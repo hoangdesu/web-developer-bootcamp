@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forms</title>
+</head>
+
+<body>
+
+    <h1>Forms</h1>
+
+    <form action="tacos">
+        <p>
+            <label for="username">Enter your username:</label>
+            <input type="text" placeholder="username" id="username" name="uname">
+        </p>
+        <p>
+            <label for="password">Enter your password:</label>
+            <input type="password" placeholder="password" id="password" name="pwd">
+        </p>
+        <p>
+            <label for="color">Choose color</label>
+            <input type="color" id="color" name="colour">
+        </p>
+
+        <input type="number" placeholder="number">
+        <input type="radio">
+        <input type="button">
+
+        <label for="mid">Mid</label>
+        <input type="checkbox" id="mid" name="chekbox">
+
+        <button>Submit!!</button>
+        <input type="submit" value="Submit from input">
+    </form>
+    <hr>
+    <button>Button outside a form</button>
+
+    <!-- Query from the form -->
+    <!-- http://127.0.0.1:5500/tacos?uname=ahihu&pwd=ahuhi&colour=%23784f4f&chekbox=on -->
+
+    <h2>Online search</h2>
+
+    <!-- https://www.youtube.com/results?search_query=programming -->
+    <form action="https://www.youtube.com/results">
+        <input type="text" name="search_query">
+        <button>Search on Youtube</button>
+    </form>
+
+    <form action="https://www.google.com/search">
+        <input type="text" name="q">
+        <input type="submit" value="Search on Google">
+    </form>
+
+    <h2>Checkboxes</h2>
+
+    <form action="/lane">
+        <div>
+            <label for="checkBox">Label before</label>
+            <input type="checkbox" id="checkBox" name="checkBox" checked>
+            <label for="checkBox">Label after</label>
+        </div>
+        <p><b>Choose your lane:</b></p>
+        <div>
+            <p>
+                <label for="top">Top</label>
+                <input type="radio" name="lane" id="top" value="Top">
+            </p>
+            <p>
+                <label for="jungle">Jungle</label>
+                <input type="radio" name="lane" id="jungle" value="Jungle">
+            </p>
+            <p>
+                <label for="mid">Mid</label>
+                <input type="radio" name="lane" id="mid" value="Mid" checked>
+            </p>
+            <p>
+                <label for="adc">ADC</label>
+                <input type="radio" name="lane" id="adc" value="ADC">
+            </p>
+            <p>
+                <label for="support">Support</label>
+                <input type="radio" name="lane" id="support" value="Support">
+            </p>
+        </div>
+
+        <div>
+            <h2>Select element</h2>
+            <label for="languages">Favorite programming language:</label>
+            <select name="programming_languages" id="languages">
+                <option value="">---Select your language---</option>
+                <option value="python" selected>Python</option>
+                <option value="javascript">Javascript</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="Lua">Lua</option>
+            </select>
+        </div>
+
+
+        <div>
+            <h2>Range:</h2>
+            <input type="range" name="volume" id="volume_slider" value="30" min="0" max="100" step="2">
+            <label for="volume_slider">Volume</label>
+        </div>
+        <button>Submit</button>
+    </form>
+
+    <label for="textarea">Text area: <br></label>
+    <textarea name="textarea" id="textarea" cols="50" rows="5" placeholder="Start typing something..."></textarea>
+
+    <h2>Form validation</h2>
+
+    <form action="/validation">
+        <p>
+            <label for="fname">Enter your name:</label>
+            <input type="text" name="fname" id="fname" required>
+        </p>
+        <p>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" minlength="6" maxlength="16" required>
+        </p>
+        <p>
+            <label for="email">Email:</label>
+            <input type="email" required>
+        </p>
+        <p>
+            <label for="url">URL:</label>
+            <input type="url" name="url" id="url" required>
+        </p>
+        <button>Submit</button>
+    </form>
+
+</body>
+
+</html>

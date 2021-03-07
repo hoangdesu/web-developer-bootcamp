@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race registration form</title>
+</head>
+
+<body>
+    <h1>Race Registration!</h1>
+
+    <form action="/register">
+        <div>
+            <label for="">First name</label>
+            <input type="text" name="firstname" id="firstname" required>
+            <label for="">Last name</label>
+            <input type="text" name="lastname" id="lastname" required>
+        </div>
+        <div>
+            <p>Select a Race:</p>
+            <div>
+                <input type="radio" name="race" id="funrun5k" value="funrun5k" checked>
+                <label for="funrun5k">Fun Run 5k</label>
+            </div>
+            <div>
+                <input type="radio" name="race" id="halfmarathon" value="halfmarathon">
+                <label for="halfmarathon">Half Marathon</label>
+            </div>
+            <div>
+                <input type="radio" name="race" id="fullmarathon" value="fullmarathon">
+                <label for="fullmarathon">Full Marathon</label>
+            </div>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required minlength="6">
+        </div>
+        <div>
+            <label for="agegroup">Select Age Group</label>
+            <select name="agegroup" id="agegroup">
+                <option value="under18">Under 18</option>
+                <option value="20-30" selected>20-30</option>
+                <option value="30-40">30-40</option>
+                <option value="50+">50+</option>
+            </select>
+        </div>
+
+        <button>Register!</button>
+    </form>
+
+    <!-- Respose: -->
+    <!-- http://127.0.0.1:5500/register?firstname=Hoang+&lastname=Nguyen&race=fullmarathon&email=sdad%40sa&password=lasjdlaskjd123&agegroup=30-40     -->
+    
+</body>
+
+</html>
