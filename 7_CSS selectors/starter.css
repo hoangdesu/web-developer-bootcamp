@@ -1,0 +1,131 @@
+/* * {
+    background-color: skyblue;
+} */
+
+body {
+    background-color: #e9c46a;
+}
+
+h1, h2 {
+    color: #264653;
+}
+
+#login {
+    color: white;
+    background-color: #e76f51;
+}
+
+#signup {
+    background-color: #2a9d8f;
+    font-size: medium;
+    color: white;
+}
+
+span {
+    color: #6b705c;
+}
+
+.tag {
+    background-color: red;
+    color: white;
+    font-size: 0.7em;
+}
+
+footer a {
+    text-decoration: none;
+    color: #264653;
+}
+
+.post a {
+    color: #e63946;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+h2 + button {
+    background-color: pink;
+    font-size: 20px;
+}
+
+footer > a {
+    font-size: 20px;
+    color: purple;
+    text-decoration: green wavy underline;
+}
+
+/* section[class="post"] {
+    background-color: #f4a261;
+} */ 
+/* ===> .post */
+/* ===> section.post */
+
+input[type="password"] {
+    background-color: #2a9d8f;
+    color: #f4a261;
+}
+
+a[href*="FACEBOOK" i] {
+    color: blue;
+}
+
+
+
+span a {
+    font-weight: 700;
+    text-decoration: none;
+}
+
+span a:hover {
+    text-decoration: underline;
+}
+
+.post button:active {
+    background-color: #bdb2ff;
+}
+
+input[type="checkbox"]:checked {
+    margin-left: 50px;
+}
+
+.post:nth-of-type(2n) {
+    background-color: #d4af5e;
+}
+
+/* .post:nth-child(3n) {
+    background-color: #d4af5e;
+} */
+
+.post h2::first-letter {
+    font-size: 50px;
+}
+
+.post p::first-line {
+    color: #bdb2ff;
+}
+
+.post p::selection {
+    background-color: yellow;
+}
+
+/* .post button::after {
+    background-color: black;
+} */
+
+.post button:hover {
+    background-color: #e63946;
+    color: white;
+}
+
+button:hover {
+    font-size: 20px;
+}
+
+/* button:active {
+    background-color: #bdb2ff;
+} */
+
+/* button {
+    background-color: magenta !important;
+} */

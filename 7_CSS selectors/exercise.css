@@ -1,0 +1,71 @@
+body {
+    background-color: #BDC3C7;
+}
+
+h1 {
+    color: #9A5CB4;
+}
+
+h1:hover {
+    color: blue;
+}
+
+p {
+    background-color: #f1ee35;
+}
+
+.hello {
+    background-color: white;
+    font-size: 25px;
+}
+
+#special {
+    font-size: 25px;
+    border: solid 2px blue;
+}
+
+#special::first-letter {
+    font-size: 100px;
+    color: #0F7F12;
+}
+
+h2 {
+    color: #FDA429
+}
+
+div p {
+    font-size: 25px;
+}
+
+input[type="checkbox"]:checked {
+    margin-left: 50px;
+}
+
+.awesome p {
+    background-color: #FEC1CC;
+}
+
+.awesome p:nth-child(3) {
+    border: solid 5px white;
+}
+
+input {
+    border: solid 3px red;
+}
+
+input[type="text"] {
+    background-color: #808080;
+}
+
+em {
+    color: white;
+    font-size: 20px ;
+}
+
+li {
+    color: blue;
+}
+
+label {
+    text-transform: uppercase;
+}

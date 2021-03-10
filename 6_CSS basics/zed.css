@@ -1,0 +1,31 @@
+h1 {
+    text-align: center;
+    font-weight: normal;
+    text-decoration: red wavy overline;
+    font-size: 50px;
+    color: red;
+    letter-spacing: 5px;
+    font-family: fantasy;
+    /* text-decoration: blue wavy underline; */
+}
+
+h2 {
+    text-decoration: solid underline purple 4px;
+    text-align: center;
+    letter-spacing: 5px;
+    font-family: fantasy;
+
+}
+
+p {
+    line-height: 1.5;
+}
+
+button {
+    background-color: red;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
