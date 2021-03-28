@@ -1,0 +1,41 @@
+section {
+    width: 400px;
+    height: 400px;
+    background-color: palegoldenrod;
+}
+
+.cube {
+    width: 50%;
+    height: 50%;
+    background-color: palevioletred;
+}
+
+h1 {
+    font-size: 40px;
+    border: 1px solid black;
+    line-height: 200%;
+}
+
+.em {
+    font-size: 20px;
+}
+
+#oneEM {
+    font-size: 1em;
+}
+
+#twoEM {
+    font-size: 2em;
+} 
+
+button {
+    font-size: 2em;
+    padding: 0 1.5em;
+    border-radius: 2em;
+    background-color: brown;
+    color: white;
+}
+
+ul {
+    font-size: 1.5em;
+}

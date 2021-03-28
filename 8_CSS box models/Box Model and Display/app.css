@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+}
+
+h1 {
+    background-color: pink;
+    width: 300px;
+    padding-left: 100px;
+    padding-top: 20px;
+    margin: 0;
+}
+
+h2 {
+    display: inline;
+}
+
+span {
+    padding-left: 20px;
+    padding-top: 50px;
+    /* background-color: #d7d7f1; */
+    border: 1px solid black;
+    width: 200px;
+}
+
+div {
+    width: 300px;
+    /* height: 500px; */
+    background-color: rgb(221, 221, 255);
+}
+
+#one {
+    background-color: #9d9df0;
+    border-width: 5px;
+    border-color: #427532;
+    border-style: solid;
+    box-sizing: border-box;
+    padding: 10px 20px 10px 30px;
+    margin: 10px 0;
+}
+
+#two {
+    background-color: #9b9baf;
+    border-width: 5px;
+    border-color: #244d18;
+    border-style: dashed;
+    border-left-width: 10px;
+    box-sizing: content-box;
+    margin: 30px 20px;
+}
+
+#three {
+    background-color: #1e7b8b;
+    border: 4px dotted #302d2d;
+    border-left-style: groove;
+    border-radius: 50%;
+}
+
+#click {
+    width: 200px;
+    text-align: center;
+    padding: 10px 30px;
+    text-transform: uppercase;
+    color: white;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-color: red;
+}
+
+#click:active {
+    background-color: purple;
+    transform: translateY(5px);
+}
+
+#cube {
+    width: 300px;
+    height: 200px;
+    background-color: #9b9baf;
+    border: 5px solid black;
+    display: inline-block;
+}
+
