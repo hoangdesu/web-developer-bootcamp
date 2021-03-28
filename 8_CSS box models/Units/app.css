@@ -1,3 +1,7 @@
+html {
+    font-size: 20px;
+}
+
 section {
     width: 400px;
     height: 400px;
@@ -38,4 +42,16 @@ button {
 
 ul {
     font-size: 1.5em;
+}
+
+.rems h2 {
+    font-size: 3rem;
+}
+
+.rems h3 {
+    font-size: 2rem;
+}
+
+.rems ul {
+    font-size: 1rem;
 }
