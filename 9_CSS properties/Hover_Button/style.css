@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #041330;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+button {
+    background-color: transparent;
+    font-size: 2em;
+    color: #E3EC79;
+    border: 5px solid #E3EC79;
+    padding: 1em 2em;
+    transition: all 0.2s ease;
+    border-radius: 20px;
+}
+
+button:hover {
+    color: white;
+    border-color: #beca3c;
+    transform: translateY(-10px);
+    box-shadow: 0 7px 5px -2px #beca3c;
+    cursor: pointer;
+}
+
+button:active {
+    transform: translateY(-5px);
+    box-shadow: 0 2px 5px 1px #beca3c;
+}
+
+button:focus {
+    outline: none;
+}

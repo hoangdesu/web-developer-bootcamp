@@ -1,0 +1,38 @@
+
+
+.box {
+    font-size: larger;
+    width: 20%;
+    color: white;
+    background-color: #e69c14;
+    border: 3px solid gray;
+    text-align: center;
+    padding: 20px;
+    margin: 50px auto;
+}
+
+.box:nth-of-type(1) {
+    transform-origin: top right;
+    transform: rotate(30deg);
+}
+
+.box:nth-of-type(2) {
+    transform: scale(0.7);
+}
+
+.box:nth-of-type(3) {
+    transform: translate(-100px, -20px);
+}
+
+.box:nth-of-type(4) {
+    transform: skew(30deg, 10deg);
+}
+
+.box:nth-of-type(5) {
+    transform: rotateY(30deg) scale(2, 0.7) translateX(-100px);
+}
+
+section {
+    transform: translate3d(10px, 10px, 10px) scale(0.8) rotate(-20deg);
+}
+

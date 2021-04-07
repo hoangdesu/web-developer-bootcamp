@@ -55,3 +55,8 @@ ul {
 .rems ul {
     font-size: 1rem;
 }
+
+#kimochi {
+    font-size: 4rem;
+    background-color: #d31212;
+}

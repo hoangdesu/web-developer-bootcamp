@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Poppins:ital,wght@0,900;1,700&family=Ubuntu:wght@700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 90%;
+    margin: 0 auto;
+    /* border: 1px solid black; */
+}
+
+nav {
+    width: 50%;
+    text-transform: uppercase;
+    font-size: 2.5em;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    border-bottom: 2px solid #ffbdbd;
+    margin-left: calc(8%/6);
+    padding: 0.5em 0;
+}
+
+main {
+    margin-top: 30px;
+}
+
+img {
+    width: 30%;
+    height: 400px;
+    object-fit: cover;
+    /* border: 1px solid black; */
+    /* 30 + 30 + 30 = 90% -> left with 10% for margin.
+    2 margins left right * 3 = 6 margins => 10% / 6 margins */
+    margin: calc(8%/6);
+    transition: transform 0.2s ease;
+}
+
+img:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}

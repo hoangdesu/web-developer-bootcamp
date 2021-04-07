@@ -1,0 +1,61 @@
+div {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    background-color: bisque;
+    display: inline-block;
+    border: 1px solid black;
+    overflow: visible;
+}
+
+#middle {
+    background-color: brown;
+}
+
+#static #middle {
+    position: static;
+    top: 200px;
+}
+
+#relative #middle {
+    position: relative;
+    top: 20px;
+    left: 20px;
+}
+
+#absolute {
+    border: 1px solid black;
+    margin-top: 50px;
+    position: relative;
+}
+
+#absolute #middle {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+}
+
+#fixed #middle {
+    position: fixed;
+    top: 50px;
+    left: 500px;
+    color: white;
+}
+
+#sticky {
+    /* position: sticky; */
+    overflow: visible;
+}
+
+body {
+    height: 100%;
+}
+
+#sticky #middle {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 50px;
+    left: 300px;
+    color: yellow;
+}
