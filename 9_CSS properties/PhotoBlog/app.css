@@ -13,13 +13,23 @@ body {
 
 nav {
     width: 50%;
-    text-transform: uppercase;
+    border-bottom: 2px solid #ffbdbd;
+    margin: 20px calc(8%/6);
+    padding: 0.5em 0;
+}
+
+h1 {
     font-size: 2.5em;
     font-weight: 700;
     font-family: 'Poppins', sans-serif;
-    border-bottom: 2px solid #ffbdbd;
-    margin-left: calc(8%/6);
-    padding: 0.5em 0;
+    text-transform: uppercase;
+    color: #351414;
+}
+
+h2 {
+    font-size: 1em;
+    font-family: 'Ubuntu', sans-serif;
+    color: #503f3f;
 }
 
 main {
@@ -34,7 +44,7 @@ img {
     /* 30 + 30 + 30 = 90% -> left with 10% for margin.
     2 margins left right * 3 = 6 margins => 10% / 6 margins */
     margin: calc(8%/6);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease-out;
 }
 
 img:hover {
