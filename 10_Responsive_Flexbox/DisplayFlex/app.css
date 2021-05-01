@@ -1,0 +1,19 @@
+h1 {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.container {
+    width: 90%;
+    height: 300px;
+    margin: 0 auto;
+    background-color: aliceblue;
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.container div {
+    width: 200px;
+    height: 200px;
+}
