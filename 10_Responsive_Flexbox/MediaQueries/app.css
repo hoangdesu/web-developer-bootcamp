@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+    font-size: 4em;
+    text-align: center;
+}
+
+h2 {
+    position: absolute;
+    /* text-align: center; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 100px;
+    width: 40px;
+    border: 1px solid black;
+    /* display: inline; */
+}
+
+nav {
+    font-size: 1.5em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+ul, li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    flex: 1;
+    max-width: 50%;
+    display: flex;
+    /* border: 1px solid red; */
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+/* Exact width, not common */
+/* @media (width: 800px) {
+    h1 {
+        color: red;
+    }
+} */
+
+/* @media (min-width:600px) and (max-width: 800px) {
+    h1 {
+        color: red;
+    }
+} */
+/* 
+@media (min-width: 400px) {
+    h1 {
+        color: red;
+    }
+}
+
+@media (min-width: 600px) {
+    h1 {
+        color: green;
+    }
+}
+
+@media (min-width: 800px) {
+    h1 {
+        color: blue;
+    }
+} */
+
+/* @media (orientation: landscape) {
+    body {
+        background-color: rgb(167, 248, 248);
+    }
+} */
+
+/* Tablet size */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 3em;
+    }
+   
+    nav, nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Phone size */
+@media (max-width: 576px) {
+    h1 {
+        font-size: 2.5em;
+    }
+}
+
