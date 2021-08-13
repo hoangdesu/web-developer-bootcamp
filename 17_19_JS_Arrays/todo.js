@@ -25,9 +25,8 @@ while (command !== 'quit') {
         } else {
             console.log("Wrong number");
         }
-
-        
     }
     command = prompt("What do you want to do?");
 }
+
 console.log("Have a nice day!");
