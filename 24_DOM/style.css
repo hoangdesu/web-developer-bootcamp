@@ -1,0 +1,24 @@
+img {
+    width: 200px;
+}
+
+.pink {
+    color: #f8879a;
+}
+
+.border {
+    border: 1px solid green;
+    text-align: center;
+}
+
+li {
+    background-color: #B10DC9;
+}
+  
+.highlight {
+    background-color: #7FDBFF;
+}
+
+.round {
+    border-radius: 50%;
+}

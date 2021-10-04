@@ -1,4 +1,4 @@
-// Take a function as argument]
+// Take a function as argument
 function roll3Dices(func) {
     // add parenthesis to invoke the function
     func();
