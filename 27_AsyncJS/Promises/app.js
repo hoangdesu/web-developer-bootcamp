@@ -38,7 +38,7 @@ fakeRequest('hi')
 // SUPER DUPER IMPORTANT PART!!
 
 const changeBodyColor = (color, delay) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         setTimeout(() => {
             document.body.style.backgroundColor = color;
             console.log('Color changed to: ' + color);
