@@ -1,0 +1,19 @@
+{
+  "name": "bla",
+  "version": "1.2.3",
+  "description": "balbala",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "me",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "yes"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

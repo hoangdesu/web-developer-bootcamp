@@ -17,6 +17,7 @@ const process = require('process');
 // console.log('This line comes after mkdir');
 
 // -- Code to create a boilerplate project folder
+// Project folder will be created relatively to where the file is run
 let folder = process.argv[2] || 'unnamed';
 folder += ' (auto generated)';
 // remove if folder exists
@@ -24,13 +25,13 @@ if (fs.existsSync(folder)) {
     fs.rmdirSync(folder, { recursive: true });
     console.log('Old folder has been removed');
 }
-fs.mkdirSync(`${folder}`);
+fs.mkdirSync(`./${folder}`);
 
 try {
     fs.writeFileSync(`./${folder}/index.html`, '');
     fs.writeFileSync(`./${folder}/app.js`, '');
     fs.writeFileSync(`./${folder}/style.css`, '');
-} catch (e) {
+} catch(e) {
     console.log(e);
 }
 
