@@ -1,0 +1,12 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    background-color: rgb(199, 209, 190);
+}
+
+body > * {
+    margin: 30px;
+}

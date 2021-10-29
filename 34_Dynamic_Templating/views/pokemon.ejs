@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/bootstrap/bootstrap.min.css" />
+        <title>Random Pokemon</title>
+    </head>
+    <body>
+        <div class="container-sm">
+            <div class="contain"></div>
+            <h1>Random Pokemon</h1>
+
+            <div class="card" style="width: 26rem">
+                <img src=<%= sprites.other['official-artwork'].front_default %>
+                class="card-img-top" alt="..." />
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <%= id %>. <%= name.toUpperCase() %>
+                    </h2>
+
+                    <p class="card-text">
+                        Placeholder for this Pokemon description. Fetch from
+                        "https://pokeapi.co/api/v2/pokemon-species/id" please.
+                        Ain't nobody got time for that
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Type: <%= types[0].type.name %>
+                    </li>
+                    <li class="list-group-item">Height: <%= height %></li>
+                    <li class="list-group-item">Weight: <%= weight %></li>
+                </ul>
+            </div>
+            <button class="btn btn-warning" onclick="location.reload()">Get another one!</button>
+        </div>
+
+        <script src="/bootstrap/bootstrap.min.js"></script>
+    </body>
+</html>

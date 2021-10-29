@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/crypto.css">
+    <title><%= ticker.base %> price</title>
+</head>
+<body>
+    <h1>Price for <%= ticker.base %> </h1>
+    <!-- <img src="https://cryptoicons.org/api/icon/<%= ticker.base.toLowerCase() %>/150" alt="" srcset=""> -->
+    <img src="https://cryptoicon-api.vercel.app/api/icon/<%= ticker.base.toLowerCase() %>" alt="">
+    <h2>1 <%= ticker.base  %> = <%= ticker.price %> <%= ticker.target %></h2>
+
+    <a href="/">Way back home</a>
+    <script>
+        console.log('hi from crypto');
+    </script>
+</body>
+</html>

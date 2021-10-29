@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<!-- head partial -->
+<%- include('partials/head', { page: 'My mains'}) %>
+
+<body>
+    <%- include('partials/navbar') %>
+    <h1>My mains</h1>
+    <p>These champs data are coming from: <%= path %>  </p>
+    <table class="table table-striped">
+        <tr>
+            <th>#</th>
+            <th>Champion</th>
+            <th>Role</th>
+        </tr>
+        <% for (let [index, champ] of champs.entries()) { %> 
+        <tr>
+            <td><%= index+1 %> </td>
+            <td><%= champ.name %> </td>
+            <td><%= champ.type %> </td>
+        <% } %> 
+        </tr>
+    </table>
+    
+</body>
+</html>

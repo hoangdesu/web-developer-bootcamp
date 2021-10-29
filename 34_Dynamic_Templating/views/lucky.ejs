@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- head partials -->
+<%- include('partials/head', { page: 'Lucky number'}) %>
+
+<body class="container">
+    <%- include('partials/navbar'); %>
+    <h1><%= name %>'s lucky number: <%= rand %></h1>
+
+    <!-- embed JS conditionals -->
+    <% if (rand % 2 === 0) { %>
+        <h2>You got an even number!</h2>
+    <% } else { %>
+        <h2>That's odd :/</h2>
+    <% } %>
+
+    <!-- using tenary -->
+    <h3><%= rand % 4 === 0 ? 'Also divisible by 4!' : '' %></h3> 
+    
+</body>
+</html>
