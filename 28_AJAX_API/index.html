@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- <h1>Empty page for different request APIs</h1> -->
+    <div id="request">
+        <h1>Request APIs</h1>
+        <button onclick=getDadJoke>Get dad joke</button>
+    </div>
+
+    <div id="searchApp">
+        <h1>TV Show Search App</h1>
+        <p>- Powered by TVMaze API</p>
+        <p>Combined VanillaJS with React =)))))</p>
+        <form>
+            <div>
+                <label for="showTitle">Show search:</label>
+                <input type="text" name="showTitle" id="showTitle">
+                <button id="btn2">Search </button>
+                <div id="showsList"></div>
+            </div>
+        </form>
+    </div>
+    
+    <div id="app"></div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="requests.js"></script>
+    <script type="text/babel" src="tvShowApp.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+.app {
+    display: inline-block;
+}
+
+.card {
+    display: inline-block;
+    margin: 10px;
+    border: 1px solid red;
+    border-radius: 8px;
+    width: 200px;
+    height: 400px;
+    text-align: center;
+    box-shadow: 1px 1px 10px 1px;
+}
+
+.card img {
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}

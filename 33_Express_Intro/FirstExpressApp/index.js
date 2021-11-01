@@ -48,6 +48,7 @@ app.get('/zoe', (req, res) => {
     res.send(content);
 });
 
+// for POST request
 app.post('/add', (req, res) => {
     res.send('Added a champ!');
 });
@@ -94,13 +95,15 @@ app.get('*', (req, res) => {
     res.send(`Not found ¯\\_(ツ)_/¯ `);
 });
 
+
+// start server
 app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
 });
 
 
 
-// --- not replated stuff :/
+// --- not related stuff :/
 function titleCase(str) {
     str = str.toLowerCase().split(' ');
     for (var i = 0; i < str.length; i++) {
