@@ -47,24 +47,34 @@ app.post('/sushi', (req, res) => {
 
 const COMMENTS = [
     {
+        id: 1,
         username: 'Ryan Vo',
-        comment: 'Xuất sắc e giai ơi 😆'
+        comment: 'Xuất sắc e giai ơi 😆',
+        date: new Date()
     },
     {
+        id: 2,
         username: 'Tran Mai',
-        comment: '10000 đỉmmmm 😍'
+        comment: '10000 đỉmmmm 😍',
+        date: new Date()
     },
     {
+        id: 3,
         username: 'Đức Nguyên',
-        comment: 'Nghệ cả củ anh ạ'
+        comment: 'Nghệ cả củ anh ạ',
+        date: new Date()
     },
     {
+        id: 4,
         username: 'Tuan Anh Nguyen',
-        comment: 'Ngầu'
+        comment: 'Ngầu',
+        date: new Date()
     },
     {
+        id: 5,
         username: 'Nguyễn Tấn Phát',
-        comment: 'Daddy đánh em đi'
+        comment: 'Daddy đánh em đi',
+        date: new Date()
     }
 ];
 
@@ -88,6 +98,16 @@ app.post('/comments', (req, res) => {
     }
 });
 
+app.get('/comments/:id', (req, res) => {
+    const { id } = req.params;
+    const comment = COMMENTS.find(c => c.id === parseInt(id));
+    // console.log(comment);
+    if (comment) {
+        res.render('comment-detail', { comment });
+    } else {
+        res.send(`No comment with id=${id} found`);
+    }
+});
 
 
 // LISTEN
