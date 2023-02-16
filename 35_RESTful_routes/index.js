@@ -72,6 +72,22 @@ app.get('/comments', (req, res) => {
     res.render('comments', { comments: COMMENTS });
 });
 
+app.get('/comments/new', (req, res) => {
+    res.render('form');
+});
+
+app.post('/comments', (req, res) => {
+    // console.log(req.body);
+    // if (req.body.hasOwnProperty('username')) console.log('has');
+
+    if (('username' in req.body) && ('comment' in req.body)) {
+        const { username, comment } = req.body;
+        COMMENTS.push({ username, comment });
+        // res.send('OK');
+        res.redirect('/comments');
+    }
+});
+
 
 
 // LISTEN

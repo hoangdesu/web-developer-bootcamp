@@ -13,14 +13,16 @@
   </head>
   <body>
     <h1>All comments</h1>
+    <a href="/">Back home</a>
     <ul>
       <% for ({ username, comment } of comments) { %>
       <li>
-        <span class="be-bold"><%= username %></span>: <br>
+        <span class="be-bold"><%= username %></span>: 
+        <br />
         <span><%= comment %></span>
       </li>
       <% } %>
     </ul>
-    <a href="/">Back home</a>
+    <a href="/comments/new">Add new comment</a>
   </body>
 </html>
