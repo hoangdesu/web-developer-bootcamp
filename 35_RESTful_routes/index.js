@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const PORT = 3001;
+const { v4: uuid } = require('uuid');
 
 // must include middlewares to parse data
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -47,31 +48,31 @@ app.post('/sushi', (req, res) => {
 
 const COMMENTS = [
     {
-        id: 1,
+        id: uuid(),
         username: 'Ryan Vo',
         comment: 'Xuất sắc e giai ơi 😆',
         date: new Date()
     },
     {
-        id: 2,
+        id: uuid(),
         username: 'Tran Mai',
         comment: '10000 đỉmmmm 😍',
         date: new Date()
     },
     {
-        id: 3,
+        id: uuid(),
         username: 'Đức Nguyên',
         comment: 'Nghệ cả củ anh ạ',
         date: new Date()
     },
     {
-        id: 4,
+        id: uuid(),
         username: 'Tuan Anh Nguyen',
         comment: 'Ngầu',
         date: new Date()
     },
     {
-        id: 5,
+        id: uuid(),
         username: 'Nguyễn Tấn Phát',
         comment: 'Daddy đánh em đi',
         date: new Date()
@@ -92,7 +93,7 @@ app.post('/comments', (req, res) => {
 
     if (('username' in req.body) && ('comment' in req.body)) {
         const { username, comment } = req.body;
-        COMMENTS.push({ username, comment });
+        COMMENTS.push({ id: uuid(), username, comment, date: new Date() });
         // res.send('OK');
         res.redirect('/comments');
     }
@@ -100,7 +101,7 @@ app.post('/comments', (req, res) => {
 
 app.get('/comments/:id', (req, res) => {
     const { id } = req.params;
-    const comment = COMMENTS.find(c => c.id === parseInt(id));
+    const comment = COMMENTS.find(c => c.id === id);
     // console.log(comment);
     if (comment) {
         res.render('comment-detail', { comment });
