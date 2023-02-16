@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .be-bold {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>All comments</h1>
+    <ul>
+      <% for ({ username, comment } of comments) { %>
+      <li>
+        <span class="be-bold"><%= username %></span>: <br>
+        <span><%= comment %></span>
+      </li>
+      <% } %>
+    </ul>
+    <a href="/">Back home</a>
+  </body>
+</html>

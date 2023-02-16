@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const { rawListeners } = require('process');
 const PORT = 3001;
 
 // must include middlewares to parse data
@@ -34,6 +33,45 @@ app.post('/sushi', (req, res) => {
     const { type, qty } = req.body;
     res.send(`POST /sushi: received order of ${qty} ${type} sushi.`)
 });
+
+
+// APIs for COMMENTS app
+// ** DESIGN **
+// Index       GET     /comments
+// New form    GET     /comments/new
+// Create      POST    /comments
+// Show        GET     /comments/:id
+// Edit form   GET     /comments/:id/edit           
+// Update      PATCH   /comments/:id
+// Destroy     DELETE  /comments/:id
+
+const COMMENTS = [
+    {
+        username: 'Ryan Vo',
+        comment: 'Xuất sắc e giai ơi 😆'
+    },
+    {
+        username: 'Tran Mai',
+        comment: '10000 đỉmmmm 😍'
+    },
+    {
+        username: 'Đức Nguyên',
+        comment: 'Nghệ cả củ anh ạ'
+    },
+    {
+        username: 'Tuan Anh Nguyen',
+        comment: 'Ngầu'
+    },
+    {
+        username: 'Nguyễn Tấn Phát',
+        comment: 'Daddy đánh em đi'
+    }
+];
+
+app.get('/comments', (req, res) => {
+    res.render('comments', { comments: COMMENTS });
+});
+
 
 
 // LISTEN
