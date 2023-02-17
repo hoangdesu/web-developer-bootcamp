@@ -48,15 +48,15 @@ app.post('/sushi', (req, res) => {
 
 const COMMENTS = [
     {
-        id: uuid(),
-        username: 'Ryan Vo',
-        comment: 'Xuất sắc e giai ơi 😆',
+        id: '1',
+        username: 'Tran Mai',
+        comment: '10000 đỉmmmm 😍',
         date: new Date()
     },
     {
         id: uuid(),
-        username: 'Tran Mai',
-        comment: '10000 đỉmmmm 😍',
+        username: 'Ryan Vo',
+        comment: 'Xuất sắc e giai ơi 😆',
         date: new Date()
     },
     {
@@ -108,6 +108,31 @@ app.get('/comments/:id', (req, res) => {
     } else {
         res.send(`No comment with id=${id} found`);
     }
+});
+
+app.get('/comments/:id/edit', (req, res) => {
+    const { id } = req.params;
+    const comment = COMMENTS.find(c => c.id === id);
+    if (comment) res.render('edit-form', { comment });
+    else res.send('invalid id');
+});
+
+app.patch('/comments/:id', (req, res) => {
+    const { id } = req.params;
+    console.log(req.body.comment);
+    // console.log('patching', id);
+
+    COMMENTS.forEach(cmt => {
+        if (cmt.id === id) {
+            cmt.comment = req.body.comment;
+            // res.send('update comment successfully');
+            res.redirect('/comments');
+        }
+    })
+    res.send('invalid id');
+
+    
+    // res.send(`patching ${id}: ${req.body.comment}`);
 });
 
 
