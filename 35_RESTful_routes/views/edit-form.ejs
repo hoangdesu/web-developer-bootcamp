@@ -10,11 +10,14 @@
     <h1>Edit comment form</h1>
     <div>ID: <%= comment.id %></div>
     <div>Username: <%= comment.username %></div>
-    <form action="/comments/<%= comment.id %>" method="patch">
-        <textarea name="comment" id="" cols="30" rows="10"><%= comment.comment %></textarea>
+
+    <!-- send as a regular POST request, Node will replace "?_method" with PATCH -->
+    <form method="POST" action="/comments/<%= comment.id %>?_method=PATCH">
+        <textarea name="comment" id="comment" cols="30" rows="5"><%= comment.comment %></textarea>
       <br />
       <button type="submit">Save</button>
     </form>
-    <a href="/comments">Back</a>
+
+    <a href="/comments">Cancel</a>
   </body>
 </html>

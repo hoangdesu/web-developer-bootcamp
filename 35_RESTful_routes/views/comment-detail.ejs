@@ -12,6 +12,10 @@
     <div><b><%= comment.username %></b> said "<%= comment.comment %>" on <%= comment.date.getDate() %>/<%= comment.date.getMonth() + 1 %>.</div>
 
     <br />
+    <a href="/comments/<%= comment.id %>/edit"><button>Edit comment</button></a>
+
+    <br />
     <a href="/comments">Back</a>
+
 </body>
 </html>

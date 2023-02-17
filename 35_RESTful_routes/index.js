@@ -3,10 +3,14 @@ const app = express();
 const path = require('path');
 const PORT = 3001;
 const { v4: uuid } = require('uuid');
+const methodOverride = require('method-override');
 
 // must include middlewares to parse data
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(express.json()); // for parsing application/json
+
+// method override middleware. Override PATCH method from POST
+app.use(methodOverride('_method'));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
@@ -79,14 +83,17 @@ const COMMENTS = [
     }
 ];
 
+// get all comments index
 app.get('/comments', (req, res) => {
     res.render('comments', { comments: COMMENTS });
 });
 
+// form to create a new comment
 app.get('/comments/new', (req, res) => {
     res.render('form');
 });
 
+// add a new comment from form to array
 app.post('/comments', (req, res) => {
     // console.log(req.body);
     // if (req.body.hasOwnProperty('username')) console.log('has');
@@ -99,6 +106,7 @@ app.post('/comments', (req, res) => {
     }
 });
 
+// comment detail
 app.get('/comments/:id', (req, res) => {
     const { id } = req.params;
     const comment = COMMENTS.find(c => c.id === id);
@@ -110,13 +118,18 @@ app.get('/comments/:id', (req, res) => {
     }
 });
 
+// edit form
 app.get('/comments/:id/edit', (req, res) => {
     const { id } = req.params;
     const comment = COMMENTS.find(c => c.id === id);
-    if (comment) res.render('edit-form', { comment });
-    else res.send('invalid id');
+    if (comment) {
+        res.render('edit-form', { comment });
+    } else {
+        res.send('invalid id');
+    }
 });
 
+// using methodOverride to turn POST from form to PATCH to update comment
 app.patch('/comments/:id', (req, res) => {
     const { id } = req.params;
     console.log(req.body.comment);
@@ -124,13 +137,11 @@ app.patch('/comments/:id', (req, res) => {
 
     COMMENTS.forEach(cmt => {
         if (cmt.id === id) {
-            cmt.comment = req.body.comment;
+            cmt.comment = req.body.comment + ' (edited)';
             // res.send('update comment successfully');
             res.redirect('/comments');
         }
     })
-    res.send('invalid id');
-
     
     // res.send(`patching ${id}: ${req.body.comment}`);
 });
