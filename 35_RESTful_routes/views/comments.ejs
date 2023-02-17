@@ -14,17 +14,36 @@
   <body>
     <h1>All comments</h1>
     <a href="/">Back home</a>
-    <ul>
+    <ol>
       <% for ({ id, username, comment } of comments) { %>
       <li>
         <span class="be-bold"><%= username %></span>: 
         <br />
         <a href="/comments/<%= id %>"><%= comment %></a>
+
+        <br />
         <a href="/comments/<%= id %>/edit"><button type="button">Edit</button></a>
         
+        <!-- empty form for sending DELETE request  -->
+        <form action="/comments/<%= id %>?_method=DELETE" method="POST" id="deleteForm">
+            <button>Delete</button>
+        </form>
+
+        <!-- handle confirmation before deleting -->
+        <!-- has bug with deleting last item -->
+        <!-- <button onclick="deleteComment()">Delete comment</button> -->
       </li>
       <% } %>
     </ul>
     <a href="/comments/new">Add new comment</a>
+
+    <script>
+        const deleteForm = document.querySelector('#deleteForm');
+        const deleteComment = () => {
+            if (confirm(`Are you sure you want to delete this comment from <%= username %>?`)) {
+                deleteForm.submit();
+            }
+        }
+    </script>
   </body>
 </html>

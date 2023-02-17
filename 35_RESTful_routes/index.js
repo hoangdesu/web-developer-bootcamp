@@ -50,7 +50,7 @@ app.post('/sushi', (req, res) => {
 // Update      PATCH   /comments/:id
 // Destroy     DELETE  /comments/:id
 
-const COMMENTS = [
+let COMMENTS = [
     {
         id: '1',
         username: 'Tran Mai',
@@ -146,6 +146,14 @@ app.patch('/comments/:id', (req, res) => {
     // res.send(`patching ${id}: ${req.body.comment}`);
 });
 
+// delete comment API
+app.delete('/comments/:id', (req, res) => {
+    const { id } = req.params;
+
+    // filter out the comments not having the id to delete, and store back to array
+    COMMENTS = COMMENTS.filter(c => c.id !== id);
+    res.redirect('/comments');
+});
 
 // LISTEN
 app.listen(PORT, () => {
