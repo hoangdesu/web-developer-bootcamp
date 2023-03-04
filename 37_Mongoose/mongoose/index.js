@@ -20,7 +20,8 @@ async function main() {
         year: { type: Number }, // shorthand for year: Number
         score: Number,
         rating: String,
-        watched: Boolean
+        watched: Boolean,
+        genres: [String]
     });
 
     const actorSchema = new mongoose.Schema({
@@ -68,6 +69,12 @@ async function main() {
             { title: 'Now you see me', score: 8.5, watched: true },
             { title: 'John Wick', score: 7.9, watched: false },
             { title: 'Johnny English', score: 7.1, watched: false },
+            { title: 'Kimi no Na wa', score: 8.4, watched: true },
+            { title: 'Peaky Blinders', score: 8.8, watched: false },
+            { title: 'John Wick 2', score: 5.5, watched: false },
+            { title: 'Spirited Away', score: 7.8, watched: false },
+            { title: 'The Social Network', score: 7.8, watched: false },
+            { title: 'Jumanji', score: 7.1, watched: false },
         ]);
     }
     // console.log('insertmany result', insertManyRes);
@@ -85,7 +92,7 @@ async function main() {
     }
 
 
-    // FIND
+    // >>> FIND
     // find movies with score >= 8.0
     Movie.find({ score: { $gte: 8.0 } }).exec().then(movies => console.log('movies with score >= 8:', movies));
 
@@ -107,7 +114,25 @@ async function main() {
 
     // find by ID
     Movie.findById(m1._id).then(m => console.log('movie 1 find by id:', m));   
+    
+    // count total documents in a collection
+    console.log('Total documents:', (await Movie.countDocuments()));
+    
+    // no movie found -> empty list
+    Movie.find({ title: 'invalid movie name' }).then(m => console.log('invalid movie (empty list):', m));
+    
+    // >>> UPDATE
+    // updateOne: returns update result, not the new data
+    Movie.updateOne({ title: 'Johnny English' }, { score: 6.2 }).then(msg => console.log('update one res:', msg));
+
+    // updateMany: same, returns result, not data
+    Movie.updateMany({ watched: false }, { year: 2023 }).then(res => console.log('update many res:', res));
+    Movie.updateMany({ title: { $in: ['Kimi no Na wa', 'Spirited Away'] }}, { genres: ['Anime'] }).then(res => console.log('update 2 anime:', res));
+
+    // returns the FOUND document (not the new one)
+    Movie.findOneAndUpdate({ title: 'Kimi no Na wa' }, { score: 9.5 }, {}).then(movie => console.log('found movie to update:', movie));
+    
+    // retunrs the NEW, UPDATED VERSION of the found document
+    Movie.findOneAndUpdate({ title: 'Spirited Away' }, { watched: true }, { new: true }).then(mov => console.log('updated movie:', mov));
+
 }
-
-
-
