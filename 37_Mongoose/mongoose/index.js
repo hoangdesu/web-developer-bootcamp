@@ -121,6 +121,7 @@ async function main() {
     // no movie found -> empty list
     Movie.find({ title: 'invalid movie name' }).then(m => console.log('invalid movie (empty list):', m));
     
+    
     // >>> UPDATE
     // updateOne: returns update result, not the new data
     Movie.updateOne({ title: 'Johnny English' }, { score: 6.2 }).then(msg => console.log('update one res:', msg));
@@ -140,6 +141,6 @@ async function main() {
     // Movie.deleteOne({ title: 'John Wick' }).then(res => console.log('deletedOne:', res));
     // Movie.deleteMany({ score: { $lt: 8.0 } }).then(r => console.log('deleted movie score < 8.0:', r));
     // Movie.findOneAndDelete({ watched: true }).then(m => console.log('removed watched movie:', m));
-    // Movie.deleteMany({}).then(r => console.log('delete the whole collection:', r));
+    // Movie.deleteMany({}).then(r => console.log('delete all documents:', r));
 
 }
