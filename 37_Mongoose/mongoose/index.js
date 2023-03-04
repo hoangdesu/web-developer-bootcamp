@@ -35,8 +35,8 @@ async function main() {
     
 
     // reset db
-    await Movie.deleteMany({});
-    await Actor.deleteMany({});
+    Movie.deleteMany({});
+    Actor.deleteMany({});
 
 
     // create actual movie instances (documents)
@@ -134,5 +134,12 @@ async function main() {
     
     // retunrs the NEW, UPDATED VERSION of the found document
     Movie.findOneAndUpdate({ title: 'Spirited Away' }, { watched: true }, { new: true }).then(mov => console.log('updated movie:', mov));
+
+
+    // >>> DELETE
+    // Movie.deleteOne({ title: 'John Wick' }).then(res => console.log('deletedOne:', res));
+    // Movie.deleteMany({ score: { $lt: 8.0 } }).then(r => console.log('deleted movie score < 8.0:', r));
+    // Movie.findOneAndDelete({ watched: true }).then(m => console.log('removed watched movie:', m));
+    // Movie.deleteMany({}).then(r => console.log('delete the whole collection:', r));
 
 }
