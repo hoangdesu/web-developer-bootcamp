@@ -100,10 +100,8 @@ async function main() {
       },
       categories: {
         type: [categorySchema], // array of subdocuments
-        default: [{ name: 'Electronics' }, { name: 'Gadgets' }]
-      }
-        
-
+        default: [{ name: 'electronics' }, { name: 'gadgets' }]
+      } 
     },
     // options
     {
@@ -117,6 +115,14 @@ async function main() {
           return this.save(); // return a thennable (promise-like) to await outside
         }
       },
+      statics: {
+        findByCategory(cat) {
+          return this.find({ 'categories.name': cat }); // accessing subfields
+        },
+        findByName(name) {
+          return this.find({ name: new RegExp(name, 'i') });
+        }
+      }
     }
   );
 
@@ -131,6 +137,17 @@ async function main() {
     // make sure calling this to take effect
     await this.save();
   }
+
+
+  // Model static methods
+  productSchema.statics.fireSale = function() {
+    // this: refers to the model "Product" created later using this schema
+    return this.updateMany({}, { price: 0, onSale: true }, { runValidators: true });
+  };
+
+  productSchema.static('changeModel', function(oldModel, newModel) {
+    return this.updateMany({ model: oldModel }, { model: newModel }, { runValidators: true });
+  });
 
 
   // model == collection
@@ -150,6 +167,7 @@ async function main() {
       online: 2,
       inStore: 3,
     },
+    categories: [{name: 'phone'}]
   });
 
   iPhone.save()
@@ -159,7 +177,9 @@ async function main() {
 
   const laptop = new Product({
     name: 'Macbook Pro',
-    price: 20000000
+    price: 20000000,
+    categories: [{ name: 'laptop' }],
+    model: 'Base'
   });
   await laptop.save();
 
@@ -201,8 +221,12 @@ async function main() {
   };
 
   await changeName();
-  
 
+  // custom model static methods
+  await Product.fireSale().then(res => console.log('fireSale:', res));
+  await Product.findByCategory('laptop').then(p => console.log('-- LAPTOP category', p));
+  await Product.changeModel('Pro', 'Pro Max');
+  await Product.findByName('book').then(p => console.log('FIND BY NAME:', p));
 
   Product.find({}).then((p) => console.log("- all products:", p));
 }
