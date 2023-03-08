@@ -17,6 +17,33 @@ mongoose
 main().catch((err) => console.error(err));
 
 async function main() {
+
+  // subdocuments
+  const categorySchema = new mongoose.Schema({
+    name: String,
+    onTrending: {
+      type: Boolean,
+      default: true
+    }
+  });
+
+  const inHouseProductionSchema = new mongoose.Schema({
+    name: {
+      type: String,
+      default: 'In-house production company name'
+    },
+    producing: {
+      type: Number,
+      default: 100
+    },
+    estimatedDeliveryDate: {
+      type: Date,
+      default: new Date('2023-02-26')
+    }
+  });
+
+
+  // parent schema
   const productSchema = new mongoose.Schema(
     // schema definition
     {
@@ -24,7 +51,7 @@ async function main() {
         type: String,
         required: true,
         minLength: 6,
-        uniques: true,
+        unique: true,
 
         // -- testing constraints
         // maxLength: 5
@@ -54,12 +81,29 @@ async function main() {
           type: Number,
           default: 0,
         },
+        // more levels of nesting
+        manufacturing: {
+          outSource: {
+            type: Number,
+            default: 0
+          },
+          inHouse: { 
+            type: inHouseProductionSchema, // nested subdocument
+            default: {}
+          }
+        }
       },
       model: {
         type: String,
         enum: ["Mini", "Base", "Pro", "Pro Max"],
         default: "Pro",
       },
+      categories: {
+        type: [categorySchema], // array of subdocuments
+        default: [{ name: 'Electronics' }, { name: 'Gadgets' }]
+      }
+        
+
     },
     // options
     {
@@ -70,7 +114,7 @@ async function main() {
         },
         setName(newName) {
           this.name = newName;
-          return this.save(); // return a promise to await outside
+          return this.save(); // return a thennable (promise-like) to await outside
         }
       },
     }
@@ -160,11 +204,9 @@ async function main() {
   
 
 
-
-
-
   Product.find({}).then((p) => console.log("- all products:", p));
 }
+
 
 // node REPL
 // .load product.js
