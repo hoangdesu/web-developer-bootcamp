@@ -45,6 +45,24 @@ personSchema.virtual('age')
     });
 
 
+// middleware
+personSchema.pre('save', function(next) {
+    this.name.first = 'Cún'; // changing first name before saving to db
+    console.log('saving...', this);
+    next();
+});
+
+personSchema.pre('save', async function() {
+    this.name.first = 'Doroke';
+    console.log('async saving...', this);
+});
+
+personSchema.post('save', async function() {
+    console.log('post save:', this);
+});
+
+
+// compiling model
 const Person = mongoose.model('Person', personSchema); // collection name "people"
 
 
