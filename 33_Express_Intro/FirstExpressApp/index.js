@@ -77,7 +77,7 @@ app.get('/search', (req, res) => {
         res.send("Nothing found if nothing search :/");
     }
     
-    // or just simply if (!req.query.year)
+    // or just simply if (req.query.year)
     else if (req.query.year !== undefined) { 
         res.send(`<h1>Search for: ${actress} in ${req.query.year}</h1>`);
     }
