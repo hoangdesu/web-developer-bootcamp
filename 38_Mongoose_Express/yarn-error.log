@@ -1,0 +1,31 @@
+Arguments: 
+  /Users/doroke/.nvm/versions/node/v16.14.2/bin/node /usr/local/Cellar/yarn/1.22.17_2/libexec/bin/yarn.js create vite
+
+PATH: 
+  /Users/doroke/.nvm/versions/node/v16.14.2/bin:/local/pgsql/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/doroke/.nvm/versions/node/v16.14.2/bin:/Users/doroke/.sdkman/candidates/java/current/bin:/local/pgsql/bin:/Users/doroke/.cargo/bin:/Users/doroke/Library/Python/3.8/bin:/Users/doroke/.fzf/bin:/Users/doroke/Library/Python/3.8/bin
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  16.14.2
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/doroke/KUMO/Code playground/Web Developer Bootcamp/38_Mongoose_Express/package.json: Unexpected end of JSON input
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:310:30)
+      at /usr/local/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:321:13
+
+npm manifest: 
+  
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

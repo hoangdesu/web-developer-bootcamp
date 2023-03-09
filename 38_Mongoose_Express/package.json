@@ -1,0 +1,23 @@
+{
+  "name": "38_mongoose_express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm-run-all --parallel start:server start:client",
+    "start:server": "yarn workspace server run start",
+    "start:client": "yarn workspace client run dev"
+  },
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
