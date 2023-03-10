@@ -39,4 +39,5 @@ Food.insertMany(data)
         console.log('insert many:', res.length)
     })
     .catch(e => console.error(e));
-
+    
+// Food.find({}).then(d => console.log(d));
