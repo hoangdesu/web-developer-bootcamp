@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/v1/foods', async (req, res) => {
-    console.log('finding all/details/640b9e79c441ee88114c22ee foods...');
+    console.log('finding all...');
     const data = await Food.find({});
     console.log(`found ${data.length} documents in db`);
     res.send(data);
@@ -39,7 +39,7 @@ app.get('/v1/foods/:id', async (req, res) => {
     if (id) {
         try {
             const food = await Food.findById(id);
-            console.log('found:', food);
+            console.log('found: ', food);
             res.status(200).send(food);
         } catch (e) {
             res.status(404).send('id not found');
