@@ -5,6 +5,10 @@
     const API = `${HOST}:${PORT}${ENDPOINT}`;
 </script>
 
+<svelte:head>
+    <title>Add new food</title>
+</svelte:head>
+
 <div>
     <h1>Add new food</h1>
 

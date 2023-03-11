@@ -17,6 +17,10 @@
     });
 </script>
 
+<svelte:head>
+    <title>Food Nutrition Facts App</title>
+</svelte:head>
+
 <main>
     <h1>Food Nutrition Facts App</h1>
     <h2>All food in database</h2>

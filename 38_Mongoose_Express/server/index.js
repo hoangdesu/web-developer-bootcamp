@@ -66,7 +66,7 @@ app.post('/v1/foods', async (req, res) => {
     console.log('newFood added to db:', f);
 
     res.status(200);
-    res.redirect(`${CLIENT_URL}/details/${newFood._id}`);
+    res.redirect(`${CLIENT_URL}/food/${newFood._id}`);
 });
 
 app.listen(PORT, () => {

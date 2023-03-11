@@ -28,6 +28,10 @@
   export let url = "";
 </script>
 
+<svelte:head>
+    <title>Food Nutrition Facts App</title>
+</svelte:head>
+
 <main>
     <!-- <h1>Food Nutrition Fact:</h1> -->
     <!-- <Link to="food">Food</Link> -->
