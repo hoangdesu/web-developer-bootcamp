@@ -3,9 +3,10 @@
   import axios from "axios";
   import { Router, Route } from "svelte-routing";
 
-  import Home from "../pages/Home.svelte";
+  import Home from "./pages/Home.svelte";
   import NavLink from "./components/NavLink.svelte";
-  import FoodDetails from "../pages/FoodDetails.svelte";
+  import FoodDetails from "./pages/FoodDetails.svelte";
+  import AddFoodForm from "./pages/AddFoodForm.svelte";
 
   // let foodList;
   // const URL = "http://localhost:3001/v1/foods";
@@ -58,10 +59,12 @@
     <Router {url}>
       <nav>
         <NavLink to="/">Home</NavLink>
+        <NavLink to="/new">Add new food</NavLink>
       </nav>
       <div>
         <Route path="/"><Home /></Route>
-        <Route path="details/:id" component={FoodDetails} />
+        <Route path="/food/:id" component={FoodDetails} />
+        <Route path="/new" component={AddFoodForm} />
       </div>
     </Router>
 

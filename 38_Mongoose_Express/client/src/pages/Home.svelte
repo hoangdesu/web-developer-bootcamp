@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Router, Route, Link } from 'svelte-routing';
     import axios from 'axios';
-    import NavLink from '../src/components/NavLink.svelte';
+    import NavLink from '../components/NavLink.svelte';
 
     const URL = "http://localhost:3001/v1/foods";
     
@@ -23,7 +23,7 @@
     <ul>
         {#if foodList}
             {#each foodList as food (food._id)}
-                <li><Link to="details/{food._id}">{food.name}</Link></li>
+                <li><Link to="/food/{food._id}">{food.name}</Link></li>
             {/each}
         {/if}
     </ul>

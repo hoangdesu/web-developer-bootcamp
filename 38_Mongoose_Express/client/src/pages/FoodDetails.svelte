@@ -1,6 +1,5 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { Router, Route, Link } from 'svelte-routing';
     import axios from "axios";
 
     export let id;
@@ -25,6 +24,10 @@
         <h2>{food.name}</h2>
         <table border={0}>
             <tr>
+                <th>Amount per</th>
+                <td>{food.amountPer.value} {food.amountPer.unit}</td>
+            </tr>
+            <tr>
                 <th>Calories (g)</th>
                 <td>{food.calories}</td>
             </tr>
@@ -35,10 +38,6 @@
             <tr>
                 <th>Category</th>
                 <td>{food.category}</td>
-            </tr>
-            <tr>
-                <th>Amount per</th>
-                <td>{food.amountPer.value} {food.amountPer.unit}</td>
             </tr>
         </table>
     {/if}

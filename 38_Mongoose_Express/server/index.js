@@ -1,14 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 const Food = require('./models/food');
 
 const PORT = 3001;
 const app = express();
+const CLIENT_URL = 'http://127.0.0.1:5173';
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.set('strictQuery', true);
 const db = 'foodNutritionAppDb';
@@ -45,6 +48,25 @@ app.get('/v1/foods/:id', async (req, res) => {
             res.status(404).send('id not found');
         }
     }
+});
+
+app.post('/v1/foods', async (req, res) => {
+    console.log('FORM DATA:', req.body);
+    const { amountPerValue, amountPerUnit } = req.body;
+    
+    const newFood = new Food({
+        ...req.body,
+        amountPer: {
+            value: amountPerValue,
+            unit: amountPerUnit
+        }
+    });
+
+    const f = await newFood.save();
+    console.log('newFood added to db:', f);
+
+    res.status(200);
+    res.redirect(`${CLIENT_URL}/details/${newFood._id}`);
 });
 
 app.listen(PORT, () => {
