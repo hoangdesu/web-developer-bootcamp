@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
-const Food = require('./models/food');
+const methodOverride = require('method-override');
 
 const PORT = 3001;
 const app = express();
@@ -12,6 +11,9 @@ const CLIENT_URL = 'http://127.0.0.1:5173';
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+
+const Food = require('./models/food');
 
 mongoose.set('strictQuery', true);
 const db = 'foodNutritionAppDb';
@@ -30,6 +32,7 @@ app.get('/', (req, res) => {
     res.send('Food Nutrition App server!');
 });
 
+// GET ALL FOODS
 app.get('/v1/foods', async (req, res) => {
     console.log('finding all...');
     const data = await Food.find({});
@@ -37,6 +40,7 @@ app.get('/v1/foods', async (req, res) => {
     res.send(data);
 });
 
+// GET FOOD
 app.get('/v1/foods/:id', async (req, res) => {
     const { id } = req.params;
     if (id) {
@@ -50,6 +54,7 @@ app.get('/v1/foods/:id', async (req, res) => {
     }
 });
 
+// ADD FOOD
 app.post('/v1/foods', async (req, res) => {
     console.log('FORM DATA:', req.body);
     const { amountPerValue, amountPerUnit } = req.body;
@@ -66,8 +71,25 @@ app.post('/v1/foods', async (req, res) => {
     console.log('newFood added to db:', f);
 
     res.status(200);
-    res.redirect(`${CLIENT_URL}/food/${newFood._id}`);
+    res.redirect(`${CLIENT_URL}/foods/${newFood._id}`);
 });
+
+// UPDATE FOOD
+app.put('/v1/foods/:id', async (req, res) => {
+    const { id } = req.params;
+    const updatedFood = {
+        ...req.body,
+        amountPer: {
+            value: req.body.amountPerValue,
+            unit: req.body.amountPerUnit
+        }
+    };
+    console.log('updated food', updatedFood);
+    await Food.findByIdAndUpdate(id, updatedFood, { runValidators: true, new: true });
+    // res.sendStatus(200);
+    res.redirect(`${CLIENT_URL}/foods/${id}`);
+});
+
 
 app.listen(PORT, () => {
     console.log('- Server running at http://localhost:' + PORT);

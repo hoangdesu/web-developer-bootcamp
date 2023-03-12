@@ -27,7 +27,7 @@
     <ul>
         {#if foodList}
             {#each foodList as food (food._id)}
-                <li><Link to="/food/{food._id}">{food.name}</Link></li>
+                <li><Link to="/foods/{food._id}">{food.name}</Link></li>
             {/each}
         {/if}
     </ul>

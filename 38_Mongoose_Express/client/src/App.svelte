@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import axios from "axios";
   import { Router, Route } from "svelte-routing";
 
   import Home from "./pages/Home.svelte";
   import NavLink from "./components/NavLink.svelte";
   import FoodDetails from "./pages/FoodDetails.svelte";
   import AddFoodForm from "./pages/AddFoodForm.svelte";
+  import EditFoodForm from "./pages/EditFoodForm.svelte";
 
   // let foodList;
   // const URL = "http://localhost:3001/v1/foods";
@@ -67,8 +66,9 @@
       </nav>
       <div>
         <Route path="/"><Home /></Route>
-        <Route path="/food/:id" component={FoodDetails} />
+        <Route path="/foods/:id" component={FoodDetails} />
         <Route path="/new" component={AddFoodForm} />
+        <Route path="/foods/:id/edit" component={EditFoodForm} />
       </div>
     </Router>
 

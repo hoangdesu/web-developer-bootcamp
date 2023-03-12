@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { Link } from 'svelte-routing';
     import axios from "axios";
 
     export let id;
@@ -41,7 +42,7 @@
             </tr>
         </table>
     {/if}
-
+    <Link to="foods/{id}/edit"><button>Edit</button></Link>
 </div>
 
 <style>
