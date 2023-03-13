@@ -2,6 +2,7 @@
     import { Link } from 'svelte-routing';
     import axios from 'axios';
     import { CATEGORIES } from '../constants';
+    import { titlelizeString } from '../helpers/strings';
 
     export let id;
 
@@ -19,9 +20,7 @@
             console.log('edit form:', food);
         });
 
-    const titlelizeString = (s: string): string => {
-        return s[0].toUpperCase() + s.slice(1);
-    };
+
 </script>
 
 <div>

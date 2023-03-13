@@ -32,12 +32,24 @@ app.get('/', (req, res) => {
     res.send('Food Nutrition App server!');
 });
 
-// GET ALL FOODS
+// GET FOODS
 app.get('/v1/foods', async (req, res) => {
     console.log('finding all...');
-    const data = await Food.find({});
-    console.log(`found ${data.length} documents in db`);
-    res.send(data);
+
+    const { category } = req.query;
+    
+    // FILTER BY CATEGORY
+    if (category) {
+        const categories = await Food.find({ category });
+        console.log(categories);
+        res.send(categories);
+
+    // SEND ALL DATA    
+    } else {
+        const data = await Food.find({});
+        console.log(`found ${data.length} documents in db`);
+        res.send(data);
+    }
 });
 
 // GET FOOD
@@ -103,7 +115,6 @@ app.delete('/v1/foods/:id', async (req, res) => {
     res.status(200);
     res.sendStatus(200);
 });
-
 
 app.listen(PORT, () => {
     console.log('- Server running at http://localhost:' + PORT);

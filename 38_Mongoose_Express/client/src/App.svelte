@@ -6,6 +6,7 @@
   import FoodDetails from "./pages/FoodDetails.svelte";
   import AddFoodForm from "./pages/AddFoodForm.svelte";
   import EditFoodForm from "./pages/EditFoodForm.svelte";
+  import CategoryFood from "./pages/CategoryFood.svelte";
 
   // let foodList;
   // const URL = "http://localhost:3001/v1/foods";
@@ -69,6 +70,9 @@
         <Route path="/foods/:id" component={FoodDetails} />
         <Route path="/new" component={AddFoodForm} />
         <Route path="/foods/:id/edit" component={EditFoodForm} />
+        <Route path="/foods/category/:category" let:params>
+          <CategoryFood category="{params.category}" id="sumthing" />
+        </Route>
       </div>
     </Router>
 

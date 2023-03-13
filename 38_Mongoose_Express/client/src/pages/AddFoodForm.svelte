@@ -1,5 +1,6 @@
 <script>
     import { CATEGORIES } from "../constants";
+    import { titlelizeString } from "../helpers/strings";
 
     const HOST = 'http://localhost';
     const PORT = 3001;
@@ -58,7 +59,7 @@
                 <td>
                     <select name="category" id="category">
                         {#each CATEGORIES as category (category)}
-                            <option value="{category}">{category}</option>
+                            <option value="{category}">{titlelizeString(category)}</option>
                         {/each}
                     </select>
                 </td>

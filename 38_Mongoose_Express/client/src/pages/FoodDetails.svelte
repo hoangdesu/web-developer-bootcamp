@@ -1,7 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { Link } from 'svelte-routing';
+    import { Link, navigate } from 'svelte-routing';
     import axios from "axios";
+    import { titlelizeString } from "../helpers/strings";
 
     export let id;
 
@@ -17,7 +18,7 @@
     const deleteHandler = async () => {
         if (confirm(`Are you sure to delete ${food.name}?`)) {
             axios.delete(URL).then(res => {
-                window.location.replace('/');
+                navigate('/', { replace: true });
             });
         }
     };
@@ -47,7 +48,8 @@
             </tr>
             <tr>
                 <th>Category</th>
-                <td>{food.category}</td>
+                <!-- <td><a href="http://localhost:3001/v1/foods?category={food.category}">{food.category}</a></td> -->
+                <Link to="/foods/category/{food.category}">{titlelizeString(food.category)}</Link>
             </tr>
         </table>
     {/if}

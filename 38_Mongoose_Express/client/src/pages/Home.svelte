@@ -23,14 +23,14 @@
 
 <main>
     <h1>Food Nutrition Facts App</h1>
-    <h2>All food in database</h2>
-    <ul>
-        {#if foodList}
+    {#if foodList}
+        <h2>All food in database ({foodList.length})</h2>
+        <ul>
             {#each foodList as food (food._id)}
                 <li><Link to="/foods/{food._id}">{food.name}</Link></li>
             {/each}
-        {/if}
-    </ul>
+        </ul>
+    {/if}
 </main>
 
 <style>
