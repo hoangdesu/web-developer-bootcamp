@@ -13,6 +13,15 @@
         food = response.data;
         console.log("food:", food);
     });
+
+    const deleteHandler = async () => {
+        if (confirm(`Are you sure to delete ${food.name}?`)) {
+            axios.delete(URL).then(res => {
+                window.location.replace('/');
+            });
+        }
+    };
+
 </script>
 
 <svelte:head>
@@ -42,7 +51,11 @@
             </tr>
         </table>
     {/if}
-    <Link to="foods/{id}/edit"><button>Edit</button></Link>
+    <Link to="foods/{id}/edit">
+        <button>✏️ Edit</button>
+    </Link>
+
+    <button on:click={deleteHandler}>🗑 Delete</button>
 </div>
 
 <style>

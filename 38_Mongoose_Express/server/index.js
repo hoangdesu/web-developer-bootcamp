@@ -67,11 +67,16 @@ app.post('/v1/foods', async (req, res) => {
         }
     });
 
-    const f = await newFood.save();
-    console.log('newFood added to db:', f);
-
-    res.status(200);
-    res.redirect(`${CLIENT_URL}/foods/${newFood._id}`);
+    try {
+        const f = await newFood.save();
+        console.log('newFood added to db:', f);
+        res.status(200);
+        res.redirect(`${CLIENT_URL}/foods/${newFood._id}`);
+    } catch (e) {
+        console.log(e);
+        res.send('invalid input');
+    }
+    
 });
 
 // UPDATE FOOD
@@ -88,6 +93,15 @@ app.put('/v1/foods/:id', async (req, res) => {
     await Food.findByIdAndUpdate(id, updatedFood, { runValidators: true, new: true });
     // res.sendStatus(200);
     res.redirect(`${CLIENT_URL}/foods/${id}`);
+});
+
+// DELETE FOOD
+app.delete('/v1/foods/:id', async (req, res) => {
+    const { id } = req.params;
+    const deleted = await Food.findByIdAndDelete(id);
+    console.log('deleted:', deleted);
+    res.status(200);
+    res.sendStatus(200);
 });
 
 
