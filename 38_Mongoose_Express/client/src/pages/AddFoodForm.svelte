@@ -1,8 +1,11 @@
 <script>
+    import { CATEGORIES } from "../constants";
+
     const HOST = 'http://localhost';
     const PORT = 3001;
     const ENDPOINT = '/v1/foods';
     const API = `${HOST}:${PORT}${ENDPOINT}`;
+    
 </script>
 
 <svelte:head>
@@ -54,12 +57,9 @@
                 </td>
                 <td>
                     <select name="category" id="category">
-                        <option value="meat">Meat</option>
-                        <option value="fruit">Fruit</option>
-                        <option value="vegetabLe">Vegetable</option>
-                        <option value="fish">Fish</option>
-                        <option value="dairy">Dairy</option>
-                        <option value="others">Others</option>
+                        {#each CATEGORIES as category (category)}
+                            <option value="{category}">{category}</option>
+                        {/each}
                     </select>
                 </td>
             </tr>

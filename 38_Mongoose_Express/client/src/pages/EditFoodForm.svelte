@@ -1,6 +1,8 @@
 <script lang="ts">
     import { Link } from 'svelte-routing';
     import axios from 'axios';
+    import { CATEGORIES } from '../constants';
+
     export let id;
 
     const HOST = 'http://localhost:3001';
@@ -16,6 +18,10 @@
             food = res.data;
             console.log('edit form:', food);
         });
+
+    const titlelizeString = (s: string): string => {
+        return s[0].toUpperCase() + s.slice(1);
+    };
 </script>
 
 <div>
@@ -46,12 +52,9 @@
                     <th>Category</th>
                     <td>
                         <select name="category" id="category">
-                            <option value="meat" selected={food.category === 'meat'}>Meat</option>
-                            <option value="fruit" selected={food.category === 'fruit'}>Fruit</option>
-                            <option value="vegetabLe" selected={food.category === 'vegetabLe'}>Vegetable</option>
-                            <option value="fish" selected={food.category === 'fish'}>Fish</option>
-                            <option value="dairy" selected={food.category === 'dairy'}>Dairy</option>
-                            <option value="others" selected={food.category === 'others'}>Others</option>
+                            {#each CATEGORIES as category (category)}
+                                <option value="{category}" selected={food.category === category}>{titlelizeString(category)}</option>
+                            {/each}
                         </select>
                     </td>
                 </tr>
