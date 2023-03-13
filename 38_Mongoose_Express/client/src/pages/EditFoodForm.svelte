@@ -29,6 +29,12 @@
         <form action={PUT_FOOD_BY_ID_ENDPOINT} method="POST">
             <table border={0}>
                 <tr>
+                    <th>Name</th>
+                    <td>
+                        <input type="text" name="name" value={food.name} /> 
+                    </td>
+                </tr>
+                <tr>
                     <th>Amount per</th>
                     <td>
                         <input type="number" name="amountPerValue" step="0.5" min="0" value={food.amountPer.value} /> 
