@@ -36,13 +36,19 @@ app.get('/', (req, res) => {
 app.get('/v1/foods', async (req, res) => {
     console.log('finding all...');
 
-    const { category } = req.query;
-    
+    const { category, name } = req.query;
+
     // FILTER BY CATEGORY
     if (category) {
         const categories = await Food.find({ category });
         console.log(categories);
         res.send(categories);
+
+    // FIND BY NAME
+    } else if (name) {
+        const foundNames = await Food.find({ name: new RegExp(name, 'i') });
+        console.log(foundNames);
+        res.send(foundNames);
 
     // SEND ALL DATA    
     } else {
