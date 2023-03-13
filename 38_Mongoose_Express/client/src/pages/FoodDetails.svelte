@@ -48,7 +48,6 @@
             </tr>
             <tr>
                 <th>Category</th>
-                <!-- <td><a href="http://localhost:3001/v1/foods?category={food.category}">{food.category}</a></td> -->
                 <Link to="/foods/category/{food.category}">{titlelizeString(food.category)}</Link>
             </tr>
         </table>

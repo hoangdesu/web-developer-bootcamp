@@ -71,7 +71,7 @@
         <Route path="/new" component={AddFoodForm} />
         <Route path="/foods/:id/edit" component={EditFoodForm} />
         <Route path="/foods/category/:category" let:params>
-          <CategoryFood category="{params.category}" id="sumthing" />
+          <CategoryFood category="{params.category}" />
         </Route>
       </div>
     </Router>

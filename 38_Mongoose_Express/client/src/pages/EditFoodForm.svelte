@@ -19,8 +19,6 @@
             food = res.data;
             console.log('edit form:', food);
         });
-
-
 </script>
 
 <div>

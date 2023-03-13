@@ -46,7 +46,7 @@ app.get('/v1/foods', async (req, res) => {
 
     // FIND BY NAME
     } else if (name) {
-        const foundNames = await Food.find({ name: new RegExp(name, 'i') });
+        const foundNames = await Food.find({ name: new RegExp(name, 'i') }); // flag "i" = case-insensitive
         console.log(foundNames);
         res.send(foundNames);
 
