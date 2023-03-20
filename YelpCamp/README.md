@@ -14,6 +14,6 @@ yarn start
 ```
 
 TODO:
-- [] prettier rc
-- [] express using module
-- [] linting?
+- [ ] prettier rc
+- [ ] express using module
+- [ ] linting?
