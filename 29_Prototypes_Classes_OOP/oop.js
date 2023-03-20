@@ -111,3 +111,48 @@ const obj = {
     thisWorks: function() {
     }
 }
+
+// Inheritance
+class Champion {
+    constructor(name, role) {
+        this.name = name;
+        this.role = role;
+    }
+    about() {
+        console.log(`${this.name}: ${this.role}`);
+    }
+    attack() {
+        console.log(`${this.name} auto attack`);
+    }
+}
+
+class JungleChamp extends Champion {
+    // intentionally left empty
+}
+
+const leesin = new JungleChamp('lee sin', 'fighter');
+leesin.about();
+
+class MidChamp extends Champion {
+    constructor(name, role, winRate) {
+        super(name, role); // passing args up to Champion's constructor
+        // adding in more properties
+        this.lane = 'mid'; 
+        this.winRate = winRate + '%';
+    }
+    roams() {
+        console.log(`${this.lane} champ ${this.name} roams top and bot`);
+    }
+    // method overriding
+    attack() {
+        console.log(`${this.lane} champ auto attack`);
+    }
+}
+
+const zed = new MidChamp('zed', 'assassin', 52);
+console.log(zed);
+zed.about(); // inherited
+zed.roams();
+zed.attack();
+console.log(zed.winRate);
+
