@@ -130,8 +130,8 @@ class JungleChamp extends Champion {
     // intentionally left empty
 }
 
-const leesin = new JungleChamp('lee sin', 'fighter');
-leesin.about();
+const leeSin = new JungleChamp('lee sin', 'fighter');
+leeSin.about();
 
 class MidChamp extends Champion {
     constructor(name, role, winRate) {

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
-  const [msg, setMsg] = useState('?');
+  const [msg, setMsg] = useState(null);
   const name = 'briannnn';
 
   useEffect(() => {
@@ -14,7 +14,7 @@ function App() {
     //   });
 
     // axios.get('http://localhost:3001/hi?name=' + name).then(res => {
-    axios.get('/hi?name=' + name).then(res => {
+    axios.get('/api/v1/hi?name=' + name).then(res => {
       console.log(res);
       setMsg(res.data.message);
     });
