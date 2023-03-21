@@ -3,6 +3,7 @@ import axios from 'axios';
 
 function App() {
   const [msg, setMsg] = useState(null);
+  const [campgrounds, setCampgrounds] = useState([]);
   const name = 'briannnn';
 
   useEffect(() => {
@@ -18,12 +19,20 @@ function App() {
       console.log(res);
       setMsg(res.data.message);
     });
+
+    axios.get('/api/v1/campgrounds').then(res => {
+      setCampgrounds(res.data);
+    })
   }, []);
 
   return (
     <div className="App">
       <p>hey!</p>
       <p>Message: {msg && msg}</p>
+      <h1>Campgrounds</h1>
+      <ol>
+        {campgrounds && campgrounds.map(cg => <li>{cg.title}: "{cg.description}" ${cg.price} at {cg.location}</li>)}
+      </ol>
     </div>
   )
 }

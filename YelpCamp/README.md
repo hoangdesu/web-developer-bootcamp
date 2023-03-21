@@ -17,3 +17,4 @@ TODO:
 - [ ] prettier rc
 - [ ] express using module
 - [ ] linting?
+- [ ] notes about configuring proxy
