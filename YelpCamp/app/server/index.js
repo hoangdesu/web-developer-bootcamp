@@ -56,18 +56,8 @@ app.get('/api/v1/hi', (req, res) => {
 
 // Route handlers
 
-
-
 app.get(`${API_V1}/campgrounds`, async (req, res) => {
-    const { id } = req.query;
-    if (id) {
-        console.log('has id');
-        const cg = await Campground.findById(id);
-        console.log(cg.location);
-        return;
-    } else {
-        return res.json(await Campground.find({}));
-    }
+    return res.json(await Campground.find({}));
 });
 
 app.get(`${API_V1}/make-campground`, async (req, res) => {
@@ -81,12 +71,11 @@ app.get(`${API_V1}/make-campground`, async (req, res) => {
     res.status(200).send('saved new campground');
 });
 
-app.get(`${API_V1}/campgrounds`, async (req, res) => {
-    const { id } = req.query;
-    const data = await Campground.find({ id });
-    // res.send(`found: ${data.title}`);
+app.get(`${API_V1}/campgrounds/:id`, async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id).exec();
+    res.json(campground);
 });
-
 
 
 app.listen(PORT, () => {

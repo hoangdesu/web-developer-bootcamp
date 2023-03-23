@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { getAllCitiesData } = require('./seedHelpers');
+const { getAllCitiesData, descriptors, places } = require('./seedHelpers');
 
 const Campground = require('../models/campground');
 
@@ -14,19 +14,23 @@ mongoose.connect(URI)
 
 // Campground.find({}).then(d => console.log(d));
 
+
+const sample = (arr) => (arr[Math.floor(Math.random() * arr.length)]);
+
 const seedDatabase = async () => {
     Campground.deleteMany({}).then(res => console.log(res));
     
     const cities = getAllCitiesData();
+    
     for (let i = 0; i <= 52; i++) {
         const randomIndex = Math.floor(Math.random() * cities.length);
         const { city, admin_name } = cities[randomIndex];
-        
+
         // to be fixed
         await new Campground({
-            title: 'aaaa',
-            price: 0,
-            description: 'bbb',
+            title: `${sample(descriptors)} ${sample(places)}`,
+            price: (Math.random() * 50).toFixed(2),
+            description: 'campground description placeholder',
             location: `${city}, ${admin_name}`
         }).save();
 
@@ -34,9 +38,9 @@ const seedDatabase = async () => {
         cities.splice(randomIndex, 1); // remove to avoid duplication
         console.log('remaining:', cities.length);
     }
-
-    // Campground.
-
 }
 
-seedDatabase();
+seedDatabase().then(() => {
+    console.log('seeding done!');
+    mongoose.connection.close();
+});
