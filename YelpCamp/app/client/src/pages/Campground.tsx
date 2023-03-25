@@ -1,28 +1,43 @@
-import React from 'react';
-import { Form, useLoaderData, Link } from "react-router-dom";
-import { useQuery } from 'react-query';
+import React, { useState, useEffect } from 'react';
+import { Form, useLoaderData, Link } from 'react-router-dom';
 import axios from 'axios';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
-  }
+}
 
 const Campground = () => {
     const { campgroundId } = useLoaderData();
+    const [campground, setCampground] = useState({
+        title: '',
+        location: '',
+        price: 0,
+        description: '',
+    });
 
-    const { isLoading, error, data: campground } = useQuery({
-        queryKey: ['campgroundsData'],
-        queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data)
-    })
+    useEffect(() => {
+        axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => setCampground(res.data));
+    }, []);
 
-  return (
-    <div>
-        <h1>Campground</h1>
-        <p>{campground.title}</p>
-        <p>{campground.location}</p>
-        <Link to={-1}>Home</Link>
-    </div>
-  )
-}
+    return (
+        <div>
+            {campground ? (
+                <>
+                    <h1>{campground.title}</h1>
+                    <h3>
+                        {campground.location} - ${campground.price}
+                    </h3>
+                    <p>{campground.description}</p>
+                </>
+            ) : (
+                <>
+                    <p>Error querying campground</p>
+                </>
+            )}
 
-export default Campground
+            <Link to='/'>Home</Link>
+        </div>
+    );
+};
+
+export default Campground;

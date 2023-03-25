@@ -3,7 +3,7 @@ const fs = require('fs');
 module.exports.getAllCitiesData = () => {
     const content = fs.readFileSync('./vn.json', 'utf-8');
     return JSON.parse(content);
-}
+};
 
 module.exports.descriptors = [
     'Forest',
@@ -23,7 +23,7 @@ module.exports.descriptors = [
     'Sea',
     'Sky',
     'Dusty',
-    'Diamond'
+    'Diamond',
 ];
 
 module.exports.places = [
@@ -47,5 +47,5 @@ module.exports.places = [
     'Mule Camp',
     'Hunting Camp',
     'Cliffs',
-    'Hollow'
+    'Hollow',
 ];

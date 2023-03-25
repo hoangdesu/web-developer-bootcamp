@@ -4,37 +4,45 @@ import { useQuery } from 'react-query';
 import axios from 'axios';
 
 const App = () => {
-  const navigation = useNavigation();
-  
-  const { isLoading, error, data: campgroundsData } = useQuery({
-    queryKey: ['campgroundsData'],
-    queryFn: () => axios.get('/api/v1/campgrounds').then(res => res.data)
-  })
+    const navigation = useNavigation();
 
-  if (isLoading) return (<p>Loading...</p>)
+    const {
+        isLoading,
+        error,
+        data: campgroundsData,
+    } = useQuery({
+        queryKey: ['campgroundsData'],
+        queryFn: () => axios.get('/api/v1/campgrounds').then(res => res.data),
+    });
 
-  if (error) return <p>An error has occurred: {error.message}</p>
+    if (isLoading) return <p>Loading...</p>;
 
-  return (
-    <div>
-        <h1>Home</h1>
-        
-        <Link to="about">Click to view our about page</Link>
-        <br />
+    if (error) return <p>An error has occurred: {error.message}</p>;
 
-        <Link to="campgrounds/testing">Campground</Link>
+    return (
+        <div>
+            <h1>Home</h1>
 
-        <ol>
-            {Array.isArray(campgroundsData) && campgroundsData.map(cg => {
-                return (
-                    <li key={cg._id}>
-                        <Link to={`campgrounds/${cg._id}`}>{cg.title} at {cg.location} (${cg.price})</Link>
-                    </li>
-                )
-            })}
-        </ol>
-    </div>
-  )
-}
+            <Link to='about'>About page</Link>
+            <br />
+
+            <Link to='campgrounds/new'>Add new campground</Link>
+            <br />
+
+            <ol>
+                {Array.isArray(campgroundsData) &&
+                    campgroundsData.map(cg => {
+                        return (
+                            <li key={cg._id}>
+                                <Link to={`campgrounds/${cg._id}`}>
+                                    {cg.title} at {cg.location} (${cg.price})
+                                </Link>
+                            </li>
+                        );
+                    })}
+            </ol>
+        </div>
+    );
+};
 
 export default App;

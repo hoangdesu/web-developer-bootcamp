@@ -44,7 +44,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/v1/hi', (req, res) => {
-    console.log('here');
     const { name } = req.query;
     let msg = 'hello world';
     if (name) {
@@ -57,8 +56,9 @@ app.get('/api/v1/hi', (req, res) => {
 // Route handlers
 
 app.get(`${API_V1}/campgrounds`, async (req, res) => {
-    return res.json(await Campground.find({}));
+    return res.status(200).json(await Campground.find({}));
 });
+
 
 app.get(`${API_V1}/make-campground`, async (req, res) => {
     const campground = new Campground({
@@ -71,10 +71,25 @@ app.get(`${API_V1}/make-campground`, async (req, res) => {
     res.status(200).send('saved new campground');
 });
 
+
 app.get(`${API_V1}/campgrounds/:id`, async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id).exec();
-    res.json(campground);
+    res.status(200).json(campground);
+});
+
+
+app.post(`${API_V1}/campgrounds`, async (req, res) => {
+    const { title, location, price, description } = req.body;
+
+    const savedCampground = await Campground({
+        title,
+        location,
+        price,
+        description
+    }).save();
+
+    res.status(200).redirect(`/campgrounds/${savedCampground._id}`);
 });
 
 
