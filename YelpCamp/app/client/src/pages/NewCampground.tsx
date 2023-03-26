@@ -20,6 +20,7 @@ const NewCampground = () => {
 
                 <button>Submit</button>
             </form>
+            
             <Link to="/">Home</Link>
         </div>
     );

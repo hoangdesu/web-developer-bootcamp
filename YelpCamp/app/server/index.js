@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 
 
 // Mongoose
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
+app.use(methodOverride('_method'));
 
 // app.use((req, res, next) => {
 //     console.log('got a request!');
@@ -90,6 +92,20 @@ app.post(`${API_V1}/campgrounds`, async (req, res) => {
     }).save();
 
     res.status(200).redirect(`/campgrounds/${savedCampground._id}`);
+});
+
+
+app.put(`${API_V1}/campgrounds/:id`, async (req, res) => {
+    const { id } = req.params;
+
+    // TODO: implement this
+    try {
+        await Campground.findByIdAndUpdate(id, req.body, { runValidators: true, new: true });
+        res.status(200).redirect(`/campgrounds/${id}`);
+    } catch(e) {
+        console.error(e);
+        res.status(500).send('server error');
+    }
 });
 
 
