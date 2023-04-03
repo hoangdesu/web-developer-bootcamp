@@ -1,18 +1,18 @@
 import React from 'react';
-import { Link, useNavigation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-const App = () => {
-    const navigation = useNavigation();
+import { API_V1 } from './constants';
 
+const App = () => {
     const {
         isLoading,
         error,
         data: campgroundsData,
     } = useQuery({
         queryKey: ['campgroundsData'],
-        queryFn: () => axios.get('/api/v1/campgrounds').then(res => res.data),
+        queryFn: () => axios.get(`${API_V1}/campgrounds`).then(res => res.data),
     });
 
     if (isLoading) return <p>Loading...</p>;
@@ -23,11 +23,13 @@ const App = () => {
         <div>
             <h1>Home</h1>
 
-            <Link to='about'>About page</Link>
+            <Link to='/about'>About page</Link>
             <br />
 
-            <Link to='campgrounds/new'>Add new campground</Link>
+            <Link to='/campgrounds/new'>Add new campground</Link>
             <br />
+
+            <p>Total: {campgroundsData.length} campgrounds</p>
 
             <ol>
                 {Array.isArray(campgroundsData) &&

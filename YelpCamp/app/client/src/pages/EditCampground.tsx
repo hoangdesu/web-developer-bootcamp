@@ -3,6 +3,8 @@ import { Link, useLoaderData } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
+import { API_V1 } from '../constants';
+
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
 }
@@ -12,7 +14,7 @@ const EditCampground = () => {
     
     const { isLoading, error, data: campground } = useQuery({
         queryKey: ['campgroundsData'],
-        queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data)
+        queryFn: () => axios.get(`${API_V1}/campgrounds/${campgroundId}`).then(res => res.data)
     });
     
     if (isLoading) return <p>Loading...</p>

@@ -15,8 +15,8 @@
     "stop:db": "brew services stop mongodb-community@6.0"
   },
   "workspaces": [
-    "server",
-    "client"
+    "app/server",
+    "app/client"
   ],
   "devDependencies": {
     "concurrently": "^7.6.0",

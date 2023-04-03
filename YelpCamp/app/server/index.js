@@ -98,7 +98,6 @@ app.post(`${API_V1}/campgrounds`, async (req, res) => {
 app.put(`${API_V1}/campgrounds/:id`, async (req, res) => {
     const { id } = req.params;
 
-    // TODO: implement this
     try {
         await Campground.findByIdAndUpdate(id, req.body, { runValidators: true, new: true });
         res.status(200).redirect(`/campgrounds/${id}`);
@@ -106,6 +105,13 @@ app.put(`${API_V1}/campgrounds/:id`, async (req, res) => {
         console.error(e);
         res.status(500).send('server error');
     }
+});
+
+
+app.delete(`${API_V1}/campgrounds/:id`, async (req, res) => {
+    const { id } = req.params;
+    await Campground.findByIdAndDelete(id);
+    res.status(200).send('ok');
 });
 
 
