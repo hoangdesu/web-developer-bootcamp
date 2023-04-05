@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
+import { Container } from '@mui/material';
+
+import './App.css';
 import { API_V1 } from './constants';
+
+import Navbar from './components/Navbar';
 
 const App = () => {
     const {
@@ -21,28 +26,24 @@ const App = () => {
 
     return (
         <div>
-            <h1>Home</h1>
+            <Navbar />
+            
+            <Container>
+                <p>Total: {campgroundsData.length} campgrounds</p>
 
-            <Link to='/about'>About page</Link>
-            <br />
-
-            <Link to='/campgrounds/new'>Add new campground</Link>
-            <br />
-
-            <p>Total: {campgroundsData.length} campgrounds</p>
-
-            <ol>
-                {Array.isArray(campgroundsData) &&
-                    campgroundsData.map(cg => {
-                        return (
-                            <li key={cg._id}>
-                                <Link to={`campgrounds/${cg._id}`}>
-                                    {cg.title} at {cg.location} (${cg.price})
-                                </Link>
-                            </li>
-                        );
-                    })}
-            </ol>
+                <ol>
+                    {Array.isArray(campgroundsData) &&
+                        campgroundsData.map(cg => {
+                            return (
+                                <li key={cg._id}>
+                                    <Link to={`campgrounds/${cg._id}`}>
+                                        {cg.title} at {cg.location} (${cg.price})
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                </ol>
+            </Container>
         </div>
     );
 };

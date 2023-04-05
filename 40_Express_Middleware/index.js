@@ -87,7 +87,7 @@ app.get('/time', (req, res) => {
     res.send('requested at ' + new Date(req.requestTime).toString()); 
 });
 
-// using custome middleware to verify password
+// using custom middleware to verify password
 // http://localhost:3001/secret?password=meoww&code=ahihi -> passing the first middleware, passing the second middeware will display this line
 app.get('/secret', verifyPasswordMiddleware, (req, res, next) => {
     res.send('My kitty will arrive in HCMC in 30 mins and I\'m so freakin exicted!! ^^~');

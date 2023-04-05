@@ -26,7 +26,7 @@ const seedDatabase = async () => {
         const randomIndex = Math.floor(Math.random() * cities.length);
         const { city, admin_name } = cities[randomIndex];
 
-        // to be fixed
+        // to be updated
         await new Campground({
             title: `${sample(descriptors)} ${sample(places)}`,
             price: (Math.random() * 50).toFixed(2),
