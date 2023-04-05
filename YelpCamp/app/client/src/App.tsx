@@ -27,7 +27,7 @@ const App = () => {
     return (
         <div>
             <Navbar />
-            
+
             <Container>
                 <p>Total: {campgroundsData.length} campgrounds</p>
 

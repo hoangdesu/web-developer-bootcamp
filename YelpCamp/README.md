@@ -6,9 +6,10 @@
 
 Install `yarn`
 
-From this folder, run the following:
+From this folder, run the following commands:
 
 ```
+yarn
 yarn run install:all
 yarn run start:db
 yarn start
@@ -18,4 +19,4 @@ TODO:
 - [x] prettier rc
 - [ ] express using module
 - [ ] linting?
-- [ ] notes about configuring proxy
+- [x] notes about configuring proxy
