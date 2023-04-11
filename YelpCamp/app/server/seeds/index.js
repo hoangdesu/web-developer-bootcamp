@@ -31,7 +31,8 @@ const seedDatabase = async () => {
             title: `${sample(descriptors)} ${sample(places)}`,
             price: (Math.random() * 50).toFixed(2),
             description: 'campground description placeholder',
-            location: `${city}, ${admin_name}`
+            location: `${city}, ${admin_name}`,
+            image: 'https://source.unsplash.com/collection/1114848' // random photo in "camping" collection
         }).save();
 
         console.log('saved:', city, admin_name);

@@ -22,7 +22,7 @@ const Navbar: React.FunctionComponent = () => {
     return (
         <BootstrapNavbar bg="dark" variant="dark">
             <Container>
-                <BootstrapNavbar.Brand href="/">Yelpcamp</BootstrapNavbar.Brand>
+                <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
                 <Nav className="me-auto">
                     {pages.map(page => (
                         <Link to={page.href} style={{ textDecoration: 'none' }} key={page.title}>

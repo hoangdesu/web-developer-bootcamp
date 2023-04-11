@@ -45,19 +45,20 @@ const Campground: React.FunctionComponent = () => {
             <Navbar />
 
             <Container>
-                {campground ? (
-                    <>
-                        <h1>{campground.title}</h1>
-                        <h3>
-                            {campground.location} - ${campground.price}
-                        </h3>
-                        <p>{campground.description}</p>
-                    </>
-                ) : (
-                    <>
+                <div>
+                    {campground ? (
+                        <>
+                            <h1>{campground.title}</h1>
+                            <h3>
+                                {campground.location} - ${campground.price}
+                            </h3>
+                            <p>{campground.description}</p>
+                            <img src={campground.image} alt="" width={700} />
+                        </>
+                    ) : (
                         <p>Error querying campground</p>
-                    </>
-                )}
+                    )}
+                </div>
 
                 <Link to={`/campgrounds/${campgroundId}/edit`}>
                     <Button>Edit</Button>
@@ -65,7 +66,7 @@ const Campground: React.FunctionComponent = () => {
 
                 <Button onClick={deleteCampgroundHandler}>Delete</Button>
             </Container>
-            
+
             <Footer />
         </PageContainer>
     );
