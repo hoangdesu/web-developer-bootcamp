@@ -8,9 +8,11 @@ import { Container } from '@mui/material';
 import './App.css';
 import { API_V1 } from './constants';
 
+import PageContainer from './components/PageContainer';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
-const App = () => {
+const App: React.FunctionComponent = () => {
     const {
         isLoading,
         error,
@@ -25,7 +27,7 @@ const App = () => {
     if (error) return <p>An error has occurred: {error.message}</p>;
 
     return (
-        <div>
+        <PageContainer>
             <Navbar />
 
             <Container>
@@ -44,7 +46,9 @@ const App = () => {
                         })}
                 </ol>
             </Container>
-        </div>
+
+            <Footer />
+        </PageContainer>
     );
 };
 

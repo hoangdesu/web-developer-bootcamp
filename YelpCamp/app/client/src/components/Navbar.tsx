@@ -18,7 +18,7 @@ const pages = [
     },
 ];
 
-const Navbar = () => {
+const Navbar: React.FunctionComponent = () => {
     return (
         <BootstrapNavbar bg="dark" variant="dark">
             <Container>

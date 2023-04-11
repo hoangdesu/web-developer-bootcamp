@@ -6,6 +6,8 @@ import axios from 'axios';
 import { Container, Button } from '@mui/material';
 
 import Navbar from '../components/Navbar';
+import PageContainer from '../components/PageContainer';
+import Footer from '../components/Footer';
 
 import { API_V1 } from '../constants';
 
@@ -13,7 +15,7 @@ export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
 }
 
-const EditCampground = () => {
+const EditCampground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
 
     const {
@@ -30,7 +32,7 @@ const EditCampground = () => {
     if (error) return <p>Error</p>;
 
     return (
-        <div>
+        <PageContainer>
             <Navbar />
 
             <Container>
@@ -56,7 +58,8 @@ const EditCampground = () => {
                     <Button>Back</Button>
                 </Link>
             </Container>
-        </div>
+            <Footer />
+        </PageContainer>
     );
 };
 

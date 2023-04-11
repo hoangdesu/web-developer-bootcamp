@@ -1,14 +1,18 @@
 import React from 'react';
 
 import Navbar from '../components/Navbar';
+import PageContainer from '../components/PageContainer';
+import Footer from '../components/Footer';
 
-const About = () => {
+const About: React.FunctionComponent = () => {
     return (
-        <div>
+        <PageContainer>
             <Navbar />
 
             <h1>About</h1>
-        </div>
+            
+            <Footer />
+        </PageContainer>
     );
 };
 

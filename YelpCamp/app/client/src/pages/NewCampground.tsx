@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import { Container } from '@mui/material';
 
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import PageContainer from '../components/PageContainer';
 
-const NewCampground = () => {
+const NewCampground: React.FunctionComponent = () => {
     return (
-        <div>
+        <PageContainer>
             <Navbar />
 
             <Container>
@@ -28,7 +30,8 @@ const NewCampground = () => {
                     <button>Submit</button>
                 </form>
             </Container>
-        </div>
+            <Footer />
+        </PageContainer>
     );
 };
 

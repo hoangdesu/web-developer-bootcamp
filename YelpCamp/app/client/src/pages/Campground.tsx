@@ -6,14 +6,16 @@ import axios from 'axios';
 import { Container, Button } from '@mui/material';
 
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 import { API_V1 } from '../constants';
+import PageContainer from '../components/PageContainer';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
 }
 
-const Campground = () => {
+const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
     const navigate = useNavigate();
 
@@ -39,8 +41,9 @@ const Campground = () => {
     if (error) return <p>Error!</p>;
 
     return (
-        <div>
+        <PageContainer>
             <Navbar />
+
             <Container>
                 {campground ? (
                     <>
@@ -55,14 +58,16 @@ const Campground = () => {
                         <p>Error querying campground</p>
                     </>
                 )}
-                
+
                 <Link to={`/campgrounds/${campgroundId}/edit`}>
                     <Button>Edit</Button>
                 </Link>
-                
+
                 <Button onClick={deleteCampgroundHandler}>Delete</Button>
             </Container>
-        </div>
+            
+            <Footer />
+        </PageContainer>
     );
 };
 
