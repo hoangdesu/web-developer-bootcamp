@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-import { Container } from '@mui/material';
+import Container from 'react-bootstrap/Container';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
