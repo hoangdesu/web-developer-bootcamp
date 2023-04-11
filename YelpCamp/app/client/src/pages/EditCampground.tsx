@@ -3,7 +3,8 @@ import { Link, useLoaderData } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import { Container, Button } from '@mui/material';
+import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
 
 import Navbar from '../components/Navbar';
 import PageContainer from '../components/PageContainer';
@@ -58,6 +59,7 @@ const EditCampground: React.FunctionComponent = () => {
                     <Button>Back</Button>
                 </Link>
             </Container>
+            
             <Footer />
         </PageContainer>
     );

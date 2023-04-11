@@ -3,7 +3,8 @@ import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import { Container, Button } from '@mui/material';
+import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';

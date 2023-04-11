@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import { Container } from '@mui/material';
+import Container from 'react-bootstrap/Container';
 
 import './App.css';
 import { API_V1 } from './constants';
@@ -11,6 +11,7 @@ import { API_V1 } from './constants';
 import PageContainer from './components/PageContainer';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import CampgroundCard from './components/CampgroundCard';
 
 const App: React.FunctionComponent = () => {
     const {
@@ -33,18 +34,16 @@ const App: React.FunctionComponent = () => {
             <Container>
                 <p>Total: {campgroundsData && campgroundsData.length} campgrounds</p>
 
-                <ol>
+                <ul style={{ paddingLeft: 0 }}>
                     {Array.isArray(campgroundsData) &&
-                        campgroundsData.map(cg => {
+                        campgroundsData.map(campground => {
                             return (
-                                <li key={cg._id}>
-                                    <Link to={`campgrounds/${cg._id}`}>
-                                        {cg.title} at {cg.location} (${cg.price})
-                                    </Link>
+                                <li key={campground._id} style={{ listStyle: 'none' }}>
+                                    <CampgroundCard campground={campground} />
                                 </li>
                             );
                         })}
-                </ol>
+                </ul>
             </Container>
 
             <Footer />
