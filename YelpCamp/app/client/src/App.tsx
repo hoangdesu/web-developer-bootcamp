@@ -29,7 +29,7 @@ const App = () => {
             <Navbar />
 
             <Container>
-                <p>Total: {campgroundsData.length} campgrounds</p>
+                <p>Total: {campgroundsData && campgroundsData.length} campgrounds</p>
 
                 <ol>
                     {Array.isArray(campgroundsData) &&

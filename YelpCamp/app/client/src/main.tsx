@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import ThemeProvider from 'react-bootstrap/ThemeProvider';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import App from './App';
 import About from './pages/About';
@@ -35,12 +37,20 @@ const router = createBrowserRouter([
         element: <EditCampground />,
         loader: editCampgroundLoader,
     },
+    {
+        path: '/campgrounds',
+        loader: async () => {
+            throw redirect('/');
+        }
+    }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-        <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-        </QueryClientProvider>
+        <ThemeProvider>
+            <QueryClientProvider client={queryClient}>
+                <RouterProvider router={router} />
+            </QueryClientProvider>
+        </ThemeProvider>
     </React.StrictMode>,
 );
