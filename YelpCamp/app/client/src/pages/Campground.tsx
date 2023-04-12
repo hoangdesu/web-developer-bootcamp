@@ -3,13 +3,12 @@ import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
+import { API_V1 } from '../constants';
+
+import { Container, Button } from 'react-bootstrap';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-
-import { API_V1 } from '../constants';
 import PageContainer from '../components/PageContainer';
 
 export async function loader({ params }) {
@@ -65,7 +64,11 @@ const Campground: React.FunctionComponent = () => {
                     <Button>Edit</Button>
                 </Link>
 
-                <Button onClick={deleteCampgroundHandler}>Delete</Button>
+                <Button variant="danger" onClick={deleteCampgroundHandler}>Delete</Button>
+
+                <Link to={-1}>
+                    <Button>Back</Button>
+                </Link>
             </Container>
 
             <Footer />

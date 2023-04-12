@@ -82,12 +82,16 @@ app.get(`${API_V1}/campgrounds/:id`, async (req, res) => {
 
 
 app.post(`${API_V1}/campgrounds`, async (req, res) => {
-    const { title, location, price, description } = req.body;
+    const { campground } = req.body;
+    const { title, location, price, image, description } = campground;
+
+    console.log('ADD NEW CAMPGROUND BODY:', req.body);
 
     const savedCampground = await Campground({
         title,
         location,
         price,
+        image,
         description
     }).save();
 

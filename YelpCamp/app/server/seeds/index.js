@@ -21,8 +21,10 @@ const seedDatabase = async () => {
     Campground.deleteMany({}).then(res => console.log(res));
     
     const cities = getAllCitiesData();
+
+    const totalCamps = 12;
     
-    for (let i = 0; i <= 52; i++) {
+    for (let i = 0; i <= totalCamps; i++) {
         const randomIndex = Math.floor(Math.random() * cities.length);
         const { city, admin_name } = cities[randomIndex];
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
@@ -7,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 
 import './App.css';
 import { API_V1 } from './constants';
+import { shuffle } from './utils/arrayUtils';
 
 import PageContainer from './components/PageContainer';
 import Navbar from './components/Navbar';
@@ -31,7 +31,7 @@ const App: React.FunctionComponent = () => {
         <PageContainer>
             <Navbar />
 
-            <Container>
+            <Container className="col-8">
                 <p>Total: {campgroundsData && campgroundsData.length} campgrounds</p>
 
                 <ul style={{ paddingLeft: 0 }}>
