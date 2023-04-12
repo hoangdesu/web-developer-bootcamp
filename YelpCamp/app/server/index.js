@@ -101,9 +101,10 @@ app.post(`${API_V1}/campgrounds`, async (req, res) => {
 
 app.put(`${API_V1}/campgrounds/:id`, async (req, res) => {
     const { id } = req.params;
+    const { campground } = req.body;
 
     try {
-        await Campground.findByIdAndUpdate(id, req.body, { runValidators: true, new: true });
+        await Campground.findByIdAndUpdate(id, campground, { runValidators: true, new: true });
         res.status(200).redirect(`/campgrounds/${id}`);
     } catch(e) {
         console.error(e);

@@ -3,8 +3,7 @@ import { Link, useLoaderData } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
+import { Container, Button, Form, InputGroup } from 'react-bootstrap';
 
 import Navbar from '../components/Navbar';
 import PageContainer from '../components/PageContainer';
@@ -36,30 +35,55 @@ const EditCampground: React.FunctionComponent = () => {
         <PageContainer>
             <Navbar />
 
-            <Container>
-                <h1>Edit campground</h1>
+            <Container className="col-6 offset-3 my-5">
+                <h1 className="text-center mb-4">Edit Campground</h1>
+                <Form action={`/api/v1/campgrounds/${campground._id}?_method=PUT`} method="post">
+                    <Form.Group className="mb-3" controlId="campgroundTitle">
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control type="text" name="campground[title]" defaultValue={campground.title} />
+                    </Form.Group>
 
-                <form action={`/api/v1/campgrounds/${campground._id}?_method=PUT`} method="post">
-                    <label htmlFor="title">Title</label>
-                    <input type="text" id="title" name="title" defaultValue={campground.title} />
+                    <Form.Group className="mb-3" controlId="campgroundLocation">
+                        <Form.Label>Location</Form.Label>
+                        <Form.Control type="text" name="campground[location]" defaultValue={campground.location} />
+                    </Form.Group>
 
-                    <label htmlFor="location">Location</label>
-                    <input type="text" id="location" name="location" defaultValue={campground.location} />
+                    <Form.Group className="mb-3" controlId="campgroundPrice">
+                        <Form.Label htmlFor="inlineFormInputGroup">Price</Form.Label>
+                        <InputGroup className="mb-2">
+                            <InputGroup.Text>$</InputGroup.Text>
+                            <Form.Control
+                                type="number"
+                                step="0.1"
+                                id="inlineFormInputGroup"
+                                name="campground[price]"
+                                defaultValue={campground.price}
+                            />
+                        </InputGroup>
+                    </Form.Group>
 
-                    <label htmlFor="price">Price</label>
-                    <input type="number" step="0.1" id="price" name="price" defaultValue={campground.price} />
+                    <Form.Group className="mb-3" controlId="campgroundImageUrl">
+                        <Form.Label>Image Url</Form.Label>
+                        <Form.Control type="text" name="campground[image]" defaultValue={campground.image} />
+                    </Form.Group>
 
-                    <label htmlFor="description">Description</label>
-                    <input type="text" id="description" name="description" defaultValue={campground.description} />
+                    <Form.Group className="mb-3" controlId="campgroundDescription">
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control as="textarea" name="campground[description]" defaultValue={campground.description} />
+                    </Form.Group>
 
-                    <button>Save</button>
-                </form>
+                    <Button variant="success" type="submit">
+                        Update campground
+                    </Button>
 
-                <Link to={-1}>
-                    <Button>Back</Button>
-                </Link>
+                    <Link to={-1}>
+                        <Button variant="info" type="submit">
+                            Cancel
+                        </Button>
+                    </Link>
+                </Form>
             </Container>
-            
+
             <Footer />
         </PageContainer>
     );
