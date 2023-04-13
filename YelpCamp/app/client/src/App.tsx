@@ -38,7 +38,7 @@ const App: React.FunctionComponent = () => {
                     {Array.isArray(campgroundsData) &&
                         campgroundsData.map(campground => {
                             return (
-                                <li key={campground._id} style={{ listStyle: 'none' }}>
+                                <li key={campground._id} style={{ listStyle: 'none', marginBottom: 12 }}>
                                     <CampgroundCard campground={campground} />
                                 </li>
                             );

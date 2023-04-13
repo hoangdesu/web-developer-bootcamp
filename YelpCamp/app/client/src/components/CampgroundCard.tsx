@@ -25,7 +25,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground: cg }) 
 
                         <Link to={`campgrounds/${cg._id}`}>
                             <Button variant="primary" className="mt-2">
-                                Book now for ${cg.price}
+                                View this campground
                             </Button>
                         </Link>
                     </Card.Body>

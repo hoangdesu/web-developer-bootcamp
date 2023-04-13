@@ -77,7 +77,7 @@ const EditCampground: React.FunctionComponent = () => {
                     </Button>
 
                     <Link to={-1}>
-                        <Button variant="info" type="submit">
+                        <Button variant="secondary" type="submit" className="mx-2">
                             Cancel
                         </Button>
                     </Link>
