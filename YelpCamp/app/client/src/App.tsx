@@ -6,7 +6,6 @@ import Container from 'react-bootstrap/Container';
 
 import './App.css';
 import { API_V1 } from './constants';
-import { shuffle } from './utils/arrayUtils';
 
 import PageContainer from './components/PageContainer';
 import Navbar from './components/Navbar';

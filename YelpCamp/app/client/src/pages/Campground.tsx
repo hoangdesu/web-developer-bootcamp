@@ -46,10 +46,10 @@ const Campground: React.FunctionComponent = () => {
             <Navbar />
 
             <Container className="col-7 my-5">
-                <Card style={{ width: '' }}>
+                <Card>
                     <Card.Img variant="top" src={campground.image} />
                     <Card.Body>
-                        <Card.Title> {campground.title}</Card.Title>
+                        <Card.Title>{campground.title}</Card.Title>
                         <Card.Text>{campground.description}</Card.Text>
                     </Card.Body>
                     <ListGroup className="list-group-flush">
