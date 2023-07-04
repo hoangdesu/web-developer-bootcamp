@@ -10,9 +10,13 @@
 
     let food;
     onMount(async () => {
-        const response = await axios.get(URL);
-        food = response.data;
-        console.log("food:", food);
+        try {
+            const response = await axios.get(URL);
+            food = response.data;
+            console.log("food data:", response);
+        } catch (err) {
+            console.log('error:', err);
+        }
     });
 
     const deleteHandler = async () => {
@@ -51,7 +55,10 @@
                 <Link to="/foods/category/{food.category}">{titlelizeString(food.category)}</Link>
             </tr>
         </table>
+    {:else}
+        <p>Food not found</p>
     {/if}
+
     <Link to="foods/{id}/edit">
         <button>✏️ Edit</button>
     </Link>

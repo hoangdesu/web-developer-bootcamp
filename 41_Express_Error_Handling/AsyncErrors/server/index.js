@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 
+const AppCustomError = require('./AppCustomError');
+
 const PORT = 3001;
 const app = express();
 const CLIENT_URL = 'http://127.0.0.1:5173';
@@ -59,16 +61,24 @@ app.get('/v1/foods', async (req, res) => {
 });
 
 // GET FOOD
-app.get('/v1/foods/:id', async (req, res) => {
+app.get('/v1/foods/:id', async (req, res, next) => {
     const { id } = req.params;
     if (id) {
-        try {
-            const food = await Food.findById(id);
-            console.log('found: ', food);
-            res.status(200).send(food);
-        } catch (e) {
-            res.status(404).send('id not found');
+        // try {
+        //     const food = await Food.findById(id);
+        //     console.log('found: ', food);
+        //     res.status(200).send(food);
+        // } catch (e) {
+        //     res.status(404).send('id not found');
+        // }
+
+        // replacing try-catch with async error handling
+        const food = await Food.findById(id);
+
+        if (!food) {
+            return next(new AppCustomError(404, 'Error: Food not found!'));
         }
+        res.status(200).send(food);
     }
 });
 
@@ -100,6 +110,12 @@ app.post('/v1/foods', async (req, res) => {
 // UPDATE FOOD
 app.put('/v1/foods/:id', async (req, res) => {
     const { id } = req.params;
+
+    // error handling
+    if (!food) {
+        return next(new AppCustomError(404, 'Error: Food not found for edit!'));
+    }
+
     const updatedFood = {
         ...req.body,
         amountPer: {
@@ -121,6 +137,14 @@ app.delete('/v1/foods/:id', async (req, res) => {
     res.status(200);
     res.sendStatus(200);
 });
+
+
+// ERROR HANDLING MIDDLEWARE
+app.use((err, req, res, next) => {
+    const { statusCode = 500, message = 'Something went wrong' } = err;
+    res.status(statusCode).send(message);
+});
+
 
 app.listen(PORT, () => {
     console.log('- Server running at http://localhost:' + PORT);
