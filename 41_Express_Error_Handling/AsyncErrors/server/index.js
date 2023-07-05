@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 
 const AppCustomError = require('./AppCustomError');
+const { wrapAsync } = require('./utilities');
 
 const PORT = 3001;
 const app = express();
@@ -35,7 +36,7 @@ app.get('/', (req, res) => {
 });
 
 // GET FOODS
-app.get('/v1/foods', async (req, res, next) => {
+app.get('/v1/foods', wrapAsync(async (req, res, next) => {
     console.log('finding all...');
 
     const { category, name } = req.query;
@@ -58,10 +59,10 @@ app.get('/v1/foods', async (req, res, next) => {
         console.log(`found ${data.length} documents in db`);
         res.send(data);
     }
-});
+}));
 
 // GET FOOD
-app.get('/v1/foods/:id', async (req, res, next) => {
+app.get('/v1/foods/:id', wrapAsync(async (req, res, next) => {
     const { id } = req.params;
     if (id) {
         // try {
@@ -83,21 +84,29 @@ app.get('/v1/foods/:id', async (req, res, next) => {
 
 
         // - combining error handling with try-catch to avoid unexpected errors
-        try {
-            const food = await Food.findById(id);
+        // try {
+        //     const food = await Food.findById(id);
 
-            if (!food) {
-                return next(new AppCustomError(404, 'Error: Food not found!'));
-            }
-            res.status(200).send(food);
-        } catch (err) {
-            return next(err);
+        //     if (!food) {
+        //         return next(new AppCustomError(404, 'Error: Food not found!'));
+        //     }
+        //     res.status(200).send(food);
+        // } catch (err) {
+        //     return next(err);
+        // }
+
+
+        // - wrapAsync will handle the catch block
+        const food = await Food.findById(id);
+        if (!food) {
+            return next(new AppCustomError(404, 'Error: Food not found!'));
         }
+        res.status(200).send(food);
     }
-});
+}));
 
 // ADD FOOD
-app.post('/v1/foods', async (req, res, next) => {
+app.post('/v1/foods', wrapAsync(async (req, res, next) => {
     console.log('FORM DATA:', req.body);
     const { amountPerValue, amountPerUnit } = req.body;
     
@@ -109,54 +118,96 @@ app.post('/v1/foods', async (req, res, next) => {
         }
     });
 
-    try {
-        const f = await newFood.save();
-        console.log('newFood added to db:', f);
-        res.status(200);
-        res.redirect(`${CLIENT_URL}/foods/${newFood._id}`);
-    } catch (e) {
-        // console.log(e);
-        // res.send('invalid input');
-        next(e);
-    }
-});
+    // try {
+    //     const f = await newFood.save();
+    //     console.log('newFood added to db:', f);
+    //     res.status(200);
+    //     res.redirect(`${CLIENT_URL}/foods/${newFood._id}`);
+    // } catch (e) {
+    //     // console.log(e);
+    //     // res.send('invalid input');
+    //     next(e);
+    // }
+
+
+    // - wrapAsync will handle the catch block
+    const f = await newFood.save();
+    console.log('newFood added to db:', f);
+    res.status(200);
+    res.redirect(`${CLIENT_URL}/foods/${newFood._id}`);
+}));
 
 // UPDATE FOOD
-app.put('/v1/foods/:id', async (req, res, next) => {
+app.put('/v1/foods/:id', wrapAsync(async (req, res, next) => {
     const { id } = req.params;
 
-    try {
-        const updatedFood = {
-            ...req.body,
-            amountPer: {
-                value: req.body.amountPerValue,
-                unit: req.body.amountPerUnit
-            }
-        };
-        console.log('updated food', updatedFood);
+    // try {
+    //     const updatedFood = {
+    //         ...req.body,
+    //         amountPer: {
+    //             value: req.body.amountPerValue,
+    //             unit: req.body.amountPerUnit
+    //         }
+    //     };
+    //     console.log('updated food', updatedFood);
 
-        const updatedRes = await Food.findByIdAndUpdate(id, updatedFood, { runValidators: true, new: true });
-        console.log('updatedRes:', updatedRes);
-        if (!updatedRes) return next(new AppCustomError(404, 'Updating food failed'));
-        res.redirect(`${CLIENT_URL}/foods/${id}`);
-    } catch (e) {
-        next(e);
-    }
-});
+    //     const updatedRes = await Food.findByIdAndUpdate(id, updatedFood, { runValidators: true, new: true });
+    //     console.log('updatedRes:', updatedRes);
+    //     if (!updatedRes) return next(new AppCustomError(404, 'Updating food failed'));
+    //     res.redirect(`${CLIENT_URL}/foods/${id}`);
+    // } catch (e) {
+    //     next(e);
+    // }
+
+
+    // - wrapAsync will handle the catch block
+    const updatedFood = {
+        ...req.body,
+        amountPer: {
+            value: req.body.amountPerValue,
+            unit: req.body.amountPerUnit
+        }
+    };
+    console.log('updated food', updatedFood);
+
+    const updatedRes = await Food.findByIdAndUpdate(id, updatedFood, { runValidators: true, new: true });
+    console.log('updatedRes:', updatedRes);
+    if (!updatedRes) return next(new AppCustomError(404, 'Updating food failed'));
+    res.redirect(`${CLIENT_URL}/foods/${id}`);
+}));
+
 
 // DELETE FOOD
-app.delete('/v1/foods/:id', async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const deleted = await Food.findByIdAndDelete(id);
+app.delete('/v1/foods/:id', wrapAsync(async (req, res, next) => {
+    // try {
+    //     const { id } = req.params;
+    //     const deleted = await Food.findByIdAndDelete(id);
 
-        if (!deleted) return next(new AppCustomError(404, 'Food not found. Deleted failed'));
+    //     if (!deleted) return next(new AppCustomError(404, 'Food not found. Deleted failed'));
 
-        console.log('deleted:', deleted);
-        res.sendStatus(200);
-    } catch (err) {
-        next(err);
-    }
+    //     console.log('deleted:', deleted);
+    //     res.sendStatus(200);
+    // } catch (err) {
+    //     next(err);
+    // }
+
+
+    // - wrapAsync will handle the catch block
+    const { id } = req.params;
+    const deleted = await Food.findByIdAndDelete(id);
+
+    if (!deleted) return next(new AppCustomError(404, 'Food not found. Deleted failed'));
+
+    console.log('deleted:', deleted);
+    res.sendStatus(200);
+}));
+
+
+// handling different errors
+app.use((err, req, res, next) => {
+    if (err.name === 'ValidationError') return next(new AppCustomError(400, `${err.name}: ${err.message}`));
+    if (err.name === 'CastError') return next(new AppCustomError(500, `${err.name}: ${err.message}`));
+    next(err);
 });
 
 
