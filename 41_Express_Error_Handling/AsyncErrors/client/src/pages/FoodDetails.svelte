@@ -9,13 +9,15 @@
     const URL = "http://localhost:3001/v1/foods/:id".replace(/:id/i, id);
 
     let food;
+    let errorMsg;
     onMount(async () => {
         try {
             const response = await axios.get(URL);
             food = response.data;
             console.log("food data:", response);
         } catch (err) {
-            console.log('error:', err);
+            errorMsg = err.response.data;
+            console.log('error:', errorMsg);
         }
     });
 
@@ -54,16 +56,19 @@
                 <th>Category</th>
                 <Link to="/foods/category/{food.category}">{titlelizeString(food.category)}</Link>
             </tr>
+            <Link to="foods/{id}/edit">
+                <button>✏️ Edit</button>
+            </Link>
+            <button on:click={deleteHandler}>🗑 Delete</button>
         </table>
     {:else}
-        <p>Food not found</p>
+        <div>
+            <p>{errorMsg}</p>
+            <Link to="/"><button>Back</button></Link>
+        </div>
     {/if}
 
-    <Link to="foods/{id}/edit">
-        <button>✏️ Edit</button>
-    </Link>
-
-    <button on:click={deleteHandler}>🗑 Delete</button>
+    
 </div>
 
 <style>

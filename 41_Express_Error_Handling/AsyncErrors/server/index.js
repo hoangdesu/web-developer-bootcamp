@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 // GET FOODS
-app.get('/v1/foods', async (req, res) => {
+app.get('/v1/foods', async (req, res, next) => {
     console.log('finding all...');
 
     const { category, name } = req.query;
@@ -72,18 +72,32 @@ app.get('/v1/foods/:id', async (req, res, next) => {
         //     res.status(404).send('id not found');
         // }
 
-        // replacing try-catch with async error handling
-        const food = await Food.findById(id);
 
-        if (!food) {
-            return next(new AppCustomError(404, 'Error: Food not found!'));
+        // - replacing try-catch with async error handling
+        // const food = await Food.findById(id);
+
+        // if (!food) {
+        //     return next(new AppCustomError(404, 'Error: Food not found!'));
+        // }
+        // res.status(200).send(food);
+
+
+        // - combining error handling with try-catch to avoid unexpected errors
+        try {
+            const food = await Food.findById(id);
+
+            if (!food) {
+                return next(new AppCustomError(404, 'Error: Food not found!'));
+            }
+            res.status(200).send(food);
+        } catch (err) {
+            return next(err);
         }
-        res.status(200).send(food);
     }
 });
 
 // ADD FOOD
-app.post('/v1/foods', async (req, res) => {
+app.post('/v1/foods', async (req, res, next) => {
     console.log('FORM DATA:', req.body);
     const { amountPerValue, amountPerUnit } = req.body;
     
@@ -101,41 +115,48 @@ app.post('/v1/foods', async (req, res) => {
         res.status(200);
         res.redirect(`${CLIENT_URL}/foods/${newFood._id}`);
     } catch (e) {
-        console.log(e);
-        res.send('invalid input');
+        // console.log(e);
+        // res.send('invalid input');
+        next(e);
     }
-    
 });
 
 // UPDATE FOOD
-app.put('/v1/foods/:id', async (req, res) => {
+app.put('/v1/foods/:id', async (req, res, next) => {
     const { id } = req.params;
 
-    // error handling
-    if (!food) {
-        return next(new AppCustomError(404, 'Error: Food not found for edit!'));
-    }
+    try {
+        const updatedFood = {
+            ...req.body,
+            amountPer: {
+                value: req.body.amountPerValue,
+                unit: req.body.amountPerUnit
+            }
+        };
+        console.log('updated food', updatedFood);
 
-    const updatedFood = {
-        ...req.body,
-        amountPer: {
-            value: req.body.amountPerValue,
-            unit: req.body.amountPerUnit
-        }
-    };
-    console.log('updated food', updatedFood);
-    await Food.findByIdAndUpdate(id, updatedFood, { runValidators: true, new: true });
-    // res.sendStatus(200);
-    res.redirect(`${CLIENT_URL}/foods/${id}`);
+        const updatedRes = await Food.findByIdAndUpdate(id, updatedFood, { runValidators: true, new: true });
+        console.log('updatedRes:', updatedRes);
+        if (!updatedRes) return next(new AppCustomError(404, 'Updating food failed'));
+        res.redirect(`${CLIENT_URL}/foods/${id}`);
+    } catch (e) {
+        next(e);
+    }
 });
 
 // DELETE FOOD
-app.delete('/v1/foods/:id', async (req, res) => {
-    const { id } = req.params;
-    const deleted = await Food.findByIdAndDelete(id);
-    console.log('deleted:', deleted);
-    res.status(200);
-    res.sendStatus(200);
+app.delete('/v1/foods/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const deleted = await Food.findByIdAndDelete(id);
+
+        if (!deleted) return next(new AppCustomError(404, 'Food not found. Deleted failed'));
+
+        console.log('deleted:', deleted);
+        res.sendStatus(200);
+    } catch (err) {
+        next(err);
+    }
 });
 
 

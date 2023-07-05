@@ -14,11 +14,14 @@
     console.log(PUT_FOOD_BY_ID_ENDPOINT);
     
     let food;
+    let errorMsg;
     axios.get(GET_FOOD_BY_ID_ENDPOINT)
         .then(res => {
             food = res.data;
             console.log('edit form:', food);
-        });
+        }).catch(e => {
+            errorMsg = e.response.data;
+        })
 </script>
 
 <div>
@@ -65,6 +68,11 @@
                 <Link to="/foods/{food._id}"><button>Cancel</button></Link>
             </table>
         </form>
+    {:else}
+        <div>
+            <p>{errorMsg}</p>
+            <Link to="/"><button>Back</button></Link>
+        </div>
     {/if}
 </div>
 
