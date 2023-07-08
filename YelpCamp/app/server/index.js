@@ -4,7 +4,6 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 
-
 // Mongoose
 mongoose.set('strictQuery', true);
 const dbName = 'yelp-camp';
@@ -16,10 +15,8 @@ db.once('open', () => {
     console.log(`Mongoose: connected to db "${dbName}"`);
 });
 
-
 // Model
 const Campground = require('./models/campground');
-
 
 // Express
 const PORT = 3001;
@@ -32,17 +29,13 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(methodOverride('_method'));
 
-// app.use((req, res, next) => {
-//     console.log('got a request!');
-//     return next();
-// })
-
+// middlewares
 
 // testing
 app.get('/', (req, res) => {
     // console.log('got a req');
     // res.send('hi hehe!');
-    res.json({ message: 'good' });
+    res.status(200).json({ message: 'good' });
 });
 
 app.get('/api/v1/hi', (req, res) => {
@@ -54,32 +47,32 @@ app.get('/api/v1/hi', (req, res) => {
     res.json({ message: msg });
 });
 
-
 // Route handlers
-
 app.get(`${API_V1}/campgrounds`, async (req, res) => {
     return res.status(200).json(await Campground.find({}));
 });
-
 
 app.get(`${API_V1}/make-campground`, async (req, res) => {
     const campground = new Campground({
         title: 'Mock campground',
         price: 123,
         description: 'just mocking',
-        location: 'Saigon'
+        location: 'Saigon',
     });
     await campground.save();
     res.status(200).send('saved new campground');
 });
 
-
-app.get(`${API_V1}/campgrounds/:id`, async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id).exec();
-    res.status(200).json(campground);
+app.get(`${API_V1}/campgrounds/:id`, async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const campground = await Campground.findById(id).exec();
+        res.status(200).json(campground);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
 });
-
 
 app.post(`${API_V1}/campgrounds`, async (req, res) => {
     const { campground } = req.body;
@@ -92,12 +85,11 @@ app.post(`${API_V1}/campgrounds`, async (req, res) => {
         location,
         price,
         image,
-        description
+        description,
     }).save();
 
     res.status(200).redirect(`/campgrounds/${savedCampground._id}`);
 });
-
 
 app.put(`${API_V1}/campgrounds/:id`, async (req, res) => {
     const { id } = req.params;
@@ -106,12 +98,11 @@ app.put(`${API_V1}/campgrounds/:id`, async (req, res) => {
     try {
         await Campground.findByIdAndUpdate(id, campground, { runValidators: true, new: true });
         res.status(200).redirect(`/campgrounds/${id}`);
-    } catch(e) {
+    } catch (e) {
         console.error(e);
         res.status(500).send('server error');
     }
 });
-
 
 app.delete(`${API_V1}/campgrounds/:id`, async (req, res) => {
     const { id } = req.params;
@@ -119,6 +110,10 @@ app.delete(`${API_V1}/campgrounds/:id`, async (req, res) => {
     res.status(200).send('ok');
 });
 
+// error handlers
+app.use((err, req, res, next) => {
+    res.status(500).send('Something went wrong');
+});
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running at http://localhost:${PORT}`);

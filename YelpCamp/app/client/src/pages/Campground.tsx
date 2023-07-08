@@ -39,7 +39,7 @@ const Campground: React.FunctionComponent = () => {
 
     if (isLoading) return <p>Loading...</p>;
 
-    if (error) return <p>Error!</p>;
+    if (error) return <p>Error! {}</p>;
 
     return (
         <PageContainer>
