@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Container, Form, Button, Col, InputGroup } from 'react-bootstrap';
+import { Container, Form, Button, InputGroup } from 'react-bootstrap';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -53,7 +53,7 @@ const NewCampground: React.FunctionComponent = () => {
                         <Form.Label>Image Url</Form.Label>
                         <Form.Control type="text" name="campground[image]" required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Price is required!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">Image URL is required!</Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="campgroundDescription">
