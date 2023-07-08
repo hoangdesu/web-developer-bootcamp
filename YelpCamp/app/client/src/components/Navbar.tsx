@@ -9,7 +9,7 @@ const pages = [
         href: '/',
     },
     {
-        title: 'New campground',
+        title: 'New Campground',
         href: '/campgrounds/new',
     },
     {
