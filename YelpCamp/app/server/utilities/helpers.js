@@ -1,5 +1,9 @@
-function wrapAsync(fn) {
-    return function(err, req, res, next) {
-        fn().catch(err => res.send(err));
-    }
+function catchAsync(fn) {
+    return function (req, res, next) {
+        fn(req, res, next).catch(err => next(err));
+    };
 }
+
+module.exports = {
+    catchAsync,
+};

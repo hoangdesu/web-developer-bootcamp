@@ -4,6 +4,9 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 
+const YelpcampError = require('./utilities/YelpcampError');
+const { catchAsync } = require('./utilities/helpers');
+
 // Mongoose
 mongoose.set('strictQuery', true);
 const dbName = 'yelp-camp';
@@ -31,11 +34,9 @@ app.use(methodOverride('_method'));
 
 // middlewares
 
-// testing
+// for testing only
 app.get('/', (req, res) => {
-    // console.log('got a req');
-    // res.send('hi hehe!');
-    res.status(200).json({ message: 'good' });
+    res.status(200).json({ message: 'OK' });
 });
 
 app.get('/api/v1/hi', (req, res) => {
@@ -48,71 +49,80 @@ app.get('/api/v1/hi', (req, res) => {
 });
 
 // Route handlers
-app.get(`${API_V1}/campgrounds`, async (req, res) => {
-    return res.status(200).json(await Campground.find({}));
-});
+app.get(
+    `${API_V1}/campgrounds`,
+    catchAsync(async (req, res) => {
+        return res.status(200).json(await Campground.find({}));
+    }),
+);
 
-app.get(`${API_V1}/make-campground`, async (req, res) => {
-    const campground = new Campground({
-        title: 'Mock campground',
-        price: 123,
-        description: 'just mocking',
-        location: 'Saigon',
-    });
-    await campground.save();
-    res.status(200).send('saved new campground');
-});
+app.get(
+    `${API_V1}/make-campground`,
+    catchAsync(async (req, res, next) => {
+        const campground = new Campground({
+            title: 'Mock campground',
+            price: 123,
+            description: 'just mocking',
+            location: 'Saigon',
+        });
+        await campground.save();
+        res.status(200).send('saved new campground');
+    }),
+);
 
-app.get(`${API_V1}/campgrounds/:id`, async (req, res, next) => {
-    try {
+app.get(
+    `${API_V1}/campgrounds/:id`,
+    catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const campground = await Campground.findById(id).exec();
         res.status(200).json(campground);
-    } catch (err) {
-        console.log(err);
-        next(err);
-    }
-});
+    }),
+);
 
-app.post(`${API_V1}/campgrounds`, async (req, res) => {
-    const { campground } = req.body;
-    const { title, location, price, image, description } = campground;
+app.post(
+    `${API_V1}/campgrounds`,
+    catchAsync(async (req, res) => {
+        const { campground } = req.body;
+        const { title, location, price, image, description } = campground;
 
-    console.log('ADD NEW CAMPGROUND BODY:', req.body);
+        console.log('ADD NEW CAMPGROUND BODY:', req.body);
 
-    const savedCampground = await Campground({
-        title,
-        location,
-        price,
-        image,
-        description,
-    }).save();
+        const savedCampground = await Campground({
+            title,
+            location,
+            price,
+            image,
+            description,
+        }).save();
 
-    res.status(200).redirect(`/campgrounds/${savedCampground._id}`);
-});
+        res.status(200).redirect(`/campgrounds/${savedCampground._id}`);
+    }),
+);
 
-app.put(`${API_V1}/campgrounds/:id`, async (req, res) => {
-    const { id } = req.params;
-    const { campground } = req.body;
+app.put(
+    `${API_V1}/campgrounds/:id`,
+    catchAsync(async (req, res) => {
+        const { id } = req.params;
+        const { campground } = req.body;
 
-    try {
         await Campground.findByIdAndUpdate(id, campground, { runValidators: true, new: true });
         res.status(200).redirect(`/campgrounds/${id}`);
-    } catch (e) {
-        console.error(e);
-        res.status(500).send('server error');
-    }
-});
+    }),
+);
 
-app.delete(`${API_V1}/campgrounds/:id`, async (req, res) => {
+app.delete(`${API_V1}/campgrounds/:id`, async (req, res, next) => {
     const { id } = req.params;
-    await Campground.findByIdAndDelete(id);
-    res.status(200).send('ok');
+    const deletedCampground = await Campground.findByIdAndDelete(id);
+    if (!deletedCampground) {
+        return next(new YelpcampError(404, 'delete failed. campground not found'));
+    }
+    res.status(200).send('campground deleted');
 });
 
 // error handlers
 app.use((err, req, res, next) => {
-    res.status(500).send('Something went wrong');
+    const { statusCode = 500, message = 'Something went wrong :(' } = err;
+    res.status(statusCode).send(message);
 });
 
 app.listen(PORT, () => {
