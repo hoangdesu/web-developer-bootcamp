@@ -34,18 +34,14 @@ const Campground: React.FunctionComponent = () => {
         data: campground,
     } = useQuery({
         queryKey: ['campgroundsData'],
-        queryFn: () =>
-            axios
-                .get(`${API_V1}/campgrounds/${campgroundId}`)
-                .then(res => res.data)
-                .catch(err => console.log(err)),
+        queryFn: () => axios.get(`${API_V1}/campgrounds/${campgroundId}`).then(res => res.data),
     });
 
     if (isLoading) return <p>Loading...</p>;
 
     // if (error || !campground) return <p>Error! {}</p>;
     if (error || !campground) {
-        throw Error('Invalid campground !!!');
+        throw new Error('Invalid campground !!!');
     }
 
     return (

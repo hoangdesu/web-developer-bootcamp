@@ -1,20 +1,29 @@
 import React from 'react';
+import { useRouteError, useNavigate } from 'react-router-dom';
+import { Container, Alert, Button } from 'react-bootstrap';
 
-import { useRouteError } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 
 const ErrorBoundary = () => {
     const error = useRouteError();
-    console.error('ERROR:', error);
+    const navigate = useNavigate();
+
+    // console.log('ERRORRR:', error);
     return (
         <PageContainer>
             <Navbar />
-            <div>
-                <h1>Error</h1>
-                <p>{error.message || error.data}</p>
-            </div>
+            <Container className="mt-3">
+                <Alert variant="danger">
+                    <Alert.Heading>{error.message || error.data}</Alert.Heading>
+                    <p>{error.stack || ''}</p>
+                </Alert>
+
+                <Button variant="secondary" onClick={() => navigate('/')}>
+                    Home
+                </Button>
+            </Container>
             <Footer />
         </PageContainer>
     );
