@@ -81,7 +81,7 @@ app.get(
 
 app.post(
     `${API_V1}/campgrounds`,
-    catchAsync(async (req, res) => {
+    catchAsync(async (req, res, next) => {
         const { campground } = req.body;
         const { title, location, price, image, description } = campground;
 
@@ -95,13 +95,19 @@ app.post(
             description,
         }).save();
 
-        res.status(200).redirect(`/campgrounds/${savedCampground._id}`);
+        console.log('savedCampground:', savedCampground);
+
+        if (savedCampground) {
+            res.status(200).json(savedCampground._id);
+        } else {
+            return next(new YelpcampError(404, 'Missing campground'));
+        }
     }),
 );
 
 app.put(
     `${API_V1}/campgrounds/:id`,
-    catchAsync(async (req, res) => {
+    catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const { campground } = req.body;
 
@@ -117,6 +123,11 @@ app.delete(`${API_V1}/campgrounds/:id`, async (req, res, next) => {
         return next(new YelpcampError(404, 'delete failed. campground not found'));
     }
     res.status(200).send('campground deleted');
+});
+
+// 404, place after all route handlers
+app.all('*', (req, res, next) => {
+    next(new YelpcampError(404, 'Page not found'));
 });
 
 // error handlers

@@ -6,4 +6,4 @@ function catchAsync(fn) {
 
 module.exports = {
     catchAsync,
-};
+}
