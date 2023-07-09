@@ -82,6 +82,8 @@ app.get(
 app.post(
     `${API_V1}/campgrounds`,
     catchAsync(async (req, res, next) => {
+        if (!req.body.campground) return next(new YelpcampError(400, 'Invalid camground data'));
+
         const { campground } = req.body;
         const { title, location, price, image, description } = campground;
 
@@ -100,7 +102,7 @@ app.post(
         if (savedCampground) {
             res.status(200).json(savedCampground._id);
         } else {
-            return next(new YelpcampError(404, 'Missing campground'));
+            return next(new YelpcampError(400, 'Failed saving campground'));
         }
     }),
 );

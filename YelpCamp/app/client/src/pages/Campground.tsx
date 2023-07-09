@@ -43,7 +43,10 @@ const Campground: React.FunctionComponent = () => {
 
     if (isLoading) return <p>Loading...</p>;
 
-    if (error || !campground) return <p>Error! {}</p>;
+    // if (error || !campground) return <p>Error! {}</p>;
+    if (error || !campground) {
+        throw Error('Invalid campground !!!');
+    }
 
     return (
         <PageContainer>
