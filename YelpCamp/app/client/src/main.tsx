@@ -34,6 +34,7 @@ const router = createBrowserRouter([
     {
         path: '/campgrounds/new',
         element: <NewCampground />,
+        errorElement: <ErrorBoundary />,
     },
     {
         path: '/campgrounds/:campgroundId/edit',

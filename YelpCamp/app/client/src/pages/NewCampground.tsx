@@ -43,12 +43,12 @@ const NewCampground: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    if (res.status === 200) {
-                        console.log(`navigating to: /campgrounds/${res.data._id}`);
-                        navigate(`/campgrounds/${res.data}`);
-                    }
+                    console.log(`navigating to: /campgrounds/${res.data}`);
+                    navigate(`/campgrounds/${res.data}`);
                 })
-                .catch(err => err);
+                .catch(err => {
+                    console.log('-- bad request:', err);
+                });
         }
         setValidated(true);
     };
@@ -81,6 +81,7 @@ const NewCampground: React.FunctionComponent = () => {
                             <Form.Control
                                 type="number"
                                 step="0.1"
+                                min="0"
                                 id="inlineFormInputGroup"
                                 defaultValue={0.0}
                                 name="campground[price]"
