@@ -3,6 +3,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
+const Joi = require('joi');
 
 const YelpcampError = require('./utilities/YelpcampError');
 const { catchAsync } = require('./utilities/helpers');
@@ -82,8 +83,23 @@ app.get(
 app.post(
     `${API_V1}/campgrounds`,
     catchAsync(async (req, res, next) => {
-        if (!req.body.campground) return next(new YelpcampError(400, 'Invalid camground data'));
-
+        // if (!req.body.campground) return next(new YelpcampError(400, 'Invalid camground data'));
+        
+        // validating request body with Joi before extracting data
+        const campgroundSchema = Joi.object({
+            campground: Joi.object({
+                title: Joi.string().required(),
+                location: Joi.string().required(),
+                price: Joi.number().required().min(0),
+                image: Joi.string().required(),
+                description: Joi.string()
+            }).required()
+        });
+        
+        const validatedCampground = campgroundSchema.validate(req.body);
+        console.log('VALIDATED CAMPGROUND:', validatedCampground);
+        if (validatedCampground.error) throw new YelpcampError(400, validatedCampground.error);
+        
         const { campground } = req.body;
         const { title, location, price, image, description } = campground;
 
