@@ -35,9 +35,12 @@ app.use(methodOverride('_method'));
 
 // middlewares
 const validateCampground = (req, res, next) => {
-    // 
-}
-
+    // validating request body with Joi before extracting data
+    const { error: validationError } = campgroundSchema.validate(req.body);
+    console.log('validationError:', validationError);
+    if (validationError) throw new YelpcampError(400, validationError); 
+    next(); // dont forget!
+};
 
 // for testing only
 app.get('/', (req, res) => {
@@ -86,17 +89,10 @@ app.get(
 
 app.post(
     `${API_V1}/campgrounds`,
+    validateCampground,
     catchAsync(async (req, res, next) => {
-
-        // validating request body with Joi before extracting data
-        const { error: validationError } = campgroundSchema.validate(req.body);
-        console.log('validationError:', validationError);
-        if (validationError) throw new YelpcampError(400, validationError);
-        
         const { campground } = req.body;
         const { title, location, price, image, description } = campground;
-
-        console.log('ADD NEW CAMPGROUND BODY:', req.body);
 
         const savedCampground = await Campground({
             title,
@@ -118,6 +114,7 @@ app.post(
 
 app.put(
     `${API_V1}/campgrounds/:id`,
+    validateCampground,
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const { campground } = req.body;
