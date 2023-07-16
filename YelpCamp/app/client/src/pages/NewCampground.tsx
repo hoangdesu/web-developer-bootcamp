@@ -48,6 +48,7 @@ const NewCampground: React.FunctionComponent = () => {
                 })
                 .catch(err => {
                     console.log('-- bad request:', err);
+                    navigate('/error');
                 });
         }
         setValidated(true);

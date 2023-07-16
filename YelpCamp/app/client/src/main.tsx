@@ -45,8 +45,13 @@ const router = createBrowserRouter([
         path: '/campgrounds',
         loader: async () => {
             throw redirect('/');
-        }
-    }
+        },
+    },
+    {
+        path: '/error',
+        element: <ErrorBoundary />,
+        errorElement: <ErrorBoundary />,
+    },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
