@@ -73,5 +73,9 @@ const addProduct = async () => {
 
 // addProduct();
 
-
-
+Farm.findOne({ name: /moon/i })
+  .populate("products")
+  .exec()
+  .then((farm) => {
+    console.log(farm);
+  });
