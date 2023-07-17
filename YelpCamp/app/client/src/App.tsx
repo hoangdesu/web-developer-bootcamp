@@ -31,7 +31,7 @@ const App: React.FunctionComponent = () => {
             <Navbar />
 
             <Container className="col-8">
-                <p>Total: {campgroundsData && campgroundsData.length} campgrounds</p>
+                <p className="mt-3">Total: {campgroundsData && campgroundsData.length} campgrounds</p>
 
                 <ul style={{ paddingLeft: 0 }}>
                     {Array.isArray(campgroundsData) &&
