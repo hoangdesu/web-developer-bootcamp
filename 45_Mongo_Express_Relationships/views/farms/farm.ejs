@@ -13,8 +13,11 @@
     <p>City: <%= farm.city %></p>
     <p>Email: <%= farm.email %></p>
     <a href="/farms">Back</a>
+
     <form action="/farms/<%= farm._id %>?_method=DELETE" method="POST">
         <button>Delete</button>
     </form>
+
+    <a href="/farms/<%= farm._id %>/products/new">Add product to this farm</a>
 </body>
 </html>

@@ -7,6 +7,7 @@ const path = require('path');
 
 const Product = require('./models/product');
 const Farm = require('./models/farm');
+const { productCategories } = require('./types');
 
 const PORT = 3000;
 const app = express();
@@ -30,7 +31,7 @@ mongoose
         console.error(err);
     });
 
-// FARM ROUTES
+// --- FARM ROUTES
 
 app.get('/farms', async (req, res) => {
     const farms = await Farm.find({});
@@ -59,7 +60,35 @@ app.delete('/farms/:id', async (req, res) => {
     res.redirect('/farms');
 });
 
-// PRODUCT ROUTES
+// GET /farms/:id/products/new (form)
+app.get('/farms/:id/products/new', async (req, res) => {
+    const { id } = req.params;
+    const farm = await Farm.findById(id);
+    res.render('./products/new', { categories: productCategories, farm });
+});
+
+// POST /farms/:id/products/
+app.post('/farms/:id/products/', async (req, res) => {
+    const { name, price, category } = req.body;
+    const product = new Product({ name, price, category });
+    
+    const { id } = req.params;
+    const farm = await Farm.findById(id);
+    farm.products.push(product);
+    await farm.save();
+
+    product.farm = farm;
+    await product.save();
+
+    res.send(farm);
+});
+
+// --- PRODUCT ROUTES
+app.get('/products', async (req, res) => {
+    const products = await Product.find({})
+    // .populate('farm');
+    res.send(products);
+}); 
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
