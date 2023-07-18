@@ -22,7 +22,7 @@ const userSchema = new Schema({
 const tweetSchema = new Schema({
   tweetText: String,
   likes: Number,
-  user: Schema.Types.ObjectId,
+  user: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 const User = new mongoose.model("User", userSchema);
@@ -55,8 +55,8 @@ const addTweet = async () => {
 // addTweet();
 
 const findTweet = async () => {
-    const tweets = await Tweet.findOne({}).populate('user').exec();
-    console.log(tweets);
-}
+  const tweets = await Tweet.find({}).populate("user", "name").exec();
+  console.log(tweets);
+};
 
 findTweet();
