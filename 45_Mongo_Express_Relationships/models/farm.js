@@ -6,7 +6,9 @@ const farmSchema = new Schema({
         type: String,
         required: [true, 'Farm must have a name'],
     },
-    city: String,
+    city: {
+      type: String
+    },
     email: {
         type: String,
         required: [true, 'Email required'],

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Farms</title>
+</head>
+
+<body>
+    <h1>All Farms</h1>
+    <a href="/farms/new">Add a new farm</a>
+
+    <p>Total: <%= farms.length %> <%= farms.length > 1 ? 'farms' : 'farm' %></p>
+    <ul>
+        <% farms.forEach(farm => { %>
+            <li><a href="/farms/<%= farm._id %>"><%= farm.name %></li>
+        <% }); %>
+    </ul>
+</body>
+
+</html>

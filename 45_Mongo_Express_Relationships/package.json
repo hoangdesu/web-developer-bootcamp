@@ -1,15 +1,15 @@
 {
-  "name": "45_Mongo_Express_Relationships",
+  "name": "45_mongo_express_relationships",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
     "method-override": "^3.0.0",
-    "mongoose": "^7.3.4",
-    "pug": "^3.0.2"
+    "mongoose": "^7.3.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

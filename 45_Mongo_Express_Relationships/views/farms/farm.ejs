@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm</title>
+</head>
+<body>
+    <h1>Farm</h1>
+
+    <p>Name: <%= farm.name %></p>
+    <p>ID: <%= farm._id %></p>
+    <p>City: <%= farm.city %></p>
+    <p>Email: <%= farm.email %></p>
+    <a href="/farms">Back</a>
+    <form action="/farms/<%= farm._id %>?_method=DELETE" method="POST">
+        <button>Delete</button>
+    </form>
+</body>
+</html>
