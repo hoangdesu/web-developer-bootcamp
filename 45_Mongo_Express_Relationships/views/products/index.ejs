@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Products</title>
 </head>
+
 <body>
-    
+    <h1>All Products</h1>
+    <p>Total products: <%= products.length %></p>
+    <ul>
+        <% products.forEach(product => { %>
+            <li><a href="/products/<%= product._id %>">
+                    <%= product.name %>
+            </li>
+            <% }); %>
+    </ul>
+    <a href="/products">All products</a>
 </body>
+
 </html>

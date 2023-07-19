@@ -50,7 +50,7 @@ app.post('/farms', async (req, res) => {
 
 app.get('/farms/:id', async (req, res) => {
     const { id } = req.params;
-    const farm = await Farm.findById(id);
+    const farm = await Farm.findById(id).populate('products');
     res.render('./farms/farm', { farm });
 });
 
@@ -80,15 +80,30 @@ app.post('/farms/:id/products/', async (req, res) => {
     product.farm = farm;
     await product.save();
 
-    res.send(farm);
+    // res.send(farm);
+    res.redirect('/farms/' + id);
 });
+
+
 
 // --- PRODUCT ROUTES
 app.get('/products', async (req, res) => {
-    const products = await Product.find({})
-    // .populate('farm');
-    res.send(products);
-}); 
+    const products = await Product.find({});
+    // res.send(products);
+    res.render('./products/index', { products });
+});
+
+app.get('/products/:id', async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findById(id).populate('farm');
+    res.render('./products/product', { product });
+});
+
+app.delete('/products/:id', async (req, res) => {
+    const { id } = req.params;
+    await Product.findByIdAndDelete(id);
+    res.redirect('/products');
+});
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);

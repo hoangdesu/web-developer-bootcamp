@@ -19,5 +19,13 @@
     </form>
 
     <a href="/farms/<%= farm._id %>/products/new">Add product to this farm</a>
+
+    <h2>All products of this farm</h2>
+    <p>Total products: <%= farm.products.length %></p>
+    <ul>
+        <% farm.products.forEach(product => { %>
+            <li><a href="/products/<%= product._id %>"><%= product.name %></li>
+        <% }); %>
+    </ul>
 </body>
 </html>
