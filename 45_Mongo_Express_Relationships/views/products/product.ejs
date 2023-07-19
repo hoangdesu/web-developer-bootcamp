@@ -10,8 +10,12 @@
     <p>Name: <%= product.name %></p>
     <p>Price: <%= product.price %></p>
     <p>Category: <%= product.category %></p>
-    <p>Farm ID: <a href="/farms/<%= product.farm._id %>"><%= product.farm._id %></a></p>
-    <p>Farm Name: <%= product.farm.name %></p>
+    <% if (product.farm) { %>
+        <p>Farm ID: <a href="/farms/<%= product.farm._id %>"><%= product.farm._id %></a></p>
+        <p>Farm Name: <%= product.farm.name %></p>
+    <% } else { %>
+        <p>Farm: emtpy</p>
+    <% }%>
 
     <form action="/products/<%= product._id %>?_method=DELETE" method="POST">
         <button>Delete</button>

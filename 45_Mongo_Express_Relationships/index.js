@@ -31,6 +31,12 @@ mongoose
         console.error(err);
     });
 
+
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
+    
 // --- FARM ROUTES
 
 app.get('/farms', async (req, res) => {
@@ -74,9 +80,12 @@ app.post('/farms/:id/products/', async (req, res) => {
     
     const { id } = req.params;
     const farm = await Farm.findById(id);
+
+    // add product to the farm
     farm.products.push(product);
     await farm.save();
 
+    // add farm to the product
     product.farm = farm;
     await product.save();
 
