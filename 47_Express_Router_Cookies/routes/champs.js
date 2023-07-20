@@ -22,6 +22,4 @@ router.post('/', (req, res) => {
     res.send('POST /champs');
 });
 
-module.exports = {
-    champRouter: router
-};
+module.exports = router;
