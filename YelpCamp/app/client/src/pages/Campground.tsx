@@ -11,6 +11,7 @@ import { LocationOn, Sell } from '@mui/icons-material';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
+import Loading from './Loading';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -37,7 +38,7 @@ const Campground: React.FunctionComponent = () => {
         queryFn: () => axios.get(`${API_V1}/campgrounds/${campgroundId}`).then(res => res.data),
     });
 
-    if (isLoading) return <p>Loading...</p>;
+    if (isLoading) return <Loading />;
 
     // if (error || !campground) return <p>Error! {}</p>;
     if (error || !campground) {

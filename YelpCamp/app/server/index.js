@@ -24,7 +24,6 @@ const reviewRouter = require('./routes/review');
 // Express
 const PORT = 3001;
 const app = express();
-const API_V1 = '';
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

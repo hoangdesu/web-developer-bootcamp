@@ -52,8 +52,7 @@ route.post(
     `/`,
     validateCampground,
     catchAsync(async (req, res, next) => {
-        const { campground } = req.body;
-        const { title, location, price, image, description } = campground;
+        const { title, location, price, image, description } = req.body.campground;
 
         const savedCampground = await Campground({
             title,
@@ -62,8 +61,6 @@ route.post(
             image,
             description,
         }).save();
-
-        console.log('savedCampground:', savedCampground);
 
         if (savedCampground) {
             res.status(200).json(savedCampground._id);
@@ -81,6 +78,7 @@ route.put(
         const { campground } = req.body;
 
         await Campground.findByIdAndUpdate(id, campground, { runValidators: true, new: true });
+        // TODO: REFACTOR TO RETURN A JSON FOR CLIENT REDIRECT, NOT SERVER
         res.status(200).redirect(`/campgrounds/${id}`);
     }),
 );
@@ -114,6 +112,7 @@ route.post(
         await newReview.save();
 
         const reviews = await Review.find({});
+        // TODO: REFACTOR TO RETURN A JSON FOR CLIENT REDIRECT, NOT SERVER
         res.status(200).redirect(`/campgrounds/${id}`);
     }),
 );

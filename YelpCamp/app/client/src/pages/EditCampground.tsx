@@ -10,6 +10,7 @@ import PageContainer from '../components/PageContainer';
 import Footer from '../components/Footer';
 
 import { API_V1 } from '../constants';
+import Loading from './Loading';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -38,7 +39,7 @@ const EditCampground: React.FunctionComponent = () => {
         setValidated(true);
     };
 
-    if (isLoading) return <p>Loading...</p>;
+    if (isLoading) return <Loading />;
 
     if (error) return <p>Error</p>;
 

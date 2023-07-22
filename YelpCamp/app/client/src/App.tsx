@@ -11,6 +11,7 @@ import PageContainer from './components/PageContainer';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CampgroundCard from './components/CampgroundCard';
+import Loading from './pages/Loading';
 
 const App: React.FunctionComponent = () => {
     const {
@@ -22,7 +23,7 @@ const App: React.FunctionComponent = () => {
         queryFn: () => axios.get(`${API_V1}/campgrounds`).then(res => res.data),
     });
 
-    if (isLoading) return <p>Loading...</p>;
+    if (isLoading) return <Loading />;
 
     if (error) return <p>An error has occurred: {error.message}</p>;
 

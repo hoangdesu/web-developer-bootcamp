@@ -12,6 +12,7 @@ import { loader as editCampgroundLoader } from './pages/EditCampground';
 import NewCampground from './pages/NewCampground';
 import EditCampground from './pages/EditCampground';
 import ErrorBoundary from './pages/ErrorBoundary';
+import Loading from './pages/Loading';
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
         path: '/error',
         element: <ErrorBoundary />,
         errorElement: <ErrorBoundary />,
+    },
+    {
+        path: '/loading',
+        element: <Loading />,
     },
 ]);
 
