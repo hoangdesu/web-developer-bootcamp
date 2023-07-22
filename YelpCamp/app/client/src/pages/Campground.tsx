@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { API_V1 } from '../constants';
 
-import { Container, Button, Card, ListGroup, Col, Row } from 'react-bootstrap';
+import { Container, Button, Card, ListGroup, Form, InputGroup } from 'react-bootstrap';
 import { LocationOn, Sell } from '@mui/icons-material';
 
 import Navbar from '../components/Navbar';
@@ -78,8 +78,44 @@ const Campground: React.FunctionComponent = () => {
                         Back
                     </Button>
                 </Link>
-            </Container>
 
+                {/* <Form className="mb-5" noValidate validated={false} onSubmit={() => {}}>
+                    <Form.Group className="mb-3" controlId="campgroundTitle">
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control type="text" name="campground[title]" ref={null} required />
+                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">Title is required!</Form.Control.Feedback>
+                    </Form.Group>
+                </Form> */}
+
+                <form action={`/api/v1/campgrounds/${campground._id}/reviews`} method="POST">
+                    <div>
+                        <label htmlFor="">Review</label>
+                        <textarea name="review[text]"></textarea>
+                    </div>
+
+                    <div>
+                        <label htmlFor="">Rating</label>
+                        <input type="number" name="review[rating]" />
+                    </div>
+
+                    <button>Submit</button>
+                </form>
+
+                <h1>All reviews </h1>
+                {campground.reviews && (
+                    <>
+                        <p>Total: {campground.reviews.length} reviews</p>
+                        <ul>
+                            {campground.reviews.map((review, index) => (
+                                <li key={index}>
+                                    {review.text} - {review.rating}
+                                </li>
+                            ))}
+                        </ul>
+                    </>
+                )}
+            </Container>
             <Footer />
         </PageContainer>
     );
