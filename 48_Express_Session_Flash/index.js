@@ -21,6 +21,12 @@ app.use(
 app.use(cookiesParser());
 app.use(flash());
 
+// flash middleware
+app.use((req, res, next) => {
+    res.locals.info = req.flash('info');
+    next();
+});
+
 app.get('/pageviews', (req, res) => {
     if (!req.session.count) req.session.count = 0;
     req.session.count++;
@@ -53,7 +59,10 @@ app.get('/afterflash', (req, res) => {
     const flashArray = req.flash('info');
     console.log(flashArray);
     const msg = flashArray[0];
-    res.send(`Flash info message: ${msg}`);
+    // res.send(`Flash info message: ${msg}`);
+
+    // access from res.locals object
+    res.send(`Flash info message: ${res.locals.info}`);
 });
 
 app.listen(PORT, () => {
