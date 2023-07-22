@@ -3,6 +3,7 @@ const app = express();
 const cookiesParser = require('cookie-parser');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
+const flash = require('connect-flash');
 
 const PORT = 3000;
 
@@ -18,6 +19,7 @@ app.use(
     }),
 );
 app.use(cookiesParser());
+app.use(flash());
 
 app.get('/pageviews', (req, res) => {
     if (!req.session.count) req.session.count = 0;
@@ -38,6 +40,20 @@ app.get('/hi', (req, res) => {
     } else {
         res.send(`You are not registered`);
     }
+});
+
+app.get('/flash', (req, res) => {
+    // Set a flash message by passing the key, followed by the value, to req.flash().
+    req.flash('info', 'Flash is back!');
+    res.redirect('/afterflash');
+});
+
+app.get('/afterflash', (req, res) => {
+    // Get an array of flash messages by passing the key to req.flash()
+    const flashArray = req.flash('info');
+    console.log(flashArray);
+    const msg = flashArray[0];
+    res.send(`Flash info message: ${msg}`);
 });
 
 app.listen(PORT, () => {
