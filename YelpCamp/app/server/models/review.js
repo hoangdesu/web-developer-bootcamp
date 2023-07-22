@@ -9,6 +9,10 @@ const reviewSchema = new Schema({
     rating: {
         type: Number,
     },
+    campground: {
+        type: Schema.Types.ObjectId,
+        ref: 'Campground'
+    }
 });
 
 module.exports = mongoose.model('Review', reviewSchema);

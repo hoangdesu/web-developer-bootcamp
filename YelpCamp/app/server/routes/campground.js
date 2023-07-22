@@ -106,9 +106,10 @@ route.post(
 
         // need refactor
         const { review } = req.body;
-        console.log('review', review);
         const newReview = new Review(review);
         campground.reviews.push(newReview);
+        newReview.campground = campground;
+
         await campground.save();
         await newReview.save();
 
