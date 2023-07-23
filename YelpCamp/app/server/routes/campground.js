@@ -1,7 +1,7 @@
 const express = require('express');
 const route = express.Router();
 const { catchAsync } = require('../utilities/helpers');
-const { campgroundSchema } = require('../schemas');
+const { campgroundSchema, reviewSchema } = require('../schemas');
 const YelpcampError = require('../utilities/YelpcampError');
 
 // Models
@@ -15,6 +15,12 @@ const validateCampground = (req, res, next) => {
     console.log('validationError:', validationError);
     if (validationError) throw new YelpcampError(400, validationError);
     next(); // dont forget!
+};
+
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) throw new YelpcampError(400, error);
+    next();
 };
 
 route.get(
@@ -98,6 +104,7 @@ route.delete(
 // POST /campgrounds/:id/reviews
 route.post(
     '/:id/reviews',
+    validateReview,
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const campground = await Campground.findById(id);

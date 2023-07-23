@@ -23,7 +23,9 @@ const Campground: React.FunctionComponent = () => {
 
     const reviewText = useRef<HTMLInputElement>(null);
     const reviewRating = useRef<HTMLInputElement>(null);
-    const [ratingValue, setRatingValue] = useState(3);
+
+    const [ratingValue, setRatingValue] = useState<Number>(3);
+    const [validated, setValidated] = useState<boolean>(false);
 
     const {
         isLoading,
@@ -39,29 +41,36 @@ const Campground: React.FunctionComponent = () => {
     };
 
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        axios
-            .post(
-                `/api/v1/campgrounds/${campground._id}/reviews`,
-                {
-                    review: {
-                        text: reviewText.current?.value || '',
-                        rating: reviewRating.current?.value || 0,
+        e.preventDefault();
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.stopPropagation();
+        } else {
+            axios
+                .post(
+                    `/api/v1/campgrounds/${campground._id}/reviews`,
+                    {
+                        review: {
+                            comment: reviewText.current?.value || '',
+                            rating: reviewRating.current?.value || 0,
+                        },
                     },
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
                     },
-                },
-            )
-            .then(res => {
-                console.log(`OK ${res.data}`);
-                // navigate(`/campgrounds/${res.data}`);
-            })
-            .catch(err => {
-                console.log('-- bad request:', err);
-                navigate('/error');
-            });
+                )
+                .then(res => {
+                    console.log(`OK ${res.data}`);
+                    navigate(0); // reload
+                })
+                .catch(err => {
+                    console.log('-- bad request:', err);
+                    navigate('/error');
+                });
+        }
+        setValidated(true);
     };
 
     const deleteCampgroundHandler = async () => {
@@ -116,19 +125,17 @@ const Campground: React.FunctionComponent = () => {
 
                 <h1>Leave a review</h1>
 
-                <Form className="mb-5" noValidate validated={false} onSubmit={onFormSubmit}>
+                <Form className="mb-5" noValidate validated={validated} onSubmit={onFormSubmit}>
                     <Form.Group className="mb-2" controlId="reviewRating">
-                        <Form.Label>Rating: {ratingValue}</Form.Label>
-                        <Form.Range name="review[rating]" ref={reviewRating} required onChange={onRangeInputChange} min={0} max={5} />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Review text is required!</Form.Control.Feedback>
+                        <Form.Label>{`Rating: ${ratingValue}`}</Form.Label>
+                        <Form.Range ref={reviewRating} onChange={onRangeInputChange} min={0} max={5} step={1} />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="reviewText">
+                    <Form.Group className="mb-3" controlId="reviewComment">
                         <Form.Label>Comment</Form.Label>
-                        <Form.Control as="textarea" name="review[text]" ref={reviewText} required />
+                        <Form.Control as="textarea" ref={reviewText} required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Comment is required!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">Please add your comment</Form.Control.Feedback>
                     </Form.Group>
 
                     <Button variant="primary" className="my-3" type="submit">
@@ -143,7 +150,7 @@ const Campground: React.FunctionComponent = () => {
                         <ul>
                             {campground.reviews.map((review, index) => (
                                 <li key={index}>
-                                    {review.text} - {review.rating}
+                                    {review.text || review.comment} - {review.rating}
                                 </li>
                             ))}
                         </ul>

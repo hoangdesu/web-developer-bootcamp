@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema({
-    text: {
+    comment: {
         type: String,
         required: [true, 'Missing review text'],
     },
     rating: {
         type: Number,
+        required: [true, 'Missing raring'],
     },
     campground: {
         type: Schema.Types.ObjectId,
