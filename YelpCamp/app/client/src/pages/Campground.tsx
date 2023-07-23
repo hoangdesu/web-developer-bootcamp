@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
 import { API_V1 } from '../constants';
 
-import { Container, Button, Card, ListGroup, Form, InputGroup } from 'react-bootstrap';
+import { Container, Button, Card, ListGroup, Form } from 'react-bootstrap';
 import { LocationOn, Sell } from '@mui/icons-material';
 
 import Navbar from '../components/Navbar';
@@ -21,13 +21,9 @@ const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
     const navigate = useNavigate();
 
-    const deleteCampgroundHandler = async () => {
-        if (confirm(`Delete ${campground.title}?`)) {
-            await axios.delete(`${API_V1}/campgrounds/${campgroundId}`);
-            alert('Deleted successfully!');
-            navigate('/');
-        }
-    };
+    const reviewText = useRef<HTMLInputElement>(null);
+    const reviewRating = useRef<HTMLInputElement>(null);
+    const [ratingValue, setRatingValue] = useState(3);
 
     const {
         isLoading,
@@ -37,6 +33,44 @@ const Campground: React.FunctionComponent = () => {
         queryKey: ['campgroundsData'],
         queryFn: () => axios.get(`${API_V1}/campgrounds/${campgroundId}`).then(res => res.data),
     });
+
+    const onRangeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setRatingValue(e.target.value);
+    };
+
+    const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        axios
+            .post(
+                `/api/v1/campgrounds/${campground._id}/reviews`,
+                {
+                    review: {
+                        text: reviewText.current?.value || '',
+                        rating: reviewRating.current?.value || 0,
+                    },
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
+            .then(res => {
+                console.log(`OK ${res.data}`);
+                // navigate(`/campgrounds/${res.data}`);
+            })
+            .catch(err => {
+                console.log('-- bad request:', err);
+                navigate('/error');
+            });
+    };
+
+    const deleteCampgroundHandler = async () => {
+        if (confirm(`Delete ${campground.title}?`)) {
+            await axios.delete(`${API_V1}/campgrounds/${campgroundId}`);
+            alert('Deleted successfully!');
+            navigate('/');
+        }
+    };
 
     if (isLoading) return <Loading />;
 
@@ -80,16 +114,29 @@ const Campground: React.FunctionComponent = () => {
                     </Button>
                 </Link>
 
-                {/* <Form className="mb-5" noValidate validated={false} onSubmit={() => {}}>
-                    <Form.Group className="mb-3" controlId="campgroundTitle">
+                <h1>Add your review</h1>
+
+                <Form className="mb-5" noValidate validated={false} onSubmit={onFormSubmit}>
+                    <Form.Group className="mb-2" controlId="reviewRating">
+                        <Form.Label>Rating: {ratingValue}</Form.Label>
+                        <Form.Range name="review[rating]" ref={reviewRating} required onChange={onRangeInputChange} min={0} max={5} />
+                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">Review text is required!</Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="reviewText">
                         <Form.Label>Title</Form.Label>
-                        <Form.Control type="text" name="campground[title]" ref={null} required />
+                        <Form.Control as="textarea" name="review[text]" ref={reviewText} required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">Title is required!</Form.Control.Feedback>
                     </Form.Group>
-                </Form> */}
 
-                <form action={`/api/v1/campgrounds/${campground._id}/reviews`} method="POST">
+                    <Button variant="secondary" className="my-3" type="submit">
+                        Submit
+                    </Button>
+                </Form>
+
+                {/* <form action={`/api/v1/campgrounds/${campground._id}/reviews`} method="POST">
                     <div>
                         <label htmlFor="">Review</label>
                         <textarea name="review[text]"></textarea>
@@ -101,7 +148,7 @@ const Campground: React.FunctionComponent = () => {
                     </div>
 
                     <button>Submit</button>
-                </form>
+                </form> */}
 
                 <h1>All reviews </h1>
                 {campground.reviews && (
