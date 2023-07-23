@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 
 const YelpcampError = require('./utilities/YelpcampError');
+const { resetDb } = require('./seeds');
 
 // Mongoose
 mongoose.set('strictQuery', true);
@@ -37,6 +38,11 @@ app.use(methodOverride('_method'));
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'OK' });
 });
+
+app.get('/resetdb', (req, res) => {
+    resetDb();
+    res.status(200).send('db has been reset');
+})
 
 // Route handlers
 

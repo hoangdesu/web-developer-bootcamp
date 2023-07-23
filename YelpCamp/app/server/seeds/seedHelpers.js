@@ -1,7 +1,8 @@
 const fs = require('fs');
+const path = require('path');
 
 module.exports.getAllCitiesData = () => {
-    const content = fs.readFileSync('./vn.json', 'utf-8');
+    const content = fs.readFileSync(path.join(__dirname, '/vn.json'), 'utf-8');
     return JSON.parse(content);
 };
 
@@ -24,7 +25,7 @@ module.exports.descriptors = [
     'Sky',
     'Dusty',
     'Diamond',
-    'Centara'
+    'Centara',
 ];
 
 module.exports.places = [

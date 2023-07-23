@@ -134,7 +134,7 @@ const Campground: React.FunctionComponent = () => {
                     <Form.Group className="mb-3" controlId="reviewComment">
                         <Form.Label>Comment</Form.Label>
                         <Form.Control as="textarea" ref={reviewText} required />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="valid">Thank you for your review!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">Please add your comment</Form.Control.Feedback>
                     </Form.Group>
 
@@ -150,7 +150,7 @@ const Campground: React.FunctionComponent = () => {
                         <ul>
                             {campground.reviews.map((review, index) => (
                                 <li key={index}>
-                                    {review.text || review.comment} - {review.rating}
+                                    {review.comment} - {review.rating}
                                 </li>
                             ))}
                         </ul>
