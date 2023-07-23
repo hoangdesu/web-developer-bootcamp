@@ -5,7 +5,6 @@ const { catchAsync } = require('../utilities/helpers');
 const YelpcampError = require('../utilities/YelpcampError');
 
 // Models
-const Campground = require('../models/campground');
 const Review = require('../models/review');
 
 route.get(

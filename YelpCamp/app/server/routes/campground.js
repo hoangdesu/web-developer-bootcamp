@@ -102,18 +102,14 @@ route.post(
         const { id } = req.params;
         const campground = await Campground.findById(id);
 
-        // need refactor
-        const { review } = req.body;
-        const newReview = new Review(review);
-        campground.reviews.push(newReview);
-        newReview.campground = campground;
+        const review = new Review(req.body.review);
+        campground.reviews.push(review);
+        review.campground = campground;
 
         await campground.save();
-        await newReview.save();
+        await review.save();
 
-        const reviews = await Review.find({});
-        // TODO: REFACTOR TO RETURN A JSON FOR CLIENT REDIRECT, NOT SERVER
-        res.status(200).redirect(`/campgrounds/${id}`);
+        res.status(200).json({ status: 'ok' });
     }),
 );
 

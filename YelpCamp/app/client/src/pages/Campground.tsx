@@ -35,7 +35,7 @@ const Campground: React.FunctionComponent = () => {
     });
 
     const onRangeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setRatingValue(e.target.value);
+        setRatingValue(parseInt(e.target.value));
     };
 
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -114,7 +114,7 @@ const Campground: React.FunctionComponent = () => {
                     </Button>
                 </Link>
 
-                <h1>Add your review</h1>
+                <h1>Leave a review</h1>
 
                 <Form className="mb-5" noValidate validated={false} onSubmit={onFormSubmit}>
                     <Form.Group className="mb-2" controlId="reviewRating">
@@ -125,32 +125,18 @@ const Campground: React.FunctionComponent = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="reviewText">
-                        <Form.Label>Title</Form.Label>
+                        <Form.Label>Comment</Form.Label>
                         <Form.Control as="textarea" name="review[text]" ref={reviewText} required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Title is required!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">Comment is required!</Form.Control.Feedback>
                     </Form.Group>
 
-                    <Button variant="secondary" className="my-3" type="submit">
+                    <Button variant="primary" className="my-3" type="submit">
                         Submit
                     </Button>
                 </Form>
 
-                {/* <form action={`/api/v1/campgrounds/${campground._id}/reviews`} method="POST">
-                    <div>
-                        <label htmlFor="">Review</label>
-                        <textarea name="review[text]"></textarea>
-                    </div>
-
-                    <div>
-                        <label htmlFor="">Rating</label>
-                        <input type="number" name="review[rating]" />
-                    </div>
-
-                    <button>Submit</button>
-                </form> */}
-
-                <h1>All reviews </h1>
+                <h1>All reviews</h1>
                 {campground.reviews && (
                     <>
                         <p>Total: {campground.reviews.length} reviews</p>
