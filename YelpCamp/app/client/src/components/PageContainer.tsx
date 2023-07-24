@@ -5,7 +5,8 @@ interface PageContainerProps {
 }
 
 const PageContainer: React.FunctionComponent<PageContainerProps> = ({ children }) => {
-    return <div className="d-flex flex-column vh-100">{children}</div>;
+    // return <div className="d-flex flex-column vh-100">{children}</div>;
+    return <div>{children}</div>
 };
 
 export default PageContainer;

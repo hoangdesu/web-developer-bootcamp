@@ -5,13 +5,14 @@ import axios from 'axios';
 
 import { API_V1 } from '../constants';
 
-import { Container, Button, Card, ListGroup, Form } from 'react-bootstrap';
+import { Container, Button, Card, ListGroup, Form, Col, Row } from 'react-bootstrap';
 import { LocationOn, Sell } from '@mui/icons-material';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import Loading from './Loading';
+import Review from '../components/Review';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -83,7 +84,6 @@ const Campground: React.FunctionComponent = () => {
 
     if (isLoading) return <Loading />;
 
-    // if (error || !campground) return <p>Error! {}</p>;
     if (error || !campground) {
         throw new Error('Invalid campground !!!');
     }
@@ -92,70 +92,72 @@ const Campground: React.FunctionComponent = () => {
         <PageContainer>
             <Navbar />
 
-            <Container className="col-7 my-5">
-                <Card>
-                    <Card.Img variant="top" src={campground.image} />
-                    <Card.Body>
-                        <Card.Title>{campground.title}</Card.Title>
-                        <Card.Text>{campground.description}</Card.Text>
-                    </Card.Body>
-                    <ListGroup className="list-group-flush">
-                        <ListGroup.Item className="text-muted">
-                            <LocationOn /> {campground.location}
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            <Sell /> ${campground.price}
-                        </ListGroup.Item>
-                    </ListGroup>
-                    <Card.Body>
-                        <Link to={`/campgrounds/${campgroundId}/edit`}>
-                            <Button variant="info">Edit</Button>
+            <Container className="col-9 my-5">
+                <Row>
+                    <Col>
+                        <Card>
+                            <Card.Img variant="top" src={campground.image} />
+                            <Card.Body>
+                                <Card.Title>{campground.title}</Card.Title>
+                                <Card.Text>{campground.description}</Card.Text>
+                            </Card.Body>
+                            <ListGroup className="list-group-flush">
+                                <ListGroup.Item className="text-muted">
+                                    <LocationOn /> {campground.location}
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                    <Sell /> ${campground.price}
+                                </ListGroup.Item>
+                            </ListGroup>
+                            <Card.Body>
+                                <Link to={`/campgrounds/${campgroundId}/edit`}>
+                                    <Button variant="info">Edit</Button>
+                                </Link>
+                                <Button variant="danger" className="mx-2" onClick={deleteCampgroundHandler}>
+                                    Delete
+                                </Button>
+                            </Card.Body>
+                        </Card>
+
+                        <Link to="/">
+                            <Button variant="secondary" className="my-3">
+                                Back
+                            </Button>
                         </Link>
-                        <Button variant="danger" className="mx-2" onClick={deleteCampgroundHandler}>
-                            Delete
-                        </Button>
-                    </Card.Body>
-                </Card>
+                    </Col>
 
-                <Link to="/">
-                    <Button variant="secondary" className="my-3">
-                        Back
-                    </Button>
-                </Link>
+                    <Col xs={5} lg={5}>
+                        <h1>Leave a review</h1>
 
-                <h1>Leave a review</h1>
+                        <Form className="mb-5" noValidate validated={validated} onSubmit={onFormSubmit}>
+                            <Form.Group className="mb-2" controlId="reviewRating">
+                                <Form.Label>{`Rating: ${ratingValue}`}</Form.Label>
+                                <Form.Range ref={reviewRating} onChange={onRangeInputChange} min={1} max={5} step={1} />
+                            </Form.Group>
 
-                <Form className="mb-5" noValidate validated={validated} onSubmit={onFormSubmit}>
-                    <Form.Group className="mb-2" controlId="reviewRating">
-                        <Form.Label>{`Rating: ${ratingValue}`}</Form.Label>
-                        <Form.Range ref={reviewRating} onChange={onRangeInputChange} min={0} max={5} step={1} />
-                    </Form.Group>
+                            <Form.Group className="mb-3" controlId="reviewComment">
+                                <Form.Label>Comment</Form.Label>
+                                <Form.Control as="textarea" ref={reviewText} required />
+                                <Form.Control.Feedback type="valid">Thank you for your review!</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">Please add your comment</Form.Control.Feedback>
+                            </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="reviewComment">
-                        <Form.Label>Comment</Form.Label>
-                        <Form.Control as="textarea" ref={reviewText} required />
-                        <Form.Control.Feedback type="valid">Thank you for your review!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Please add your comment</Form.Control.Feedback>
-                    </Form.Group>
+                            <Button variant="primary" className="my-3" type="submit">
+                                Submit
+                            </Button>
+                        </Form>
 
-                    <Button variant="primary" className="my-3" type="submit">
-                        Submit
-                    </Button>
-                </Form>
-
-                <h1>All reviews</h1>
-                {campground.reviews && (
-                    <>
-                        <p>Total: {campground.reviews.length} reviews</p>
-                        <ul>
-                            {campground.reviews.map((review, index) => (
-                                <li key={index}>
-                                    {review.comment} - {review.rating}
-                                </li>
-                            ))}
-                        </ul>
-                    </>
-                )}
+                        <h1>All reviews</h1>
+                        {campground.reviews && (
+                            <>
+                                <p>Total: {campground.reviews.length} reviews</p>
+                                {campground.reviews.map(review => (
+                                    <Review key={review._id} review={review} />
+                                ))}
+                            </>
+                        )}
+                    </Col>
+                </Row>
             </Container>
             <Footer />
         </PageContainer>

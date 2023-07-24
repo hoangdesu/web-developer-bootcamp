@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 app.get('/resetdb', (req, res) => {
     resetDb();
     res.status(200).send('db has been reset');
-})
+});
 
 // Route handlers
 
