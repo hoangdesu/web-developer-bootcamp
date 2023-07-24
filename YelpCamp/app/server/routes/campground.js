@@ -101,6 +101,7 @@ route.delete(
     }),
 );
 
+// -- HANDLERS FOR REVIEWS --
 // POST /campgrounds/:id/reviews
 route.post(
     '/:id/reviews',
@@ -117,6 +118,19 @@ route.post(
         await review.save();
 
         res.status(200).json({ status: 'ok' });
+    }),
+);
+
+// DELETE /campgrounds/:campgroundId/reviews/:reviewId
+route.delete(
+    '/:campgroundId/reviews/:reviewId',
+    catchAsync(async (req, res, next) => {
+        const { campgroundId, reviewId } = req.params;
+
+        await Campground.findByIdAndUpdate(campgroundId, { $pull: { reviews: reviewId } });
+        await Review.findByIdAndDelete(reviewId);
+
+        res.send(200).json({ status: 'ok' });
     }),
 );
 

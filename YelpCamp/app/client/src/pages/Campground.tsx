@@ -147,10 +147,12 @@ const Campground: React.FunctionComponent = () => {
                             </Button>
                         </Form>
 
-                        <h1>All reviews</h1>
+                        <h1>
+                            {campground.reviews?.length || 0} {campground.reviews?.length === 0 ? 'review' : 'reviews'}
+                        </h1>
                         {campground.reviews && (
                             <>
-                                <p>Total: {campground.reviews.length} reviews</p>
+                                {campground.reviews?.length === 0 && 'Add your first review!'}
                                 {campground.reviews.map(review => (
                                     <Review key={review._id} review={review} />
                                 ))}
