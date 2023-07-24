@@ -22,17 +22,19 @@ db.once('open', () => {
 const campgroundRouter = require('./routes/campground');
 const reviewRouter = require('./routes/review');
 
+// Models
+const Review = require('./models/review');
+
 // Express
 const PORT = 3001;
 const app = express();
 
+// middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(methodOverride('_method'));
-
-// middlewares
 
 // for testing only
 app.get('/', (req, res) => {
@@ -44,10 +46,13 @@ app.get('/resetdb', (req, res) => {
     res.status(200).send('db has been reset');
 });
 
-// Route handlers
+app.get('/reviews', async (req, res, next) => {
+    res.status(200).json(await Review.find({}));
+});
 
+// Route handlers
 app.use('/api/v1/campgrounds', campgroundRouter);
-app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/campgrounds/:campgroundId/reviews', reviewRouter);
 
 // 404, place after all route handlers
 app.all('*', (req, res, next) => {

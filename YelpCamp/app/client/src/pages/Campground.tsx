@@ -74,11 +74,12 @@ const Campground: React.FunctionComponent = () => {
         setValidated(true);
     };
 
-    const deleteCampgroundHandler = async () => {
+    const deleteCampgroundHandler = () => {
         if (confirm(`Delete ${campground.title}?`)) {
-            await axios.delete(`${API_V1}/campgrounds/${campgroundId}`);
-            alert('Deleted successfully!');
-            navigate('/');
+            axios.delete(`${API_V1}/campgrounds/${campgroundId}`).then(() => {
+                alert('Deleted successfully!');
+                navigate('/');
+            });
         }
     };
 
@@ -147,9 +148,9 @@ const Campground: React.FunctionComponent = () => {
                             </Button>
                         </Form>
 
-                        <h1>
+                        <h2>
                             {campground.reviews?.length || 0} {campground.reviews?.length === 0 ? 'review' : 'reviews'}
-                        </h1>
+                        </h2>
                         {campground.reviews && (
                             <>
                                 {campground.reviews?.length === 0 && 'Add your first review!'}

@@ -1,17 +1,50 @@
 const express = require('express');
-const route = express.Router();
+const router = express.Router({ mergeParams: true });
 const { catchAsync } = require('../utilities/helpers');
+const { reviewSchema } = require('../schemas');
 
 const YelpcampError = require('../utilities/YelpcampError');
 
 // Models
 const Review = require('../models/review');
+const Campground = require('../models/campground');
 
-route.get(
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) throw new YelpcampError(400, error);
+    next();
+};
+
+// POST /api/v1/campgrounds/:id/reviews
+router.post(
     '/',
-    catchAsync(async (req, res, next) => {
-        res.status(200).json(await Review.find({}));
+    validateReview,
+    catchAsync(async (req, res) => {
+        const { campgroundId } = req.params;
+        const campground = await Campground.findById(campgroundId);
+
+        const review = new Review(req.body.review);
+        campground.reviews.push(review);
+        review.campground = campground;
+
+        await campground.save();
+        await review.save();
+
+        res.status(200).json({ status: 'ok' });
     }),
 );
 
-module.exports = route;
+// DELETE /api/v1/campgrounds/:campgroundId/reviews/:reviewId
+router.delete(
+    '/:reviewId',
+    catchAsync(async (req, res) => {
+        const { campgroundId, reviewId } = req.params;
+
+        await Campground.findByIdAndUpdate(campgroundId, { $pull: { reviews: reviewId } });
+        await Review.findByIdAndDelete(reviewId);
+
+        res.status(200).json({ status: 'ok' });
+    }),
+);
+
+module.exports = router;
