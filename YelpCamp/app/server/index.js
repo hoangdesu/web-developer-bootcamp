@@ -6,6 +6,7 @@ const methodOverride = require('method-override');
 const path = require('path');
 const session = require('express-session');
 require('dotenv').config();
+const flash = require('connect-flash');
 
 const YelpcampError = require('./utilities/YelpcampError');
 const { resetDb } = require('./seeds');
@@ -38,6 +39,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(methodOverride('_method'));
 app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use(flash());
 
 const sessionConfigs = {
     secret: process.env.SESSION_SECRET,

@@ -14,7 +14,13 @@ import EditCampground from './pages/EditCampground';
 import ErrorBoundary from './pages/ErrorBoundary';
 import Loading from './pages/Loading';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false, // default: true
+        },
+    },
+});
 
 const router = createBrowserRouter([
     {
