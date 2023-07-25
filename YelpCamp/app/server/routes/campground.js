@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { catchAsync } = require('../utilities/helpers');
-const { campgroundSchema, reviewSchema } = require('../schemas');
+const { campgroundSchema } = require('../schemas');
 const YelpcampError = require('../utilities/YelpcampError');
 
 // Models

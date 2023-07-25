@@ -3,19 +3,21 @@ const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
+const path = require('path');
+const session = require('express-session');
+require('dotenv').config();
 
 const YelpcampError = require('./utilities/YelpcampError');
 const { resetDb } = require('./seeds');
 
 // Mongoose
 mongoose.set('strictQuery', true);
-const dbName = 'yelp-camp';
-const URI = `mongodb://localhost:27017/${dbName}`;
+const URI = `${process.env.MONGO_URI}/${process.env.DB_NAME}`;
 mongoose.connect(URI);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-    console.log(`Mongoose: connected to db "${dbName}"`);
+    console.log(`Mongoose: connected to db "${process.env.DB_NAME}"`);
 });
 
 // Routers
@@ -35,6 +37,20 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(methodOverride('_method'));
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
+const sessionConfigs = {
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { 
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        httpOnly: true,
+    }
+};
+app.use(session(sessionConfigs));
+
 
 // for testing only
 app.get('/', (req, res) => {

@@ -15,7 +15,7 @@ const validateReview = (req, res, next) => {
     next();
 };
 
-// POST /api/v1/campgrounds/:id/reviews
+// POST /api/v1/campgrounds/:campgroundId/reviews
 router.post(
     '/',
     validateReview,
