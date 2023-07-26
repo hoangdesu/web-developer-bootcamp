@@ -40,11 +40,9 @@ const StyledCardBody = styled(Card.Body)`
 const Review: React.FunctionComponent<ReviewProps> = ({ review }) => {
     const removeReviewHandler = () => {
         if (confirm('Are you sure to delete this comment?')) {
-            axios
-                .delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`)
-                .catch(e => {
-                    console.log('Delete failed', e);
-                });
+            axios.delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`).catch(e => {
+                console.log('Delete failed', e);
+            });
         }
     };
     return (

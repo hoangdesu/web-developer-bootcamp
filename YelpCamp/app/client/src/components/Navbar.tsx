@@ -25,6 +25,7 @@ const Navbar: React.FunctionComponent = () => {
                 <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
                 <Nav className="me-auto">
                     {pages.map(page => (
+                        // TODO: Fix error
                         <Link to={page.href} style={{ textDecoration: 'none' }} key={page.title}>
                             <Nav.Link href={page.href}>{page.title}</Nav.Link>
                         </Link>

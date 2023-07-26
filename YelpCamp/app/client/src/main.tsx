@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import ThemeProvider from 'react-bootstrap/ThemeProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import AppContextProvider from './store/AppContextProvider';
+
 import App from './App';
 import About from './pages/About';
 import Campground, { loader as addCampgroundLoader } from './pages/Campground';
@@ -69,7 +71,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
         <ThemeProvider>
             <QueryClientProvider client={queryClient}>
-                <RouterProvider router={router} />
+                <AppContextProvider>
+                    <RouterProvider router={router} />
+                </AppContextProvider>
             </QueryClientProvider>
         </ThemeProvider>
     </React.StrictMode>,

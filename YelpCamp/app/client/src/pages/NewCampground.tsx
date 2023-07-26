@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
+import AppContext from '../store/app-context';
 
 import { Container, Form, Button, InputGroup } from 'react-bootstrap';
 
@@ -11,6 +13,7 @@ import PageContainer from '../components/PageContainer';
 const NewCampground: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
     const navigate = useNavigate();
+    const appContext = useContext(AppContext);
 
     const formTitle = useRef<HTMLInputElement>(null);
     const formLocation = useRef<HTMLInputElement>(null);
@@ -44,6 +47,7 @@ const NewCampground: React.FunctionComponent = () => {
                 )
                 .then(res => {
                     console.log(`navigating to: /campgrounds/${res.data}`);
+                    appContext.setAlert('NEW CAMPGROUND');
                     navigate(`/campgrounds/${res.data}`);
                 })
                 .catch(err => {

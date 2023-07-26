@@ -1,12 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
 import { API_V1 } from '../constants';
+import AppContext from '../store/app-context';
 
-import { Container, Button, Card, ListGroup, Form, Col, Row } from 'react-bootstrap';
+import { Container, Button, Card, ListGroup, Form, Col, Row, Alert } from 'react-bootstrap';
 import { LocationOn, Sell } from '@mui/icons-material';
+import FlashMessage from 'react-flash-message';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -21,6 +23,9 @@ export async function loader({ params }) {
 const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
     const navigate = useNavigate();
+    const appContext = useContext(AppContext);
+
+    console.log('alert', appContext.alert);
 
     const reviewText = useRef<HTMLInputElement>(null);
     const reviewRating = useRef<HTMLInputElement>(null);
@@ -94,6 +99,14 @@ const Campground: React.FunctionComponent = () => {
             <Navbar />
 
             <Container className="col-9 my-5">
+                <FlashMessage duration={5000} persistOnHover={true}>
+                    {appContext.alert && (
+                        <Alert variant="success" onClose={() => appContext.setAlert(null)} dismissible>
+                            <Alert.Heading>Add new campground successfully</Alert.Heading>
+                            <span>{appContext.alert}</span>
+                        </Alert>
+                    )}
+                </FlashMessage>
                 <Row>
                     <Col>
                         <Card>
