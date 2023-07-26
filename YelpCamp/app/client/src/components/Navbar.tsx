@@ -23,11 +23,11 @@ const Navbar: React.FunctionComponent = () => {
         <BootstrapNavbar bg="dark" variant="dark">
             <Container>
                 <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
-                <Nav className="me-auto">
+                {/* <Nav className="me-auto"> */}
+                <Nav>
                     {pages.map(page => (
-                        // TODO: Fix error
                         <Link to={page.href} style={{ textDecoration: 'none' }} key={page.title}>
-                            <Nav.Link href={page.href}>{page.title}</Nav.Link>
+                            <span className="nav-link">{page.title}</span>
                         </Link>
                     ))}
                 </Nav>

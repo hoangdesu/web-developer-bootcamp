@@ -40,7 +40,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review }) => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
-    console.log(appContext.alert)
+    // console.log(appContext.alert)
     
     const removeReviewHandler = () => {
         if (confirm('Are you sure to delete this comment?')) {

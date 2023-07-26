@@ -92,13 +92,12 @@ const EditCampground: React.FunctionComponent = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="campgroundPrice">
-                        <Form.Label htmlFor="inlineFormInputGroup">Price</Form.Label>
+                        <Form.Label>Price</Form.Label>
                         <InputGroup className="mb-2">
                             <InputGroup.Text>$</InputGroup.Text>
                             <Form.Control
                                 type="number"
                                 step="0.5"
-                                id="inlineFormInputGroup"
                                 defaultValue={campground.price}
                                 ref={formPrice}
                                 required
