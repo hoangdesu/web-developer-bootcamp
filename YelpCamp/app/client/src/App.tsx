@@ -16,12 +16,7 @@ import Loading from './pages/Loading';
 
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
-    console.log(appContext.alert);
-
-    const changeContext = () => {
-        appContext.setAlert('NOICE');
-    };
-
+    
     const {
         isLoading,
         error,
@@ -41,11 +36,6 @@ const App: React.FunctionComponent = () => {
 
             <Container className="col-8">
                 <p className="mt-3">Total: {campgroundsData && campgroundsData.length} campgrounds</p>
-
-                {/* testing */}
-                <button onClick={changeContext}>test</button>
-                {appContext.alert}
-
 
                 <ul style={{ paddingLeft: 0 }}>
                     {Array.isArray(campgroundsData) &&

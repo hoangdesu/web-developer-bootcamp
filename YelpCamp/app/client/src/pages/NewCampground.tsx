@@ -62,6 +62,8 @@ const NewCampground: React.FunctionComponent = () => {
         <PageContainer>
             <Navbar />
 
+            <button onClick={() => appContext.setAlert('NEW CAMPGROUND')}>Set alert</button>
+
             <Container className="col-6 offset-3 mt-5">
                 <h1 className="text-center mb-4">New Campground</h1>
                 <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>

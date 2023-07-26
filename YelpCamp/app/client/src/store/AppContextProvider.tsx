@@ -3,20 +3,19 @@ import AppContext from './app-context';
 
 interface appState {
     alert: string | null;
-};
-
-const initialAppState: appState = {
-    alert: 'ok',
 }
 
+const initialAppState: appState = {
+    alert: null,
+};
+
 const appReducer = (state, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case 'SET_ALERT':
-            console.log('inside set_alert', action.alert)
             return {
                 ...state,
-                alert: action.alert
-            }
+                alert: action.alert,
+            };
             break;
         default:
             return initialAppState;
@@ -24,25 +23,20 @@ const appReducer = (state, action) => {
     }
 };
 
-const AppContextProvider = (props) => {
+const AppContextProvider = props => {
     const [appState, dispatchAppAction] = useReducer(appReducer, initialAppState);
 
     const setAlert = (alert: string | null) => {
-        console.log('setting alert', alert)
         dispatchAppAction({ type: 'SET_ALERT', alert: alert });
-    }
-    
+    };
+
     const appContext = {
         alert: appState.alert,
-        setAlert: setAlert
-    }
+        setAlert: setAlert,
+    };
 
-    return (
-        <AppContext.Provider value={appContext}>
-            {props.children}
-        </AppContext.Provider>
-    );
-}
+    return <AppContext.Provider value={appContext}>{props.children}</AppContext.Provider>;
+};
 
 export default AppContextProvider;
 

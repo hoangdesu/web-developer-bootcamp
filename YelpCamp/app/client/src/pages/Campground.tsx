@@ -8,13 +8,13 @@ import AppContext from '../store/app-context';
 
 import { Container, Button, Card, ListGroup, Form, Col, Row, Alert } from 'react-bootstrap';
 import { LocationOn, Sell } from '@mui/icons-material';
-import FlashMessage from 'react-flash-message';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import Loading from './Loading';
 import Review from '../components/Review';
+import FlashMessage from '../components/FlashMessage';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -24,8 +24,6 @@ const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
-
-    console.log('alert', appContext.alert);
 
     const reviewText = useRef<HTMLInputElement>(null);
     const reviewRating = useRef<HTMLInputElement>(null);
@@ -97,12 +95,10 @@ const Campground: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <Navbar />
-
             <Container className="col-9 my-5">
-                <FlashMessage duration={5000} persistOnHover={true}>
+                <FlashMessage duration={3 * 1000} persistOnHover={true}>
                     {appContext.alert && (
-                        <Alert variant="success" onClose={() => appContext.setAlert(null)} dismissible>
-                            <Alert.Heading>Add new campground successfully</Alert.Heading>
+                        <Alert variant="info" onClose={() => appContext.setAlert(null)} dismissible>
                             <span>{appContext.alert}</span>
                         </Alert>
                     )}
