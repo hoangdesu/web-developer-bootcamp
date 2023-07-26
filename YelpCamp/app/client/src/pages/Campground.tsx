@@ -38,14 +38,11 @@ const Campground: React.FunctionComponent = () => {
         isLoading,
         error,
         data: campground,
+        refetch,
     } = useQuery({
         queryKey: ['campgroundsData'],
         queryFn: () => axios.get(`${API_V1}/campgrounds/${campgroundId}`).then(res => res.data),
     });
-
-    const onRangeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setRatingValue(parseInt(e.target.value));
-    };
 
     const onReviewSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -69,9 +66,10 @@ const Campground: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    console.log(`OK ${res.data}`);
-                    appContext.setAlert('Added comment'); 
-                    navigate(0); // reload
+                    appContext.setAlert('Thank you for your review!');
+                    refetch();
+                    form.reset();
+                    setValidated(false); // reset the form validated state
                 })
                 .catch(err => {
                     console.log('-- bad request:', err);
@@ -93,7 +91,6 @@ const Campground: React.FunctionComponent = () => {
     if (isLoading) return <Loading />;
 
     if (error || !campground) {
-        // throw new Error('Invalid campground!');
         appContext.setAlert('Invalid campground!');
         navigate('/');
     }
@@ -148,13 +145,12 @@ const Campground: React.FunctionComponent = () => {
                         <Form className="mb-5" noValidate validated={validated} onSubmit={onReviewSubmit}>
                             <Form.Group className="mb-2" controlId="reviewRating">
                                 <Form.Label>{`Rating: ${ratingValue}`}</Form.Label>
-                                <Form.Range ref={reviewRating} onChange={onRangeInputChange} min={1} max={5} step={1} />
+                                <Form.Range ref={reviewRating} onChange={() => setRatingValue(parseInt(e.target.value))} min={1} max={5} step={1} />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="reviewComment">
                                 <Form.Label>Comment</Form.Label>
                                 <Form.Control as="textarea" ref={reviewText} required />
-                                <Form.Control.Feedback type="valid">Thank you for your review!</Form.Control.Feedback>
                                 <Form.Control.Feedback type="invalid">Please add your comment</Form.Control.Feedback>
                             </Form.Group>
 
@@ -170,7 +166,7 @@ const Campground: React.FunctionComponent = () => {
                             <>
                                 {campground.reviews?.length === 0 && 'Add your first review!'}
                                 {campground.reviews.map((review: ReviewType) => (
-                                    <Review key={review._id} review={review} />
+                                    <Review key={review._id} review={review} refetch={refetch} />
                                 ))}
                             </>
                         )}

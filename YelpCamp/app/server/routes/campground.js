@@ -42,7 +42,9 @@ router.get(
     `/:id`,
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
-        const campground = await Campground.findById(id).populate('reviews').exec();
+        const campground = await Campground.findById(id)
+            .populate({ path: 'reviews', options: { sort: { createdAt: -1 } } })
+            .exec();
         res.status(200).json(campground);
     }),
 );
@@ -97,6 +99,5 @@ router.delete(
         res.status(200).send('campground deleted');
     }),
 );
-
 
 module.exports = router;

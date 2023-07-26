@@ -7,10 +7,10 @@ import { Card } from 'react-bootstrap';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Review } from '../types';
 import AppContext from '../store/app-context';
-import { useMutation } from 'react-query';
 
 interface ReviewProps {
     review: Review;
+    refetch: () => {};
 }
 
 const StyledCardBody = styled(Card.Body)`
@@ -36,29 +36,27 @@ const StyledCardBody = styled(Card.Body)`
     }
 `;
 
-const Review: React.FunctionComponent<ReviewProps> = ({ review }) => {
+const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
     // console.log(appContext.alert)
-    
+
     const removeReviewHandler = () => {
         if (confirm('Are you sure to delete this comment?')) {
             axios
-                // TODO: consider refactor to useMutation to hot reload reviews array
                 .delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`)
                 .then(res => {
-                    navigate(0);
                     appContext.setAlert('Comment deleted');
-
+                    refetch();
                 })
                 .catch(e => {
                     console.log('Delete failed', e);
-                    navigate(0);
                     appContext.setAlert('Failed to delete comment');
                 });
         }
     };
+
     return (
         <Card className="mb-3">
             <StyledCardBody>
