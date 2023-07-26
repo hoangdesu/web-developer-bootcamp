@@ -15,6 +15,7 @@ import PageContainer from '../components/PageContainer';
 import Loading from './Loading';
 import Review from '../components/Review';
 import FlashMessage from '../components/FlashMessage';
+import { Review as ReviewType } from '../types';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -24,6 +25,8 @@ const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
+
+    // console.log(appContext.alert);
 
     const reviewText = useRef<HTMLInputElement>(null);
     const reviewRating = useRef<HTMLInputElement>(null);
@@ -44,7 +47,7 @@ const Campground: React.FunctionComponent = () => {
         setRatingValue(parseInt(e.target.value));
     };
 
-    const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onReviewSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
@@ -67,6 +70,7 @@ const Campground: React.FunctionComponent = () => {
                 )
                 .then(res => {
                     console.log(`OK ${res.data}`);
+                    appContext.setAlert('Added comment'); 
                     navigate(0); // reload
                 })
                 .catch(err => {
@@ -80,7 +84,7 @@ const Campground: React.FunctionComponent = () => {
     const deleteCampgroundHandler = () => {
         if (confirm(`Delete ${campground.title}?`)) {
             axios.delete(`${API_V1}/campgrounds/${campgroundId}`).then(() => {
-                alert('Deleted successfully!');
+                appContext.setAlert('Deleted campground successfully');
                 navigate('/');
             });
         }
@@ -89,20 +93,22 @@ const Campground: React.FunctionComponent = () => {
     if (isLoading) return <Loading />;
 
     if (error || !campground) {
-        throw new Error('Invalid campground !!!');
+        // throw new Error('Invalid campground!');
+        appContext.setAlert('Invalid campground!');
+        navigate('/');
     }
 
     return (
         <PageContainer>
             <Navbar />
             <Container className="col-9 my-5">
-                <FlashMessage duration={3 * 1000} persistOnHover={true}>
-                    {appContext.alert && (
+                {appContext.alert && (
+                    <FlashMessage duration={3 * 1000} persistOnHover={true}>
                         <Alert variant="info" onClose={() => appContext.setAlert(null)} dismissible>
                             <span>{appContext.alert}</span>
                         </Alert>
-                    )}
-                </FlashMessage>
+                    </FlashMessage>
+                )}
                 <Row>
                     <Col>
                         <Card>
@@ -139,7 +145,7 @@ const Campground: React.FunctionComponent = () => {
                     <Col xs={5} lg={5}>
                         <h1>Leave a review</h1>
 
-                        <Form className="mb-5" noValidate validated={validated} onSubmit={onFormSubmit}>
+                        <Form className="mb-5" noValidate validated={validated} onSubmit={onReviewSubmit}>
                             <Form.Group className="mb-2" controlId="reviewRating">
                                 <Form.Label>{`Rating: ${ratingValue}`}</Form.Label>
                                 <Form.Range ref={reviewRating} onChange={onRangeInputChange} min={1} max={5} step={1} />
@@ -163,7 +169,7 @@ const Campground: React.FunctionComponent = () => {
                         {campground.reviews && (
                             <>
                                 {campground.reviews?.length === 0 && 'Add your first review!'}
-                                {campground.reviews.map(review => (
+                                {campground.reviews.map((review: ReviewType) => (
                                     <Review key={review._id} review={review} />
                                 ))}
                             </>

@@ -6,3 +6,10 @@ export interface Campground {
     location: string;
     image: string;
 }
+
+export interface Review {
+    _id: string;
+    comment: string;
+    rating: number;
+    campground: string;
+};

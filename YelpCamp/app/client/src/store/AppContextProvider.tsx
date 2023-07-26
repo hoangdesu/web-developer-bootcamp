@@ -23,7 +23,7 @@ const appReducer = (state, action) => {
     }
 };
 
-const AppContextProvider = props => {
+const AppContextProvider = ({ children }) => {
     const [appState, dispatchAppAction] = useReducer(appReducer, initialAppState);
 
     const setAlert = (alert: string | null) => {
@@ -35,7 +35,7 @@ const AppContextProvider = props => {
         setAlert: setAlert,
     };
 
-    return <AppContext.Provider value={appContext}>{props.children}</AppContext.Provider>;
+    return <AppContext.Provider value={appContext}>{children}</AppContext.Provider>;
 };
 
 export default AppContextProvider;

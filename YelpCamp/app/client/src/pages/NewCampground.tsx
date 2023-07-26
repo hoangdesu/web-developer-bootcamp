@@ -33,7 +33,7 @@ const NewCampground: React.FunctionComponent = () => {
                     {
                         campground: {
                             title: formTitle.current?.value || '',
-                            price: formPrice.current?.value || 0,
+                            price: parseFloat(formPrice.current?.value) || 0,
                             location: formLocation.current?.value || '',
                             image: formImage.current?.value || '',
                             description: formDescription.current?.value || '',
@@ -46,8 +46,7 @@ const NewCampground: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    console.log(`navigating to: /campgrounds/${res.data}`);
-                    appContext.setAlert('NEW CAMPGROUND');
+                    appContext.setAlert('Created new campground successfully');
                     navigate(`/campgrounds/${res.data}`);
                 })
                 .catch(err => {
@@ -61,22 +60,19 @@ const NewCampground: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <Navbar />
-
-            <button onClick={() => appContext.setAlert('NEW CAMPGROUND')}>Set alert</button>
-
             <Container className="col-6 offset-3 mt-5">
                 <h1 className="text-center mb-4">New Campground</h1>
                 <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="campgroundTitle">
                         <Form.Label>Title</Form.Label>
-                        <Form.Control type="text" name="campground[title]" ref={formTitle} required />
+                        <Form.Control type="text" ref={formTitle} required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">Title is required!</Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="campgroundLocation">
                         <Form.Label>Location</Form.Label>
-                        <Form.Control type="text" name="campground[location]" ref={formLocation} required />
+                        <Form.Control type="text" ref={formLocation} required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">Location is required!</Form.Control.Feedback>
                     </Form.Group>
@@ -85,16 +81,7 @@ const NewCampground: React.FunctionComponent = () => {
                         <Form.Label htmlFor="inlineFormInputGroup">Price</Form.Label>
                         <InputGroup className="mb-2">
                             <InputGroup.Text>$</InputGroup.Text>
-                            <Form.Control
-                                type="number"
-                                step="0.1"
-                                min="0"
-                                id="inlineFormInputGroup"
-                                defaultValue={0.0}
-                                name="campground[price]"
-                                ref={formPrice}
-                                required
-                            />
+                            <Form.Control type="number" step="0.1" min="0" id="inlineFormInputGroup" defaultValue={0.0} ref={formPrice} required />
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">Price is required!</Form.Control.Feedback>
                         </InputGroup>
@@ -102,14 +89,14 @@ const NewCampground: React.FunctionComponent = () => {
 
                     <Form.Group className="mb-3" controlId="campgroundImageUrl">
                         <Form.Label>Image Url</Form.Label>
-                        <Form.Control type="text" name="campground[image]" ref={formImage} required />
+                        <Form.Control type="text" ref={formImage} required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">Image URL is required!</Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="campgroundDescription">
                         <Form.Label>Description</Form.Label>
-                        <Form.Control as="textarea" name="campground[description]" ref={formDescription} />
+                        <Form.Control as="textarea" ref={formDescription} />
                         <Form.Control.Feedback type="valid">Description is optional</Form.Control.Feedback>
                     </Form.Group>
 
@@ -117,8 +104,9 @@ const NewCampground: React.FunctionComponent = () => {
                         Add campground
                     </Button>
                 </Form>
+                {/* for testing */}
+                {/* <button onClick={() => appContext.setAlert('ADD NEW CAMPGROUND')}>Set alert</button> */}
             </Container>
-
             <Footer />
         </PageContainer>
     );

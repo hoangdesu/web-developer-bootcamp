@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from '@emotion/styled';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 import { Card } from 'react-bootstrap';
 import ClearIcon from '@mui/icons-material/Clear';
+import { Review } from '../types';
+import AppContext from '../store/app-context';
+import { useMutation } from 'react-query';
 
 interface ReviewProps {
-    review: {
-        _id: string;
-        comment: string;
-        rating: number;
-        campground: string;
-    };
+    review: Review;
 }
 
 const StyledCardBody = styled(Card.Body)`
@@ -38,11 +37,26 @@ const StyledCardBody = styled(Card.Body)`
 `;
 
 const Review: React.FunctionComponent<ReviewProps> = ({ review }) => {
+    const appContext = useContext(AppContext);
+    const navigate = useNavigate();
+
+    console.log(appContext.alert)
+    
     const removeReviewHandler = () => {
         if (confirm('Are you sure to delete this comment?')) {
-            axios.delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`).catch(e => {
-                console.log('Delete failed', e);
-            });
+            axios
+                // TODO: consider refactor to useMutation to hot reload reviews array
+                .delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`)
+                .then(res => {
+                    navigate(0);
+                    appContext.setAlert('Comment deleted');
+
+                })
+                .catch(e => {
+                    console.log('Delete failed', e);
+                    navigate(0);
+                    appContext.setAlert('Failed to delete comment');
+                });
         }
     };
     return (

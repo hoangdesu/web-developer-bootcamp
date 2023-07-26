@@ -10,7 +10,6 @@ const ErrorBoundary = () => {
     const error = useRouteError();
     const navigate = useNavigate();
 
-    // console.log('ERRORRR:', error);
     return (
         <PageContainer>
             <Navbar />

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import Container from 'react-bootstrap/Container';
+import { Container, Alert } from 'react-bootstrap';
 
 import './App.css';
 import { API_V1 } from './constants';
@@ -13,10 +13,11 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CampgroundCard from './components/CampgroundCard';
 import Loading from './pages/Loading';
+import FlashMessage from './components/FlashMessage';
 
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
-    
+
     const {
         isLoading,
         error,
@@ -34,7 +35,14 @@ const App: React.FunctionComponent = () => {
         <PageContainer>
             <Navbar />
 
-            <Container className="col-8">
+            <Container className="col-8 my-3">
+                {appContext.alert && (
+                    <FlashMessage duration={3 * 1000} persistOnHover={true}>
+                        <Alert variant="success" onClose={() => appContext.setAlert(null)} dismissible>
+                            <span>{appContext.alert}</span>
+                        </Alert>
+                    </FlashMessage>
+                )}
                 <p className="mt-3">Total: {campgroundsData && campgroundsData.length} campgrounds</p>
 
                 <ul style={{ paddingLeft: 0 }}>

@@ -76,9 +76,13 @@ router.put(
         const { id } = req.params;
         const { campground } = req.body;
 
-        await Campground.findByIdAndUpdate(id, campground, { runValidators: true, new: true });
-        // TODO: REFACTOR TO RETURN A JSON FOR CLIENT REDIRECT, NOT SERVER
-        res.status(200).redirect(`/campgrounds/${id}`);
+        const updatedCampground = await Campground.findByIdAndUpdate(id, campground, { runValidators: true, new: true });
+
+        if (!updatedCampground) {
+            return next(new YelpcampError(400, 'Failed saving campground'));
+        } else {
+            res.status(200).json(updatedCampground._id);
+        }
     }),
 );
 
