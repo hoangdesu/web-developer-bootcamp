@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState, useContext, useEffect } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
@@ -27,6 +27,12 @@ const Campground: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
 
     // console.log(appContext.alert);
+
+    // useEffect(() => {
+    //     return () => {
+    //         appContext.setAlert(null);
+    //     }
+    // })
 
     const reviewText = useRef<HTMLInputElement>(null);
     const reviewRating = useRef<HTMLInputElement>(null);

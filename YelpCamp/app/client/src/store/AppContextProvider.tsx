@@ -39,6 +39,3 @@ const AppContextProvider = ({ children }) => {
 };
 
 export default AppContextProvider;
-
-// Unterminated regular expression literal.ts(1161) error caused by naming file ".ts"
-// -> rename to tsx solves

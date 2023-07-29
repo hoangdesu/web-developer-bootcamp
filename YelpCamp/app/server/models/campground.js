@@ -2,22 +2,27 @@ const mongoose = require('mongoose');
 const Review = require('./review');
 const Schema = mongoose.Schema;
 
-const campgroundSchema = new Schema({
-    title: {
-        type: String,
-        require: true,
-    },
-    price: Number,
-    description: String,
-    location: String,
-    image: String,
-    reviews: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Review',
+const campgroundSchema = new Schema(
+    {
+        title: {
+            type: String,
+            require: true,
         },
-    ],
-});
+        price: Number,
+        description: String,
+        location: String,
+        image: String,
+        reviews: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Review',
+            },
+        ],
+    },
+    {
+        timestamps: true,
+    },
+);
 
 campgroundSchema.post('findOneAndDelete', async function (campground) {
     if (campground) {
