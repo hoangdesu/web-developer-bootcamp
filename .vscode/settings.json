@@ -17,7 +17,24 @@
     "terminal.ansiMagenta": "#8F4673",
     "terminal.ansiRed": "#FB543F",
     "terminal.ansiWhite": "#A89984",
-    "terminal.ansiYellow": "#FAC03B"
+    "terminal.ansiYellow": "#FAC03B",
+    "activityBar.activeBackground": "#d747ec",
+    "activityBar.background": "#d747ec",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#e7cd18",
+    "activityBarBadge.foreground": "#15202b",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#d747ec",
+    "statusBar.background": "#cd19e7",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#d747ec",
+    "statusBarItem.remoteBackground": "#cd19e7",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#cd19e7",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#cd19e799",
+    "titleBar.inactiveForeground": "#e7e7e799"
   },
   "security.workspace.trust.enabled": false,
   "terminal.integrated.fontFamily": "MesloLGS NF",
@@ -106,6 +123,7 @@
     "fortran_fixed-form": "cd $dir && gfortran $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
     "fortran": "cd $dir && gfortran $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt"
   },
-    "window.zoomLevel": 0,
+    "window.zoomLevel": -1,
+    "peacock.color": "#cd19e7",
     // "vscode-pets.theme": "beach"
 }

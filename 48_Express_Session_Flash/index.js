@@ -27,6 +27,10 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get('/', (req, res) => {
+    res.send(`Current session ${JSON.stringify(req.session)}`);
+});
+
 app.get('/pageviews', (req, res) => {
     if (!req.session.count) req.session.count = 0;
     req.session.count++;
