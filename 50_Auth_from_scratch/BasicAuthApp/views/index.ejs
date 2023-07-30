@@ -6,11 +6,12 @@
     <title>Home</title>
 </head>
 <body>
-    <%- include('navbar', { user_id }) %>
+    <%- include('navbar', { user }) %>
 
     <h1>Home</h1>
 
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
+    <% if (user) { %>
+        <h2>You can only see this cuz you're in :D</h1>
+    <% } %>
 </body>
 </html>

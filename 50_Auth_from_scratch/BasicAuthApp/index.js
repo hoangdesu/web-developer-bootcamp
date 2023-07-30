@@ -4,7 +4,7 @@ const session = require('express-session');
 const path = require('path');
 const User = require('./User');
 const bcrypt = require('bcrypt');
-const flash = require('flash');
+const flash = require('connect-flash');
 const mongoose = require('mongoose');
 
 const db = 'basic-auth-app';
@@ -32,28 +32,38 @@ app.use(
 app.use(flash());
 app.use(express.urlencoded({ extended: true }));
 
+// flash middleware
+app.use((req, res, next) => {
+    res.locals.info = req.flash('info');
+    next();
+});
+
 const requireLoggedin = (req, res, next) => {
     if (!req.session.user_id) {
-        req.flash('unauthorized', 'Unauthorized. You need to login first');
+        req.flash('info', 'Unauthorized. You need to login first');
         res.redirect('/login');
     } else {
         return next();
     }
-} 
+};
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
     const { user_id } = req.session;
-    res.render('index', { user_id });
+    const user = await User.findById(user_id);
+    res.render('index', { user });
 });
 
-app.get('/login', (req, res) => {
+app.get('/login', async (req, res) => {
     const { user_id } = req.session;
-    res.render('login', { user_id });
+    // console.log('info:', res.locals.info);
+    const user = await User.findById(user_id);
+    res.render('login', { user });
 });
 
-app.get('/register', (req, res) => {
+app.get('/register', async (req, res) => {
     const { user_id } = req.session;
-    res.render('register', { user_id });
+    const user = await User.findById(user_id);
+    res.render('register', { user });
 });
 
 app.get('/secret', requireLoggedin, async (req, res) => {
@@ -64,20 +74,30 @@ app.get('/secret', requireLoggedin, async (req, res) => {
 
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
+
+    if (await User.findOne({ username })) {
+        req.flash('info', 'username already exists');
+        res.redirect('/register');
+        return;
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = new User({ username, password: hashedPassword });
     await user.save();
 
     // res.send(user);
     req.session.user_id = user._id;
-    res.redirect('/secret');
+    res.redirect('/');
 });
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
     console.log(user);
-    if (!user) return res.redirect(302, '/login');
+    if (!user) {
+        req.flash('info', 'username doesn\'t exist');
+        return res.redirect(302, '/login');
+    }
 
     const matched = await bcrypt.compare(password, user.password);
     console.log('matched:', matched);
@@ -86,14 +106,15 @@ app.post('/login', async (req, res) => {
         req.session.user_id = user._id;
         res.redirect('/secret');
     } else {
-        res.redirect('/');
+        req.flash('info', 'Wrong password');
+        res.redirect('/login');
     }
 });
 
 app.post('/logout', (req, res) => {
     req.session.user_id = null;
     // req.session.destroy();
-    res.send('/');
+    res.redirect('/');
 });
 
 app.listen(3001, () => {

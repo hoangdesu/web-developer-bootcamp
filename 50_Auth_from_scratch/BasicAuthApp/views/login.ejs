@@ -6,7 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    <%- include('navbar', { user_id }) %>
+    <%- include('navbar', { user }) %>
+    <% if (info) { %>
+        <p><%= info %></p>
+    <% } %>
     <h1>Login</h1>
     <form action="/login" method="POST">
         <div>
@@ -17,7 +20,7 @@
             <label for="">Password</label>
             <input type="text" name="password">
         </div>
-        <button>Register</button>
+        <button>Login</button>
     </form>
 </body>
 </html>

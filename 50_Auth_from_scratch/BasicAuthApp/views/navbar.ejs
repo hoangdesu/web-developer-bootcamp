@@ -1,3 +1,14 @@
 <div>
-    user_id: <%= user_id %>
+    <% if (user) { %>
+        <p>Logged in. user_id: <%= user._id %> - username: <%= user.username %></p>
+        <form action="/logout" method="post">
+            <button>Logout</button>
+        </form>
+    <% } else { %>
+        <p>Logged out</p>
+    <% } %>
+    <a href="/">Home</a>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+    <a href="/secret">Top secret</a>
 </div>
