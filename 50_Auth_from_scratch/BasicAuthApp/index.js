@@ -32,9 +32,11 @@ app.use(
 app.use(flash());
 app.use(express.urlencoded({ extended: true }));
 
-// flash middleware
-app.use((req, res, next) => {
+// flash and get user middleware
+app.use(async (req, res, next) => {
     res.locals.info = req.flash('info');
+    const { user_id } = req.session;
+    res.locals.user = await User.findById(user_id);
     next();
 });
 
@@ -49,27 +51,27 @@ const requireLoggedin = (req, res, next) => {
 
 app.get('/', async (req, res) => {
     const { user_id } = req.session;
-    const user = await User.findById(user_id);
-    res.render('index', { user });
+    // const user = await User.findById(user_id);
+    res.render('index');
 });
 
 app.get('/login', async (req, res) => {
     const { user_id } = req.session;
     // console.log('info:', res.locals.info);
-    const user = await User.findById(user_id);
-    res.render('login', { user });
+    // const user = await User.findById(user_id);
+    res.render('login');
 });
 
 app.get('/register', async (req, res) => {
-    const { user_id } = req.session;
-    const user = await User.findById(user_id);
-    res.render('register', { user });
+    // const { user_id } = req.session;
+    // const user = await User.findById(user_id);
+    res.render('register');
 });
 
 app.get('/secret', requireLoggedin, async (req, res) => {
-    const { user_id } = req.session;
-    const user = await User.findById(user_id);
-    res.render('secret', { user, user_id });
+    // const { user_id } = req.session;
+    // const user = await User.findById(user_id);
+    res.render('secret');
 });
 
 app.post('/register', async (req, res) => {
