@@ -84,10 +84,10 @@ app.post('/register', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const user = new User({ username, password: hashedPassword });
+    const user = new User({ username, password }); // use middleware to hash password before saving to db
     await user.save();
 
-    // res.send(user);
+    // store logged in user into sesssion
     req.session.user_id = user._id;
     res.redirect('/');
 });
@@ -97,12 +97,15 @@ app.post('/login', async (req, res) => {
     const user = await User.findOne({ username });
     console.log(user);
     if (!user) {
-        req.flash('info', 'username doesn\'t exist');
+        req.flash('info', "username doesn't exist");
         return res.redirect(302, '/login');
     }
 
     const matched = await bcrypt.compare(password, user.password);
     console.log('matched:', matched);
+
+    // could use static methods
+    // const validatedUser = await User.findAndValidate(username, password);
 
     if (matched) {
         req.session.user_id = user._id;
