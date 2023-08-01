@@ -123,7 +123,7 @@
     "fortran_fixed-form": "cd $dir && gfortran $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
     "fortran": "cd $dir && gfortran $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt"
   },
-  "window.zoomLevel": -1,
+  "window.zoomLevel": 0,
   "peacock.color": "#9d87b1"
   // "vscode-pets.theme": "beach"
 }

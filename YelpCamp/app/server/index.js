@@ -7,6 +7,8 @@ const path = require('path');
 const session = require('express-session');
 require('dotenv').config();
 const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
 
 const YelpcampError = require('./utilities/YelpcampError');
 const { resetDb } = require('./seeds');
@@ -24,22 +26,15 @@ db.once('open', () => {
 // Routers
 const campgroundRouter = require('./routes/campground');
 const reviewRouter = require('./routes/review');
+const userRouter = require('./routes/user');
 
 // Models
 const Review = require('./models/review');
+const User = require('./models/user');
 
 // Express
 const PORT = 3001;
 const app = express();
-
-// middlewares
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(cors());
-app.use(morgan('dev'));
-app.use(methodOverride('_method'));
-app.use('/static', express.static(path.join(__dirname, 'public')));
-app.use(flash());
 
 const sessionConfigs = {
     secret: process.env.SESSION_SECRET,
@@ -51,8 +46,23 @@ const sessionConfigs = {
         httpOnly: true,
     }
 };
-app.use(session(sessionConfigs));
 
+// middlewares
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors());
+app.use(morgan('dev'));
+app.use(methodOverride('_method'));
+app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use(session(sessionConfigs));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // for testing only
 app.get('/', (req, res) => {
@@ -71,6 +81,7 @@ app.get('/reviews', async (req, res, next) => {
 // Route handlers
 app.use('/api/v1/campgrounds', campgroundRouter);
 app.use('/api/v1/campgrounds/:campgroundId/reviews', reviewRouter);
+app.use('/api/v1/users', userRouter);
 
 // 404, place after all route handlers
 app.all('*', (req, res, next) => {
