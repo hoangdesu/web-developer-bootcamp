@@ -13,6 +13,14 @@ const pages = [
         href: '/campgrounds/new',
     },
     {
+        title: 'Register',
+        href: '/register',
+    },
+    {
+        title: 'Login',
+        href: '/login',
+    },
+    {
         title: 'About',
         href: '/about',
     },

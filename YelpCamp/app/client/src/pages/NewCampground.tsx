@@ -104,8 +104,6 @@ const NewCampground: React.FunctionComponent = () => {
                         Add campground
                     </Button>
                 </Form>
-                {/* for testing */}
-                {/* <button onClick={() => appContext.setAlert('ADD NEW CAMPGROUND')}>Set alert</button> */}
             </Container>
             <Footer />
         </PageContainer>

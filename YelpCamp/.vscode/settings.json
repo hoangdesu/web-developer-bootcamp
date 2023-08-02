@@ -18,22 +18,22 @@
     "terminal.ansiRed": "#FB543F",
     "terminal.ansiWhite": "#A89984",
     "terminal.ansiYellow": "#FAC03B",
-    "activityBar.activeBackground": "#b6a6c5",
-    "activityBar.background": "#b6a6c5",
+    "activityBar.activeBackground": "#a2f693",
+    "activityBar.background": "#a2f693",
     "activityBar.foreground": "#15202b",
     "activityBar.inactiveForeground": "#15202b99",
-    "activityBarBadge.background": "#877058",
-    "activityBarBadge.foreground": "#e7e7e7",
+    "activityBarBadge.background": "#899af5",
+    "activityBarBadge.foreground": "#15202b",
     "commandCenter.border": "#15202b99",
-    "sash.hoverBorder": "#b6a6c5",
-    "statusBar.background": "#9d87b1",
+    "sash.hoverBorder": "#a2f693",
+    "statusBar.background": "#79f264",
     "statusBar.foreground": "#15202b",
-    "statusBarItem.hoverBackground": "#84689d",
-    "statusBarItem.remoteBackground": "#9d87b1",
+    "statusBarItem.hoverBackground": "#50ee35",
+    "statusBarItem.remoteBackground": "#79f264",
     "statusBarItem.remoteForeground": "#15202b",
-    "titleBar.activeBackground": "#9d87b1",
+    "titleBar.activeBackground": "#79f264",
     "titleBar.activeForeground": "#15202b",
-    "titleBar.inactiveBackground": "#9d87b199",
+    "titleBar.inactiveBackground": "#79f26499",
     "titleBar.inactiveForeground": "#15202b99"
   },
   "security.workspace.trust.enabled": false,
@@ -124,6 +124,6 @@
     "fortran": "cd $dir && gfortran $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt"
   },
   "window.zoomLevel": 0,
-  "peacock.color": "#9d87b1"
+  "peacock.color": "#79f264"
   // "vscode-pets.theme": "beach"
 }
