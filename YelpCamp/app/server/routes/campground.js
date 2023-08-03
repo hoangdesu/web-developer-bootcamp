@@ -3,6 +3,7 @@ const router = express.Router();
 const { catchAsync } = require('../utilities/helpers');
 const { campgroundSchema } = require('../schemas');
 const YelpcampError = require('../utilities/YelpcampError');
+const { isLoggedIn } = require('../middleware');
 
 // Models
 const Campground = require('../models/campground');
@@ -40,6 +41,7 @@ router.get(
 
 router.get(
     `/:id`,
+    isLoggedIn,
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const campground = await Campground.findById(id)
@@ -51,6 +53,7 @@ router.get(
 
 router.post(
     `/`,
+    isLoggedIn,
     validateCampground,
     catchAsync(async (req, res, next) => {
         const { title, location, price, image, description } = req.body.campground;
@@ -73,6 +76,7 @@ router.post(
 
 router.put(
     `/:id`,
+    isLoggedIn,
     validateCampground,
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
@@ -90,6 +94,7 @@ router.put(
 
 router.delete(
     `/:id`,
+    isLoggedIn,
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const deletedCampground = await Campground.findByIdAndDelete(id);

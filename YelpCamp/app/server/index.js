@@ -47,6 +47,8 @@ const sessionConfigs = {
     }
 };
 
+
+
 // middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -63,6 +65,12 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+// testing
+app.use((req, res, next) => {
+    console.log('current user:', req.user);
+    next();
+})
 
 // for testing only
 app.get('/', (req, res) => {

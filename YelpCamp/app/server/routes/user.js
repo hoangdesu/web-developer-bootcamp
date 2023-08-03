@@ -3,9 +3,10 @@ const router = express.Router({ mergeParams: true });
 const { catchAsync } = require('../utilities/helpers');
 const User = require('../models/user');
 const YelpcampError = require('../utilities/YelpcampError');
+const passport = require('passport');
 
 router.get('/', async (req, res) => {
-    const users = await User.find({});
+    const users = await User.find({}).select('+salt +hash');
     res.status(200).json(users);
 });
 
@@ -33,5 +34,16 @@ router.get('/:id', async (req, res) => {
         res.send(e);
     }
 });
+
+router.post('/login', passport.authenticate('local', { failureFlash: true }), (req, res, next) => {
+    res.send(req.user);
+});
+
+router.post('/logout', (req, res, next) => {
+    req.logout(function (err) {
+        if (err) return next(err);
+        res.redirect('/');
+    })
+})
 
 module.exports = router;

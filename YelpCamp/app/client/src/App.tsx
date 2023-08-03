@@ -27,6 +27,12 @@ const App: React.FunctionComponent = () => {
         queryFn: () => axios.get(`${API_V1}/campgrounds`).then(res => res.data),
     });
 
+    const logoutHandler = () => {
+        axios.post('/api/v1/users/logout', {
+            campgroundsData
+        })
+    }
+
     if (isLoading) return <Loading />;
 
     if (error) return <p>An error has occurred: {error.message}</p>;
@@ -43,6 +49,9 @@ const App: React.FunctionComponent = () => {
                         </Alert>
                     </FlashMessage>
                 )}
+
+                {/* TESTING LOGOUT BUTTON */}
+                <button onClick={logoutHandler}>Logout</button>
                 <p className="mt-3">Total: {campgroundsData && campgroundsData.length} campgrounds</p>
 
                 <ul style={{ paddingLeft: 0 }}>

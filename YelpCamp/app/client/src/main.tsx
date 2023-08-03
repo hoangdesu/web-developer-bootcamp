@@ -16,6 +16,7 @@ import EditCampground from './pages/EditCampground';
 import ErrorBoundary from './pages/ErrorBoundary';
 import Loading from './pages/Loading';
 import Register from './pages/Register';
+import Login from './pages/Login';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
     {
         path: '/register',
         element: <Register />
+    },
+    {
+        path: '/login',
+        element: <Login />
     },
     {
         path: '/error',
