@@ -49,22 +49,21 @@ const Login: React.FunctionComponent = () => {
                     },
                 )
                 .then(async res => {
-                    await Promise.all(
-                        [
-                            appContext.setAlert({
-                                message: `Welcome back, ${res.data.username}!`,
-                                variant: 'success',
-                            }),
-                            appContext.setCurrentUser(res.data),
-                            navigate(`/`),
-                        ],
-                    );
+                    // BUG: CAN ONLY SET 1 STATE AT A TIME??
+                    // => SOLVED: spread the state in reducer, otherwise object will be reset
+                    appContext.setAlert({
+                        message: `Welcome back, ${res.data.username}!`,
+                        variant: 'success',
+                    });
+                    appContext.setCurrentUser(res.data);
+                    navigate(`/`);
                 })
                 .catch(err => {
                     appContext.setAlert({
                         message: 'Wrong username or password. Please login again',
                         variant: 'warning',
                     });
+                    appContext.setCurrentUser(null);
                     setValidated(false);
                     form.reset();
                 });

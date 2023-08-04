@@ -20,7 +20,7 @@ const validateCampground = (req, res, next) => {
 router.get(
     '/',
     catchAsync(async (req, res) => {
-        return res.status(200).json(await Campground.find({}));
+        return res.status(200).json(await Campground.find({}).exec());
     }),
 );
 
@@ -41,7 +41,6 @@ router.get(
 
 router.get(
     `/:id`,
-    requiresLoggedIn,
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const campground = await Campground.findById(id)

@@ -6,7 +6,8 @@ const YelpcampError = require('../utilities/YelpcampError');
 const passport = require('passport');
 
 router.get('/', async (req, res) => {
-    const users = await User.find({}).select('+salt +hash');
+    // const users = await User.find({}).select('+salt +hash');
+    const users = await User.find({}).exec();
     res.status(200).json(users);
 });
 
@@ -35,7 +36,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/login', passport.authenticate('local', { failureFlash: true }), (req, res, next) => {
+router.post('/login', passport.authenticate('local'), (req, res, next) => {
     console.log('login ok:', req.user);
     res.status(200).json(req.user);
 });

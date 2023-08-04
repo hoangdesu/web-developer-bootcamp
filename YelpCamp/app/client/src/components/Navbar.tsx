@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
-import { Navbar as BootstrapNavbar } from 'react-bootstrap';
+import { Navbar as BootstrapNavbar, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import AppContext from '../store/app-context';
+import axios from 'axios';
 
 const pages = [
     {
@@ -18,10 +19,10 @@ const pages = [
         title: 'Register',
         href: '/register',
     },
-    {
-        title: 'Login',
-        href: '/login',
-    },
+    // {
+    //     title: 'Login',
+    //     href: '/login',
+    // },
     {
         title: 'About',
         href: '/about',
@@ -29,7 +30,12 @@ const pages = [
 ];
 
 const Navbar: React.FunctionComponent = () => {
-    const appContext = useContext(AppContext)
+    const appContext = useContext(AppContext);
+
+    const logoutHandler = () => {
+        axios.post('/api/v1/users/logout');
+        appContext.setCurrentUser(null);
+    };
 
     return (
         <BootstrapNavbar bg="dark" variant="dark">
@@ -42,6 +48,17 @@ const Navbar: React.FunctionComponent = () => {
                             <span className="nav-link">{page.title}</span>
                         </Link>
                     ))}
+
+                    {appContext.currentUser ? (
+                        <Button variant="secondary" onClick={logoutHandler}>
+                            Logout
+                        </Button>
+                    ) : (
+                        // </Link>
+                        <Link to={'/login'} style={{ textDecoration: 'none' }} key={'login'}>
+                            <span className="nav-link">Login</span>
+                        </Link>
+                    )}
                 </Nav>
             </Container>
         </BootstrapNavbar>

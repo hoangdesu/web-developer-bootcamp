@@ -46,12 +46,19 @@ const NewCampground: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    appContext.setAlert('Created new campground successfully');
+                    appContext.setAlert({
+                        message: 'Created new campground successfully',
+                        variant: 'success'
+                    });
                     navigate(`/campgrounds/${res.data}`);
                 })
                 .catch(err => {
-                    console.log('-- bad request:', err);
-                    navigate('/error');
+                    appContext.setAlert({
+                        message: 'Please log in first before creating campground',
+                        variant: 'danger'
+                    });
+                    appContext.setCurrentUser(null);
+                    navigate('/login');
                 });
         }
         setValidated(true);

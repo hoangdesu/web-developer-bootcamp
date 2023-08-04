@@ -2,6 +2,6 @@ module.exports.requiresLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next();
     } else {
-        return res.redirect('/');
+        return res.sendStatus(401);
     }
 };

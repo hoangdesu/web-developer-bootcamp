@@ -4,7 +4,7 @@ import AppContext from '../store/app-context';
 
 const Footer: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
-    const debuggingMode = true;
+    const debuggingMode = false;
 
     const handler = () => {
         console.log(appContext);

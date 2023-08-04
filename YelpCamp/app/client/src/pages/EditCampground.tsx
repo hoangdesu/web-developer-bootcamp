@@ -55,8 +55,19 @@ const EditCampground: React.FunctionComponent = () => {
                     },
                 })
                 .then(res => {
-                    // appContext.setAlert('Campground has been updated');
+                    appContext.setAlert({
+                        message: 'Campground has been updated',
+                        variant: 'success',
+                    });
                     navigate(`/campgrounds/${campground._id}`);
+                })
+                .catch(err => {
+                    appContext.setAlert({
+                        message: 'Unauthorized! You must be login before editing',
+                        variant: 'danger',
+                    });
+                    appContext.setCurrentUser(null);
+                    navigate('/login');
                 });
         }
         setValidated(true);
@@ -72,11 +83,7 @@ const EditCampground: React.FunctionComponent = () => {
 
             <Container className="col-6 offset-3 my-5">
                 <h1 className="text-center mb-4">Edit Campground</h1>
-                <Form
-                    noValidate
-                    validated={validated}
-                    onSubmit={handleSubmit}
-                >
+                <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="campgroundTitle">
                         <Form.Label>Title</Form.Label>
                         <Form.Control type="text" ref={formTitle} defaultValue={campground.title} required />
@@ -95,13 +102,7 @@ const EditCampground: React.FunctionComponent = () => {
                         <Form.Label>Price</Form.Label>
                         <InputGroup className="mb-2">
                             <InputGroup.Text>$</InputGroup.Text>
-                            <Form.Control
-                                type="number"
-                                step="0.5"
-                                defaultValue={campground.price}
-                                ref={formPrice}
-                                required
-                            />
+                            <Form.Control type="number" step="0.5" defaultValue={campground.price} ref={formPrice} required />
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">Price is required!</Form.Control.Feedback>
                         </InputGroup>

@@ -47,12 +47,19 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
             axios
                 .delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`)
                 .then(res => {
-                    // appContext.setAlert('Comment deleted');
+                    appContext.setAlert({
+                        message: 'Comment deleted',
+                        variant: 'success'
+                    });
                     refetch();
                 })
                 .catch(e => {
                     console.log('Delete failed', e);
-                    // appContext.setAlert('Failed to delete comment');
+                    appContext.setAlert({
+                        message: 'Failed to delete comment',
+                        variant: 'danger'
+                    });
+                    appContext.setCurrentUser(null);
                 });
         }
     };

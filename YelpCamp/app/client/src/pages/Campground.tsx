@@ -83,13 +83,22 @@ const Campground: React.FunctionComponent = () => {
 
     const deleteCampgroundHandler = () => {
         if (confirm(`Delete ${campground.title}?`)) {
-            axios.delete(`${API_V1}/campgrounds/${campgroundId}`).then(() => {
-                appContext.setAlert({
-                    message: 'Deleted campground successfully',
-                    variant: 'warning',
+            axios
+                .delete(`${API_V1}/campgrounds/${campgroundId}`)
+                .then(() => {
+                    appContext.setAlert({
+                        message: 'Deleted campground successfully',
+                        variant: 'warning',
+                    });
+                    navigate('/');
+                })
+                .catch(err => {
+                    appContext.setAlert({
+                        message: 'Unauthorized!',
+                        variant: 'danger',
+                    });
+                    appContext.setCurrentUser(null);
                 });
-                navigate('/');
-            });
         }
     };
 
@@ -102,10 +111,6 @@ const Campground: React.FunctionComponent = () => {
         });
         navigate('/');
     }
-
-    useEffect(() => {
-        console.log('current user:', appContext.currentUser);
-    }, [])
 
     return (
         <PageContainer>
@@ -128,14 +133,16 @@ const Campground: React.FunctionComponent = () => {
                                     <Sell /> ${campground.price}
                                 </ListGroup.Item>
                             </ListGroup>
-                            <Card.Body>
-                                <Link to={`/campgrounds/${campgroundId}/edit`}>
-                                    <Button variant="info">Edit</Button>
-                                </Link>
-                                <Button variant="danger" className="mx-2" onClick={deleteCampgroundHandler}>
-                                    Delete
-                                </Button>
-                            </Card.Body>
+                            {appContext.currentUser && (
+                                <Card.Body>
+                                    <Link to={`/campgrounds/${campgroundId}/edit`}>
+                                        <Button variant="info">Edit</Button>
+                                    </Link>
+                                    <Button variant="danger" className="mx-2" onClick={deleteCampgroundHandler}>
+                                        Delete
+                                    </Button>
+                                </Card.Body>
+                            )}
                         </Card>
 
                         <Link to="/">
@@ -146,25 +153,34 @@ const Campground: React.FunctionComponent = () => {
                     </Col>
 
                     <Col xs={5} lg={5}>
-                        <h1>Leave a review</h1>
+                        {appContext.currentUser && (
+                            <>
+                                <h1>Leave a review</h1>
 
-                        <Form className="mb-5" noValidate validated={validated} onSubmit={onReviewSubmit}>
-                            <Form.Group className="mb-2" controlId="reviewRating">
-                                <Form.Label>{`Rating: ${ratingValue}`}</Form.Label>
-                                <Form.Range ref={reviewRating} onChange={() => setRatingValue(parseInt(e.target.value))} min={1} max={5} step={1} />
-                            </Form.Group>
+                                <Form className="mb-5" noValidate validated={validated} onSubmit={onReviewSubmit}>
+                                    <Form.Group className="mb-2" controlId="reviewRating">
+                                        <Form.Label>{`Rating: ${ratingValue}`}</Form.Label>
+                                        <Form.Range
+                                            ref={reviewRating}
+                                            onChange={() => setRatingValue(parseInt(e.target.value))}
+                                            min={1}
+                                            max={5}
+                                            step={1}
+                                        />
+                                    </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="reviewComment">
-                                <Form.Label>Comment</Form.Label>
-                                <Form.Control as="textarea" ref={reviewText} required />
-                                <Form.Control.Feedback type="invalid">Please add your comment</Form.Control.Feedback>
-                            </Form.Group>
+                                    <Form.Group className="mb-3" controlId="reviewComment">
+                                        <Form.Label>Comment</Form.Label>
+                                        <Form.Control as="textarea" ref={reviewText} required />
+                                        <Form.Control.Feedback type="invalid">Please add your comment</Form.Control.Feedback>
+                                    </Form.Group>
 
-                            <Button variant="primary" className="my-3" type="submit">
-                                Submit
-                            </Button>
-                        </Form>
-
+                                    <Button variant="primary" className="my-3" type="submit">
+                                        Submit
+                                    </Button>
+                                </Form>
+                            </>
+                        )}
                         <h2>
                             {campground.reviews?.length || 0} {campground.reviews?.length === 0 ? 'review' : 'reviews'}
                         </h2>

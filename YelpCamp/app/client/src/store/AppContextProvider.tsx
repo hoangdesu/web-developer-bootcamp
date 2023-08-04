@@ -16,11 +16,13 @@ const appReducer = (state, action) => {
     switch (action.type) {
         case 'SET_ALERT':
             return {
+                ...state,
                 alert: action.alert,
             };
             break;
         case 'SET_CURRENT_USER':
             return {
+                ...state, // spread to keep other state, otherwise reset
                 currentUser: action.user,
             };
             break;
