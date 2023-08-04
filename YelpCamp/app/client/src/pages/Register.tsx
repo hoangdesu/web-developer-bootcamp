@@ -50,7 +50,10 @@ const Register: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    appContext.setAlert('Created new user successfully');
+                    appContext.setAlert({
+                        message: 'Created new user',
+                        variant: 'success'
+                    });
                     navigate(`/campgrounds`);
                 })
                 .catch(err => {

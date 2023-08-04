@@ -33,21 +33,19 @@ const Review = require('./models/review');
 const User = require('./models/user');
 
 // Express
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const app = express();
 
 const sessionConfigs = {
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { 
+    cookie: {
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true,
-    }
+    },
 };
-
-
 
 // middlewares
 app.use(express.urlencoded({ extended: true }));
@@ -68,9 +66,9 @@ passport.deserializeUser(User.deserializeUser());
 
 // testing
 app.use((req, res, next) => {
-    console.log('current user:', req.user);
+    console.log('req.user:', req.user);
     next();
-})
+});
 
 // for testing only
 app.get('/', (req, res) => {

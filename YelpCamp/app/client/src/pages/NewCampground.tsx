@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -56,6 +56,16 @@ const NewCampground: React.FunctionComponent = () => {
         }
         setValidated(true);
     };
+
+    useEffect(() => {
+        if (!appContext.currentUser) {
+            appContext.setAlert({
+                message: 'Please log in first',
+                variant: 'warning',
+            })
+            navigate('/login');
+        }
+    }, []);
 
     return (
         <PageContainer>

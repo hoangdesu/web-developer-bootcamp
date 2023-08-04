@@ -16,6 +16,7 @@ import Loading from './Loading';
 import Review from '../components/Review';
 import FlashMessage from '../components/FlashMessage';
 import { Review as ReviewType } from '../types';
+import FlashAlert from '../components/FlashAlert';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -25,14 +26,6 @@ const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
-
-    // console.log(appContext.alert);
-
-    // useEffect(() => {
-    //     return () => {
-    //         appContext.setAlert(null);
-    //     }
-    // })
 
     const reviewText = useRef<HTMLInputElement>(null);
     const reviewRating = useRef<HTMLInputElement>(null);
@@ -72,7 +65,10 @@ const Campground: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    appContext.setAlert('Thank you for your review!');
+                    appContext.setAlert({
+                        message: 'Thank you for your review!',
+                        variant: 'info',
+                    });
                     refetch();
                     form.reset();
                     setValidated(false); // reset the form validated state
@@ -88,7 +84,10 @@ const Campground: React.FunctionComponent = () => {
     const deleteCampgroundHandler = () => {
         if (confirm(`Delete ${campground.title}?`)) {
             axios.delete(`${API_V1}/campgrounds/${campgroundId}`).then(() => {
-                appContext.setAlert('Deleted campground successfully');
+                appContext.setAlert({
+                    message: 'Deleted campground successfully',
+                    variant: 'warning',
+                });
                 navigate('/');
             });
         }
@@ -97,21 +96,22 @@ const Campground: React.FunctionComponent = () => {
     if (isLoading) return <Loading />;
 
     if (error || !campground) {
-        appContext.setAlert('Invalid campground!');
+        appContext.setAlert({
+            message: 'Invalid campground!',
+            variant: 'info',
+        });
         navigate('/');
     }
+
+    useEffect(() => {
+        console.log('current user:', appContext.currentUser);
+    }, [])
 
     return (
         <PageContainer>
             <Navbar />
             <Container className="col-9 my-5">
-                {appContext.alert && (
-                    <FlashMessage duration={3 * 1000} persistOnHover={true}>
-                        <Alert variant="info" onClose={() => appContext.setAlert(null)} dismissible>
-                            <span>{appContext.alert}</span>
-                        </Alert>
-                    </FlashMessage>
-                )}
+                <FlashAlert />
                 <Row>
                     <Col>
                         <Card>

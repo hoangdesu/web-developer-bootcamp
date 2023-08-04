@@ -28,7 +28,7 @@ router.get('/:id', async (req, res) => {
         const { id } = req.params;
         const user = await User.findById(id);
         res.json(user);
-        console.log()
+        console.log();
     } catch (e) {
         console.error(e);
         res.send(e);
@@ -36,14 +36,16 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local', { failureFlash: true }), (req, res, next) => {
-    res.send(req.user);
+    console.log('login ok:', req.user);
+    res.status(200).json(req.user);
 });
 
 router.post('/logout', (req, res, next) => {
     req.logout(function (err) {
         if (err) return next(err);
-        res.redirect('/');
-    })
-})
+        console.log('logging out...');
+        res.sendStatus(200);
+    });
+});
 
 module.exports = router;

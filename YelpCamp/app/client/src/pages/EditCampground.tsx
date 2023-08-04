@@ -55,7 +55,7 @@ const EditCampground: React.FunctionComponent = () => {
                     },
                 })
                 .then(res => {
-                    appContext.setAlert('Campground has been updated');
+                    // appContext.setAlert('Campground has been updated');
                     navigate(`/campgrounds/${campground._id}`);
                 });
         }

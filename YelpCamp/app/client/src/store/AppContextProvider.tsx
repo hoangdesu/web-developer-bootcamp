@@ -1,20 +1,27 @@
 import React, { useReducer } from 'react';
 import AppContext from './app-context';
+import { Alert, User } from '../types';
 
 interface appState {
-    alert: string | null;
+    alert: Alert | null;
+    currentUser: User | null;
 }
 
 const initialAppState: appState = {
     alert: null,
+    currentUser: null,
 };
 
 const appReducer = (state, action) => {
     switch (action.type) {
         case 'SET_ALERT':
             return {
-                ...state,
                 alert: action.alert,
+            };
+            break;
+        case 'SET_CURRENT_USER':
+            return {
+                currentUser: action.user,
             };
             break;
         default:
@@ -26,13 +33,19 @@ const appReducer = (state, action) => {
 const AppContextProvider = ({ children }) => {
     const [appState, dispatchAppAction] = useReducer(appReducer, initialAppState);
 
-    const setAlert = (alert: string | null) => {
+    const setAlert = (alert: Alert) => {
         dispatchAppAction({ type: 'SET_ALERT', alert: alert });
+    };
+
+    const setCurrentUser = (user: User) => {
+        dispatchAppAction({ type: 'SET_CURRENT_USER', user: user });
     };
 
     const appContext = {
         alert: appState.alert,
         setAlert: setAlert,
+        currentUser: appState.currentUser,
+        setCurrentUser: setCurrentUser,
     };
 
     return <AppContext.Provider value={appContext}>{children}</AppContext.Provider>;

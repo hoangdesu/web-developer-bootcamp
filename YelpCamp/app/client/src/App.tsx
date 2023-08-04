@@ -14,6 +14,7 @@ import Footer from './components/Footer';
 import CampgroundCard from './components/CampgroundCard';
 import Loading from './pages/Loading';
 import FlashMessage from './components/FlashMessage';
+import FlashAlert from './components/FlashAlert';
 
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
@@ -28,9 +29,8 @@ const App: React.FunctionComponent = () => {
     });
 
     const logoutHandler = () => {
-        axios.post('/api/v1/users/logout', {
-            campgroundsData
-        })
+        axios.post('/api/v1/users/logout');
+        appContext.setCurrentUser(null);
     }
 
     if (isLoading) return <Loading />;
@@ -42,13 +42,8 @@ const App: React.FunctionComponent = () => {
             <Navbar />
 
             <Container className="col-8 my-3">
-                {appContext.alert && (
-                    <FlashMessage duration={3 * 1000} persistOnHover={true}>
-                        <Alert variant="success" onClose={() => appContext.setAlert(null)} dismissible>
-                            <span>{appContext.alert}</span>
-                        </Alert>
-                    </FlashMessage>
-                )}
+
+                <FlashAlert />
 
                 {/* TESTING LOGOUT BUTTON */}
                 <button onClick={logoutHandler}>Logout</button>

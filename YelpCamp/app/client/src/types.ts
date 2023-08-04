@@ -12,4 +12,15 @@ export interface Review {
     comment: string;
     rating: number;
     campground: string;
-};
+}
+
+export interface Alert {
+    message: string;
+    variant: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark';
+}
+
+export interface User {
+    username: string;
+    email: string;
+    _id: string;
+}

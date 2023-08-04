@@ -1,16 +1,17 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import axios from 'axios';
 
 import AppContext from '../store/app-context';
 
-import { Container, Form, Button, InputGroup } from 'react-bootstrap';
+import { Container, Form, Button, InputGroup, Alert } from 'react-bootstrap';
 import { Visibility, VisibilityOff } from '@mui/icons-material/';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
+import FlashAlert from '../components/FlashAlert';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {
@@ -47,14 +48,25 @@ const Login: React.FunctionComponent = () => {
                         },
                     },
                 )
-                .then(res => {
-                    console.log(res);
-                    appContext.setAlert(`Welcome back, ${res.data.username}!`);
-                    navigate(`/campgrounds`);
+                .then(async res => {
+                    await Promise.all(
+                        [
+                            appContext.setAlert({
+                                message: `Welcome back, ${res.data.username}!`,
+                                variant: 'success',
+                            }),
+                            appContext.setCurrentUser(res.data),
+                            navigate(`/`),
+                        ],
+                    );
                 })
                 .catch(err => {
-                    console.log('-- bad request:', err);
-                    navigate('/error');
+                    appContext.setAlert({
+                        message: 'Wrong username or password. Please login again',
+                        variant: 'warning',
+                    });
+                    setValidated(false);
+                    form.reset();
                 });
         }
         setValidated(true);
@@ -64,6 +76,7 @@ const Login: React.FunctionComponent = () => {
         <PageContainer>
             <Navbar />
             <Container className="col-6 offset-3 mt-5">
+                <FlashAlert />
                 <h1 className="text-center mb-4">Login</h1>
                 <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">

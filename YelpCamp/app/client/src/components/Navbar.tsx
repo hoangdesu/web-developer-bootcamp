@@ -1,7 +1,9 @@
+import React, { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import { Navbar as BootstrapNavbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import AppContext from '../store/app-context';
 
 const pages = [
     {
@@ -27,6 +29,8 @@ const pages = [
 ];
 
 const Navbar: React.FunctionComponent = () => {
+    const appContext = useContext(AppContext)
+
     return (
         <BootstrapNavbar bg="dark" variant="dark">
             <Container>
