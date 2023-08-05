@@ -19,10 +19,6 @@ const pages = [
         title: 'Register',
         href: '/register',
     },
-    // {
-    //     title: 'Login',
-    //     href: '/login',
-    // },
     {
         title: 'About',
         href: '/about',
@@ -32,9 +28,11 @@ const pages = [
 const Navbar: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
 
-    const logoutHandler = () => {
-        axios.post('/api/v1/users/logout');
-        appContext.setCurrentUser(null);
+    const logoutHandler = async () => {
+        if (confirm('Logging out?')) {
+            await axios.post('/api/v1/users/logout');
+            appContext.setCurrentUser(null);
+        }
     };
 
     return (

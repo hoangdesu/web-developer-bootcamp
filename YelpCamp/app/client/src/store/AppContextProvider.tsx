@@ -22,7 +22,7 @@ const appReducer = (state, action) => {
             break;
         case 'SET_CURRENT_USER':
             return {
-                ...state, // spread to keep other state, otherwise reset
+                ...state, // spread to keep other state, otherwise state will be reset
                 currentUser: action.user,
             };
             break;
