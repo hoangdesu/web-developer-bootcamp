@@ -12,6 +12,7 @@ const LocalStrategy = require('passport-local');
 
 const YelpcampError = require('./utilities/YelpcampError');
 const { resetDb } = require('./seeds');
+const sessionConfigs = require('./configs/sessionConfigs');
 
 // Mongoose
 mongoose.set('strictQuery', true);
@@ -24,9 +25,9 @@ db.once('open', () => {
 });
 
 // Routers
-const campgroundRouter = require('./routes/campground');
-const reviewRouter = require('./routes/review');
-const userRouter = require('./routes/user');
+const campgroundRoutes = require('./routes/campground');
+const reviewRoutes = require('./routes/review');
+const userRoutes = require('./routes/user');
 
 // Models
 const Review = require('./models/review');
@@ -35,17 +36,6 @@ const User = require('./models/user');
 // Express
 const PORT = process.env.PORT || 3001;
 const app = express();
-
-const sessionConfigs = {
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-        httpOnly: true,
-    },
-};
 
 // middlewares
 app.use(express.urlencoded({ extended: true }));
@@ -56,21 +46,20 @@ app.use(methodOverride('_method'));
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use(session(sessionConfigs));
 app.use(flash());
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Passport
+app.use(passport.initialize());
+app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// testing
+// for testing only
 app.use((req, res, next) => {
     console.log('req.user:', req.user);
     next();
 });
 
-// for testing only
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'OK' });
 });
@@ -85,9 +74,9 @@ app.get('/reviews', async (req, res, next) => {
 });
 
 // Route handlers
-app.use('/api/v1/campgrounds', campgroundRouter);
-app.use('/api/v1/campgrounds/:campgroundId/reviews', reviewRouter);
-app.use('/api/v1/users', userRouter);
+app.use('/api/v1/campgrounds', campgroundRoutes);
+app.use('/api/v1/campgrounds/:campgroundId/reviews', reviewRoutes);
+app.use('/api/v1/users', userRoutes);
 
 // 404, place after all route handlers
 app.all('*', (req, res, next) => {

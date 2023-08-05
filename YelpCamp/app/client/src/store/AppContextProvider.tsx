@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import AppContext from './app-context';
 import { Alert, User } from '../types';
 
@@ -49,6 +49,11 @@ const AppContextProvider = ({ children }) => {
         currentUser: appState.currentUser,
         setCurrentUser: setCurrentUser,
     };
+
+    useEffect(() => {
+        const currentUser = localStorage.getItem('currentUser');
+        setCurrentUser(currentUser);
+    }, []);
 
     return <AppContext.Provider value={appContext}>{children}</AppContext.Provider>;
 };

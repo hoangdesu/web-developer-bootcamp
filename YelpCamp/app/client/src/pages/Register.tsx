@@ -11,6 +11,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material/';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
+import FlashAlert from '../components/FlashAlert';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {
@@ -50,15 +51,22 @@ const Register: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
+                    localStorage.setItem('currentUser', res.data);
+                    appContext.setCurrentUser(res.data);
                     appContext.setAlert({
-                        message: 'Created new user',
-                        variant: 'success'
+                        message: 'Welcome to YelpCamp!',
+                        variant: 'success',
                     });
                     navigate(`/`);
                 })
                 .catch(err => {
-                    console.log('-- bad request:', err);
-                    navigate('/error');
+                    console.log(err)
+                    appContext.setAlert({
+                        message: err.response?.data?.message || 'This email has been used',
+                        variant: 'warning',
+                    });
+                    setValidated(false);
+                    form.reset();
                 });
         }
         setValidated(true);
@@ -68,6 +76,7 @@ const Register: React.FunctionComponent = () => {
         <PageContainer>
             <Navbar />
             <Container className="col-6 offset-3 mt-5">
+                <FlashAlert />
                 <h1 className="text-center mb-4">Register</h1>
                 <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">

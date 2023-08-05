@@ -48,14 +48,15 @@ const Login: React.FunctionComponent = () => {
                         },
                     },
                 )
-                .then(async res => {
+                .then(res => {
                     // BUG: CAN ONLY SET 1 STATE AT A TIME??
                     // => SOLVED: spread the state in reducer, otherwise object will be reset
+                    localStorage.setItem('currentUser', JSON.stringify(res.data));
+                    appContext.setCurrentUser(res.data);
                     appContext.setAlert({
                         message: `Welcome back, ${res.data.username}!`,
                         variant: 'success',
                     });
-                    appContext.setCurrentUser(res.data);
                     navigate(`/`);
                 })
                 .catch(err => {

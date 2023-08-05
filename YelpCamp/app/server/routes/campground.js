@@ -3,7 +3,7 @@ const router = express.Router();
 const { catchAsync } = require('../utilities/helpers');
 const { campgroundSchema } = require('../schemas');
 const YelpcampError = require('../utilities/YelpcampError');
-const { requiresLoggedIn } = require('../middleware');
+const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 
 // Models
 const Campground = require('../models/campground');

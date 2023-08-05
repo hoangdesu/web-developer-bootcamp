@@ -3,16 +3,16 @@ const { getAllCitiesData, descriptors, places } = require('./seedHelpers');
 
 const Campground = require('../models/campground');
 
-mongoose.set('strictQuery', true);
-const dbName = 'yelp-camp';
-const URI = `mongodb://localhost:27017/${dbName}`;
-mongoose
-    .connect(URI)
-    .then(() => {
-        console.log(`Mongoose: connected to db "${dbName}"`);
-        resetDb();
-    })
-    .catch(e => console.error.bind(console, 'connection error:'));
+// mongoose.set('strictQuery', true);
+// const dbName = 'yelp-camp';
+// const URI = `mongodb://localhost:27017/${dbName}`;
+// mongoose
+//     .connect(URI)
+//     .then(() => {
+//         console.log(`Mongoose: connected to db "${dbName}"`);
+//         resetDb();
+//     })
+//     .catch(e => console.error.bind(console, 'connection error:'));
 
 const sample = arr => arr[Math.floor(Math.random() * arr.length)];
 

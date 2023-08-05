@@ -16,10 +16,6 @@ const pages = [
         href: '/campgrounds/new',
     },
     {
-        title: 'Register',
-        href: '/register',
-    },
-    {
         title: 'About',
         href: '/about',
     },
@@ -32,6 +28,7 @@ const Navbar: React.FunctionComponent = () => {
         if (confirm('Logging out?')) {
             await axios.post('/api/v1/users/logout');
             appContext.setCurrentUser(null);
+            localStorage.removeItem('currentUser');
         }
     };
 
@@ -39,8 +36,8 @@ const Navbar: React.FunctionComponent = () => {
         <BootstrapNavbar bg="dark" variant="dark">
             <Container>
                 <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
-                {/* <Nav className="me-auto"> */}
-                <Nav>
+                <Nav className="me-auto">
+                    {/* <Nav> */}
                     {pages.map(page => (
                         <Link to={page.href} style={{ textDecoration: 'none' }} key={page.title}>
                             <span className="nav-link">{page.title}</span>
@@ -52,10 +49,14 @@ const Navbar: React.FunctionComponent = () => {
                             Logout
                         </Button>
                     ) : (
-                        // </Link>
-                        <Link to={'/login'} style={{ textDecoration: 'none' }} key={'login'}>
-                            <span className="nav-link">Login</span>
-                        </Link>
+                        <>
+                            <Link to={'/login'} style={{ textDecoration: 'none' }} key={'login'}>
+                                <span className="nav-link">Login</span>
+                            </Link>
+                            <Link to={'/register'} style={{ textDecoration: 'none' }} key={'register'}>
+                                <span className="nav-link">Register</span>
+                            </Link>
+                        </>
                     )}
                 </Nav>
             </Container>

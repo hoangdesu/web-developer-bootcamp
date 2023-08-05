@@ -7,7 +7,11 @@ const AppContext = createContext({
         variant: String,
     },
     setAlert: (alert: Alert) => {},
-    currentUser: {},
+    currentUser: {
+        id: String,
+        username: String,
+        email: String,
+    },
     setCurrentUser: (user: User | null) => {},
 });
 

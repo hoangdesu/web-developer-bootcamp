@@ -6,7 +6,7 @@ import axios from 'axios';
 import { API_V1 } from '../constants';
 import AppContext from '../store/app-context';
 
-import { Container, Button, Card, ListGroup, Form, Col, Row, Alert } from 'react-bootstrap';
+import { Container, Button, Card, ListGroup, Form, Col, Row } from 'react-bootstrap';
 import { LocationOn, Sell } from '@mui/icons-material';
 
 import Navbar from '../components/Navbar';
@@ -24,8 +24,8 @@ export async function loader({ params }) {
 
 const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
-    const navigate = useNavigate();
     const appContext = useContext(AppContext);
+    const navigate = useNavigate();
 
     const reviewText = useRef<HTMLInputElement>(null);
     const reviewRating = useRef<HTMLInputElement>(null);
@@ -74,8 +74,12 @@ const Campground: React.FunctionComponent = () => {
                     setValidated(false); // reset the form validated state
                 })
                 .catch(err => {
-                    console.log('-- bad request:', err);
-                    navigate('/error');
+                    appContext.setAlert({
+                        message: 'Unauthorized to delete comment. Please login again',
+                        variant: 'danger'
+                    })
+                    appContext.setCurrentUser(null);
+                    navigate('/login');
                 });
         }
         setValidated(true);
@@ -154,6 +158,7 @@ const Campground: React.FunctionComponent = () => {
                     </Col>
 
                     <Col xs={5} lg={5}>
+                        {/* only activate review form for logged in user */}
                         {appContext.currentUser && (
                             <>
                                 <h1>Leave a review</h1>

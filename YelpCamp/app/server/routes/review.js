@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router({ mergeParams: true });
 const { catchAsync } = require('../utilities/helpers');
 const { reviewSchema } = require('../schemas');
+const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 
 const YelpcampError = require('../utilities/YelpcampError');
 
@@ -18,6 +19,7 @@ const validateReview = (req, res, next) => {
 // POST /api/v1/campgrounds/:campgroundId/reviews
 router.post(
     '/',
+    requiresLoggedIn,
     validateReview,
     catchAsync(async (req, res) => {
         const { campgroundId } = req.params;
@@ -37,6 +39,7 @@ router.post(
 // DELETE /api/v1/campgrounds/:campgroundId/reviews/:reviewId
 router.delete(
     '/:reviewId',
+    requiresLoggedIn,
     catchAsync(async (req, res) => {
         const { campgroundId, reviewId } = req.params;
 

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
@@ -38,7 +38,7 @@ const App: React.FunctionComponent = () => {
 
             <Container className="col-8 my-3">
                 <FlashAlert />
-                
+
                 <p className="mt-3">Total: {campgroundsData && campgroundsData.length} campgrounds</p>
                 <ul style={{ paddingLeft: 0 }}>
                     {Array.isArray(campgroundsData) &&
