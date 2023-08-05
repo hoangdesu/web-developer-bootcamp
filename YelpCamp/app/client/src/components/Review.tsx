@@ -40,8 +40,6 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
-    // console.log(appContext.alert)
-
     const removeReviewHandler = () => {
         if (confirm('Are you sure to delete this comment?')) {
             axios
@@ -49,7 +47,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                 .then(res => {
                     appContext.setAlert({
                         message: 'Comment deleted',
-                        variant: 'success'
+                        variant: 'success',
                     });
                     refetch();
                 })
@@ -57,7 +55,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                     console.log('Delete failed', e);
                     appContext.setAlert({
                         message: 'Failed to delete comment',
-                        variant: 'danger'
+                        variant: 'danger',
                     });
                     appContext.setCurrentUser(null);
                 });
@@ -67,7 +65,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
     return (
         <Card className="mb-3">
             <StyledCardBody>
-                <ClearIcon onClick={removeReviewHandler} className="clearIcon" />
+                {appContext.currentUser && <ClearIcon onClick={removeReviewHandler} className="clearIcon" />}
                 <Card.Title>Rating: {review.rating}</Card.Title>
                 <Card.Text>Comment: {review.comment}</Card.Text>
             </StyledCardBody>

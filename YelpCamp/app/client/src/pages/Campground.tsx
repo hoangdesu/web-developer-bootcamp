@@ -94,10 +94,11 @@ const Campground: React.FunctionComponent = () => {
                 })
                 .catch(err => {
                     appContext.setAlert({
-                        message: 'Unauthorized!',
+                        message: 'Unauthorized to delete campground',
                         variant: 'danger',
                     });
                     appContext.setCurrentUser(null);
+                    navigate('/login');
                 });
         }
     };

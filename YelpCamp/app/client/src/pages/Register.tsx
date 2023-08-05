@@ -54,7 +54,7 @@ const Register: React.FunctionComponent = () => {
                         message: 'Created new user',
                         variant: 'success'
                     });
-                    navigate(`/campgrounds`);
+                    navigate(`/`);
                 })
                 .catch(err => {
                     console.log('-- bad request:', err);
