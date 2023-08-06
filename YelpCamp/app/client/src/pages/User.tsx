@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
-import { useLoaderData, useNavigate } from 'react-router-dom';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import { Button, Container } from 'react-bootstrap';
 import FlashAlert from '../components/FlashAlert';
@@ -39,6 +39,12 @@ const User = () => {
                 <p>Username: {user.username}</p>
                 <p>UserId: {user._id}</p>
                 <p>Email: {user.email}</p>
+                <p>Owned campgrounds:</p>
+                <ol>
+                    {user.campgrounds.map(campground => (
+                        <li><Link to={`/campgrounds/${campground._id}`}>{campground.title} (${campground.price})</Link></li>
+                    ))}
+                </ol>
                 <Button onClick={() => navigate(-1)}>Back</Button>
             </Container>
             <Footer />
