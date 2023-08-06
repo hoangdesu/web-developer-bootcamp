@@ -9,7 +9,7 @@ interface CardProps {
 }
 
 const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
-    console.log(campground);
+    // console.log(campground);
     return (
         <Card>
             <Row>

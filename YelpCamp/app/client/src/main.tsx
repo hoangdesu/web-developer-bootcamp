@@ -17,6 +17,7 @@ import ErrorBoundary from './pages/ErrorBoundary';
 import Loading from './pages/Loading';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import User, { loader as usernameLoader } from './pages/User';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -60,11 +61,17 @@ const router = createBrowserRouter([
     },
     {
         path: '/register',
-        element: <Register />
+        element: <Register />,
     },
     {
         path: '/login',
-        element: <Login />
+        element: <Login />,
+    },
+    {
+        path: '/users/:username',
+        element: <User />,
+        loader: usernameLoader,
+        errorElement: <ErrorBoundary />,
     },
     {
         path: '/error',

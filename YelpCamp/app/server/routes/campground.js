@@ -13,7 +13,7 @@ const User = require('../models/user');
 const validateCampground = (req, res, next) => {
     // validating request body with Joi before extracting data
     const { error: validationError } = campgroundSchema.validate(req.body);
-    console.log('validationError:', validationError);
+    // console.log('validationError:', validationError);
     if (validationError) throw new YelpcampError(400, validationError);
     next(); // dont forget!
 };
@@ -53,6 +53,7 @@ router.get(
     }),
 );
 
+// POST /api/v1/campgrounds
 router.post(
     `/`,
     requiresLoggedIn,
@@ -60,7 +61,7 @@ router.post(
     catchAsync(async (req, res, next) => {
         const { title, location, price, image, description, author } = req.body.campground;
 
-        console.log('body campground:', req.body.campground);
+        // console.log('body', req.body.campground);
 
         const savedCampground = await Campground({
             title,
@@ -71,23 +72,19 @@ router.post(
             author,
         }).save();
 
-        console.log('savedCampground:', savedCampground);
+        // save new campground to user's campgrounds list
+        const user = await User.findById(author);
+        if (!user) return next(new YelpcampError(500, 'User not found'));
 
-        const user = await User.findOne({ id: author._id });
-        // User.find;
-
-        console.log('user', user);
         user.campgrounds.push(savedCampground._id);
         await user.save();
 
-        if (savedCampground) {
-            res.status(200).json(savedCampground._id);
-        } else {
-            return next(new YelpcampError(400, 'Failed saving campground'));
-        }
+        if (!savedCampground) return next(new YelpcampError(400, 'Failed saving campground'));
+        res.status(201).json(savedCampground._id);
     }),
 );
 
+// PUT /api/v1/campgrounds:id
 router.put(
     `/:id`,
     requiresLoggedIn,

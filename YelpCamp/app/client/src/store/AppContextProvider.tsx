@@ -52,9 +52,12 @@ const AppContextProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        axios.get('/api/v1/auth/currentuser').then(res => {
-            setCurrentUser(res.data);
-        });
+        //     axios.get('/api/v1/auth/currentuser').then(res => {
+        //         setCurrentUser(res.data);
+        //     });
+        const user = localStorage.getItem('currentUser');
+        setCurrentUser(JSON.parse(user));
+        // console.log('user', user);
     }, []);
 
     return <AppContext.Provider value={appContext}>{children}</AppContext.Provider>;

@@ -7,4 +7,4 @@ export const shuffle = (arr: []): [] => {
         arr[randomIndex] = temp;
     }
     return arr;
-}
+};

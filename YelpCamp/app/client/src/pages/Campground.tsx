@@ -6,7 +6,7 @@ import axios from 'axios';
 import AppContext from '../store/app-context';
 
 import { Container, Button, Card, ListGroup, Form, Col, Row } from 'react-bootstrap';
-import { LocationOn, Sell } from '@mui/icons-material';
+import { LocationOn, Sell, Person } from '@mui/icons-material';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -15,6 +15,7 @@ import Loading from './Loading';
 import Review from '../components/Review';
 import { Review as ReviewType } from '../types';
 import FlashAlert from '../components/FlashAlert';
+import { USDtoVND } from '../utils/currency';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -115,7 +116,7 @@ const Campground: React.FunctionComponent = () => {
         navigate('/');
     }
 
-    console.log('campground', campground);
+    const formattedPrice = `$${campground.price}/night (~${USDtoVND(campground.price)})`;
 
     return (
         <PageContainer>
@@ -131,12 +132,14 @@ const Campground: React.FunctionComponent = () => {
                                 <Card.Text>{campground.description}</Card.Text>
                             </Card.Body>
                             <ListGroup className="list-group-flush">
-                                <ListGroup.Item>Author: {campground.author?.username}</ListGroup.Item>
                                 <ListGroup.Item className="text-muted">
                                     <LocationOn /> {campground.location}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
-                                    <Sell /> ${campground.price}
+                                    <Sell /> {formattedPrice}
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                    <Person /> <Link to={`/users/${campground.author?.username}`}>{campground.author?.username || 'annonymous'}</Link>
                                 </ListGroup.Item>
                             </ListGroup>
                             {appContext.currentUser && campground.author?._id === appContext.currentUser?.id && (

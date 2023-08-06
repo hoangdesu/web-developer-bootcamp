@@ -9,8 +9,7 @@ import { Container, Form, Button, InputGroup } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
-import { useQuery } from 'react-query';
-import Loading from './Loading';
+import FlashAlert from '../components/FlashAlert';
 
 const NewCampground: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
@@ -22,16 +21,18 @@ const NewCampground: React.FunctionComponent = () => {
     const formPrice = useRef<HTMLInputElement>(null);
     const formImage = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
-    const formAuthor = useRef<HTMLInputElement>(null);
 
-    const {
-        isLoading,
-        error,
-        data: currentUser,
-    } = useQuery({
-        queryKey: ['newCampground'],
-        queryFn: () => axios.get(`/api/v1/auth/currentuser`).then(res => res.data),
-    });
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    useEffect(() => {
+        if (!currentUser) {
+            appContext.setAlert({
+                message: 'Please log in first',
+                variant: 'warning',
+            });
+            navigate('/login');
+        }
+    }, [currentUser]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -66,31 +67,36 @@ const NewCampground: React.FunctionComponent = () => {
                     navigate(`/campgrounds/${res.data}`);
                 })
                 .catch(err => {
+                    console.log(err);
+                    let errorMessage = 'Something went wrong';
+                    if (err.response.status === 400) {
+                        errorMessage = err.response?.data?.details ? err.response.data.details[0].message : err.response?.data;
+                        // setValidated(false);
+                        // form.reset();
+                    } else if (err.response.status === 401) {
+                        errorMessage = err.response?.data || 'Unauthorized! Please log in again';
+                        localStorage.removeItem('currentUser');
+                        navigate('/login');
+                    } else if (err.response.status === 500) {
+                        errorMessage = err.response?.data || err.reponse?.message;
+                    }
                     appContext.setAlert({
-                        message: 'Please log in first before creating campground',
+                        message: errorMessage,
                         variant: 'danger',
                     });
                     appContext.setCurrentUser(null);
-                    navigate('/login');
                 });
         }
         setValidated(true);
     };
 
-    if (isLoading) return <Loading />;
-
-    if (!currentUser) {
-        appContext.setAlert({
-            message: 'Please log in first',
-            variant: 'warning',
-        });
-        navigate('/login');
-    }
+    // if (isLoading) return <Loading />;
 
     return (
         <PageContainer>
             <Navbar />
             <Container className="col-6 offset-3 mt-5">
+                <FlashAlert />
                 <h1 className="text-center mb-4">New Campground</h1>
                 <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="campgroundTitle">

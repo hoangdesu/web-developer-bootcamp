@@ -37,6 +37,20 @@ router.post(
     }),
 );
 
+router.get('/username/:username', async (req, res, next) => {
+    try {
+        const { username } = req.params;
+        const user = await User.findOne({ username }).select('_id username email');
+
+        if (!user) return next(new YelpcampError(404, 'User not found'));
+
+        // console.log(user);
+        res.status(200).send(user);
+    } catch (err) {
+        console.error(err);
+    }
+});
+
 router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -50,7 +64,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local'), (req, res, next) => {
-    console.log('Logged in!');
+    console.log('Logged in!', req.user.username);
     res.sendStatus(200);
 });
 
