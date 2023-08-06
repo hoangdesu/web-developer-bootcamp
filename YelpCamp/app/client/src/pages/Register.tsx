@@ -57,6 +57,7 @@ const Register: React.FunctionComponent = () => {
                             variant: 'success',
                         });
                         appContext.setCurrentUser(resp.data);
+                        localStorage.setItem('currentUser', JSON.stringify(resp.data));
                         navigate(`/`);
                     });
                 })

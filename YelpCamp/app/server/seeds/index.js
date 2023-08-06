@@ -34,7 +34,7 @@ const seedDatabase = async (dbCounts) => {
         console.log('user:', randomUserIndex, randomUser.username)
 
         // to be updated
-        await new Campground({
+        const newCampground = await new Campground({
             title: `${sample(descriptors)} ${sample(places)}`,
             price: (Math.random() * 50).toFixed(1),
             description: 'campground description placeholder',
@@ -42,6 +42,10 @@ const seedDatabase = async (dbCounts) => {
             image: 'https://source.unsplash.com/collection/1114848', // random photo in "camping" collection
             author: randomUser._id,
         }).save();
+
+        randomUser.campgrounds.push(newCampground);
+        await randomUser.save();
+
 
         console.log('saved:', city, admin_name);
         cities.splice(randomIndex, 1); // remove to avoid duplication

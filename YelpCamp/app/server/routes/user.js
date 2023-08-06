@@ -40,7 +40,7 @@ router.post(
 router.get('/username/:username', async (req, res, next) => {
     try {
         const { username } = req.params;
-        const user = await User.findOne({ username }).select('_id username email');
+        const user = await User.findOne({ username }).select('_id username email').populate('campgrounds', '_id title price').exec();
 
         if (!user) return next(new YelpcampError(404, 'User not found'));
 
@@ -64,7 +64,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local'), (req, res, next) => {
-    console.log('Logged in!', req.user.username);
+    console.log('User logged in:', req.user.username);
     res.sendStatus(200);
 });
 
