@@ -9,6 +9,8 @@ import { Container, Form, Button, InputGroup } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
+import { useQuery } from 'react-query';
+import Loading from './Loading';
 
 const NewCampground: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
@@ -20,6 +22,16 @@ const NewCampground: React.FunctionComponent = () => {
     const formPrice = useRef<HTMLInputElement>(null);
     const formImage = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
+
+    const {
+        isLoading,
+        error,
+        data: currentUser,
+        refetch,
+    } = useQuery({
+        queryKey: ['campgroundsData'],
+        queryFn: () => axios.get(`/api/v1/users/currentuser`).then(res => res.data),
+    });
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -64,15 +76,35 @@ const NewCampground: React.FunctionComponent = () => {
         setValidated(true);
     };
 
-    useEffect(() => {
-        if (!appContext.currentUser) {
-            appContext.setAlert({
-                message: 'Please log in first',
-                variant: 'warning',
-            })
-            navigate('/login');
-        }
-    }, []);
+    if (isLoading) return <Loading />
+
+    if (!currentUser) {
+        appContext.setAlert({
+                            message: 'Please log in first',
+                            variant: 'warning',
+                        })
+                        navigate('/login');
+    }
+
+    // useEffect(() => {
+    //     axios.get('/api/v1/users/currentuser').then(resp => {
+    //         // appContext.setAlert({
+    //         //     message: `Welcome back! ${resp.data.username}`,
+    //         //     variant: 'success',
+    //         // });
+    //         // appContext.setCurrentUser(resp.data);
+    //         // navigate(`/`);
+    //         if (!resp.data) {
+    //             appContext.setAlert({
+    //                 message: 'Please log in first',
+    //                 variant: 'warning',
+    //             })
+    //             navigate('/login');
+    //         }
+    //     })
+        
+        
+    // }, []);
 
     return (
         <PageContainer>

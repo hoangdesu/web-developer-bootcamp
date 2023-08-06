@@ -51,16 +51,18 @@ const Register: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    localStorage.setItem('currentUser', res.data);
-                    appContext.setCurrentUser(res.data);
-                    appContext.setAlert({
-                        message: 'Welcome to YelpCamp!',
-                        variant: 'success',
+                    // localStorage.setItem('currentUser', res.data);
+                    axios.get('/api/v1/users/currentuser').then(resp => {
+                        appContext.setAlert({
+                            message: `Welcome to YelpCamp, ${resp.data.username}!`,
+                            variant: 'success',
+                        });
+                        appContext.setCurrentUser(resp.data);
+                        navigate(`/`);
                     });
-                    navigate(`/`);
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log(err);
                     appContext.setAlert({
                         message: err.response?.data?.message || 'This email has been used',
                         variant: 'warning',

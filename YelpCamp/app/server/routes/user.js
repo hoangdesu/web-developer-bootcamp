@@ -7,6 +7,7 @@ const YelpcampError = require('../utilities/YelpcampError');
 
 const User = require('../models/user');
 
+
 // GET /api/v1/users
 router.get('/', async (req, res) => {
     // const users = await User.find({}).select('+salt +hash'); // salt and hash fields are not returned by default
@@ -28,12 +29,12 @@ router.post(
             // establish a login session after user resigter successfully
             req.login(user, function (err) {
                 if (err) return next(err);
-                const user = {
-                    id: newUser._id,
-                    username: newUser.username,
-                    email: newUser.email,
-                };
-                return res.status(200).json(user);
+                // const user = {
+                //     id: newUser._id,
+                //     username: newUser.username,
+                //     email: newUser.email,
+                // };
+                return res.sendStatus(200);
             });
         } catch (err) {
             console.log(err);
@@ -41,6 +42,18 @@ router.post(
         }
     }),
 );
+
+router.get('/currentuser', (req, res) => {
+    if (req.user) {
+        res.status(200).json({
+            user: req.user._id,
+            username: req.user.username,
+            email: req.user.email
+        });
+    } else {
+        res.status(200).json(null);
+    }
+});
 
 router.get('/:id', async (req, res) => {
     try {
@@ -54,14 +67,15 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+
 router.post('/login', passport.authenticate('local', {}), (req, res, next) => {
     console.log('Logged in!');
-    const user = {
-        id: req.user._id,
-        username: req.user.username,
-        email: req.user.email,
-    };
-    res.status(200).json(user);
+    // const user = {
+    //     id: req.user._id,
+    //     username: req.user.username,
+    //     email: req.user.email,
+    // };
+    res.sendStatus(200);
 });
 
 router.post('/logout', (req, res, next) => {
@@ -71,5 +85,6 @@ router.post('/logout', (req, res, next) => {
         res.sendStatus(200);
     });
 });
+
 
 module.exports = router;

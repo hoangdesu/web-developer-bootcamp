@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import AppContext from './app-context';
 import { Alert, User } from '../types';
+import axios from 'axios';
 
 interface appState {
     alert: Alert | null;
@@ -51,8 +52,9 @@ const AppContextProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        const currentUser = localStorage.getItem('currentUser');
-        setCurrentUser(currentUser);
+        axios.get('/api/v1/users/currentuser').then(res => {
+            setCurrentUser(res.data);
+        });
     }, []);
 
     return <AppContext.Provider value={appContext}>{children}</AppContext.Provider>;

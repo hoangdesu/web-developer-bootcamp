@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import AppContext from '../store/app-context';
 
-import { Container, Form, Button, InputGroup, Alert } from 'react-bootstrap';
+import { Container, Form, Button, InputGroup } from 'react-bootstrap';
 import { Visibility, VisibilityOff } from '@mui/icons-material/';
 
 import Navbar from '../components/Navbar';
@@ -51,13 +51,14 @@ const Login: React.FunctionComponent = () => {
                 .then(res => {
                     // BUG: CAN ONLY SET 1 STATE AT A TIME??
                     // => SOLVED: spread the state in reducer, otherwise object will be reset
-                    localStorage.setItem('currentUser', JSON.stringify(res.data));
-                    appContext.setCurrentUser(res.data);
-                    appContext.setAlert({
-                        message: `Welcome back, ${res.data.username}!`,
-                        variant: 'success',
+                    axios.get('/api/v1/users/currentuser').then(resp => {
+                        appContext.setAlert({
+                            message: `Welcome back, ${resp.data.username}!`,
+                            variant: 'success',
+                        });
+                        appContext.setCurrentUser(resp.data);
+                        navigate(-1);
                     });
-                    navigate(`/`);
                 })
                 .catch(err => {
                     appContext.setAlert({
