@@ -3,7 +3,6 @@ import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import { API_V1 } from '../constants';
 import AppContext from '../store/app-context';
 
 import { Container, Button, Card, ListGroup, Form, Col, Row } from 'react-bootstrap';
@@ -14,7 +13,6 @@ import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import Loading from './Loading';
 import Review from '../components/Review';
-import FlashMessage from '../components/FlashMessage';
 import { Review as ReviewType } from '../types';
 import FlashAlert from '../components/FlashAlert';
 
@@ -40,7 +38,7 @@ const Campground: React.FunctionComponent = () => {
         refetch,
     } = useQuery({
         queryKey: ['campgroundsData'],
-        queryFn: () => axios.get(`${API_V1}/campgrounds/${campgroundId}`).then(res => res.data),
+        queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
     });
 
     const onReviewSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -76,8 +74,8 @@ const Campground: React.FunctionComponent = () => {
                 .catch(err => {
                     appContext.setAlert({
                         message: 'Unauthorized to delete comment. Please login again',
-                        variant: 'danger'
-                    })
+                        variant: 'danger',
+                    });
                     appContext.setCurrentUser(null);
                     navigate('/login');
                 });
@@ -88,7 +86,7 @@ const Campground: React.FunctionComponent = () => {
     const deleteCampgroundHandler = () => {
         if (confirm(`Delete ${campground.title}?`)) {
             axios
-                .delete(`${API_V1}/campgrounds/${campgroundId}`)
+                .delete(`/api/v1/campgrounds/${campgroundId}`)
                 .then(() => {
                     appContext.setAlert({
                         message: 'Deleted campground successfully',
@@ -117,6 +115,8 @@ const Campground: React.FunctionComponent = () => {
         navigate('/');
     }
 
+    console.log('campground', campground);
+
     return (
         <PageContainer>
             <Navbar />
@@ -131,6 +131,7 @@ const Campground: React.FunctionComponent = () => {
                                 <Card.Text>{campground.description}</Card.Text>
                             </Card.Body>
                             <ListGroup className="list-group-flush">
+                                <ListGroup.Item>Author: {campground.author?.username}</ListGroup.Item>
                                 <ListGroup.Item className="text-muted">
                                     <LocationOn /> {campground.location}
                                 </ListGroup.Item>
@@ -138,7 +139,7 @@ const Campground: React.FunctionComponent = () => {
                                     <Sell /> ${campground.price}
                                 </ListGroup.Item>
                             </ListGroup>
-                            {appContext.currentUser && (
+                            {appContext.currentUser && campground.author?._id === appContext.currentUser?.id && (
                                 <Card.Body>
                                     <Link to={`/campgrounds/${campgroundId}/edit`}>
                                         <Button variant="info">Edit</Button>

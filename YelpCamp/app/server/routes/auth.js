@@ -5,7 +5,7 @@ const router = express.Router();
 router.get('/currentuser', (req, res) => {
     if (req.user) {
         res.status(200).json({
-            user: req.user._id,
+            id: req.user._id,
             username: req.user.username,
             email: req.user.email,
         });

@@ -22,14 +22,15 @@ const NewCampground: React.FunctionComponent = () => {
     const formPrice = useRef<HTMLInputElement>(null);
     const formImage = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
+    const formAuthor = useRef<HTMLInputElement>(null);
 
     const {
         isLoading,
         error,
         data: currentUser,
     } = useQuery({
-        queryKey: ['campgroundsData'],
-        queryFn: () => axios.get(`/api/v1/users/currentuser`).then(res => res.data),
+        queryKey: ['newCampground'],
+        queryFn: () => axios.get(`/api/v1/auth/currentuser`).then(res => res.data),
     });
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -48,6 +49,7 @@ const NewCampground: React.FunctionComponent = () => {
                             location: formLocation.current?.value || '',
                             image: formImage.current?.value || '',
                             description: formDescription.current?.value || '',
+                            author: currentUser?.id,
                         },
                     },
                     {

@@ -55,7 +55,8 @@ const Login: React.FunctionComponent = () => {
                             variant: 'success',
                         });
                         appContext.setCurrentUser(resp.data);
-                        navigate(-1);
+                        // navigate(-1); // back to previous page
+                        navigate('/');
                     });
                 })
                 .catch(err => {

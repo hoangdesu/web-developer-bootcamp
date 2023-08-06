@@ -5,6 +5,8 @@ export interface Campground {
     description: string;
     location: string;
     image: string;
+    author: User;
+    reviews: Review;
 }
 
 export interface Review {
@@ -24,3 +26,4 @@ export interface User {
     username: string;
     email: string;
 }
+

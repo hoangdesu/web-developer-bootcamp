@@ -23,7 +23,7 @@ router.post(
             const user = new User({ username, email, plainPassword: password });
 
             // use the static method from passport-local-mongoose to create a new user and save into db
-            const newUser = await User.register(user, password);
+            await User.register(user, password);
 
             // establish a login session after user resigter successfully
             req.login(user, function (err) {

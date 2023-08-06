@@ -7,6 +7,7 @@ const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 
 // Models
 const Campground = require('../models/campground');
+const User = require('../models/user');
 
 // middlewares
 const validateCampground = (req, res, next) => {
@@ -20,7 +21,8 @@ const validateCampground = (req, res, next) => {
 router.get(
     '/',
     catchAsync(async (req, res) => {
-        return res.status(200).json(await Campground.find({}).exec());
+        const campgrounds = await Campground.find({}).populate('author', '_id username').exec();
+        return res.status(200).json(campgrounds);
     }),
 );
 
@@ -44,6 +46,7 @@ router.get(
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const campground = await Campground.findById(id)
+            .populate('author')
             .populate({ path: 'reviews', options: { sort: { createdAt: -1 } } })
             .exec();
         res.status(200).json(campground);
@@ -55,7 +58,9 @@ router.post(
     requiresLoggedIn,
     validateCampground,
     catchAsync(async (req, res, next) => {
-        const { title, location, price, image, description } = req.body.campground;
+        const { title, location, price, image, description, author } = req.body.campground;
+
+        console.log('body campground:', req.body.campground);
 
         const savedCampground = await Campground({
             title,
@@ -63,7 +68,17 @@ router.post(
             price,
             image,
             description,
+            author,
         }).save();
+
+        console.log('savedCampground:', savedCampground);
+
+        const user = await User.findOne({ id: author._id });
+        // User.find;
+
+        console.log('user', user);
+        user.campgrounds.push(savedCampground._id);
+        await user.save();
 
         if (savedCampground) {
             res.status(200).json(savedCampground._id);

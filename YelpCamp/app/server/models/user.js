@@ -6,12 +6,18 @@ const userSchema = new Schema(
     {
         email: {
             type: String,
-            // required: [true, 'Email is required'],
+            required: [true, 'Email is required'],
             unique: true,
         },
         plainPassword: {
             type: String,
-        }
+        },
+        campgrounds: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Campground'
+            }
+        ]
     },
     {
         timestamps: true,

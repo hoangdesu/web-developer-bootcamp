@@ -57,7 +57,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // for testing only
 app.use((req, res, next) => {
-    console.log('req.user:', req.user);
+    console.log('req.user:', req.user?.username || null);
     next();
 });
 
@@ -66,7 +66,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/resetdb', (req, res) => {
-    resetDb();
+    const { count } = req.params;
+    resetDb(count);
     res.status(200).send('db has been reset');
 });
 

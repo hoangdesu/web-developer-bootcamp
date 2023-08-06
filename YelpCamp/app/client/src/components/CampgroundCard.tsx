@@ -8,22 +8,24 @@ interface CardProps {
     campground: Campground;
 }
 
-const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground: cg }) => {
+const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
+    console.log(campground);
     return (
         <Card>
             <Row>
                 <Col md={4}>
-                    <Image fluid src={cg.image} alt="Campground image" />
+                    <Image fluid src={campground.image} alt="Campground image" />
                 </Col>
                 <Col md={8}>
                     <Card.Body>
-                        <Card.Title>{cg.title}</Card.Title>
+                        <Card.Title>{campground.title}</Card.Title>
                         <Card.Subtitle>
-                            <small className="text-muted">{cg.location}</small>
+                            <small className="text-muted">{campground.location}</small>
                         </Card.Subtitle>
-                        <Card.Text className="my-3">{cg.description}</Card.Text>
+                        <Card.Text className="my-3">{campground.description}</Card.Text>
+                        <Card.Text className="my-3">Username: {campground.author?.username}</Card.Text>
 
-                        <Link to={`campgrounds/${cg._id}`}>
+                        <Link to={`campgrounds/${campground._id}`}>
                             <Button variant="primary" className="mt-2">
                                 View this campground
                             </Button>

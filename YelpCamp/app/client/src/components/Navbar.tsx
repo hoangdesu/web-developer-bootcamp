@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import { Navbar as BootstrapNavbar, Button, NavDropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AppContext from '../store/app-context';
 import axios from 'axios';
 
@@ -23,11 +23,13 @@ const pages = [
 
 const Navbar: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
+    const navigate = useNavigate();
 
     const logoutHandler = async () => {
         if (confirm('Logging out?')) {
             await axios.post('/api/v1/users/logout');
             appContext.setCurrentUser(null);
+            navigate(0);
         }
     };
 
@@ -43,7 +45,7 @@ const Navbar: React.FunctionComponent = () => {
                     ))}
                 </Nav>
                 <Nav className="justify-content-end" activeKey="/home">
-                    <NavDropdown title={'User'} id="nav-dropdown">
+                    <NavDropdown title={appContext.currentUser?.username || 'User'} id="nav-dropdown">
                         {appContext.currentUser ? (
                             <>
                                 <NavDropdown.Item eventKey="4.1">

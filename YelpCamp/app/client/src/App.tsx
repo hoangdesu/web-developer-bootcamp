@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import { Container, Alert } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 import './App.css';
-import { API_V1 } from './constants';
+
 import AppContext from './store/app-context';
 
 import PageContainer from './components/PageContainer';
@@ -13,7 +13,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CampgroundCard from './components/CampgroundCard';
 import Loading from './pages/Loading';
-import FlashMessage from './components/FlashMessage';
+
 import FlashAlert from './components/FlashAlert';
 
 const App: React.FunctionComponent = () => {
@@ -25,7 +25,7 @@ const App: React.FunctionComponent = () => {
         data: campgroundsData,
     } = useQuery({
         queryKey: ['campgroundsData'],
-        queryFn: () => axios.get(`${API_V1}/campgrounds`).then(res => res.data),
+        queryFn: () => axios.get(`/api/v1/campgrounds`).then(res => res.data),
     });
 
     if (isLoading) return <Loading />;

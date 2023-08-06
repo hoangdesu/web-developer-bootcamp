@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { getAllCitiesData, descriptors, places } = require('./seedHelpers');
 
 const Campground = require('../models/campground');
+const User = require('../models/user');
 
 // mongoose.set('strictQuery', true);
 // const dbName = 'yelp-camp';
@@ -16,24 +17,30 @@ const Campground = require('../models/campground');
 
 const sample = arr => arr[Math.floor(Math.random() * arr.length)];
 
-const seedDatabase = async () => {
+const seedDatabase = async (dbCounts) => {
     Campground.deleteMany({}).then(res => console.log(res));
 
     const cities = getAllCitiesData();
 
-    const totalCamps = 12;
+    const totalCamps = dbCounts || 10;
 
     for (let i = 0; i <= totalCamps; i++) {
         const randomIndex = Math.floor(Math.random() * cities.length);
         const { city, admin_name } = cities[randomIndex];
 
+        const randomUserIndex = Math.floor(Math.random() * 10);
+        const randomUser = await User.findOne().skip(randomUserIndex).exec();
+        
+        console.log('user:', randomUserIndex, randomUser.username)
+
         // to be updated
         await new Campground({
             title: `${sample(descriptors)} ${sample(places)}`,
-            price: (Math.random() * 50).toFixed(2),
+            price: (Math.random() * 50).toFixed(1),
             description: 'campground description placeholder',
             location: `${city}, ${admin_name}`,
             image: 'https://source.unsplash.com/collection/1114848', // random photo in "camping" collection
+            author: randomUser._id,
         }).save();
 
         console.log('saved:', city, admin_name);
@@ -43,8 +50,8 @@ const seedDatabase = async () => {
 };
 
 // can invoke this script via http://localhost:3001/resetdb
-module.exports.resetDb = () => {
-    seedDatabase().then(() => {
+module.exports.resetDb = (dbCounts) => {
+    seedDatabase(dbCounts).then(() => {
         console.log('seeding done!');
     });
 };
