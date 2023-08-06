@@ -52,7 +52,7 @@ const AppContextProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        axios.get('/api/v1/users/currentuser').then(res => {
+        axios.get('/api/v1/auth/currentuser').then(res => {
             setCurrentUser(res.data);
         });
     }, []);

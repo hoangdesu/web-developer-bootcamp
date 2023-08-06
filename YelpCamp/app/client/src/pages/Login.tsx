@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import axios from 'axios';
@@ -49,9 +49,7 @@ const Login: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    // BUG: CAN ONLY SET 1 STATE AT A TIME??
-                    // => SOLVED: spread the state in reducer, otherwise object will be reset
-                    axios.get('/api/v1/users/currentuser').then(resp => {
+                    axios.get('/api/v1/auth/currentuser').then(resp => {
                         appContext.setAlert({
                             message: `Welcome back, ${resp.data.username}!`,
                             variant: 'success',

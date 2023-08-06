@@ -51,8 +51,7 @@ const Register: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    // localStorage.setItem('currentUser', res.data);
-                    axios.get('/api/v1/users/currentuser').then(resp => {
+                    axios.get('/api/v1/auth/currentuser').then(resp => {
                         appContext.setAlert({
                             message: `Welcome to YelpCamp, ${resp.data.username}!`,
                             variant: 'success',

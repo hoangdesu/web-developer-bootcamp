@@ -27,7 +27,6 @@ const NewCampground: React.FunctionComponent = () => {
         isLoading,
         error,
         data: currentUser,
-        refetch,
     } = useQuery({
         queryKey: ['campgroundsData'],
         queryFn: () => axios.get(`/api/v1/users/currentuser`).then(res => res.data),
@@ -60,14 +59,14 @@ const NewCampground: React.FunctionComponent = () => {
                 .then(res => {
                     appContext.setAlert({
                         message: 'Created new campground successfully',
-                        variant: 'success'
+                        variant: 'success',
                     });
                     navigate(`/campgrounds/${res.data}`);
                 })
                 .catch(err => {
                     appContext.setAlert({
                         message: 'Please log in first before creating campground',
-                        variant: 'danger'
+                        variant: 'danger',
                     });
                     appContext.setCurrentUser(null);
                     navigate('/login');
@@ -76,35 +75,15 @@ const NewCampground: React.FunctionComponent = () => {
         setValidated(true);
     };
 
-    if (isLoading) return <Loading />
+    if (isLoading) return <Loading />;
 
     if (!currentUser) {
         appContext.setAlert({
-                            message: 'Please log in first',
-                            variant: 'warning',
-                        })
-                        navigate('/login');
+            message: 'Please log in first',
+            variant: 'warning',
+        });
+        navigate('/login');
     }
-
-    // useEffect(() => {
-    //     axios.get('/api/v1/users/currentuser').then(resp => {
-    //         // appContext.setAlert({
-    //         //     message: `Welcome back! ${resp.data.username}`,
-    //         //     variant: 'success',
-    //         // });
-    //         // appContext.setCurrentUser(resp.data);
-    //         // navigate(`/`);
-    //         if (!resp.data) {
-    //             appContext.setAlert({
-    //                 message: 'Please log in first',
-    //                 variant: 'warning',
-    //             })
-    //             navigate('/login');
-    //         }
-    //     })
-        
-        
-    // }, []);
 
     return (
         <PageContainer>

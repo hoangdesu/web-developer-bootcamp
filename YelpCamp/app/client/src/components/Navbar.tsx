@@ -36,7 +36,6 @@ const Navbar: React.FunctionComponent = () => {
             <Container>
                 <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
                 <Nav className="me-auto">
-                    {/* <Nav> */}
                     {pages.map(page => (
                         <Link to={page.href} style={{ textDecoration: 'none' }} key={page.title}>
                             <span className="nav-link">{page.title}</span>
@@ -59,17 +58,12 @@ const Navbar: React.FunctionComponent = () => {
                             </>
                         ) : (
                             <>
-                                <NavDropdown.Item eventKey="4.1">
-                                    <Link to={'/login'} style={{ textDecoration: 'none' }} key={'login'}>
-                                        <span className="">Login</span>
-                                    </Link>
-                                </NavDropdown.Item>
-                                <NavDropdown.Item eventKey="4.1">
-                                    <Link to={'/register'} style={{ textDecoration: 'none' }} key={'register'}>
-                                        {/* <span className="nav-link">Register</span> */}
-                                        <span className="">Register</span>
-                                    </Link>
-                                </NavDropdown.Item>
+                                <Link to={'/login'} key={'login'} className="dropdown-item">
+                                    Login
+                                </Link>
+                                <Link to={'/register'} key={'register'} className="dropdown-item">
+                                    Register
+                                </Link>
                             </>
                         )}
                     </NavDropdown>

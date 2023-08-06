@@ -28,6 +28,7 @@ db.once('open', () => {
 const campgroundRoutes = require('./routes/campground');
 const reviewRoutes = require('./routes/review');
 const userRoutes = require('./routes/user');
+const authRoutes = require('./routes/auth');
 
 // Models
 const Review = require('./models/review');
@@ -57,7 +58,6 @@ passport.deserializeUser(User.deserializeUser());
 // for testing only
 app.use((req, res, next) => {
     console.log('req.user:', req.user);
-    console.log('req:', req.originalUrl, req.path)
     next();
 });
 
@@ -78,6 +78,7 @@ app.get('/reviews', async (req, res, next) => {
 app.use('/api/v1/campgrounds', campgroundRoutes);
 app.use('/api/v1/campgrounds/:campgroundId/reviews', reviewRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 // 404, place after all route handlers
 app.all('*', (req, res, next) => {
