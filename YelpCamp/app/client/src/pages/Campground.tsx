@@ -87,7 +87,12 @@ const Campground: React.FunctionComponent = () => {
     const deleteCampgroundHandler = () => {
         if (confirm(`Delete ${campground.title}?`)) {
             axios
-                .delete(`/api/v1/campgrounds/${campgroundId}`)
+                .delete(`/api/v1/campgrounds/${campgroundId}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: appContext.currentUser.id.toString(),
+                    },
+                })
                 .then(() => {
                     appContext.setAlert({
                         message: 'Deleted campground successfully',
@@ -96,12 +101,25 @@ const Campground: React.FunctionComponent = () => {
                     navigate('/');
                 })
                 .catch(err => {
+                    console.error(err);
+                    let message = '';
+                    if (err.response.status === 401) {
+                        message = 'Unauthorized to delete campground. Please log in again.';
+                        appContext.setAlert({
+                            message,
+                            variant: 'danger',
+                        });
+                        navigate('/login');
+                    } else if (err.response.status === 403) {
+                        message = 'Unauthorized to delete campground';
+                    } else {
+                        message = `${err.response.status} - ${err.response.data}`;
+                    }
                     appContext.setAlert({
-                        message: 'Unauthorized to delete campground',
+                        message,
                         variant: 'danger',
                     });
-                    appContext.setCurrentUser(null);
-                    navigate('/login');
+                    // appContext.setCurrentUser(null);
                 });
         }
     };
@@ -117,6 +135,11 @@ const Campground: React.FunctionComponent = () => {
     }
 
     const formattedPrice = `$${campground.price}/night (~${USDtoVND(campground.price)})`;
+
+    const isAuthor = () => {
+        if (appContext.currentUser) return campground.author?._id === appContext.currentUser.id;
+        return false;
+    };
 
     return (
         <PageContainer>
@@ -142,7 +165,7 @@ const Campground: React.FunctionComponent = () => {
                                     <Person /> <Link to={`/users/${campground.author?.username}`}>{campground.author?.username || 'annonymous'}</Link>
                                 </ListGroup.Item>
                             </ListGroup>
-                            {appContext.currentUser && campground.author?._id === appContext.currentUser?.id && (
+                            {isAuthor() && (
                                 <Card.Body>
                                     <Link to={`/campgrounds/${campgroundId}/edit`}>
                                         <Button variant="info">Edit</Button>
@@ -161,7 +184,7 @@ const Campground: React.FunctionComponent = () => {
                         </Link>
                     </Col>
 
-                    <Col xs={5} lg={5}>
+                    <Col lg={5}>
                         {/* only activate review form for logged in user */}
                         {appContext.currentUser && (
                             <>
@@ -172,7 +195,7 @@ const Campground: React.FunctionComponent = () => {
                                         <Form.Label>{`Rating: ${ratingValue}`}</Form.Label>
                                         <Form.Range
                                             ref={reviewRating}
-                                            onChange={() => setRatingValue(parseInt(e.target.value))}
+                                            onChange={evt => setRatingValue(parseInt(evt.target.value))}
                                             min={1}
                                             max={5}
                                             step={1}

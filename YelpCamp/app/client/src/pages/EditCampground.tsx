@@ -12,6 +12,7 @@ import Loading from './Loading';
 
 import { API_V1 } from '../constants';
 import AppContext from '../store/app-context';
+import FlashAlert from '../components/FlashAlert';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -30,6 +31,7 @@ const EditCampground: React.FunctionComponent = () => {
     const formDescription = useRef<HTMLInputElement>(null);
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    // console.log(currentUser);
 
     const {
         isLoading,
@@ -47,16 +49,25 @@ const EditCampground: React.FunctionComponent = () => {
             event.stopPropagation();
         } else {
             axios
-                .put(`/api/v1/campgrounds/${campground._id}`, {
-                    campground: {
-                        title: formTitle.current?.value || '',
-                        price: parseFloat(formPrice.current?.value) || 0,
-                        location: formLocation.current?.value || '',
-                        image: formImage.current?.value || '',
-                        description: formDescription.current?.value || '',
-                        author: currentUser.id
+                .put(
+                    `/api/v1/campgrounds/${campground._id}`,
+                    {
+                        campground: {
+                            title: formTitle.current?.value || '',
+                            price: parseFloat(formPrice.current?.value) || 0,
+                            location: formLocation.current?.value || '',
+                            image: formImage.current?.value || '',
+                            description: formDescription.current?.value || '',
+                            // author: currentUser.id,
+                        },
                     },
-                })
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: currentUser.id,
+                        },
+                    },
+                )
                 .then(res => {
                     appContext.setAlert({
                         message: 'Campground has been updated',
@@ -65,12 +76,13 @@ const EditCampground: React.FunctionComponent = () => {
                     navigate(`/campgrounds/${campground._id}`);
                 })
                 .catch(err => {
+                    console.error(err);
                     appContext.setAlert({
-                        message: 'Unauthorized! You must be login before editing',
+                        message: `${err.response.status} - ${err.response.data}`,
                         variant: 'danger',
                     });
-                    appContext.setCurrentUser(null);
-                    navigate('/login');
+                    // appContext.setCurrentUser(null);
+                    // navigate('/login');
                 });
         }
         setValidated(true);
@@ -85,6 +97,7 @@ const EditCampground: React.FunctionComponent = () => {
             <Navbar />
 
             <Container className="col-6 offset-3 my-5">
+                <FlashAlert />
                 <h1 className="text-center mb-4">Edit Campground</h1>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="campgroundTitle">

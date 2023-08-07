@@ -7,7 +7,7 @@ module.exports.campgroundSchema = Joi.object({
         price: Joi.number().required().min(0),
         image: Joi.string().required(),
         description: Joi.string(),
-        author: Joi.string().required(),
+        author: Joi.string(),
     }).required(),
 });
 

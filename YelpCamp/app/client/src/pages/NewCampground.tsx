@@ -50,12 +50,12 @@ const NewCampground: React.FunctionComponent = () => {
                             location: formLocation.current?.value || '',
                             image: formImage.current?.value || '',
                             description: formDescription.current?.value || '',
-                            author: currentUser?.id,
                         },
                     },
                     {
                         headers: {
                             'Content-Type': 'application/json',
+                            Authorization: currentUser?.id,
                         },
                     },
                 )
@@ -67,7 +67,7 @@ const NewCampground: React.FunctionComponent = () => {
                     navigate(`/campgrounds/${res.data}`);
                 })
                 .catch(err => {
-                    console.log(err);
+                    // console.log(err);
                     let errorMessage = 'Something went wrong';
                     if (err.response.status === 400) {
                         errorMessage = err.response?.data?.details ? err.response.data.details[0].message : err.response?.data;

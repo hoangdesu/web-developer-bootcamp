@@ -8,7 +8,7 @@ const FlashAlert: React.FC = () => {
 
     return appContext.alert?.message ? (
         <FlashMessage duration={3 * 1000} persistOnHover={true}>
-            <Alert variant={appContext.alert.variant} onClose={() => appContext.setAlert(null)} dismissible>
+            <Alert variant={appContext.alert.variant} onClose={() => appContext.setAlert(null)} dismissible className="mb-2">
                 <span>{appContext.alert.message}</span>
             </Alert>
         </FlashMessage>

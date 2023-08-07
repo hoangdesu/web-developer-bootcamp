@@ -6,7 +6,7 @@ const campgroundSchema = new Schema(
     {
         title: {
             type: String,
-            require: true,
+            required: true,
         },
         price: Number,
         description: String,

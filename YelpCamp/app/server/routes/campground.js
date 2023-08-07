@@ -14,8 +14,22 @@ const validateCampground = (req, res, next) => {
     // validating request body with Joi before extracting data
     const { error: validationError } = campgroundSchema.validate(req.body);
     // console.log('validationError:', validationError);
-    if (validationError) throw new YelpcampError(400, validationError);
+    if (validationError) throw new YelpcampError(500, validationError);
     next(); // dont forget!
+};
+
+const isAuthor = async (req, res, next) => {
+    console.log('-- is author');
+    const { id } = req.params;
+
+    const author = req.headers.authorization;
+    if (!author) return next(new YelpcampError(400, 'Missing Authorization header'));
+
+    const campground = await Campground.findById(id);
+
+    if (!campground) return next(new YelpcampError(404, 'Campground now found'));
+    if (!campground.author.equals(author)) return next(new YelpcampError(403, "Forbidden! You don't have permission to perform this action"));
+    next();
 };
 
 router.get(
@@ -59,9 +73,11 @@ router.post(
     requiresLoggedIn,
     validateCampground,
     catchAsync(async (req, res, next) => {
-        const { title, location, price, image, description, author } = req.body.campground;
+        const { title, location, price, image, description } = req.body.campground;
 
-        // console.log('body', req.body.campground);
+        // Authorization
+        const author = req.headers.authorization;
+        // console.log('headers:', req.headers, author);
 
         const savedCampground = await Campground({
             title,
@@ -74,26 +90,43 @@ router.post(
 
         // save new campground to user's campgrounds list
         const user = await User.findById(author);
-        if (!user) return next(new YelpcampError(500, 'User not found'));
+        if (!user) return next(new YelpcampError(404, 'User not found'));
 
         user.campgrounds.push(savedCampground._id);
         await user.save();
 
-        if (!savedCampground) return next(new YelpcampError(400, 'Failed saving campground'));
+        if (!savedCampground) return next(new YelpcampError(500, 'Failed saving campground'));
         res.status(201).json(savedCampground._id);
     }),
 );
 
-// PUT /api/v1/campgrounds:id
+// PUT /api/v1/campgrounds/:id
 router.put(
     `/:id`,
     requiresLoggedIn,
+    isAuthor,
     validateCampground,
     catchAsync(async (req, res, next) => {
+        // console.log('\n--editing campground:');
         const { id } = req.params;
         const { campground } = req.body;
+        // const author = req.headers.authorization;
 
-        const updatedCampground = await Campground.findByIdAndUpdate(id, campground, { runValidators: true, new: true });
+        // check if campground exists, extract author field
+        // console.log('campground:', newCampgroundData);
+        // const campground = await Campground.findById(campgroundId);
+
+        // if (!campground) return next(new YelpcampError(404, 'Campground now found'));
+
+        // if (campground._id ===)
+        // console.log('author:', campground.author.toString(), author, campground.author.equals(author));
+        // if (!campground.author.equals(author)) {
+        //     return next(new YelpcampError(403, "Forbidden, you don't have permission to edit campground"));
+        // }
+
+        // return next(new YelpcampError(405, 'Stop'))
+
+        const updatedCampground = await Campground.findByIdAndUpdate(id, { runValidators: true, new: true });
 
         if (!updatedCampground) {
             return next(new YelpcampError(400, 'Failed saving campground'));
@@ -106,6 +139,7 @@ router.put(
 router.delete(
     `/:id`,
     requiresLoggedIn,
+    isAuthor,
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const deletedCampground = await Campground.findByIdAndDelete(id);
