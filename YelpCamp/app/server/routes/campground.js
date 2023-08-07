@@ -60,8 +60,16 @@ router.get(
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const campground = await Campground.findById(id)
-            .populate('author')
-            .populate({ path: 'reviews', options: { sort: { createdAt: -1 } } }) // sort newest review on top
+            .populate('author', '_id username email')
+            .populate({
+                path: 'reviews',
+                populate: {
+                    path: 'author',
+                    model: 'User',
+                    select: { _id: 1, username: 1 }, // select certain fields inside nested populate. 1 for true
+                },
+                options: { sort: { createdAt: -1 } },
+            }) // sort newest review on top
             .exec();
         res.status(200).json(campground);
     }),
@@ -148,7 +156,7 @@ router.delete(
 
         const authorId = deletedCampground.author;
         const updatedUser = await User.findByIdAndUpdate(authorId, { $pull: { campgrounds: id } });
-        
+
         console.log('updatedUser', updatedUser);
         res.status(200).send('campground deleted');
     }),

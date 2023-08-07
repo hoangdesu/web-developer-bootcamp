@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from '@emotion/styled';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-import { Card } from 'react-bootstrap';
-import ClearIcon from '@mui/icons-material/Clear';
+import { Card, Form } from 'react-bootstrap';
+import { Check, Clear, Edit } from '@mui/icons-material';
 import { Review } from '../types';
 import AppContext from '../store/app-context';
 
@@ -14,29 +14,30 @@ interface ReviewProps {
 }
 
 const StyledCardBody = styled(Card.Body)`
-    .clearIcon {
+    .icons {
         display: none;
         position: absolute;
-        right: 0;
-        top: 0px;
+        right: 30px;
+        top: 0;
         margin: 10px;
         width: 20px;
         height: 20px;
-        opacity: 0.8;
+        opacity: 0.7;
     }
 
     &:hover {
-        .clearIcon {
-            display: inline;
+        .icons {
+            display: flex;
         }
     }
 
-    .clearIcon:hover {
+    .icons:hover {
         cursor: pointer;
     }
 `;
 
 const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
+    const [isEditingReview, setIsEditingReview] = useState(false);
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
@@ -66,13 +67,37 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
         }
     };
 
+    const editReviewHandler = () => {
+        setIsEditingReview(!isEditingReview);
+    };
+
+    const isAuthor = () => {
+        return review.author.username.toString() === appContext.currentUser.username.toString();
+    };
+
     return (
         <Card className="mb-3">
             <StyledCardBody>
-                {appContext.currentUser && <ClearIcon onClick={removeReviewHandler} className="clearIcon" />}
-                {/* <Card.Title>User: {review.author?.username}</Card.Title> */}
-                <Card.Title>Rating: {review.rating}</Card.Title>
-                <Card.Text>Comment: {review.comment}</Card.Text>
+                {/* Only allow review deletion if isAuthor */}
+                {appContext.currentUser && isAuthor() && (
+                    <span className="icons">
+                        {!isEditingReview ? <Edit onClick={editReviewHandler} /> : <Check onClick={editReviewHandler} />}
+                        <Clear onClick={removeReviewHandler} />
+                    </span>
+                )}
+
+                {isEditingReview ? (
+                    <>
+                        <Form.Control defaultValue={review.rating} />
+                        <Form.Control as="textarea" defaultValue={review.comment} />
+                    </>
+                ) : (
+                    <>
+                        <Card.Title>User: {review.author?.username}</Card.Title>
+                        <Card.Title>Rating: {review.rating}</Card.Title>
+                        <Card.Text>Comment: {review.comment} </Card.Text>
+                    </>
+                )}
             </StyledCardBody>
         </Card>
     );

@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const { getAllCitiesData, descriptors, places } = require('./seedHelpers');
+const { loremIpsum } = require('lorem-ipsum');
 
 const Campground = require('../models/campground');
 const User = require('../models/user');
+const Review = require('../models/review');
 
 // mongoose.set('strictQuery', true);
 // const dbName = 'yelp-camp';
@@ -17,7 +19,7 @@ const User = require('../models/user');
 
 const sample = arr => arr[Math.floor(Math.random() * arr.length)];
 
-const seedDatabase = async (dbCounts) => {
+const seedDatabase = async dbCounts => {
     Campground.deleteMany({}).then(res => console.log(res));
 
     const cities = getAllCitiesData();
@@ -28,10 +30,10 @@ const seedDatabase = async (dbCounts) => {
         const randomIndex = Math.floor(Math.random() * cities.length);
         const { city, admin_name } = cities[randomIndex];
 
-        const randomUserIndex = Math.floor(Math.random() * 10);
+        const randomUserIndex = Math.floor(Math.random() * 3);
         const randomUser = await User.findOne().skip(randomUserIndex).exec();
-        
-        console.log('user:', randomUserIndex, randomUser.username)
+
+        console.log('user:', randomUserIndex, randomUser.username);
 
         // to be updated
         const newCampground = await new Campground({
@@ -46,6 +48,20 @@ const seedDatabase = async (dbCounts) => {
         randomUser.campgrounds.push(newCampground);
         await randomUser.save();
 
+        // generate random reviews
+        for (let j = 0; j < Math.floor(Math.random() * 10) + 3; j++) {
+            const randomUserIndex = Math.floor(Math.random() * 3);
+            const randomUser = await User.findOne().skip(randomUserIndex).exec();
+            const review = new Review({
+                comment: loremIpsum(),
+                rating: Math.floor(Math.random() * 4) + 1,
+                author: randomUser._id,
+                campground: newCampground._id,
+            });
+            newCampground.reviews.push(review);
+            await newCampground.save();
+            await review.save();
+        }
 
         console.log('saved:', city, admin_name);
         cities.splice(randomIndex, 1); // remove to avoid duplication
@@ -54,7 +70,7 @@ const seedDatabase = async (dbCounts) => {
 };
 
 // can invoke this script via http://localhost:3001/resetdb
-module.exports.resetDb = (dbCounts) => {
+module.exports.resetDb = dbCounts => {
     seedDatabase(dbCounts).then(() => {
         console.log('seeding done!');
     });

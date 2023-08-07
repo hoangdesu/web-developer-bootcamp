@@ -47,7 +47,7 @@ router.post(
         const authorId = req.headers.authorization;
         
         const user = await User.findById(authorId);
-        console.log('user:', user);
+        // console.log('user:', user);
 
         const review = new Review(req.body.review);
         campground.reviews.push(review);

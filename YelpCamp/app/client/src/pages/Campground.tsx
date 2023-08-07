@@ -142,7 +142,15 @@ const Campground: React.FunctionComponent = () => {
         return false;
     };
 
-    console.log('author:', campground);
+    console.log('reviews:', campground.reviews);
+
+    const averageRating = () => {
+        const result = (campground?.reviews?.reduce((accumulator, review) => accumulator + review.rating, 0) / campground?.reviews?.length).toFixed(
+            1,
+        );
+        if (result === 'NaN') return '-';
+        return result;
+    };
 
     return (
         <PageContainer>
@@ -192,7 +200,6 @@ const Campground: React.FunctionComponent = () => {
                         {appContext.currentUser && (
                             <>
                                 <h1>Leave a review</h1>
-
                                 <Form className="mb-5" noValidate validated={validated} onSubmit={onReviewSubmit}>
                                     <Form.Group className="mb-2" controlId="reviewRating">
                                         <Form.Label>{`Rating: ${ratingValue}`}</Form.Label>
@@ -220,6 +227,7 @@ const Campground: React.FunctionComponent = () => {
                         <h2>
                             {campground.reviews?.length || 0} {campground.reviews?.length === 0 ? 'review' : 'reviews'}
                         </h2>
+                        <p>Average rating: {averageRating()}</p>
                         {campground.reviews && (
                             <>
                                 {campground.reviews?.length === 0 && 'Add your first review!'}

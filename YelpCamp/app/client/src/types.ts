@@ -14,6 +14,7 @@ export interface Review {
     comment: string;
     rating: number;
     campground: string;
+    author: User;
 }
 
 export interface Alert {
