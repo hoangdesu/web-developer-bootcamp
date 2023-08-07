@@ -76,11 +76,13 @@ const EditCampground: React.FunctionComponent = () => {
                     navigate(`/campgrounds/${campground._id}`);
                 })
                 .catch(err => {
-                    console.error(err);
                     appContext.setAlert({
                         message: `${err.response.status} - ${err.response.data}`,
                         variant: 'danger',
                     });
+                    // console.error(err);
+                    
+                    if (err.response.status === 401) navigate('/login');
                     // appContext.setCurrentUser(null);
                     // navigate('/login');
                 });

@@ -9,7 +9,11 @@ const reviewSchema = new Schema(
         },
         rating: {
             type: Number,
-            required: [true, 'Missing raring'],
+            required: [true, 'Missing rating'],
+        },
+        author: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
         },
         campground: {
             type: Schema.Types.ObjectId,

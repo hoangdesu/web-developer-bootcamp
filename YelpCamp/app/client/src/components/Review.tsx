@@ -43,7 +43,11 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
     const removeReviewHandler = () => {
         if (confirm('Are you sure to delete this comment?')) {
             axios
-                .delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`)
+                .delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`, {
+                    headers: {
+                        Authorization: appContext.currentUser.id.toString(),
+                    },
+                })
                 .then(res => {
                     appContext.setAlert({
                         message: 'Comment deleted',
@@ -57,7 +61,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                         message: 'Failed to delete comment',
                         variant: 'danger',
                     });
-                    appContext.setCurrentUser(null);
+                    // appContext.setCurrentUser(null);
                 });
         }
     };
@@ -66,6 +70,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
         <Card className="mb-3">
             <StyledCardBody>
                 {appContext.currentUser && <ClearIcon onClick={removeReviewHandler} className="clearIcon" />}
+                {/* <Card.Title>User: {review.author?.username}</Card.Title> */}
                 <Card.Title>Rating: {review.rating}</Card.Title>
                 <Card.Text>Comment: {review.comment}</Card.Text>
             </StyledCardBody>

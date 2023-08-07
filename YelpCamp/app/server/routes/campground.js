@@ -61,7 +61,7 @@ router.get(
         const { id } = req.params;
         const campground = await Campground.findById(id)
             .populate('author')
-            .populate({ path: 'reviews', options: { sort: { createdAt: -1 } } })
+            .populate({ path: 'reviews', options: { sort: { createdAt: -1 } } }) // sort newest review on top
             .exec();
         res.status(200).json(campground);
     }),
@@ -126,13 +126,11 @@ router.put(
 
         // return next(new YelpcampError(405, 'Stop'))
 
-        const updatedCampground = await Campground.findByIdAndUpdate(id, { runValidators: true, new: true });
+        const updatedCampground = await Campground.findByIdAndUpdate(id, campground, { runValidators: true, new: true });
 
-        if (!updatedCampground) {
-            return next(new YelpcampError(400, 'Failed saving campground'));
-        } else {
-            res.status(200).json(updatedCampground._id);
-        }
+        if (!updatedCampground) return next(new YelpcampError(400, 'Failed saving campground'));
+
+        res.status(200).json(updatedCampground._id);
     }),
 );
 
@@ -143,9 +141,15 @@ router.delete(
     catchAsync(async (req, res, next) => {
         const { id } = req.params;
         const deletedCampground = await Campground.findByIdAndDelete(id);
+
         if (!deletedCampground) {
-            return next(new YelpcampError(404, 'delete failed. campground not found'));
+            return next(new YelpcampError(404, 'Delete failed. Campground not found'));
         }
+
+        const authorId = deletedCampground.author;
+        const updatedUser = await User.findByIdAndUpdate(authorId, { $pull: { campgrounds: id } });
+        
+        console.log('updatedUser', updatedUser);
         res.status(200).send('campground deleted');
     }),
 );

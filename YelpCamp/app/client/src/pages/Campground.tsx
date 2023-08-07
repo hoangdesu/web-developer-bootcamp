@@ -60,6 +60,7 @@ const Campground: React.FunctionComponent = () => {
                     {
                         headers: {
                             'Content-Type': 'application/json',
+                            Authorization: appContext.currentUser.id.toString(),
                         },
                     },
                 )
@@ -140,6 +141,8 @@ const Campground: React.FunctionComponent = () => {
         if (appContext.currentUser) return campground.author?._id === appContext.currentUser.id;
         return false;
     };
+
+    console.log('author:', campground);
 
     return (
         <PageContainer>
