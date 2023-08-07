@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import axios from 'axios';
@@ -29,6 +29,17 @@ const Register: React.FunctionComponent = () => {
     const formUsername = useRef<HTMLInputElement>(null);
     const formEmail = useRef<HTMLInputElement>(null);
     const formPassword = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser) {
+            appContext.setAlert({
+                message: `You're already logged in as ${currentUser.username}`,
+                variant: 'success',
+            });
+            navigate('/');
+        }
+    }, []);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

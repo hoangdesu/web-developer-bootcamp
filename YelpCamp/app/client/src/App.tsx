@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
@@ -18,6 +18,18 @@ import FlashAlert from './components/FlashAlert';
 
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
+
+    useEffect(() => {
+        axios.get('/api/v1/auth/currentuser').then(res => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (!currentUser) {
+                localStorage.removeItem('currentUser');
+            } else {
+                localStorage.setItem('currentUser', JSON.stringify(res.data));
+            }
+        });
+    }, [localStorage]);
 
     const {
         isLoading,

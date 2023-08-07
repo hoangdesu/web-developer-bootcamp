@@ -33,6 +33,10 @@ const Navbar: React.FunctionComponent = () => {
             await axios.post('/api/v1/users/logout');
             appContext.setCurrentUser(null);
             localStorage.removeItem('currentUser');
+            appContext.setAlert({
+                message: `Goodbye!`,
+                variant: 'success',
+            });
             navigate('/');
         }
     };

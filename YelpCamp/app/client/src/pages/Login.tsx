@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import axios from 'axios';
@@ -28,6 +28,17 @@ const Login: React.FunctionComponent = () => {
 
     const formUsername = useRef<HTMLInputElement>(null);
     const formPassword = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser) {
+            appContext.setAlert({
+                message: `Welcome back, ${currentUser.username}`,
+                variant: 'success',
+            });
+            navigate('/');
+        }
+    }, []);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
