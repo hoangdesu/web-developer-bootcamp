@@ -42,7 +42,7 @@ const User = () => {
                 <p>Owned campgrounds:</p>
                 <ol>
                     {user.campgrounds.map(campground => (
-                        <li><Link to={`/campgrounds/${campground._id}`}>{campground.title} (${campground.price})</Link></li>
+                        <li key={campground._id}><Link to={`/campgrounds/${campground._id}`}>{campground.title} (${campground.price})</Link></li>
                     ))}
                 </ol>
                 <Button onClick={() => navigate(-1)}>Back</Button>

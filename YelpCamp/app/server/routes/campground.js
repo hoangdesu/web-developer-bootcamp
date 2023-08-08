@@ -5,14 +5,16 @@ const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 const middlewares = require('../middlewares/campground');
 const controller = require('../controllers/campground');
 
-router.route('/').get(controller.getAllCamgrounds);
+router
+    .route('/')
+    .get(controller.getAllCamgrounds)
+    .post(requiresLoggedIn, middlewares.validateCampground, controller.createCampground); // BUGGGGGG
 
 router.get(`/makecampground`, controller.addMockCampground);
 
 router
     .route('/:id')
     .get(controller.getACampground)
-    .post(requiresLoggedIn, middlewares.validateCampground, controller.createCampground)
     .put(
         requiresLoggedIn,
         middlewares.isCampgroundAuthor,

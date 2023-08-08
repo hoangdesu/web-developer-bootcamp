@@ -4,6 +4,5 @@ module.exports = (req, res, next) => {
     if (!req.isAuthenticated()) {
         return next(new YelpcampError(401, 'Unauthorized!'));
     }
-    console.log('hits');
     next();
 };

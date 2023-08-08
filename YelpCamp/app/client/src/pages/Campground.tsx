@@ -6,7 +6,7 @@ import axios from 'axios';
 import AppContext from '../store/app-context';
 
 import { Container, Button, Card, ListGroup, Form, Col, Row } from 'react-bootstrap';
-import { LocationOn, Sell, Person } from '@mui/icons-material';
+import { LocationOn, Sell, Person, Star } from '@mui/icons-material';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -16,6 +16,7 @@ import Review from '../components/Review';
 import { Review as ReviewType } from '../types';
 import FlashAlert from '../components/FlashAlert';
 import { USDtoVND } from '../utils/currency';
+import { Box, Rating } from '@mui/material';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -27,9 +28,8 @@ const Campground: React.FunctionComponent = () => {
     const navigate = useNavigate();
 
     const reviewText = useRef<HTMLInputElement>(null);
-    const reviewRating = useRef<HTMLInputElement>(null);
 
-    const [ratingValue, setRatingValue] = useState<Number>(3);
+    const [ratingValue, setRatingValue] = useState<number>(3);
     const [validated, setValidated] = useState<boolean>(false);
 
     const {
@@ -45,6 +45,8 @@ const Campground: React.FunctionComponent = () => {
     const onReviewSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget;
+
+        // return;
         if (form.checkValidity() === false) {
             e.stopPropagation();
         } else {
@@ -54,7 +56,7 @@ const Campground: React.FunctionComponent = () => {
                     {
                         review: {
                             comment: reviewText.current?.value || '',
-                            rating: reviewRating.current?.value || 0,
+                            rating: ratingValue || 1,
                         },
                     },
                     {
@@ -72,6 +74,7 @@ const Campground: React.FunctionComponent = () => {
                     refetch();
                     form.reset();
                     setValidated(false); // reset the form validated state
+                    setRatingValue(3);
                 })
                 .catch(err => {
                     if (err.response.status === 401) {
@@ -208,16 +211,16 @@ const Campground: React.FunctionComponent = () => {
                         {/* only activate review form for logged in user */}
                         {appContext.currentUser && (
                             <>
-                                <h1>Leave a review</h1>
+                                <h2>Leave a review</h2>
                                 <Form className="mb-5" noValidate validated={validated} onSubmit={onReviewSubmit}>
                                     <Form.Group className="mb-2" controlId="reviewRating">
-                                        <Form.Label>{`Rating: ${ratingValue}`}</Form.Label>
-                                        <Form.Range
-                                            ref={reviewRating}
-                                            onChange={evt => setRatingValue(parseInt(evt.target.value))}
-                                            min={1}
-                                            max={5}
-                                            step={1}
+                                        <Rating
+                                            name="simple-controlled"
+                                            value={ratingValue}
+                                            onChange={(event, newValue) => {
+                                                setRatingValue(newValue || 1);
+                                            }}
+                                            // size="large"
                                         />
                                     </Form.Group>
 
@@ -236,7 +239,27 @@ const Campground: React.FunctionComponent = () => {
                         <h2>
                             {campground.reviews?.length || 0} {campground.reviews?.length === 0 ? 'review' : 'reviews'}
                         </h2>
-                        <p>Average rating: {averageRating()}</p>
+
+                        {campground.reviews?.length > 0 && (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'baseline',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <p>Average rating: {averageRating()}</p>
+                                <Rating
+                                    name="read-only"
+                                    value={parseFloat(averageRating()) || 1}
+                                    readOnly
+                                    // size="small"
+                                    precision={0.5}
+                                    emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
+                                />
+                            </Box>
+                        )}
+
                         {campground.reviews && (
                             <>
                                 {campground.reviews?.length === 0 && 'Add your first review!'}

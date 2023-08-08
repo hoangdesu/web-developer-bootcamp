@@ -50,7 +50,7 @@ const seedDatabase = async dbCounts => {
 
         // generate random reviews
         for (let j = 0; j < Math.floor(Math.random() * 10) + 3; j++) {
-            const randomUserIndex = Math.floor(Math.random() * 3);
+            const randomUserIndex = Math.floor(Math.random() * 3); // TODO: fix this. get actual user index
             const randomUser = await User.findOne().skip(randomUserIndex).exec();
             const review = new Review({
                 comment: loremIpsum(),

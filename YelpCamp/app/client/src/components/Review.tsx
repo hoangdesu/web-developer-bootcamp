@@ -7,6 +7,7 @@ import { Card, Form } from 'react-bootstrap';
 import { Check, Clear, Edit } from '@mui/icons-material';
 import { Review } from '../types';
 import AppContext from '../store/app-context';
+import { Rating } from '@mui/material';
 
 interface ReviewProps {
     review: Review;
@@ -78,24 +79,44 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
     return (
         <Card className="mb-3">
             <StyledCardBody>
-                {/* Only allow review deletion if isAuthor */}
+                {/* Only allow to edit and delete a review if isAuthor */}
                 {appContext.currentUser && isAuthor() && (
                     <span className="icons">
-                        {!isEditingReview ? <Edit onClick={editReviewHandler} /> : <Check onClick={editReviewHandler} />}
-                        <Clear onClick={removeReviewHandler} />
+                        {/* TODO: STYLE EDIT REVIEW */}
+                        {isEditingReview ? (
+                            <>
+                                <Check onClick={editReviewHandler} />
+                                <p>save</p>
+                                <p>cancel</p>
+                                <Clear onClick={removeReviewHandler} />
+                            </>
+                        ) : (
+                            <>
+                                <Edit onClick={editReviewHandler} />
+                                <Clear onClick={removeReviewHandler} />
+                            </>
+                        )}
                     </span>
                 )}
 
+                {/* TODO: EDIT REVIEW HANDLER */}
                 {isEditingReview ? (
                     <>
-                        <Form.Control defaultValue={review.rating} />
+                        <Rating
+                            name="simple-controlled"
+                            value={review.rating}
+                            onChange={(event, newValue) => {
+                                // setValue(newValue);
+                            }}
+                        />
                         <Form.Control as="textarea" defaultValue={review.comment} />
                     </>
                 ) : (
                     <>
-                        <Card.Title>User: {review.author?.username}</Card.Title>
-                        <Card.Title>Rating: {review.rating}</Card.Title>
-                        <Card.Text>Comment: {review.comment} </Card.Text>
+                        <Card.Title>{review.author?.username}</Card.Title>
+                        {/* <Card.Title>Rating: {review.rating}</Card.Title> */}
+                        <Rating name="read-only" value={review.rating} readOnly size="small" />
+                        <Card.Text>{review.comment}</Card.Text>
                     </>
                 )}
             </StyledCardBody>

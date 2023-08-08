@@ -79,6 +79,8 @@ const deleteCampground = catchAsync(async (req, res, next) => {
     // delete all campgrounds associated with this user
     const userId = deletedCampground.author;
     const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { campgrounds: id } });
+
+    // TODO: delete a campground will delete all those REVIEWS in a user' reviews array
     console.log('updatedUser', updatedUser);
 
     res.status(200).send('campground deleted');

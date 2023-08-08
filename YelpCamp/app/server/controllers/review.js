@@ -46,7 +46,7 @@ const deleteReview = catchAsync(async (req, res) => {
 const editReview = catchAsync(async (req, res) => {
     const { campgroundId, reviewId } = req.params;
     const author = req.headers.authorization;
-    // TODO
+    // TODO: implement this
 });
 
 module.exports = {
