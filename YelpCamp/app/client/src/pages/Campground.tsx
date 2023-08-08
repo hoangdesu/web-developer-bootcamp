@@ -74,12 +74,20 @@ const Campground: React.FunctionComponent = () => {
                     setValidated(false); // reset the form validated state
                 })
                 .catch(err => {
-                    appContext.setAlert({
-                        message: 'Unauthorized to delete comment. Please login again',
-                        variant: 'danger',
-                    });
-                    appContext.setCurrentUser(null);
-                    navigate('/login');
+                    if (err.response.status === 401) {
+                        appContext.setAlert({
+                            message: 'Unauthorized to add review. Please login again',
+                            variant: 'danger',
+                        });
+                        appContext.setCurrentUser(null);
+                        localStorage.removeItem('currentUser');
+                        navigate('/login');
+                    } else {
+                        appContext.setAlert({
+                            message: `${err.response.staus} - ${err.response.data}`,
+                            variant: 'danger',
+                        });
+                    }
                 });
         }
         setValidated(true);
@@ -102,6 +110,7 @@ const Campground: React.FunctionComponent = () => {
                     navigate('/');
                 })
                 .catch(err => {
+                    // TODO: write a error handling function for navigating
                     console.error(err);
                     let message = '';
                     if (err.response.status === 401) {
@@ -142,7 +151,7 @@ const Campground: React.FunctionComponent = () => {
         return false;
     };
 
-    console.log('reviews:', campground.reviews);
+    // console.log('reviews:', campground.reviews);
 
     const averageRating = () => {
         const result = (campground?.reviews?.reduce((accumulator, review) => accumulator + review.rating, 0) / campground?.reviews?.length).toFixed(

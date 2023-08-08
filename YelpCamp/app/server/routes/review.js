@@ -5,7 +5,7 @@ const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 const middlewares = require('../middlewares/review');
 const controller = require('../controllers/review');
 
-router.post('/', requiresLoggedIn, middlewares.validateReview, controller.addReview);
+router.route('/').post(requiresLoggedIn, middlewares.validateReview, controller.addReview);
 
 router
     .route('/:reviewId')
