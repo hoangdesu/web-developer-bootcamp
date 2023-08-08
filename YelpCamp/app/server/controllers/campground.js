@@ -25,6 +25,7 @@ const getACampground = catchAsync(async (req, res, next) => {
     res.status(200).json(campground);
 });
 
+// POST /api/v1/campgrounds
 const createCampground = catchAsync(async (req, res, next) => {
     const { title, location, price, image, description } = req.body.campground;
 
@@ -52,25 +53,10 @@ const createCampground = catchAsync(async (req, res, next) => {
     res.status(201).json(savedCampground._id);
 });
 
+// PUT /api/v1/campgrounds/:id
 const editCampground = catchAsync(async (req, res, next) => {
-    // console.log('\n--editing campground:');
     const { id } = req.params;
     const { campground } = req.body;
-    // const author = req.headers.authorization;
-
-    // check if campground exists, extract author field
-    // console.log('campground:', newCampgroundData);
-    // const campground = await Campground.findById(campgroundId);
-
-    // if (!campground) return next(new YelpcampError(404, 'Campground now found'));
-
-    // if (campground._id ===)
-    // console.log('author:', campground.author.toString(), author, campground.author.equals(author));
-    // if (!campground.author.equals(author)) {
-    //     return next(new YelpcampError(403, "Forbidden, you don't have permission to edit campground"));
-    // }
-
-    // return next(new YelpcampError(405, 'Stop'))
 
     const updatedCampground = await Campground.findByIdAndUpdate(id, campground, {
         runValidators: true,
@@ -90,10 +76,11 @@ const deleteCampground = catchAsync(async (req, res, next) => {
         return next(new YelpcampError(404, 'Delete failed. Campground not found'));
     }
 
-    const authorId = deletedCampground.author;
-    const updatedUser = await User.findByIdAndUpdate(authorId, { $pull: { campgrounds: id } });
-
+    // delete all campgrounds associated with this user
+    const userId = deletedCampground.author;
+    const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { campgrounds: id } });
     console.log('updatedUser', updatedUser);
+
     res.status(200).send('campground deleted');
 });
 

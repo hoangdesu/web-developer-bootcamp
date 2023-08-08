@@ -3,38 +3,22 @@ const router = express.Router();
 
 const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 const middlewares = require('../middlewares/campground');
-const campgrounds = require('../controllers/campground');
+const controller = require('../controllers/campground');
 
-router.route('/').get(campgrounds.getAllCamgrounds);
+router.route('/').get(controller.getAllCamgrounds);
 
-router.get(`/make-campground`, campgrounds.addMockCampground);
+router.get(`/makecampground`, controller.addMockCampground);
 
-// router.route('/:id')
-// .get()
-// .put()
-// .delete()
-
-router.get(`/:id`, campgrounds.getACampground);
-
-// POST /api/v1/campgrounds
-router.post(`/`, requiresLoggedIn, middlewares.validateCampground, campgrounds.createCampground);
-
-// PUT /api/v1/campgrounds/:id
-router.put(
-    `/:id`,
-    requiresLoggedIn,
-    middlewares.isCampgroundAuthor,
-    middlewares.validateCampground,
-    campgrounds.editCampground,
-);
-
-router.delete(
-    `/:id`,
-    requiresLoggedIn,
-    middlewares.isCampgroundAuthor,
-    campgrounds.deleteCampground,
-);
-
-
+router
+    .route('/:id')
+    .get(controller.getACampground)
+    .post(requiresLoggedIn, middlewares.validateCampground, controller.createCampground)
+    .put(
+        requiresLoggedIn,
+        middlewares.isCampgroundAuthor,
+        middlewares.validateCampground,
+        controller.editCampground,
+    )
+    .delete(requiresLoggedIn, middlewares.isCampgroundAuthor, controller.deleteCampground);
 
 module.exports = router;
