@@ -57,7 +57,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // for testing only
 app.use((req, res, next) => {
-    console.log('req.user:', req.user?.username || null);
+    console.log('\nreq.user:', req.user?.username || null);
     next();
 });
 
