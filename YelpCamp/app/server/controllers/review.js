@@ -3,6 +3,7 @@ const { catchAsync } = require('../utilities/helpers');
 const Campground = require('../models/campground');
 const Review = require('../models/review');
 const User = require('../models/user');
+const YelpcampError = require('../utilities/YelpcampError');
 
 // POST /api/v1/campgrounds/:campgroundId/reviews
 const addReview = catchAsync(async (req, res) => {
@@ -15,9 +16,10 @@ const addReview = catchAsync(async (req, res) => {
     // console.log('user:', user);
 
     const review = new Review(req.body.review);
-    campground.reviews.push(review);
     review.campground = campground;
     review.author = user;
+
+    campground.reviews.push(review);
     user.reviews.push(review);
 
     await campground.save();
@@ -44,9 +46,17 @@ const deleteReview = catchAsync(async (req, res) => {
 });
 
 const editReview = catchAsync(async (req, res) => {
-    const { campgroundId, reviewId } = req.params;
-    const author = req.headers.authorization;
-    // TODO: implement this
+    const { reviewId } = req.params;
+    const { review } = req.body;
+
+    const updatedReview = await Review.findByIdAndUpdate(reviewId, review, {
+        runValidators: true,
+        new: true,
+    });
+    // console.log(updatedReview);
+
+    if (!updatedReview) return next(new YelpcampError(500, 'Failed updating review'));
+    res.status(200).json({ status: 'ok' });
 });
 
 module.exports = {

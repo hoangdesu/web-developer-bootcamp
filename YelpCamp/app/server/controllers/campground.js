@@ -17,10 +17,10 @@ const getACampground = catchAsync(async (req, res, next) => {
             populate: {
                 path: 'author',
                 model: 'User',
-                select: { _id: 1, username: 1 }, // select certain fields inside nested populate. 1 for true
+                select: { _id: 1, username: 1, createdAt: 1, updatedAt: 1 }, // select certain fields inside nested populate. 1 for true
             },
-            options: { sort: { createdAt: -1 } },
-        }) // sort newest review on top
+            options: { sort: { createdAt: -1 } }, // sort newest review on top
+        })
         .exec();
     res.status(200).json(campground);
 });

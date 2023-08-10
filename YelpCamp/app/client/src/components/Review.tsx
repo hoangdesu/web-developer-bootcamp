@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import styled from '@emotion/styled';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Card, Form } from 'react-bootstrap';
-import { Check, Clear, Edit } from '@mui/icons-material';
+import { Check, Clear, Delete, MoreHoriz } from '@mui/icons-material';
 import { Review } from '../types';
 import AppContext from '../store/app-context';
 import { Rating } from '@mui/material';
@@ -16,14 +16,9 @@ interface ReviewProps {
 
 const StyledCardBody = styled(Card.Body)`
     .icons {
+        float: right;
         display: none;
-        position: absolute;
-        right: 30px;
-        top: 0;
-        margin: 10px;
-        width: 20px;
-        height: 20px;
-        opacity: 0.7;
+        opacity: 0.8;
     }
 
     &:hover {
@@ -37,10 +32,23 @@ const StyledCardBody = styled(Card.Body)`
     }
 `;
 
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: #42434f;
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
 const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
-    const [isEditingReview, setIsEditingReview] = useState(false);
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
+
+    const [isEditingReview, setIsEditingReview] = useState(false);
+    const [formData, setFormData] = useState({
+        comment: review.comment,
+        rating: review.rating,
+    });
 
     const removeReviewHandler = () => {
         if (confirm('Are you sure to delete this comment?')) {
@@ -58,23 +66,70 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                     refetch();
                 })
                 .catch(e => {
-                    console.log('Delete failed', e);
+                    // console.log('Delete failed', e);
                     appContext.setAlert({
                         message: 'Failed to delete comment',
                         variant: 'danger',
                     });
-                    // appContext.setCurrentUser(null);
                 });
         }
     };
 
-    const editReviewHandler = () => {
-        setIsEditingReview(!isEditingReview);
+    const saveChangeReviewHandler = () => {
+        if (formData.comment.length === 0) {
+            return;
+        }
+
+        if (confirm('Save review?')) {
+            axios
+                .put(
+                    `/api/v1/campgrounds/${review.campground}/reviews/${review._id}`,
+                    {
+                        review: {
+                            comment: formData.comment,
+                            rating: formData.rating,
+                        },
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: appContext.currentUser.id.toString(),
+                        },
+                    },
+                )
+                .then(res => {
+                    setIsEditingReview(!isEditingReview);
+                    refetch();
+                })
+                .catch(err => {
+                    console.log('error', err);
+                    if (err.response.status === 401) {
+                        appContext.setAlert({
+                            message: 'Please login again!',
+                            variant: 'info',
+                        });
+                        localStorage.removeItem('currentUser');
+                        navigate('/login');
+                    } else {
+                        appContext.setAlert({
+                            message: 'Something went wrong. Your review was not saved',
+                            variant: 'danger',
+                        });
+                        setIsEditingReview(!isEditingReview);
+                    }
+                });
+        }
     };
 
     const isAuthor = () => {
         return review.author.username.toString() === appContext.currentUser.username.toString();
     };
+
+    const isEdited = () => {
+        if (review.createdAt !== review.updatedAt) {
+            return <small className="text-muted">(Edited)</small>
+        }
+    }
 
     return (
         <Card className="mb-3">
@@ -82,41 +137,46 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                 {/* Only allow to edit and delete a review if isAuthor */}
                 {appContext.currentUser && isAuthor() && (
                     <span className="icons">
-                        {/* TODO: STYLE EDIT REVIEW */}
                         {isEditingReview ? (
                             <>
-                                <Check onClick={editReviewHandler} />
-                                <p>save</p>
-                                <p>cancel</p>
-                                <Clear onClick={removeReviewHandler} />
+                                <Check onClick={saveChangeReviewHandler} />
+                                <Clear onClick={() => setIsEditingReview(!isEditingReview)} />
+                                <Delete onClick={removeReviewHandler} />
                             </>
                         ) : (
-                            <>
-                                <Edit onClick={editReviewHandler} />
-                                <Clear onClick={removeReviewHandler} />
-                            </>
+                            <MoreHoriz onClick={() => setIsEditingReview(!isEditingReview)} />
                         )}
                     </span>
                 )}
 
-                {/* TODO: EDIT REVIEW HANDLER */}
                 {isEditingReview ? (
                     <>
                         <Rating
                             name="simple-controlled"
-                            value={review.rating}
+                            value={formData.rating}
                             onChange={(event, newValue) => {
-                                // setValue(newValue);
+                                setFormData(prev => ({ ...prev, rating: newValue || 1 }));
                             }}
                         />
-                        <Form.Control as="textarea" defaultValue={review.comment} />
+                        <Form.Control
+                            as="textarea"
+                            value={formData.comment}
+                            onChange={evt => {
+                                const comment = evt.currentTarget?.value;
+                                setFormData(prev => ({
+                                    ...prev,
+                                    comment,
+                                }));
+                            }}
+                        />
                     </>
                 ) : (
                     <>
-                        <Card.Title>{review.author?.username}</Card.Title>
-                        {/* <Card.Title>Rating: {review.rating}</Card.Title> */}
+                        <Card.Title>
+                            <StyledLink to={`/users/${review.author?.username}`}>{review.author?.username}</StyledLink>
+                        </Card.Title>
                         <Rating name="read-only" value={review.rating} readOnly size="small" />
-                        <Card.Text>{review.comment}</Card.Text>
+                        <Card.Text>{review.comment} {isEdited()}</Card.Text>
                     </>
                 )}
             </StyledCardBody>

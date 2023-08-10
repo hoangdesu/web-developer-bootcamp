@@ -72,5 +72,3 @@ FlashMessage.propTypes = {
 };
 
 export default FlashMessage;
-
-// TODO: possibly create a FlashMessageAlert component, can config variant and message. Change shape of alert object to { message, variant }
