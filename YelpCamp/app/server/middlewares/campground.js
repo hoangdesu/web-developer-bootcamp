@@ -12,14 +12,13 @@ const validateCampground = (req, res, next) => {
 };
 
 const isCampgroundAuthor = async (req, res, next) => {
-    console.log('-- is author');
+    // console.log('-- is author');
     const { id } = req.params;
 
     const author = req.headers.authorization;
     if (!author) return next(new YelpcampError(400, 'Missing Authorization header'));
 
     const campground = await Campground.findById(id);
-
     if (!campground) return next(new YelpcampError(404, 'Campground now found'));
     if (!campground.author.equals(author))
         return next(

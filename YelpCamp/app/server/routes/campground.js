@@ -8,7 +8,7 @@ const controller = require('../controllers/campground');
 router
     .route('/')
     .get(controller.getAllCamgrounds)
-    .post(requiresLoggedIn, middlewares.validateCampground, controller.createCampground); // BUGGGGGG
+    .post(requiresLoggedIn, middlewares.validateCampground, controller.createCampground);
 
 router.get(`/makecampground`, controller.addMockCampground);
 
