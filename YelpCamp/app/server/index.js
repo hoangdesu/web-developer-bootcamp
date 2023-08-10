@@ -75,13 +75,15 @@ app.get('/reviews', async (req, res, next) => {
     res.status(200).json(await Review.find({}));
 });
 
-// testing cloudinary
-// const cloudinary = require('cloudinary').v2;
+// testing file upload & cloudinary
 const parser = require('./controllers/cloudinary');
-app.get('/upload', parser.single('image'), (req, res) => {
+app.post('/upload', parser.single('image'), (req, res) => {
     console.log('uploading...')
     // res.send('upload');
-    res.json(req.file)
+    res.json({
+        body: req.body, 
+        file: req.file
+    });
 });
 
 // Route handlers
