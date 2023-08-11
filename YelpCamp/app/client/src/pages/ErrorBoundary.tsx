@@ -15,7 +15,9 @@ const ErrorBoundary = () => {
             <Navbar />
             <Container className="mt-3">
                 <Alert variant="danger">
-                    <Alert.Heading>{error?.message || error?.data || 'Something went wrong'}</Alert.Heading>
+                    <Alert.Heading>
+                        {error?.message || error?.data || 'Something went wrong'}
+                    </Alert.Heading>
                     <p>{error?.stack || ':/'}</p>
                 </Alert>
 

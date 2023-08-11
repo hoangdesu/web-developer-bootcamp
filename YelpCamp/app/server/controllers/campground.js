@@ -27,20 +27,33 @@ const getACampground = catchAsync(async (req, res, next) => {
 
 // POST /api/v1/campgrounds
 const createCampground = catchAsync(async (req, res, next) => {
-    const { title, location, price, image, description } = req.body.campground;
+    const { title, location, price, description } = req.body.campground;
+
+    // console.log('--- creating campground...');
+    // console.log(req.headers)
+    // console.log('body:', req.body);
+    // console.log('files:', req.files);
 
     // Authorization
     const author = req.headers.authorization;
     // console.log('headers:', req.headers, author);
 
+    // TODO: CREATE BUILD CAMPGROUND OBJECT HANDLER, MIGHT USE FACTORY PATTERN
+    const images = req.files.map(file => ({
+        url: file.path,
+        filename: file.filename,
+    }));
+
     const savedCampground = await Campground({
         title,
         location,
         price,
-        image,
+        images,
         description,
         author,
     }).save();
+
+    console.log('saved campground: ', savedCampground);
 
     // save new campground to user's campgrounds list
     const user = await User.findById(author);

@@ -157,12 +157,15 @@ const Campground: React.FunctionComponent = () => {
     // console.log('reviews:', campground.reviews);
 
     const averageRating = () => {
-        const result = (campground?.reviews?.reduce((accumulator, review) => accumulator + review.rating, 0) / campground?.reviews?.length).toFixed(
-            1,
-        );
+        const result = (
+            campground?.reviews?.reduce((accumulator, review) => accumulator + review.rating, 0) /
+            campground?.reviews?.length
+        ).toFixed(1);
         if (result === 'NaN') return '-';
         return result;
     };
+
+    console.log(campground);
 
     return (
         <PageContainer>
@@ -172,7 +175,10 @@ const Campground: React.FunctionComponent = () => {
                 <Row>
                     <Col>
                         <Card>
-                            <Card.Img variant="top" src={campground.image} />
+                            {campground.images?.map(image => (
+                                <Card.Img variant="top" src={image.url} />
+                            ))}
+                            {/* <Card.Img variant="top" src={campground.image} /> */}
                             <Card.Body>
                                 <Card.Title>{campground.title}</Card.Title>
                                 <Card.Text>{campground.description}</Card.Text>
@@ -185,7 +191,10 @@ const Campground: React.FunctionComponent = () => {
                                     <Sell /> {formattedPrice}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
-                                    <Person /> <Link to={`/users/${campground.author?.username}`}>{campground.author?.username || 'annonymous'}</Link>
+                                    <Person />{' '}
+                                    <Link to={`/users/${campground.author?.username}`}>
+                                        {campground.author?.username || 'annonymous'}
+                                    </Link>
                                 </ListGroup.Item>
                             </ListGroup>
                             {isAuthor() && (
@@ -193,7 +202,11 @@ const Campground: React.FunctionComponent = () => {
                                     <Link to={`/campgrounds/${campgroundId}/edit`}>
                                         <Button variant="info">Edit</Button>
                                     </Link>
-                                    <Button variant="danger" className="mx-2" onClick={deleteCampgroundHandler}>
+                                    <Button
+                                        variant="danger"
+                                        className="mx-2"
+                                        onClick={deleteCampgroundHandler}
+                                    >
                                         Delete
                                     </Button>
                                 </Card.Body>
@@ -212,7 +225,12 @@ const Campground: React.FunctionComponent = () => {
                         {appContext.currentUser && (
                             <>
                                 <h2>Leave a review</h2>
-                                <Form className="mb-5" noValidate validated={validated} onSubmit={onReviewSubmit}>
+                                <Form
+                                    className="mb-5"
+                                    noValidate
+                                    validated={validated}
+                                    onSubmit={onReviewSubmit}
+                                >
                                     <Form.Group className="mb-2" controlId="reviewRating">
                                         <Rating
                                             name="simple-controlled"
@@ -227,7 +245,9 @@ const Campground: React.FunctionComponent = () => {
                                     <Form.Group className="mb-3" controlId="reviewComment">
                                         <Form.Label>Comment</Form.Label>
                                         <Form.Control as="textarea" ref={reviewText} required />
-                                        <Form.Control.Feedback type="invalid">Please add your comment</Form.Control.Feedback>
+                                        <Form.Control.Feedback type="invalid">
+                                            Please add your comment
+                                        </Form.Control.Feedback>
                                     </Form.Group>
 
                                     <Button variant="primary" className="my-3" type="submit">
@@ -237,7 +257,8 @@ const Campground: React.FunctionComponent = () => {
                             </>
                         )}
                         <h2>
-                            {campground.reviews?.length || 0} {campground.reviews?.length === 0 ? 'review' : 'reviews'}
+                            {campground.reviews?.length || 0}{' '}
+                            {campground.reviews?.length === 0 ? 'review' : 'reviews'}
                         </h2>
 
                         {campground.reviews?.length > 0 && (
@@ -255,7 +276,9 @@ const Campground: React.FunctionComponent = () => {
                                     readOnly
                                     // size="small"
                                     precision={0.5}
-                                    emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
+                                    emptyIcon={
+                                        <Star style={{ opacity: 0.55 }} fontSize="inherit" />
+                                    }
                                 />
                             </Box>
                         )}

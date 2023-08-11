@@ -5,10 +5,17 @@ const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 const middlewares = require('../middlewares/campground');
 const controller = require('../controllers/campground');
 
+const upload = require('../configs/cloudinary');
+
 router
     .route('/')
     .get(controller.getAllCamgrounds)
-    .post(requiresLoggedIn, middlewares.validateCampground, controller.createCampground);
+    .post(
+        requiresLoggedIn,
+        upload.array('campground[images]'),
+        middlewares.validateCampground,
+        controller.createCampground,
+    );
 
 router.get(`/makecampground`, controller.addMockCampground);
 

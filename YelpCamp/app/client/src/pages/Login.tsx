@@ -67,8 +67,8 @@ const Login: React.FunctionComponent = () => {
                         });
                         appContext.setCurrentUser(resp.data);
                         localStorage.setItem('currentUser', JSON.stringify(resp.data));
-                        navigate(-1); // back to previous page
-                        // navigate('/');
+                        // navigate(-1); // back to previous page
+                        navigate('/');
                     });
                 })
                 .catch(err => {

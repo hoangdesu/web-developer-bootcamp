@@ -5,8 +5,29 @@ const { campgroundSchema } = require('../schemas');
 
 const validateCampground = (req, res, next) => {
     // validating request body with Joi before extracting data
-    const { error: validationError } = campgroundSchema.validate(req.body);
-    // console.log('validationError:', validationError);
+    console.log('joi:', req.body, req.files)
+
+    // TODO: CREATE BUILD CAMPGROUND OBJECT HANDLER, MIGHT USE FACTORY PATTERN
+    const { title, location, price, description } = req.body.campground;
+    const author = req.headers.authorization;
+    const body = {
+        campground: {
+            title,
+            location,
+            price,
+            description,
+            author
+        }
+    };
+
+    body.campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+
+    console.log('--- body', body)
+
+    const { error: validationError } = campgroundSchema.validate(body);
+
+    console.log('validationError:', validationError);
+
     if (validationError) throw new YelpcampError(500, validationError);
     next(); // dont forget!
 };

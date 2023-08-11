@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import AppContext from '../store/app-context';
 
-import { Container, Form, Button, InputGroup } from 'react-bootstrap';
+import { Container, Form, Button, InputGroup, Spinner } from 'react-bootstrap';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -13,13 +13,14 @@ import FlashAlert from '../components/FlashAlert';
 
 const NewCampground: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
+    const [isUploading, setIsUploading] = useState<boolean>(false);
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
 
     const formTitle = useRef<HTMLInputElement>(null);
     const formLocation = useRef<HTMLInputElement>(null);
     const formPrice = useRef<HTMLInputElement>(null);
-    const formImage = useRef<HTMLInputElement>(null);
+    const formImages = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -40,21 +41,31 @@ const NewCampground: React.FunctionComponent = () => {
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
+            setIsUploading(!isUploading);
+            const formData = new FormData();
+            formData.append('campground[title]', formTitle.current?.value || '');
+            formData.append('campground[price]', parseFloat(formPrice.current?.value) || 0);
+            formData.append('campground[location]', formLocation.current?.value || '');
+            formData.append('campground[description]', formDescription.current?.value || '');
+            Array.from(formImages?.current?.files).forEach(file => {
+                formData.append('campground[images]', file);
+            });
             axios
                 .post(
                     '/api/v1/campgrounds',
-                    {
-                        campground: {
-                            title: formTitle.current?.value || '',
-                            price: parseFloat(formPrice.current?.value) || 0,
-                            location: formLocation.current?.value || '',
-                            image: formImage.current?.value || '',
-                            description: formDescription.current?.value || '',
-                        },
-                    },
+                    // {
+                    //     campground: {
+                    //         title: formTitle.current?.value || '',
+                    //         price: parseFloat(formPrice.current?.value) || 0,
+                    //         location: formLocation.current?.value || '',
+                    //         // image: formImage.current?.value || '',
+                    //         description: formDescription.current?.value || '',
+                    //     },
+                    // },
+                    formData,
                     {
                         headers: {
-                            'Content-Type': 'application/json',
+                            'Content-Type': 'multipart/form-data',
                             Authorization: currentUser?.id,
                         },
                     },
@@ -70,7 +81,9 @@ const NewCampground: React.FunctionComponent = () => {
                     // console.log(err);
                     let errorMessage = 'Something went wrong';
                     if (err.response.status === 400) {
-                        errorMessage = err.response?.data?.details ? err.response.data.details[0].message : err.response?.data;
+                        errorMessage = err.response?.data?.details
+                            ? err.response.data.details[0].message
+                            : err.response?.data;
                         // setValidated(false);
                         // form.reset();
                     } else if (err.response.status === 401) {
@@ -92,53 +105,123 @@ const NewCampground: React.FunctionComponent = () => {
 
     // if (isLoading) return <Loading />;
 
+    // const handleSubmit2 = e => {
+    //     e.preventDefault();
+    //     appContext.setAlert({
+    //         message: 'uploading...',
+    //         variant: 'info',
+    //     });
+
+    //     const fileList = Array.from(formImage?.current?.files);
+    //     const formData = new FormData();
+    //     // formData.append('images', formImage?.current?.files[0]);
+    //     formData.append('name', 'hehe');
+
+    //     Array.from(formImage.current?.files).forEach(file => {
+    //         formData.append('images', file);
+    //     });
+
+    //     console.log(formData.entries(), formData.get('images'));
+    //     return;
+    //     axios.post('/api/v1/campgrounds', formData, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data',
+    //             Authorization: currentUser?.id,
+    //         },
+    //     });
+    // };
+
     return (
         <PageContainer>
             <Navbar />
             <Container className="col-6 offset-3 mt-5">
                 <FlashAlert />
                 <h1 className="text-center mb-4">New Campground</h1>
-                <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form
+                    className="mb-5"
+                    noValidate
+                    validated={validated}
+                    onSubmit={handleSubmit}
+                    encType="multipart/form-data"
+                >
                     <Form.Group className="mb-3" controlId="campgroundTitle">
                         <Form.Label>Title</Form.Label>
                         <Form.Control type="text" ref={formTitle} required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Title is required!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">
+                            Title is required!
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="campgroundLocation">
                         <Form.Label>Location</Form.Label>
                         <Form.Control type="text" ref={formLocation} required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Location is required!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">
+                            Location is required!
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="inlineFormInputGroup">Price</Form.Label>
                         <InputGroup className="mb-2">
                             <InputGroup.Text>$</InputGroup.Text>
-                            <Form.Control type="number" step="0.1" min="0" id="inlineFormInputGroup" defaultValue={0.0} ref={formPrice} required />
+                            <Form.Control
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                id="inlineFormInputGroup"
+                                defaultValue={0.0}
+                                ref={formPrice}
+                                required
+                            />
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">Price is required!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                Price is required!
+                            </Form.Control.Feedback>
                         </InputGroup>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="campgroundImageUrl">
                         <Form.Label>Image Url</Form.Label>
-                        <Form.Control type="text" ref={formImage} required />
+                        {/* <Form.Control type="text" ref={formImage} required /> */}
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Image URL is required!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">
+                            Image URL is required!
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="formFileMultiple" className="mb-3">
+                        <Form.Label>Multiple files input example</Form.Label>
+                        <Form.Control type="file" multiple ref={formImages} />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="campgroundDescription">
                         <Form.Label>Description</Form.Label>
                         <Form.Control as="textarea" ref={formDescription} />
-                        <Form.Control.Feedback type="valid">Description is optional</Form.Control.Feedback>
+                        <Form.Control.Feedback type="valid">
+                            Description is optional
+                        </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Button variant="success" type="submit">
-                        Add campground
-                    </Button>
+                    {isUploading ? (
+                        <>
+                            <Button variant="secondary" type="submit" disabled>
+                                <Spinner
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                    as="span"
+                                />
+                                <span> Creating campground...</span>
+                            </Button>
+                        </>
+                    ) : (
+                        <Button variant="success" type="submit">
+                            Add campground
+                        </Button>
+                    )}
                 </Form>
             </Container>
             <Footer />
