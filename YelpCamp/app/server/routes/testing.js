@@ -3,6 +3,9 @@ const router = express.Router();
 const cloudinary = require('cloudinary').v2;
 const parser = require('../configs/cloudinary');
 const { resetDb } = require('../seeds');
+
+const Campground = require('../models/campground');
+const User = require('../models/user');
 const Review = require('../models/review');
 
 // for testing only
@@ -12,7 +15,7 @@ router.get('/', (req, res) => {
 
 // reset database, seeding new & random data
 router.get('/resetdb', (req, res) => {
-    const { count = 1 } = req.params;
+    const { count = 2 } = req.params;
     resetDb(count);
     res.status(200).send('db has been reset');
 });
@@ -50,6 +53,14 @@ router.delete('/image/:id', (req, res) => {
             console.log(`deleted resource id ${id} success`, res);
             res.send('deleted');
         });
+});
+
+// drop all collections
+router.delete('/dropcollections', async (req, res) => {
+    const campgrounds = await Campground.deleteMany({});
+    const reviews = await Review.deleteMany({});
+    const users = await User.deleteMany({});
+    res.json({ campgrounds, reviews, users });
 });
 
 module.exports = router;

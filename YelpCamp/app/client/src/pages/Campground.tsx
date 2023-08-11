@@ -5,7 +5,17 @@ import axios from 'axios';
 
 import AppContext from '../store/app-context';
 
-import { Container, Button, Card, ListGroup, Form, Col, Row } from 'react-bootstrap';
+import {
+    Container,
+    Button,
+    Card,
+    ListGroup,
+    Form,
+    Col,
+    Row,
+    Carousel,
+    Image,
+} from 'react-bootstrap';
 import { LocationOn, Sell, Person, Star } from '@mui/icons-material';
 
 import Navbar from '../components/Navbar';
@@ -17,15 +27,37 @@ import { Review as ReviewType } from '../types';
 import FlashAlert from '../components/FlashAlert';
 import { USDtoVND } from '../utils/currency';
 import { Box, Rating } from '@mui/material';
+import styled from '@emotion/styled';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
 }
 
+const ImageThumbnails = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 8px;
+    gap: 6px;
+    /* opacity: 0.8; */
+
+    & > img {
+        transition: 0.3s all;
+    }
+
+    & > img:hover {
+        cursor: pointer;
+        opacity: 0.8 !important;
+    }
+`;
+
 const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
+    const [index, setIndex] = useState(0);
 
     const reviewText = useRef<HTMLInputElement>(null);
 
@@ -165,7 +197,12 @@ const Campground: React.FunctionComponent = () => {
         return result;
     };
 
-    console.log(campground);
+    // console.log(campground);
+
+    const changeImageHandler = index => {
+        // console.log(index);
+        setIndex(index);
+    };
 
     return (
         <PageContainer>
@@ -175,9 +212,58 @@ const Campground: React.FunctionComponent = () => {
                 <Row>
                     <Col>
                         <Card>
-                            {campground.images?.map(image => (
+                            {/* {campground.images?.map(image => (
                                 <Card.Img variant="top" src={image.url} />
-                            ))}
+                            ))} */}
+
+                            {/* CAROUSEL */}
+
+                            <Carousel activeIndex={index} onSelect={changeImageHandler}>
+                                {campground.images?.map(image => (
+                                    <Carousel.Item key={image.url}>
+                                        {/* <ExampleCarouselImage text="First slide" /> */}
+                                        <Card.Img
+                                            variant="top"
+                                            src={image.url}
+                                            height={'400px'}
+                                            style={{ objectFit: 'cover' }}
+                                        />
+                                        {/* <Image src={image.url} className="img-fluid w-100" height={'300px'} /> */}
+                                        {/* <Carousel.Caption>
+                                            <h3>First slide label</h3>
+                                            <p>
+                                                Nulla vitae elit libero, a pharetra augue mollis
+                                                interdum.
+                                            </p>
+                                        </Carousel.Caption> */}
+                                    </Carousel.Item>
+                                ))}
+                            </Carousel>
+
+                            <ImageThumbnails>
+                                {campground.images?.map((image, i) => (
+                                    <>
+                                        {/* <img key={image.url} src={image.url} alt="" width={100} height={60} className="object-fit-fill border rounded" onClick={changeImageHandler} /> */}
+                                        <Image
+                                            key={image.url}
+                                            src={image.url}
+                                            alt={image.filename}
+                                            width={'100px'}
+                                            height={'60px'}
+                                            rounded
+                                            onClick={() => changeImageHandler(i)}
+                                            style={{
+                                                opacity: index === i ? 1 : 0.5,
+                                                objectFit: 'cover',
+                                            }}
+
+                                            // TODO: set selected to full opacity -> DONE
+                                            // TODO: refactor this shit
+                                        />
+                                    </>
+                                ))}
+                            </ImageThumbnails>
+
                             {/* <Card.Img variant="top" src={campground.image} /> */}
                             <Card.Body>
                                 <Card.Title>{campground.title}</Card.Title>

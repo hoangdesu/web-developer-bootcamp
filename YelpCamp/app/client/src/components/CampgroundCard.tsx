@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row, Col, Image, Button } from 'react-bootstrap';
+import { Card, Row, Col, Image, Button, Carousel } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { Campground } from '../types';
@@ -11,10 +11,24 @@ interface CardProps {
 const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
     // console.log(campground);
     return (
-        <Card>
+        <Card
+        // style={{backgroundColor: 'red'}}
+        >
             <Row>
                 <Col md={4}>
-                    <Image fluid src={campground.image} alt="Campground image" />
+                    {/* <Image fluid src={campground.image} alt="Campground image" /> */}
+                    <Carousel interval={null}>
+                        {campground.images?.map(image => (
+                            <Carousel.Item key={image.url}>
+                                <Card.Img
+                                    variant="top"
+                                    src={image.url}
+                                    height={'200'}
+                                    style={{ objectFit: 'cover' }}
+                                />
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>
                 </Col>
                 <Col md={8}>
                     <Card.Body>
@@ -23,7 +37,9 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                             <small className="text-muted">{campground.location}</small>
                         </Card.Subtitle>
                         <Card.Text className="my-3">{campground.description}</Card.Text>
-                        <Card.Text className="my-3">Username: {campground.author?.username}</Card.Text>
+                        <Card.Text className="my-3">
+                            Username: {campground.author?.username}
+                        </Card.Text>
 
                         <Link to={`campgrounds/${campground._id}`}>
                             <Button variant="primary" className="mt-2">
