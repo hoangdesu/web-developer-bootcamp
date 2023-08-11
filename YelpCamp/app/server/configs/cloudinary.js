@@ -11,17 +11,11 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'yelp-camp',
-        format: async (req, file) => 'png', // supports promises as well
-        public_id: (req, file) => 'computed-filename-using-request',
+        folder: 'YelpCamp',
+        // format: async (req, file) => 'png', // supports promises as well
+        // public_id: (req, file) => 'computed-filename-using-request',
+        allowedFormats: ['png', 'jpg', 'jpeg'],
     },
 });
 
-// const parser = multer({ storage: storage });
-const parser = multer({ dest: 'multer-uploads/' })
-
-// app.post('/upload', parser.single('image'), function (req, res) {
-//     res.json(req.file);
-// });
-
-module.exports = parser;
+module.exports = multer({ storage: storage });

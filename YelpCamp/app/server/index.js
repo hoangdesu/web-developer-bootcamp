@@ -76,15 +76,21 @@ app.get('/reviews', async (req, res, next) => {
 });
 
 // testing file upload & cloudinary
-const parser = require('./controllers/cloudinary');
-app.post('/upload', parser.single('image'), (req, res) => {
-    console.log('uploading...')
-    // res.send('upload');
-    res.json({
-        body: req.body, 
-        file: req.file
-    });
-});
+const parser = require('./configs/cloudinary');
+app.post(
+    '/upload',
+    // parser.single('image'),
+    parser.array('images'),
+    (req, res) => {
+        console.log('uploading...');
+        // res.send('upload');
+        res.json({
+            body: req.body,
+            // file: req.file || null,
+            files: req.files
+        });
+    },
+);
 
 // Route handlers
 app.use('/api/v1/campgrounds', campgroundRoutes);
