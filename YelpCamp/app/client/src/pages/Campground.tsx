@@ -259,6 +259,7 @@ const Campground: React.FunctionComponent = () => {
 
                                             // TODO: set selected to full opacity -> DONE
                                             // TODO: refactor this shit
+                                            // TODO: limit to only 10 images upload
                                         />
                                     </>
                                 ))}

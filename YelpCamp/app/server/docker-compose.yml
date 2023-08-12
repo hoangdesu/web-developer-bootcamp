@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  yelpcamp-server:
+    build: .
+    ports:
+      - '3001:3001'
+    # depends_on:
+    #   - mongo
+    # env_file: ./.env
+    environment:
+      - DB_NAME=yelp-camp
+      - PORT=3001
+      - MONGO_URI=mongodb://host.docker.internal:27017 # // connect to local mongodb
+      - SESSION_SECRET=yelpcamptopsecret
+      - CLOUDINARY_CLOUD_NAME=hoangdesu
+      - CLOUDINARY_API_KEY=236239411785761
+      - CLOUDINARY_API_SECRET=mn4kTcw3CzsflqnaLGFAZnxo4_o
+
+    # volumes:
+    #   - ./:/usr/src/app
+    # networks:
+    #   - app-network
+    # command: 'yarn start'
+    
+
+  # // container mongo
+  # mongo:
+  #   image: mongo
+  #   ports:
+  #     - '27017:27017'
+  #   volumes:
+  #     - ./data:/data/db
+
+# networks:
+# app-network:
+#   driver: bridge 
+
+
