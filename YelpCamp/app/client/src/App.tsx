@@ -15,6 +15,14 @@ import CampgroundCard from './components/CampgroundCard';
 import Loading from './pages/Loading';
 
 import FlashAlert from './components/FlashAlert';
+import styled from '@emotion/styled';
+
+const CampgroundsContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+`;
 
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
@@ -51,17 +59,16 @@ const App: React.FunctionComponent = () => {
             <Container className="col-8 my-3">
                 <FlashAlert />
 
-                <p className="mt-3">Total: {campgroundsData && campgroundsData.length} campgrounds</p>
-                <ul style={{ paddingLeft: 0 }}>
+                <h5 className="my-3">
+                    Total: {campgroundsData && campgroundsData.length} campgrounds
+                </h5>
+
+                <CampgroundsContainer>
                     {Array.isArray(campgroundsData) &&
                         campgroundsData.map(campground => {
-                            return (
-                                <li key={campground._id} style={{ listStyle: 'none', marginBottom: 12 }}>
-                                    <CampgroundCard campground={campground} />
-                                </li>
-                            );
+                            return <CampgroundCard campground={campground} />;
                         })}
-                </ul>
+                </CampgroundsContainer>
             </Container>
 
             <Footer />
