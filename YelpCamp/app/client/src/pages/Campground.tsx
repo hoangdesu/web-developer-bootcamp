@@ -1,19 +1,11 @@
-import React, { useRef, useState, useContext, useEffect } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
 import AppContext from '../store/app-context';
 
-import {
-    Container,
-    Button,
-    Card,
-    ListGroup,
-    Form,
-    Col,
-    Row,
-} from 'react-bootstrap';
+import { Container, Button, Card, ListGroup, Form, Col, Row } from 'react-bootstrap';
 import { LocationOn, Sell, Person, Star } from '@mui/icons-material';
 
 import Navbar from '../components/Navbar';
@@ -30,8 +22,6 @@ import CampgroundCardCarousel from '../components/CampgroundCardCarousel';
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
 }
-
-
 
 const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
@@ -177,8 +167,6 @@ const Campground: React.FunctionComponent = () => {
     };
 
     // console.log(campground);
-
-
 
     return (
         <PageContainer>

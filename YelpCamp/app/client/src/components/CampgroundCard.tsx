@@ -11,7 +11,7 @@ interface CardProps {
 }
 
 const StyledCard = styled(Card)`
-    width: 18rem;
+    width: 16rem;
     box-shadow: 0 0 8px #f1e0e0;
     transition: 0.2s ease;
 
@@ -30,7 +30,9 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                 style={{ textDecoration: 'none', color: '#212529', height: '25em' }}
             >
                 <Row>
-                    <Carousel interval={null}>
+                    {/* // might not need carousel in homepage */}
+                    
+                    {/* <Carousel interval={null}>
                         {campground.images?.map(image => (
                             <Carousel.Item key={image.url}>
                                 <Card.Img
@@ -41,7 +43,15 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                                 />
                             </Carousel.Item>
                         ))}
-                    </Carousel>
+                    </Carousel> */}
+
+                    <Card.Img
+                        variant="top"
+                        src={campground.images[0].url}
+                        height={'200'}
+                        style={{ objectFit: 'cover' }}
+                    />
+
                     <Col>
                         <Card.Body>
                             <Card.Title>{campground.title}</Card.Title>

@@ -23,16 +23,16 @@ const ImageThumbnails = styled.div`
 `;
 
 const CampgroundCardCarousel = ({ campground }) => {
-    const [index, setIndex] = useState(0);
+    const [activeIndex, setActiveIndex] = useState(0);
 
     const changeImageHandler = index => {
         // console.log(index);
-        setIndex(index);
+        setActiveIndex(index);
     };
 
     return (
         <div>
-            <Carousel activeIndex={index} onSelect={changeImageHandler}>
+            <Carousel activeIndex={activeIndex} onSelect={changeImageHandler}>
                 {campground.images?.map(image => (
                     <Carousel.Item key={image.url}>
                         <Card.Img
@@ -48,25 +48,19 @@ const CampgroundCardCarousel = ({ campground }) => {
 
             <ImageThumbnails>
                 {campground.images?.map((image, i) => (
-                    <>
-                        <Image
-                            key={image.url}
-                            src={image.url.replace('upload/', 'upload/w_200/')} // using cloudinary img transform API
-                            alt={image.filename}
-                            width={'100px'}
-                            height={'60px'}
-                            rounded
-                            onClick={() => changeImageHandler(i)}
-                            style={{
-                                opacity: index === i ? 1 : 0.5,
-                                objectFit: 'cover',
-                            }}
-
-                            // TODO: set selected to full opacity -> DONE
-                            // TODO: refactor this shit
-                            // TODO: limit to only 10 images upload
-                        />
-                    </>
+                    <Image
+                        key={image.url}
+                        src={image.url.replace('upload/', 'upload/w_200/')} // using cloudinary img transform API
+                        alt={image.filename}
+                        width={'100px'}
+                        height={'60px'}
+                        rounded
+                        onClick={() => changeImageHandler(i)}
+                        style={{
+                            opacity: activeIndex === i ? 1 : 0.6,
+                            objectFit: 'cover',
+                        }}
+                    />
                 ))}
             </ImageThumbnails>
         </div>

@@ -71,10 +71,48 @@ const editCampground = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { campground } = req.body;
 
+    // console.log('---editing campground:', req.body, req.files);
+
+    const images = req.files.map(file => ({
+        url: file.path,
+        filename: file.filename,
+    }));
+
+    // const newCampgroundData = {
+    //     ...campground,
+    //     images,
+    // };
+
+    // get current campground data
+    // const campground = await Campground.findById(id);
+
+    // adding new images
+
+    // console.log('campground:', campground, campgroundBody);
+
+    // const updatedCampground = {
+    //     ...campground,
+    //     ...campgroundBody
+    // }
+    // console.log('updated campground:', updatedCampground)
+
+    // updatedCampground.images.push(...images);
+
+    // await updatedCampground.save()
+
+    // return;
+
+    // await campground.save();
+
+    // update campground text data
     const updatedCampground = await Campground.findByIdAndUpdate(id, campground, {
         runValidators: true,
         new: true,
     });
+
+    // add images to array and save
+    updatedCampground.images.push(...images);
+    await updatedCampground.save();
 
     if (!updatedCampground) return next(new YelpcampError(400, 'Failed saving campground'));
 

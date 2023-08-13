@@ -199,7 +199,8 @@ const NewCampground: React.FunctionComponent = () => {
                                         marginBottom: '8px',
                                         objectFit: 'cover',
                                     }}
-                                    alt="Thumb"
+                                    alt="thumbnail"
+                                    thumbnail
                                 />
                             ))}
                     </Form.Group>

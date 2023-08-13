@@ -22,11 +22,11 @@ const validateCampground = (req, res, next) => {
 
     body.campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
 
-    console.log('--- body', body)
+    // console.log('--- body', body)
 
     const { error: validationError } = campgroundSchema.validate(body);
 
-    console.log('validationError:', validationError);
+    validationError && console.log('validationError:', validationError);
 
     if (validationError) throw new YelpcampError(500, validationError);
     next(); // dont forget!

@@ -25,6 +25,7 @@ router
     .put(
         requiresLoggedIn,
         middlewares.isCampgroundAuthor,
+        upload.array('campground[images]'),
         middlewares.validateCampground,
         controller.editCampground,
     )

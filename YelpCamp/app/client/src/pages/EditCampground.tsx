@@ -3,7 +3,7 @@ import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import { Container, Button, Form, InputGroup, Image } from 'react-bootstrap';
+import { Container, Button, Form, InputGroup, Image, Spinner } from 'react-bootstrap';
 
 import Navbar from '../components/Navbar';
 import PageContainer from '../components/PageContainer';
@@ -23,11 +23,13 @@ const EditCampground: React.FunctionComponent = () => {
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
     const [validated, setValidated] = useState(false);
+    const [selectedImages, setSelectedImages] = useState([]);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const formTitle = useRef<HTMLInputElement>(null);
     const formLocation = useRef<HTMLInputElement>(null);
     const formPrice = useRef<HTMLInputElement>(null);
-    const formImage = useRef<HTMLInputElement>(null);
+    const formImages = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -35,9 +37,9 @@ const EditCampground: React.FunctionComponent = () => {
     //
 
     // TODO: protect route when user is not logged in / unauthorized to edit
-    // useEffect(() => {
-    //     if (!currentUser) navigate('/login');
-    // }, [])
+    useEffect(() => {
+        if (!currentUser) navigate('/login');
+    }, [])
 
     const {
         isLoading,
@@ -54,25 +56,22 @@ const EditCampground: React.FunctionComponent = () => {
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
+            const formData = new FormData();
+            formData.append('campground[title]', formTitle.current?.value || '');
+            formData.append('campground[price]', parseFloat(formPrice.current?.value) || 0);
+            formData.append('campground[location]', formLocation.current?.value || '');
+            formData.append('campground[description]', formDescription.current?.value || '');
+            Array.from(formImages.current?.files).forEach(file => {
+                formData.append('campground[images]', file);
+            });
+
             axios
-                .put(
-                    `/api/v1/campgrounds/${campground._id}`,
-                    {
-                        campground: {
-                            title: formTitle.current?.value || '',
-                            price: parseFloat(formPrice.current?.value) || 0,
-                            location: formLocation.current?.value || '',
-                            image: formImage.current?.value || '',
-                            description: formDescription.current?.value || '',
-                        },
+                .put(`/api/v1/campgrounds/${campground._id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: currentUser?.id,
                     },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: currentUser.id,
-                        },
-                    },
-                )
+                })
                 .then(res => {
                     appContext.setAlert({
                         message: 'Campground has been updated',
@@ -81,15 +80,17 @@ const EditCampground: React.FunctionComponent = () => {
                     navigate(`/campgrounds/${campground._id}`);
                 })
                 .catch(err => {
+                    console.error(err);
                     appContext.setAlert({
                         message: `${err.response.status} - ${err.response.data}`,
                         variant: 'danger',
                     });
-                    // console.error(err);
 
                     if (err.response.status === 401) navigate('/login');
                     // appContext.setCurrentUser(null);
                     // navigate('/login');
+
+                    setIsUpdating(false);
                 });
         }
         setValidated(true);
@@ -98,6 +99,11 @@ const EditCampground: React.FunctionComponent = () => {
     if (isLoading) return <Loading />;
 
     if (error) return <p>Error</p>;
+
+    const onSelectImagesHandler = evt => {
+        const imageFiles = Array.from(evt.target.files).map(f => f);
+        setSelectedImages(imageFiles);
+    };
 
     return (
         <PageContainer>
@@ -153,28 +159,6 @@ const EditCampground: React.FunctionComponent = () => {
                         </InputGroup>
                     </Form.Group>
 
-                    {/* <Form.Group className="mb-3" controlId="campgroundImageUrl">
-                        <Form.Label>Image Url</Form.Label>
-                        <Form.Control type="text" ref={formImage} defaultValue={campground.image} required />
-                        <Image src={campground.image} thumbnail className="mt-2" />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Image URL is required!</Form.Control.Feedback>
-                    </Form.Group> */}
-
-                    {/* IMAGES */}
-                    <Form.Group className="mb-3" controlId="campgroundImageUrl">
-                        <Form.Label>Images Url</Form.Label>
-                        <div>
-                            {campground.images.map(image => (
-                                <Image src={image.url.replace('upload/', 'upload/w_200/')} width={200} thumbnail />
-                            ))}
-                        </div>
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Image URL is required!
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
                     <Form.Group className="mb-3" controlId="campgroundDescription">
                         <Form.Label>Description</Form.Label>
                         <Form.Control
@@ -187,9 +171,84 @@ const EditCampground: React.FunctionComponent = () => {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Button variant="success" type="submit">
-                        Update campground
-                    </Button>
+                    {/* IMAGES */}
+                    <Form.Group className="mb-3" controlId="campgroundImageUrl">
+                        <Form.Label>Images uploaded ({campground.images.length})</Form.Label>
+                        <div>
+                            {campground.images.map(image => (
+                                <Image
+                                    key={image.url}
+                                    src={image.url.replace('upload/', 'upload/w_200/')}
+                                    style={{
+                                        width: '160px',
+                                        height: '100px',
+                                        marginRight: '8px',
+                                        marginBottom: '8px',
+                                        objectFit: 'cover',
+                                    }}
+                                    alt="Thumbnail"
+                                    thumbnail
+                                />
+                            ))}
+                        </div>
+                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">
+                            Image URL is required!
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="campgroundImages" className="mb-3">
+                        <Form.Label>Add more images</Form.Label>
+                        <Form.Control
+                            type="file"
+                            multiple
+                            ref={formImages}
+                            accept="image/*"
+                            onChange={onSelectImagesHandler}
+                        />
+                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">
+                            Please select some images
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="campgroundImages" className="mb-3">
+                        {selectedImages &&
+                            selectedImages.map(img => (
+                                <Image
+                                    key={img}
+                                    src={URL.createObjectURL(img)}
+                                    style={{
+                                        width: '160px',
+                                        height: '100px',
+                                        marginRight: '8px',
+                                        marginBottom: '8px',
+                                        objectFit: 'cover',
+                                    }}
+                                    alt="Thumbnail"
+                                    thumbnail
+                                />
+                            ))}
+                    </Form.Group>
+
+                    {isUpdating ? (
+                        <>
+                            <Button variant="secondary" type="submit" disabled>
+                                <Spinner
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                    as="span"
+                                />
+                                <span> Creating campground...</span>
+                            </Button>
+                        </>
+                    ) : (
+                        <Button variant="success" type="submit">
+                            Update campground
+                        </Button>
+                    )}
 
                     <Link to={-1}>
                         <Button variant="secondary" type="submit" className="mx-2">

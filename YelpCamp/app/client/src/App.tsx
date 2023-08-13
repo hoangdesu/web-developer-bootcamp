@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import { Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 
 import './App.css';
 
@@ -22,6 +22,8 @@ const CampgroundsContainer = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
     gap: 16px;
+    /* align-items: center; */
+    /* justify-content: space-between; */
 `;
 
 const App: React.FunctionComponent = () => {
@@ -56,19 +58,28 @@ const App: React.FunctionComponent = () => {
         <PageContainer>
             <Navbar />
 
-            <Container className="col-8 my-3">
-                <FlashAlert />
+            <Container className="my-5">
+                <Row className="justify-content-center">
+                    <Col md="10">
+                        <FlashAlert />
 
-                <h5 className="my-3">
-                    Total: {campgroundsData && campgroundsData.length} campgrounds
-                </h5>
+                        <h5 className="my-3">
+                            Total: {campgroundsData && campgroundsData.length} campgrounds
+                        </h5>
 
-                <CampgroundsContainer>
-                    {Array.isArray(campgroundsData) &&
-                        campgroundsData.map(campground => {
-                            return <CampgroundCard key={campground._id} campground={campground} />;
-                        })}
-                </CampgroundsContainer>
+                        <CampgroundsContainer>
+                            {Array.isArray(campgroundsData) &&
+                                campgroundsData.map(campground => {
+                                    return (
+                                        <CampgroundCard
+                                            key={campground._id}
+                                            campground={campground}
+                                        />
+                                    );
+                                })}
+                        </CampgroundsContainer>
+                    </Col>
+                </Row>
             </Container>
 
             <Footer />
@@ -77,3 +88,5 @@ const App: React.FunctionComponent = () => {
 };
 
 export default App;
+
+// style={{backgroundColor: 'red', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
