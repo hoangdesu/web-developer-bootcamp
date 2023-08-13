@@ -212,30 +212,19 @@ const Campground: React.FunctionComponent = () => {
                 <Row>
                     <Col>
                         <Card>
-                            {/* {campground.images?.map(image => (
-                                <Card.Img variant="top" src={image.url} />
-                            ))} */}
-
                             {/* CAROUSEL */}
+                            {/* TODO: separate carousel component */}
 
                             <Carousel activeIndex={index} onSelect={changeImageHandler}>
                                 {campground.images?.map(image => (
                                     <Carousel.Item key={image.url}>
-                                        {/* <ExampleCarouselImage text="First slide" /> */}
                                         <Card.Img
                                             variant="top"
+                                            // can use virtual here to display transformed imgs from cloudinary for faster speed
                                             src={image.url}
                                             height={'400px'}
                                             style={{ objectFit: 'cover' }}
                                         />
-                                        {/* <Image src={image.url} className="img-fluid w-100" height={'300px'} /> */}
-                                        {/* <Carousel.Caption>
-                                            <h3>First slide label</h3>
-                                            <p>
-                                                Nulla vitae elit libero, a pharetra augue mollis
-                                                interdum.
-                                            </p>
-                                        </Carousel.Caption> */}
                                     </Carousel.Item>
                                 ))}
                             </Carousel>
@@ -246,7 +235,7 @@ const Campground: React.FunctionComponent = () => {
                                         {/* <img key={image.url} src={image.url} alt="" width={100} height={60} className="object-fit-fill border rounded" onClick={changeImageHandler} /> */}
                                         <Image
                                             key={image.url}
-                                            src={image.url}
+                                            src={image.url.replace('upload/', 'upload/w_200/')} // using cloudinary img transform API
                                             alt={image.filename}
                                             width={'100px'}
                                             height={'60px'}

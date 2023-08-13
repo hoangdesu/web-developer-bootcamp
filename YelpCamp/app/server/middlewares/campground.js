@@ -5,7 +5,7 @@ const { campgroundSchema } = require('../schemas');
 
 const validateCampground = (req, res, next) => {
     // validating request body with Joi before extracting data
-    console.log('joi:', req.body, req.files)
+    // console.log('joi:', req.body, req.files)
 
     // TODO: CREATE BUILD CAMPGROUND OBJECT HANDLER, MIGHT USE FACTORY PATTERN
     const { title, location, price, description } = req.body.campground;

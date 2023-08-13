@@ -68,6 +68,12 @@ const NewCampground: React.FunctionComponent = () => {
                             'Content-Type': 'multipart/form-data',
                             Authorization: currentUser?.id,
                         },
+                        // onUploadProgress: function (progressEvent) {
+                        //     var percentCompleted = Math.round(
+                        //         (progressEvent.loaded * 100) / 100,
+                        //     );
+                        //     console.log('upload progress:', progressEvent.loaded);
+                        // },
                     },
                 )
                 .then(res => {
@@ -191,8 +197,8 @@ const NewCampground: React.FunctionComponent = () => {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group controlId="formFileMultiple" className="mb-3">
-                        <Form.Label>Multiple files input example</Form.Label>
+                    <Form.Group controlId="formImages" className="mb-3">
+                        <Form.Label>Upload images</Form.Label>
                         <Form.Control type="file" multiple ref={formImages} />
                     </Form.Group>
 

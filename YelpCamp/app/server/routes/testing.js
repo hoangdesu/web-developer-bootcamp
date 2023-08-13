@@ -55,6 +55,12 @@ router.delete('/image/:id', (req, res) => {
         });
 });
 
+router.post('/delete-images-array', (req, res) => {
+    console.log('--deleting images array');
+    console.log(req.body);
+    return res.send(req.body);
+})
+
 // drop all collections
 router.delete('/dropcollections', async (req, res) => {
     const campgrounds = await Campground.deleteMany({});

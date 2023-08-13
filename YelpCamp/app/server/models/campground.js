@@ -4,8 +4,8 @@ const Review = require('./review');
 
 const Image = Schema(
     {
-        url: { type: String, required: true },
-        filename: { type: String, required: true },
+        url: { type: String, required: [true, 'Missing image url'] },
+        filename: { type: String, required: [true, 'Missing image filename'] },
     },
     { _id: false },
 );
@@ -14,7 +14,7 @@ const campgroundSchema = new Schema(
     {
         title: {
             type: String,
-            required: true,
+            required: [true, 'Missing campground title'],
         },
         price: Number,
         description: String,

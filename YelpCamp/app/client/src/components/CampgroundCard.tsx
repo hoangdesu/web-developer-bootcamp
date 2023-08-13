@@ -16,7 +16,6 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
         >
             <Row>
                 <Col md={4}>
-                    {/* <Image fluid src={campground.image} alt="Campground image" /> */}
                     <Carousel interval={null}>
                         {campground.images?.map(image => (
                             <Carousel.Item key={image.url}>
