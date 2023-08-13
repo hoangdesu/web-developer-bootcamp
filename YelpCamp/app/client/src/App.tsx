@@ -66,7 +66,7 @@ const App: React.FunctionComponent = () => {
                 <CampgroundsContainer>
                     {Array.isArray(campgroundsData) &&
                         campgroundsData.map(campground => {
-                            return <CampgroundCard campground={campground} />;
+                            return <CampgroundCard key={campground._id} campground={campground} />;
                         })}
                 </CampgroundsContainer>
             </Container>

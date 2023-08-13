@@ -13,8 +13,6 @@ import {
     Form,
     Col,
     Row,
-    Carousel,
-    Image,
 } from 'react-bootstrap';
 import { LocationOn, Sell, Person, Star } from '@mui/icons-material';
 
@@ -27,37 +25,18 @@ import { Review as ReviewType } from '../types';
 import FlashAlert from '../components/FlashAlert';
 import { USDtoVND } from '../utils/currency';
 import { Box, Rating } from '@mui/material';
-import styled from '@emotion/styled';
+import CampgroundCardCarousel from '../components/CampgroundCardCarousel';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
 }
 
-const ImageThumbnails = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-top: 8px;
-    gap: 6px;
-    /* opacity: 0.8; */
 
-    & > img {
-        transition: 0.3s all;
-    }
-
-    & > img:hover {
-        cursor: pointer;
-        opacity: 0.8 !important;
-    }
-`;
 
 const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
-    const [index, setIndex] = useState(0);
 
     const reviewText = useRef<HTMLInputElement>(null);
 
@@ -199,10 +178,7 @@ const Campground: React.FunctionComponent = () => {
 
     // console.log(campground);
 
-    const changeImageHandler = index => {
-        // console.log(index);
-        setIndex(index);
-    };
+
 
     return (
         <PageContainer>
@@ -215,44 +191,7 @@ const Campground: React.FunctionComponent = () => {
                             {/* CAROUSEL */}
                             {/* TODO: separate carousel component */}
 
-                            <Carousel activeIndex={index} onSelect={changeImageHandler}>
-                                {campground.images?.map(image => (
-                                    <Carousel.Item key={image.url}>
-                                        <Card.Img
-                                            variant="top"
-                                            // can use virtual here to display transformed imgs from cloudinary for faster speed
-                                            src={image.url}
-                                            height={'400px'}
-                                            style={{ objectFit: 'cover' }}
-                                        />
-                                    </Carousel.Item>
-                                ))}
-                            </Carousel>
-
-                            <ImageThumbnails>
-                                {campground.images?.map((image, i) => (
-                                    <>
-                                        {/* <img key={image.url} src={image.url} alt="" width={100} height={60} className="object-fit-fill border rounded" onClick={changeImageHandler} /> */}
-                                        <Image
-                                            key={image.url}
-                                            src={image.url.replace('upload/', 'upload/w_200/')} // using cloudinary img transform API
-                                            alt={image.filename}
-                                            width={'100px'}
-                                            height={'60px'}
-                                            rounded
-                                            onClick={() => changeImageHandler(i)}
-                                            style={{
-                                                opacity: index === i ? 1 : 0.5,
-                                                objectFit: 'cover',
-                                            }}
-
-                                            // TODO: set selected to full opacity -> DONE
-                                            // TODO: refactor this shit
-                                            // TODO: limit to only 10 images upload
-                                        />
-                                    </>
-                                ))}
-                            </ImageThumbnails>
+                            <CampgroundCardCarousel campground={campground} />
 
                             {/* <Card.Img variant="top" src={campground.image} /> */}
                             <Card.Body>
@@ -314,7 +253,6 @@ const Campground: React.FunctionComponent = () => {
                                             onChange={(event, newValue) => {
                                                 setRatingValue(newValue || 1);
                                             }}
-                                            // size="large"
                                         />
                                     </Form.Group>
 
@@ -350,7 +288,6 @@ const Campground: React.FunctionComponent = () => {
                                     name="read-only"
                                     value={parseFloat(averageRating()) || 1}
                                     readOnly
-                                    // size="small"
                                     precision={0.5}
                                     emptyIcon={
                                         <Star style={{ opacity: 0.55 }} fontSize="inherit" />

@@ -1,20 +1,17 @@
 import React from 'react';
 import { Card, Row, Col, Image, Button, Carousel } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import { Campground } from '../types';
 import styled from '@emotion/styled';
+import { Place } from '@mui/icons-material';
 
 interface CardProps {
     campground: Campground;
 }
 
-// text-decoration: none;
-//     color: #212529;
-
 const StyledCard = styled(Card)`
     width: 18rem;
-    height: 100%;
     box-shadow: 0 0 8px #f1e0e0;
     transition: 0.2s ease;
 
@@ -26,11 +23,12 @@ const StyledCard = styled(Card)`
 const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
     // console.log(campground);
     return (
-        <Link
-            to={`campgrounds/${campground._id}`}
-            style={{ textDecoration: 'none', color: '#212529' }}
-        >
-            <StyledCard>
+        // TODO: fix this shit again -> Warning: validateDOMNesting(...): <a> cannot appear as a descendant of <a>.
+        <StyledCard>
+            <Link
+                to={`campgrounds/${campground._id}`}
+                style={{ textDecoration: 'none', color: '#212529', height: '25em' }}
+            >
                 <Row>
                     <Carousel interval={null}>
                         {campground.images?.map(image => (
@@ -48,17 +46,20 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                         <Card.Body>
                             <Card.Title>{campground.title}</Card.Title>
                             <Card.Subtitle>
-                                <small className="text-muted">{campground.location}</small>
+                                <small className="text-muted">
+                                    <Place />
+                                    {campground.location}
+                                </small>
                             </Card.Subtitle>
-                            <Card.Text className="my-3">{campground.description}</Card.Text>
+                            <Card.Text className="my-3">$ {campground.price}</Card.Text>
                             <Card.Text className="my-3">
-                                Username: {campground.author?.username}
+                                Created by {campground.author?.username}
                             </Card.Text>
                         </Card.Body>
                     </Col>
                 </Row>
-            </StyledCard>
-        </Link>
+            </Link>
+        </StyledCard>
     );
 };
 

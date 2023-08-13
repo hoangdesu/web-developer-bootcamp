@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import AppContext from '../store/app-context';
 
-import { Container, Form, Button, InputGroup, Spinner } from 'react-bootstrap';
+import { Container, Form, Button, InputGroup, Spinner, Image } from 'react-bootstrap';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -14,6 +14,7 @@ import FlashAlert from '../components/FlashAlert';
 const NewCampground: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
     const [isUploading, setIsUploading] = useState<boolean>(false);
+    const [selectedImages, setSelectedImages] = useState([]);
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
 
@@ -37,6 +38,12 @@ const NewCampground: React.FunctionComponent = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        if (formImages?.current?.files.length > 10) {
+            alert('Please only select maximum 10 images');
+            return;
+        }
+
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.stopPropagation();
@@ -47,35 +54,16 @@ const NewCampground: React.FunctionComponent = () => {
             formData.append('campground[price]', parseFloat(formPrice.current?.value) || 0);
             formData.append('campground[location]', formLocation.current?.value || '');
             formData.append('campground[description]', formDescription.current?.value || '');
-            Array.from(formImages?.current?.files).forEach(file => {
+            Array.from(formImages.current?.files).forEach(file => {
                 formData.append('campground[images]', file);
             });
             axios
-                .post(
-                    '/api/v1/campgrounds',
-                    // {
-                    //     campground: {
-                    //         title: formTitle.current?.value || '',
-                    //         price: parseFloat(formPrice.current?.value) || 0,
-                    //         location: formLocation.current?.value || '',
-                    //         // image: formImage.current?.value || '',
-                    //         description: formDescription.current?.value || '',
-                    //     },
-                    // },
-                    formData,
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                            Authorization: currentUser?.id,
-                        },
-                        // onUploadProgress: function (progressEvent) {
-                        //     var percentCompleted = Math.round(
-                        //         (progressEvent.loaded * 100) / 100,
-                        //     );
-                        //     console.log('upload progress:', progressEvent.loaded);
-                        // },
+                .post('/api/v1/campgrounds', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: currentUser?.id,
                     },
-                )
+                })
                 .then(res => {
                     appContext.setAlert({
                         message: 'Created new campground successfully',
@@ -84,7 +72,7 @@ const NewCampground: React.FunctionComponent = () => {
                     navigate(`/campgrounds/${res.data}`);
                 })
                 .catch(err => {
-                    // console.log(err);
+                    console.error(err);
                     let errorMessage = 'Something went wrong';
                     if (err.response.status === 400) {
                         errorMessage = err.response?.data?.details
@@ -97,7 +85,17 @@ const NewCampground: React.FunctionComponent = () => {
                         localStorage.removeItem('currentUser');
                         navigate('/login');
                     } else if (err.response.status === 500) {
-                        errorMessage = err.response?.data || err.reponse?.message;
+                        errorMessage =
+                            err.response?.data ||
+                            err.reponse?.message ||
+                            'Server error. Your campground was not created';
+                        appContext.setAlert({
+                            message: errorMessage,
+                            variant: 'danger',
+                        });
+                        setValidated(false);
+                        form.reset();
+                        setIsUploading(false);
                     }
                     appContext.setAlert({
                         message: errorMessage,
@@ -109,33 +107,10 @@ const NewCampground: React.FunctionComponent = () => {
         setValidated(true);
     };
 
-    // if (isLoading) return <Loading />;
-
-    // const handleSubmit2 = e => {
-    //     e.preventDefault();
-    //     appContext.setAlert({
-    //         message: 'uploading...',
-    //         variant: 'info',
-    //     });
-
-    //     const fileList = Array.from(formImage?.current?.files);
-    //     const formData = new FormData();
-    //     // formData.append('images', formImage?.current?.files[0]);
-    //     formData.append('name', 'hehe');
-
-    //     Array.from(formImage.current?.files).forEach(file => {
-    //         formData.append('images', file);
-    //     });
-
-    //     console.log(formData.entries(), formData.get('images'));
-    //     return;
-    //     axios.post('/api/v1/campgrounds', formData, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data',
-    //             Authorization: currentUser?.id,
-    //         },
-    //     });
-    // };
+    const onSelectImagesHandler = evt => {
+        const imageFiles = Array.from(evt.target.files).map(f => f);
+        setSelectedImages(imageFiles);
+    };
 
     return (
         <PageContainer>
@@ -188,26 +163,45 @@ const NewCampground: React.FunctionComponent = () => {
                         </InputGroup>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="campgroundImageUrl">
-                        <Form.Label>Image Url</Form.Label>
-                        {/* <Form.Control type="text" ref={formImage} required /> */}
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Image URL is required!
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group controlId="formImages" className="mb-3">
-                        <Form.Label>Upload images</Form.Label>
-                        <Form.Control type="file" multiple ref={formImages} />
-                    </Form.Group>
-
                     <Form.Group className="mb-3" controlId="campgroundDescription">
                         <Form.Label>Description</Form.Label>
                         <Form.Control as="textarea" ref={formDescription} />
                         <Form.Control.Feedback type="valid">
                             Description is optional
                         </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="campgroundImages" className="mb-3">
+                        <Form.Label>Upload images (max 10)</Form.Label>
+                        <Form.Control
+                            type="file"
+                            multiple
+                            ref={formImages}
+                            accept="image/*"
+                            onChange={onSelectImagesHandler}
+                        />
+                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">
+                            Please select some images
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="campgroundImages" className="mb-3">
+                        {selectedImages &&
+                            selectedImages.map(img => (
+                                <Image
+                                    key={img}
+                                    src={URL.createObjectURL(img)}
+                                    style={{
+                                        width: '160px',
+                                        height: '100px',
+                                        marginRight: '8px',
+                                        marginBottom: '8px',
+                                        objectFit: 'cover',
+                                    }}
+                                    alt="Thumb"
+                                />
+                            ))}
                     </Form.Group>
 
                     {isUploading ? (
@@ -225,7 +219,7 @@ const NewCampground: React.FunctionComponent = () => {
                         </>
                     ) : (
                         <Button variant="success" type="submit">
-                            Add campground
+                            Create campground
                         </Button>
                     )}
                 </Form>
