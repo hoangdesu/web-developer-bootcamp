@@ -166,7 +166,7 @@ const Campground: React.FunctionComponent = () => {
         return result;
     };
 
-    // console.log(campground);
+    // console.log(campground.images);
 
     return (
         <PageContainer>
@@ -176,12 +176,8 @@ const Campground: React.FunctionComponent = () => {
                 <Row>
                     <Col>
                         <Card>
-                            {/* CAROUSEL */}
-                            {/* TODO: separate carousel component */}
-
                             <CampgroundCardCarousel campground={campground} />
-
-                            {/* <Card.Img variant="top" src={campground.image} /> */}
+                            
                             <Card.Body>
                                 <Card.Title>{campground.title}</Card.Title>
                                 <Card.Text>{campground.description}</Card.Text>
@@ -200,6 +196,7 @@ const Campground: React.FunctionComponent = () => {
                                     </Link>
                                 </ListGroup.Item>
                             </ListGroup>
+                            
                             {isAuthor() && (
                                 <Card.Body>
                                     <Link to={`/campgrounds/${campgroundId}/edit`}>

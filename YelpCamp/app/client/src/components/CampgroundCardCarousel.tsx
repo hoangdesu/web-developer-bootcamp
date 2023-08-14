@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { Card, Carousel, Image } from 'react-bootstrap';
+import { Campground } from '../types';
 
 const ImageThumbnails = styled.div`
     display: flex;
@@ -22,8 +23,12 @@ const ImageThumbnails = styled.div`
     }
 `;
 
-const CampgroundCardCarousel = ({ campground }) => {
-    const [activeIndex, setActiveIndex] = useState(0);
+interface CarouselProps {
+    campground: Campground;
+}
+
+const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campground }) => {
+    const [activeIndex, setActiveIndex] = useState<number>(0);
 
     const changeImageHandler = index => {
         // console.log(index);
@@ -37,7 +42,6 @@ const CampgroundCardCarousel = ({ campground }) => {
                     <Carousel.Item key={image.url}>
                         <Card.Img
                             variant="top"
-                            // TODO: can use virtual here to display transformed imgs from cloudinary for faster speed
                             src={image.url}
                             height={'400px'}
                             style={{ objectFit: 'cover' }}
@@ -50,7 +54,7 @@ const CampgroundCardCarousel = ({ campground }) => {
                 {campground.images?.map((image, i) => (
                     <Image
                         key={image.url}
-                        src={image.url.replace('upload/', 'upload/w_200/')} // using cloudinary img transform API
+                        src={image.thumbnail} // using cloudinary img transform API
                         alt={image.filename}
                         width={'100px'}
                         height={'60px'}

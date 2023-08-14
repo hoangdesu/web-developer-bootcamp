@@ -1,9 +1,26 @@
-import React from 'react'
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const Search = () => {
-  return (
-    <div>Work in progress...</div>
-  )
-}
+    let [searchParams] = useSearchParams();
 
-export default Search
+    // get query string
+    function handleSubmit(event) {
+        event.preventDefault();
+        // console.log();
+        // searchParams.entries()
+        for (const entry of searchParams.entries()) {
+            console.log(entry, searchParams.get(entry));
+        }
+    }
+    return (
+        <div>
+            Work in progress...
+            <button onClick={handleSubmit}>params</button>
+        </div>
+    );
+};
+
+export default Search;
+
+// https://ultimatecourses.com/blog/query-strings-search-params-react-router

@@ -2,13 +2,21 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Review = require('./review');
 
-const Image = Schema(
+const ImageSchema = Schema(
     {
         url: { type: String, required: [true, 'Missing image url'] },
         filename: { type: String, required: [true, 'Missing image filename'] },
     },
     { _id: false },
 );
+
+// virtual: create a computed value "thumbnail", not stored in db
+ImageSchema.virtual('thumbnail').get(function() {
+    return this.url.replace('/upload', '/upload/w_200');
+})
+
+// to include in API response
+ImageSchema.set("toJSON", { getters: true });
 
 const campgroundSchema = new Schema(
     {
@@ -19,7 +27,7 @@ const campgroundSchema = new Schema(
         price: Number,
         description: String,
         location: String,
-        images: [Image],
+        images: [ImageSchema],
         author: {
             type: Schema.Types.ObjectId,
             ref: 'User',

@@ -23,7 +23,6 @@ const StyledCard = styled(Card)`
 const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
     // console.log(campground);
     return (
-        // TODO: fix this shit again -> Warning: validateDOMNesting(...): <a> cannot appear as a descendant of <a>.
         <StyledCard>
             <Link
                 to={`campgrounds/${campground._id}`}
@@ -31,7 +30,8 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
             >
                 <Row>
                     {/* // might not need carousel in homepage */}
-                    
+                    {/* // TODO: fix this shit again -> Warning: validateDOMNesting(...): <a> cannot appear as a descendant of <a>. */}
+
                     {/* <Carousel interval={null}>
                         {campground.images?.map(image => (
                             <Carousel.Item key={image.url}>

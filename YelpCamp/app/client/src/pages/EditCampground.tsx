@@ -50,7 +50,7 @@ const EditCampground: React.FunctionComponent = () => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     // console.log(currentUser);
 
-    // TODO: protect route when user is not logged in / unauthorized to edit
+    // protect route when user is not logged in
     useEffect(() => {
         if (!currentUser) navigate('/login');
     }, []);
@@ -63,6 +63,21 @@ const EditCampground: React.FunctionComponent = () => {
         queryKey: ['campgroundData'],
         queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
     });
+
+    // protect route when user is unauthorized to edit
+    useEffect(() => {
+        if (campground) {
+            if (campground.author) {
+                if (campground.author._id !== currentUser.id) {
+                    appContext.setAlert({
+                        message: "You don't have permission to edit this campground!",
+                        variant: 'warning',
+                    });
+                    navigate('/');
+                }
+            }
+        }
+    }, [campground]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -221,6 +236,7 @@ const EditCampground: React.FunctionComponent = () => {
                     </Form.Group>
 
                     {/* IMAGES */}
+                    {/* TODO: NICE TO HAVE: select main image -> set selected image to be images[0] */}
                     <Form.Group className="mb-3" controlId="campgroundImageUrl">
                         <div
                             style={{
@@ -233,12 +249,14 @@ const EditCampground: React.FunctionComponent = () => {
                         >
                             <p>Images uploaded ({campground.images.length})</p>
                             <Button
-                                variant="warning"
+                                variant={showDeleteCheckboxes ? 'secondary' : 'warning'}
                                 type="button"
-                                onClick={() => setShowDeleteCheckboxes(show => {
-                                    if (!show) setDeletingImages([]);
-                                    return !show;
-                                })}
+                                onClick={() =>
+                                    setShowDeleteCheckboxes(show => {
+                                        if (show) setDeletingImages([]);
+                                        return !show;
+                                    })
+                                }
                                 size="sm"
                             >
                                 {!showDeleteCheckboxes ? (
@@ -246,14 +264,15 @@ const EditCampground: React.FunctionComponent = () => {
                                         <Delete /> Delete images?
                                     </span>
                                 ) : (
-                                    'Cancel'
+                                    <span>Cancel</span>
                                 )}
                             </Button>
                         </div>
+
                         {campground.images.map(image => (
                             <UploadedImagesWrapper key={image.url}>
                                 <Image
-                                    src={image.url.replace('upload/', 'upload/w_200/')}
+                                    src={image.thumbnail}
                                     style={{
                                         width: '160px',
                                         height: '100px',
@@ -274,15 +293,12 @@ const EditCampground: React.FunctionComponent = () => {
                                 )}
                             </UploadedImagesWrapper>
                         ))}
-                        {/* <button
-                                onClick={e => {
-                                    e.preventDefault();
-                                    // deletingImages.forEach((img, i) => console.log(i, img));
-                                    console.log(deletingImages);
-                                }}
-                            >
-                                View deleted images array
-                            </button> */}
+                        {deletingImages.length > 0 && (
+                            <p>
+                                Deleting {deletingImages.length}{' '}
+                                {deletingImages.length === 1 ? 'image' : 'images'}
+                            </p>
+                        )}
 
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">

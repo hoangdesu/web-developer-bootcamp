@@ -2,11 +2,17 @@ export interface Campground {
     _id: string;
     title: string;
     price: number;
-    description: string;
+    description?: string;
     location: string;
-    image: string;
+    images: Image[];
     author: User;
     reviews: Review;
+}
+
+export interface Image {
+    url: string;
+    filename: string;
+    thumbnail?: string;
 }
 
 export interface Review {

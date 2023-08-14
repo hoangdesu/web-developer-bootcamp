@@ -59,6 +59,8 @@ const getUserById = async (req, res) => {
     }
 };
 
+// TODO: change user password/email feature
+
 const login = (req, res, next) => {
     console.log('User logged in:', req.user.username);
     res.sendStatus(200);

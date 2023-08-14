@@ -24,6 +24,7 @@ const getACampground = catchAsync(async (req, res, next) => {
             options: { sort: { createdAt: -1 } }, // sort newest review on top
         })
         .exec();
+    // console.log(campground.images[0].thumbnail);
     res.status(200).json(campground);
 });
 
