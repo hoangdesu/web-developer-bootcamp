@@ -2,6 +2,8 @@ const { catchAsync } = require('../utilities/helpers');
 
 const Campground = require('../models/campground');
 const User = require('../models/user');
+const { cloudinary } = require('../configs/cloudinary');
+const YelpcampError = require('../utilities/YelpcampError');
 
 const getAllCamgrounds = catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({}).populate('author', '_id username').exec();
@@ -69,14 +71,9 @@ const createCampground = catchAsync(async (req, res, next) => {
 // PUT /api/v1/campgrounds/:id
 const editCampground = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const { campground } = req.body;
+    const { campground, deletingImages } = req.body;
 
-    // console.log('---editing campground:', req.body, req.files);
-
-    const images = req.files.map(file => ({
-        url: file.path,
-        filename: file.filename,
-    }));
+    console.log('---editing campground:', req.body, req.files);
 
     // const newCampgroundData = {
     //     ...campground,
@@ -110,9 +107,40 @@ const editCampground = catchAsync(async (req, res, next) => {
         new: true,
     });
 
-    // add images to array and save
-    updatedCampground.images.push(...images);
-    await updatedCampground.save();
+    // add images to array and save to db
+    if (req.files) {
+        // mapping over image file objects from req.files
+        const uploadingImages = req.files.map(file => ({
+            url: file.path,
+            filename: file.filename,
+        }));
+
+        // save to db
+        updatedCampground.images.push(...uploadingImages);
+        await updatedCampground.save();
+    }
+
+    // deleting images
+    if (deletingImages) {
+        // delete images stored in cloudinary
+        // await deletingImages.forEach(image => cloudinary.uploader.destroy(image)); // method 1
+        // method 2
+        const deletedRes = await cloudinary.api.delete_resources(deletingImages, {
+            type: 'upload',
+            resource_type: 'image',
+        });
+        // .then(res => console.log('deleted:', res));
+
+        if (!deletedRes)
+            return next(new YelpcampError(500, 'Failed deleting images on Cloudinary'));
+
+        // delete images in db
+        await updatedCampground.updateOne({
+            $pull: { images: { filename: { $in: deletingImages } } },
+        });
+
+        if (!updatedCampground) return next(new YelpcampError(400, 'Failed deleting images in db'));
+    }
 
     if (!updatedCampground) return next(new YelpcampError(400, 'Failed saving campground'));
 
@@ -133,6 +161,8 @@ const deleteCampground = catchAsync(async (req, res, next) => {
 
     // TODO: delete a campground will delete all those REVIEWS in a user' reviews array
     console.log('updatedUser', updatedUser);
+
+    // TODO: delete a campground should delete all images from cloudinary
 
     res.status(200).send('campground deleted');
 });

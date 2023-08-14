@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-import { Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 
 import './App.css';
 
@@ -16,6 +16,7 @@ import Loading from './pages/Loading';
 
 import FlashAlert from './components/FlashAlert';
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 
 const CampgroundsContainer = styled.div`
     display: flex;
@@ -28,6 +29,9 @@ const CampgroundsContainer = styled.div`
 
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
+    const navigate = useNavigate();
+
+    const searchRef = useRef(null);
 
     useEffect(() => {
         axios.get('/api/v1/auth/currentuser').then(res => {
@@ -54,6 +58,12 @@ const App: React.FunctionComponent = () => {
 
     if (error) return <p>An error has occurred: {error.message}</p>;
 
+    const onSearchSubmit = evt => {
+        evt.preventDefault();
+        if (!searchRef.current?.value) return;
+        navigate(`/search?q=${searchRef.current?.value}`);
+    };
+
     return (
         <PageContainer>
             <Navbar />
@@ -63,9 +73,28 @@ const App: React.FunctionComponent = () => {
                     <Col md="10">
                         <FlashAlert />
 
-                        <h5 className="my-3">
-                            Total: {campgroundsData && campgroundsData.length} campgrounds
-                        </h5>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'baseline',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <span className="my-3">
+                                Total: {campgroundsData && campgroundsData.length} campgrounds
+                            </span>
+                            <form action="" onSubmit={onSearchSubmit}>
+                                <input
+                                    type="text"
+                                    placeholder="Search campground..."
+                                    ref={searchRef}
+                                />
+                                <Button variant="info" type="submit">
+                                    Search
+                                </Button>
+                            </form>
+                        </div>
 
                         <CampgroundsContainer>
                             {Array.isArray(campgroundsData) &&

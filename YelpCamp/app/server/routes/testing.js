@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const cloudinary = require('cloudinary').v2;
-const parser = require('../configs/cloudinary');
+const { upload } = require('../configs/cloudinary');
 const { resetDb } = require('../seeds');
 
 const Campground = require('../models/campground');
@@ -29,7 +29,7 @@ router.get('/reviews', async (req, res, next) => {
 router.post(
     '/upload',
     // parser.single('image'),
-    parser.array('images'),
+    upload.array('images'),
     (req, res) => {
         console.log('uploading...');
         // res.send('upload');
@@ -59,7 +59,7 @@ router.post('/delete-images-array', (req, res) => {
     console.log('--deleting images array');
     console.log(req.body);
     return res.send(req.body);
-})
+});
 
 // drop all collections
 router.delete('/dropcollections', async (req, res) => {

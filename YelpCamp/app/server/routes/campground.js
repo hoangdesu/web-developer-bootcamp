@@ -5,7 +5,7 @@ const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 const middlewares = require('../middlewares/campground');
 const controller = require('../controllers/campground');
 
-const upload = require('../configs/cloudinary');
+const { upload } = require('../configs/cloudinary');
 
 router
     .route('/')

@@ -10,13 +10,25 @@ import PageContainer from '../components/PageContainer';
 import Footer from '../components/Footer';
 import Loading from './Loading';
 
-import { API_V1 } from '../constants';
 import AppContext from '../store/app-context';
 import FlashAlert from '../components/FlashAlert';
+import styled from '@emotion/styled';
+import { Delete } from '@mui/icons-material';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
 }
+
+const UploadedImagesWrapper = styled.span`
+    display: inline-block;
+
+    position: relative;
+    & > input {
+        position: absolute;
+        right: 12px;
+        top: 6px;
+    }
+`;
 
 const EditCampground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
@@ -32,14 +44,16 @@ const EditCampground: React.FunctionComponent = () => {
     const formImages = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
 
+    const [showDeleteCheckboxes, setShowDeleteCheckboxes] = useState(false);
+    const [deletingImages, setDeletingImages] = useState<String[]>([]);
+
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     // console.log(currentUser);
-    //
 
     // TODO: protect route when user is not logged in / unauthorized to edit
     useEffect(() => {
         if (!currentUser) navigate('/login');
-    }, [])
+    }, []);
 
     const {
         isLoading,
@@ -56,6 +70,7 @@ const EditCampground: React.FunctionComponent = () => {
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
+            setIsUpdating(true);
             const formData = new FormData();
             formData.append('campground[title]', formTitle.current?.value || '');
             formData.append('campground[price]', parseFloat(formPrice.current?.value) || 0);
@@ -64,6 +79,15 @@ const EditCampground: React.FunctionComponent = () => {
             Array.from(formImages.current?.files).forEach(file => {
                 formData.append('campground[images]', file);
             });
+
+            deletingImages.forEach(img => formData.append('deletingImages[]', img));
+
+            // Array.from(formData.keys()).forEach(key => {
+            //     console.log(key, formData.get(key))
+            // });
+
+            // console.log(formData.getAll('deletingImages[]'))
+            // return;
 
             axios
                 .put(`/api/v1/campgrounds/${campground._id}`, formData, {
@@ -103,6 +127,31 @@ const EditCampground: React.FunctionComponent = () => {
     const onSelectImagesHandler = evt => {
         const imageFiles = Array.from(evt.target.files).map(f => f);
         setSelectedImages(imageFiles);
+    };
+
+    const onDeletingImagesChange = evt => {
+        // console.log(evt.currentTarget?.value, evt.currentTarget?.checked);
+
+        const fileName = evt.currentTarget?.value;
+
+        if (evt.currentTarget?.checked) {
+            setDeletingImages(prev => {
+                const images = [...prev];
+                images.push(fileName);
+                return images;
+            });
+            // deletingImages.push(evt.currentTarget.value);
+        } else {
+            // if (i > -1) deletingImages.splice(i, 1);
+            // deletingImages.pop(i);
+            setDeletingImages(prev => {
+                const images = [...prev];
+                const i = images.indexOf(fileName);
+                if (i > -1) images.pop(i);
+                // console.log(i, images)
+                return images;
+            });
+        }
     };
 
     return (
@@ -173,11 +222,37 @@ const EditCampground: React.FunctionComponent = () => {
 
                     {/* IMAGES */}
                     <Form.Group className="mb-3" controlId="campgroundImageUrl">
-                        <Form.Label>Images uploaded ({campground.images.length})</Form.Label>
-                        <div>
-                            {campground.images.map(image => (
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'flex-start',
+                                marginBottom: '8px',
+                            }}
+                        >
+                            <p>Images uploaded ({campground.images.length})</p>
+                            <Button
+                                variant="warning"
+                                type="button"
+                                onClick={() => setShowDeleteCheckboxes(show => {
+                                    if (!show) setDeletingImages([]);
+                                    return !show;
+                                })}
+                                size="sm"
+                            >
+                                {!showDeleteCheckboxes ? (
+                                    <span>
+                                        <Delete /> Delete images?
+                                    </span>
+                                ) : (
+                                    'Cancel'
+                                )}
+                            </Button>
+                        </div>
+                        {campground.images.map(image => (
+                            <UploadedImagesWrapper key={image.url}>
                                 <Image
-                                    key={image.url}
                                     src={image.url.replace('upload/', 'upload/w_200/')}
                                     style={{
                                         width: '160px',
@@ -189,8 +264,26 @@ const EditCampground: React.FunctionComponent = () => {
                                     alt="Thumbnail"
                                     thumbnail
                                 />
-                            ))}
-                        </div>
+                                {showDeleteCheckboxes && (
+                                    <input
+                                        type="checkbox"
+                                        id={image.url}
+                                        value={image.filename}
+                                        onChange={onDeletingImagesChange}
+                                    />
+                                )}
+                            </UploadedImagesWrapper>
+                        ))}
+                        {/* <button
+                                onClick={e => {
+                                    e.preventDefault();
+                                    // deletingImages.forEach((img, i) => console.log(i, img));
+                                    console.log(deletingImages);
+                                }}
+                            >
+                                View deleted images array
+                            </button> */}
+
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">
                             Image URL is required!
@@ -232,18 +325,16 @@ const EditCampground: React.FunctionComponent = () => {
                     </Form.Group>
 
                     {isUpdating ? (
-                        <>
-                            <Button variant="secondary" type="submit" disabled>
-                                <Spinner
-                                    animation="border"
-                                    size="sm"
-                                    role="status"
-                                    aria-hidden="true"
-                                    as="span"
-                                />
-                                <span> Creating campground...</span>
-                            </Button>
-                        </>
+                        <Button variant="secondary" type="submit" disabled>
+                            <Spinner
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                                as="span"
+                            />
+                            <span> Updating campground...</span>
+                        </Button>
                     ) : (
                         <Button variant="success" type="submit">
                             Update campground

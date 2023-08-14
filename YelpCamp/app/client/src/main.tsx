@@ -19,6 +19,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import User, { loader as usernameLoader } from './pages/User';
 import Testing from './pages/Testing';
+import Search from './pages/Search';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -72,6 +73,12 @@ const router = createBrowserRouter([
         path: '/users/:username',
         element: <User />,
         loader: usernameLoader,
+        errorElement: <ErrorBoundary />,
+    },
+    {
+        path: '/search',
+        element: <Search />,
+        // loader: usernameLoader,
         errorElement: <ErrorBoundary />,
     },
     {
