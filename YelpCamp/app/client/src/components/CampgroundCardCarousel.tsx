@@ -36,7 +36,7 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
     };
 
     return (
-        <div>
+        <>
             <Carousel activeIndex={activeIndex} onSelect={changeImageHandler}>
                 {campground.images?.map(image => (
                     <Carousel.Item key={image.url}>
@@ -67,7 +67,7 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
                     />
                 ))}
             </ImageThumbnails>
-        </div>
+        </>
     );
 };
 

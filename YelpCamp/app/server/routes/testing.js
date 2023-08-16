@@ -15,9 +15,10 @@ router.get('/', (req, res) => {
 
 // reset database, seeding new & random data
 router.get('/resetdb', (req, res) => {
-    const { count = 2 } = req.params;
+    let { count } = req.query;
+    if (!count) count = 5;
     resetDb(count);
-    res.status(200).send('db has been reset');
+    res.status(200).send(`db has been reset with ${count} new campgrounds and random data`);
 });
 
 // get all reviews route

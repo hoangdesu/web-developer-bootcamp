@@ -19,21 +19,56 @@ const Review = require('../models/review');
 
 const sample = arr => arr[Math.floor(Math.random() * arr.length)];
 
+const CLOUDINARY_IMAGES = [
+    {
+        url: 'https://res.cloudinary.com/hoangdesu/image/upload/v1691787713/YelpCamp/p5limcj1xadvcvlwizri.jpg',
+        filename: 'YelpCamp/p5limcj1xadvcvlwizri',
+    },
+    {
+        url: 'https://res.cloudinary.com/hoangdesu/image/upload/v1691787713/YelpCamp/ie6bxicx1ngczkpfu0dt.jpg',
+        filename: 'YelpCamp/ie6bxicx1ngczkpfu0dt',
+    },
+    {
+        url: 'https://res.cloudinary.com/hoangdesu/image/upload/v1691787713/YelpCamp/unqigoun3yqpridt3xrn.jpg',
+        filename: 'YelpCamp/unqigoun3yqpridt3xrn',
+    },
+    {
+        url: 'https://res.cloudinary.com/hoangdesu/image/upload/v1691787713/YelpCamp/y5lqve05juzmowq0ppgp.jpg',
+        filename: 'YelpCamp/y5lqve05juzmowq0ppgp',
+    },
+    {
+        url: 'https://res.cloudinary.com/hoangdesu/image/upload/v1691787712/YelpCamp/mhgx6mbtqd0xbsyhelir.jpg',
+        filename: 'YelpCamp/mhgx6mbtqd0xbsyhelir',
+    },
+];
+
 const seedDatabase = async dbCounts => {
-    Campground.deleteMany({}).then(res => console.log(res));
+    // drop all campgrounds
+    await Campground.deleteMany({}).then(res => console.log(res));
 
     const cities = getAllCitiesData();
 
-    const totalCamps = dbCounts || 10;
+    const totalCamps = dbCounts;
+    console.log("🚀 ~ file: index.js:52 ~ seedDatabase ~ totalCamps:", totalCamps)
 
-    for (let i = 0; i <= totalCamps; i++) {
+    for (let i = 0; i < totalCamps; i++) {
         const randomIndex = Math.floor(Math.random() * cities.length);
         const { city, admin_name } = cities[randomIndex];
 
-        const randomUserIndex = Math.floor(Math.random() * 3);
+        const randomUserIndex = Math.floor(Math.random() * (await User.countDocuments()));
         const randomUser = await User.findOne().skip(randomUserIndex).exec();
 
         console.log('user:', randomUserIndex, randomUser.username);
+
+        const randomImages = () => {
+            const IMAGES = CLOUDINARY_IMAGES;
+            const imgs = [];
+            for (let j = 0; j < Math.floor(Math.random() * CLOUDINARY_IMAGES.length) + 1; j++) {
+                imgs.push(sample(IMAGES));
+                IMAGES.splice(randomIndex, 1); // remove to avoid duplication
+            }
+            return imgs;
+        }
 
         // to be updated
         const newCampground = await new Campground({
@@ -41,16 +76,18 @@ const seedDatabase = async dbCounts => {
             price: (Math.random() * 50).toFixed(1),
             description: 'campground description placeholder',
             location: `${city}, ${admin_name}`,
-            image: 'https://source.unsplash.com/collection/1114848', // random photo in "camping" collection
+            // image: 'https://source.unsplash.com/collection/1114848', // random photo in "camping" collection
             author: randomUser._id,
+            // images: sample(CLOUDINARY_IMAGES),
+            images: randomImages()
         }).save();
 
         randomUser.campgrounds.push(newCampground);
         await randomUser.save();
 
         // generate random reviews
-        for (let j = 0; j < Math.floor(Math.random() * 10) + 3; j++) {
-            const randomUserIndex = Math.floor(Math.random() * 3); // TODO: fix this. get actual user index
+        for (let j = 0; j < Math.floor(Math.random() * 10) + 1; j++) {
+            const randomUserIndex = Math.floor(Math.random() * (await User.countDocuments()));
             const randomUser = await User.findOne().skip(randomUserIndex).exec();
             const review = new Review({
                 comment: loremIpsum(),

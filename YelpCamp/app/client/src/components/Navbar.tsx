@@ -81,7 +81,11 @@ const Navbar: React.FunctionComponent = () => {
                         </Link>
                     ))}
                 </Nav>
+                
+                {/* testing */}
+                <Link to="/testing">Testing</Link>
                 <button onClick={quickLoginHandler}>Quick login</button>
+
                 <Nav activeKey="/home">
                     {currentUser ? (
                         <NavDropdown

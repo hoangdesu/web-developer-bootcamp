@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Testing = () => {
     const reader = new FileReader();
@@ -18,6 +18,10 @@ const Testing = () => {
 
     return (
         <div>
+            <div>
+                <Link to="/">Home</Link>
+            </div>
+
             <h1>Testing upload</h1>
             <form
                 action="http://localhost:3001/testing/upload"
@@ -41,7 +45,7 @@ const Testing = () => {
                             selectedImages.map(img => (
                                 <img
                                     key={img}
-                                    src={URL.createObjectURL(img)} 
+                                    src={URL.createObjectURL(img)}
                                     // src={URL.createObjectURL('https://res.cloudinary.com/hoangdesu/image/upload/w_200/v1691787172/YelpCamp/mr9j3h7y5qpjfhcdwaf9.jpg')} // cannot
                                     // style={styles.image}
                                     style={{ width: '200px' }}
@@ -75,6 +79,12 @@ const Testing = () => {
                     <input type="checkbox" id="3" name="deleteImages[]" value="3" />
                 </div>
                 <button>Submit</button>
+            </form>
+
+            <h1>Seed database</h1>
+            <form action={`http://localhost:3001/testing/resetdb`} method="get">
+                <input type="text" name="count" id="" placeholder="campgrounds (default=5)" />
+                <button type="submit">Reseed database</button>
             </form>
         </div>
     );
