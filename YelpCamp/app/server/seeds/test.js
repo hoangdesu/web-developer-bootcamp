@@ -1,6 +1,7 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const mongoose = require('mongoose');
-const { getAllCitiesData, descriptors, places } = require('./seedHelpers');
-const { loremIpsum } = require('lorem-ipsum');
+const { cloudinary } = require('../configs/cloudinary');
 
 const Campground = require('../models/campground');
 const User = require('../models/user');
@@ -20,7 +21,24 @@ mongoose
 async function test() {
     console.log('inside');
     const users = await User.countDocuments();
-    console.log("🚀 ~ file: test.js:23 ~ test ~ users:", users)
+    console.log('🚀 ~ file: test.js:23 ~ test ~ users:', users);
 }
 
-test();
+// test();
+
+const testCloudinary = () => {
+    console.log('testing cloudinary');
+    console.log('env:', process.env.CLOUDINARY_CLOUD_NAME)
+    cloudinary.api.resources(
+        {
+            type: 'upload',
+            prefix: 'YelpCamp', // add your folder
+        },
+        function (error, result) {
+            // console.log(result, error);
+            console.log(result.resources.length)
+        },
+    );
+};
+
+testCloudinary();

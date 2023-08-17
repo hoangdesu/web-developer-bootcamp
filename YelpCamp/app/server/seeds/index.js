@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const { getAllCitiesData, descriptors, places } = require('./seedHelpers');
 const { loremIpsum } = require('lorem-ipsum');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+const { cloudinary } = require('../configs/cloudinary');
 
 const Campground = require('../models/campground');
 const User = require('../models/user');
@@ -49,7 +52,7 @@ const seedDatabase = async dbCounts => {
     const cities = getAllCitiesData();
 
     const totalCamps = dbCounts;
-    console.log("🚀 ~ file: index.js:52 ~ seedDatabase ~ totalCamps:", totalCamps)
+    console.log('🚀 ~ file: index.js:52 ~ seedDatabase ~ totalCamps:', totalCamps);
 
     for (let i = 0; i < totalCamps; i++) {
         const randomIndex = Math.floor(Math.random() * cities.length);
@@ -60,15 +63,44 @@ const seedDatabase = async dbCounts => {
 
         console.log('user:', randomUserIndex, randomUser.username);
 
-        const randomImages = () => {
-            const IMAGES = CLOUDINARY_IMAGES;
+        const randomImages = async () => {
+            const { resources } = await cloudinary.api.resources({
+                type: 'upload',
+                prefix: 'YelpCamp', // add your folder
+            });
+            console.log('🚀 ~ file: index.js:71 ~ randomImages ~ res:', resources);
+
             const imgs = [];
-            for (let j = 0; j < Math.floor(Math.random() * CLOUDINARY_IMAGES.length) + 1; j++) {
+            const IMAGES = resources.map(r => ({ url: r.url, filename: r.public_id }));
+            // console.log('🚀 ~ file: index.js:79 ~ randomImages ~ IMAGES:', IMAGES);
+
+            for (let j = 0; j < Math.floor(Math.random() * IMAGES.length) + 1; j++) {
                 imgs.push(sample(IMAGES));
-                IMAGES.splice(randomIndex, 1); // remove to avoid duplication
             }
+
+            // console.log('🚀 ~ file: index.js:87 ~ randomImages ~ imgs:', imgs.length, imgs);
             return imgs;
-        }
+
+            //     function (error, result) {
+            //         // console.log(result, error);
+            //         console.log(result.resources.length);
+            //         const { resources } = result;
+
+            //         const imgs = [];
+            //         const IMAGES = resources.map(r => ({ url: r.url, filename: r.public_id }));
+            //         // console.log('🚀 ~ file: index.js:79 ~ randomImages ~ IMAGES:', IMAGES);
+
+            //         for (let j = 0; j < Math.floor(Math.random() * IMAGES.length) + 1; j++) {
+            //             imgs.push(sample(IMAGES));
+            //         }
+
+            //         // console.log('🚀 ~ file: index.js:87 ~ randomImages ~ imgs:', imgs.length, imgs);
+            //         return imgs;
+            //     },
+            // );
+        };
+
+        // console.log('random images:', await randomImages());
 
         // to be updated
         const newCampground = await new Campground({
@@ -79,8 +111,13 @@ const seedDatabase = async dbCounts => {
             // image: 'https://source.unsplash.com/collection/1114848', // random photo in "camping" collection
             author: randomUser._id,
             // images: sample(CLOUDINARY_IMAGES),
-            images: randomImages()
+            images: await randomImages(),
         }).save();
+        
+        // randomImages().then(res => {
+        //     console.log('inside random images', res);
+        // });
+        // console.log('🚀 ~ file: index.js:101 ~ seedDatabase ~ newCampground:', newCampground);
 
         randomUser.campgrounds.push(newCampground);
         await randomUser.save();

@@ -47,7 +47,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
 
                     <Card.Img
                         variant="top"
-                        src={campground.images[0].url}
+                        src={campground?.images?.[0]?.url}
                         height={'200'}
                         style={{ objectFit: 'cover' }}
                     />
