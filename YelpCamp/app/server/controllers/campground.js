@@ -5,6 +5,8 @@ const User = require('../models/user');
 const { cloudinary } = require('../configs/cloudinary');
 const YelpcampError = require('../utilities/YelpcampError');
 
+const geocodingClient = require('../configs/mapbox');
+
 const getAllCamgrounds = catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({}).populate('author', '_id username').exec();
     return res.status(200).json(campgrounds);
@@ -12,6 +14,7 @@ const getAllCamgrounds = catchAsync(async (req, res) => {
 
 const getACampground = catchAsync(async (req, res, next) => {
     const { id } = req.params;
+
     const campground = await Campground.findById(id)
         .populate('author', '_id username email')
         .populate({
@@ -24,6 +27,18 @@ const getACampground = catchAsync(async (req, res, next) => {
             options: { sort: { createdAt: -1 } }, // sort newest review on top
         })
         .exec();
+
+    if (!campground) next(new (YelpcampError(404, 'Campground not found'))());
+
+    const geoData = await geocodingClient
+        .forwardGeocode({
+            query: campground.location,
+            limit: 1,
+        })
+        .send();
+    console.log("🚀 ~ file: campground.js:39 ~ getACampground ~ geoData:", geoData.body.features[0].geometry)
+
+    
     // console.log(campground.images[0].thumbnail);
     res.status(200).json(campground);
 });
@@ -47,9 +62,19 @@ const createCampground = catchAsync(async (req, res, next) => {
         filename: file.filename,
     }));
 
+    // Geometry data
+    const geoData = await geocodingClient
+        .forwardGeocode({
+            query: location,
+            limit: 1,
+        })
+        .send();
+    const geometry = geoData.body.features[0].geometry;
+
     const savedCampground = await Campground({
         title,
         location,
+        geometry,
         price,
         images,
         description,

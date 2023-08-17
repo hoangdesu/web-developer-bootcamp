@@ -8,6 +8,7 @@
     "start:server": "node index.js"
   },
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.15.3",
     "cloudinary": "^1.40.0",
     "connect-flash": "^0.1.1",
     "cors": "^2.8.5",

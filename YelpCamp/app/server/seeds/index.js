@@ -45,13 +45,12 @@ const CLOUDINARY_IMAGES = [
     },
 ];
 
-const seedDatabase = async dbCounts => {
+const seedDatabase = async totalCamps => {
     // drop all campgrounds
     await Campground.deleteMany({}).then(res => console.log(res));
 
     const cities = getAllCitiesData();
 
-    const totalCamps = dbCounts;
     console.log('🚀 ~ file: index.js:52 ~ seedDatabase ~ totalCamps:', totalCamps);
 
     for (let i = 0; i < totalCamps; i++) {
@@ -113,7 +112,7 @@ const seedDatabase = async dbCounts => {
             // images: sample(CLOUDINARY_IMAGES),
             images: await randomImages(),
         }).save();
-        
+
         // randomImages().then(res => {
         //     console.log('inside random images', res);
         // });

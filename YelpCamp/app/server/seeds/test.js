@@ -28,7 +28,7 @@ async function test() {
 
 const testCloudinary = () => {
     console.log('testing cloudinary');
-    console.log('env:', process.env.CLOUDINARY_CLOUD_NAME)
+    console.log('env:', process.env.CLOUDINARY_CLOUD_NAME);
     cloudinary.api.resources(
         {
             type: 'upload',
@@ -36,9 +36,27 @@ const testCloudinary = () => {
         },
         function (error, result) {
             // console.log(result, error);
-            console.log(result.resources.length)
+            console.log(result.resources.length);
         },
     );
 };
 
-testCloudinary();
+// testCloudinary();
+
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const geocodingClient = mbxGeocoding({ accessToken: process.env.MAP_BOX_ACCESS_TOKEN });
+const testMapbox = async () => {
+    const geoData = await geocodingClient
+        .forwardGeocode({
+            query: 'osaka',
+            limit: 3, // optinal, default to 5
+        })
+        .send();
+    // const match = response.body;
+    // console.log(geoData.body.features);
+    geoData.body.features.forEach(f => {
+        console.log(f.geometry.coordinates, f.place_name);
+    })
+};
+
+testMapbox();

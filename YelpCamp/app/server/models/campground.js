@@ -11,12 +11,24 @@ const ImageSchema = Schema(
 );
 
 // virtual: create a computed value "thumbnail", not stored in db
-ImageSchema.virtual('thumbnail').get(function() {
+ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
-})
+});
 
 // to include in API response
-ImageSchema.set("toJSON", { getters: true });
+ImageSchema.set('toJSON', { getters: true });
+
+const pointSchema = Schema({
+    type: {
+        type: String,
+        enum: ['Point'],
+        required: true,
+    },
+    coordinates: {
+        type: [Number],
+        required: true,
+    },
+});
 
 const campgroundSchema = new Schema(
     {
@@ -27,6 +39,10 @@ const campgroundSchema = new Schema(
         price: Number,
         description: String,
         location: String,
+        geometry: {
+            type: pointSchema,
+            required: true,
+        },
         images: [ImageSchema],
         author: {
             type: Schema.Types.ObjectId,
