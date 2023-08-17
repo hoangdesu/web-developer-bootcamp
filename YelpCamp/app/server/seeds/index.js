@@ -8,6 +8,7 @@ const { cloudinary } = require('../configs/cloudinary');
 const Campground = require('../models/campground');
 const User = require('../models/user');
 const Review = require('../models/review');
+const geocodingClient = require('../configs/mapbox');
 
 // mongoose.set('strictQuery', true);
 // const dbName = 'yelp-camp';
@@ -21,29 +22,6 @@ const Review = require('../models/review');
 //     .catch(e => console.error.bind(console, 'connection error:'));
 
 const sample = arr => arr[Math.floor(Math.random() * arr.length)];
-
-const CLOUDINARY_IMAGES = [
-    {
-        url: 'https://res.cloudinary.com/hoangdesu/image/upload/v1691787713/YelpCamp/p5limcj1xadvcvlwizri.jpg',
-        filename: 'YelpCamp/p5limcj1xadvcvlwizri',
-    },
-    {
-        url: 'https://res.cloudinary.com/hoangdesu/image/upload/v1691787713/YelpCamp/ie6bxicx1ngczkpfu0dt.jpg',
-        filename: 'YelpCamp/ie6bxicx1ngczkpfu0dt',
-    },
-    {
-        url: 'https://res.cloudinary.com/hoangdesu/image/upload/v1691787713/YelpCamp/unqigoun3yqpridt3xrn.jpg',
-        filename: 'YelpCamp/unqigoun3yqpridt3xrn',
-    },
-    {
-        url: 'https://res.cloudinary.com/hoangdesu/image/upload/v1691787713/YelpCamp/y5lqve05juzmowq0ppgp.jpg',
-        filename: 'YelpCamp/y5lqve05juzmowq0ppgp',
-    },
-    {
-        url: 'https://res.cloudinary.com/hoangdesu/image/upload/v1691787712/YelpCamp/mhgx6mbtqd0xbsyhelir.jpg',
-        filename: 'YelpCamp/mhgx6mbtqd0xbsyhelir',
-    },
-];
 
 const seedDatabase = async totalCamps => {
     // drop all campgrounds
@@ -79,44 +57,34 @@ const seedDatabase = async totalCamps => {
 
             // console.log('🚀 ~ file: index.js:87 ~ randomImages ~ imgs:', imgs.length, imgs);
             return imgs;
-
-            //     function (error, result) {
-            //         // console.log(result, error);
-            //         console.log(result.resources.length);
-            //         const { resources } = result;
-
-            //         const imgs = [];
-            //         const IMAGES = resources.map(r => ({ url: r.url, filename: r.public_id }));
-            //         // console.log('🚀 ~ file: index.js:79 ~ randomImages ~ IMAGES:', IMAGES);
-
-            //         for (let j = 0; j < Math.floor(Math.random() * IMAGES.length) + 1; j++) {
-            //             imgs.push(sample(IMAGES));
-            //         }
-
-            //         // console.log('🚀 ~ file: index.js:87 ~ randomImages ~ imgs:', imgs.length, imgs);
-            //         return imgs;
-            //     },
-            // );
         };
 
         // console.log('random images:', await randomImages());
 
         // to be updated
-        const newCampground = await new Campground({
+        const newCampground = new Campground({
             title: `${sample(descriptors)} ${sample(places)}`,
             price: (Math.random() * 50).toFixed(1),
             description: 'campground description placeholder',
             location: `${city}, ${admin_name}`,
             // image: 'https://source.unsplash.com/collection/1114848', // random photo in "camping" collection
             author: randomUser._id,
-            // images: sample(CLOUDINARY_IMAGES),
             images: await randomImages(),
-        }).save();
+        });
+
+        const geoData = await geocodingClient
+            .forwardGeocode({
+                query: newCampground.location,
+                limit: 1,
+            })
+            .send();
+        newCampground.geometry = geoData.body.features[0].geometry;
+        await newCampground.save();
 
         // randomImages().then(res => {
         //     console.log('inside random images', res);
         // });
-        // console.log('🚀 ~ file: index.js:101 ~ seedDatabase ~ newCampground:', newCampground);
+        console.log('🚀 ~ file: index.js:101 ~ seedDatabase ~ newCampground:', newCampground);
 
         randomUser.campgrounds.push(newCampground);
         await randomUser.save();
@@ -143,7 +111,7 @@ const seedDatabase = async totalCamps => {
 };
 
 // can invoke this script via http://localhost:3001/resetdb
-module.exports.resetDb = dbCounts => {
+module.exports.resetDb = async dbCounts => {
     seedDatabase(dbCounts).then(() => {
         console.log('seeding done!');
     });

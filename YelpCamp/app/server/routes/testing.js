@@ -14,10 +14,10 @@ router.get('/', (req, res) => {
 });
 
 // reset database, seeding new & random data
-router.get('/resetdb', (req, res) => {
+router.get('/resetdb', async (req, res) => {
     let { count } = req.query;
     if (!count) count = 5;
-    resetDb(count);
+    await resetDb(count);
     res.status(200).send(`db has been reset with ${count} new campgrounds and random data`);
 });
 

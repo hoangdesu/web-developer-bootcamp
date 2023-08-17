@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios from 'axios';
@@ -19,6 +19,9 @@ import { USDtoVND } from '../utils/currency';
 import { Box, Rating } from '@mui/material';
 import CampgroundCardCarousel from '../components/CampgroundCardCarousel';
 
+import mapboxgl from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
 }
@@ -33,15 +36,32 @@ const Campground: React.FunctionComponent = () => {
     const [ratingValue, setRatingValue] = useState<number>(3);
     const [validated, setValidated] = useState<boolean>(false);
 
+    // mapbox
+    const mapContainer = useRef(null);
+    const map = useRef(null);
+    const [lng, setLng] = useState(-70.9);
+    const [lat, setLat] = useState(42.35);
+    const [zoom, setZoom] = useState(10);
+
+    
+
     const {
         isLoading,
         error,
         data: campground,
         refetch,
     } = useQuery({
-        queryKey: ['campgroundsData'],
+        queryKey: ['campgroundData'],
         queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
     });
+
+    // useEffect (() => {
+    //     if (campground.geometry && campground.coordinates) {
+    //     setLng(campground?.geometry?.coordinates?.[0]);
+    //     setLat(campground?.geometry?.coordinates?.[1]);
+    //     }
+    // }, [campground?.geometry])
+
 
     const onReviewSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -168,6 +188,33 @@ const Campground: React.FunctionComponent = () => {
 
     // console.log(campground.images);
 
+    // if (campground && campground.geometry) {
+    //     setLng(campground?.geometry?.coordinates?.[0]);
+    //     setLat(campground?.geometry?.coordinates?.[1]);
+    // }
+
+    useEffect(() => {
+        if (!campground) return;
+        if (!mapContainer.current) return;
+        if (map.current) return; // initialize map only once
+        map.current = new mapboxgl.Map({
+            container: mapContainer.current,
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: campground.geometry.coordinates,
+            zoom: zoom,
+        });
+
+        // map.current.on('move', () => {
+        //     setLng(map.current.getCenter().lng.toFixed(4));
+        //     setLat(map.current.getCenter().lat.toFixed(4));
+        //     setZoom(map.current.getZoom().toFixed(2));
+        // });
+    });
+    
+
+
+    
+
     return (
         <PageContainer>
             <Navbar />
@@ -177,7 +224,7 @@ const Campground: React.FunctionComponent = () => {
                     <Col>
                         <Card>
                             <CampgroundCardCarousel campground={campground} />
-                            
+
                             <Card.Body>
                                 <Card.Title>{campground.title}</Card.Title>
                                 <Card.Text>{campground.description}</Card.Text>
@@ -196,7 +243,7 @@ const Campground: React.FunctionComponent = () => {
                                     </Link>
                                 </ListGroup.Item>
                             </ListGroup>
-                            
+
                             {isAuthor() && (
                                 <Card.Body>
                                     <Link to={`/campgrounds/${campgroundId}/edit`}>
@@ -221,6 +268,12 @@ const Campground: React.FunctionComponent = () => {
                     </Col>
 
                     <Col lg={5}>
+                        <div
+                            ref={mapContainer}
+                            className="map-container"
+                            style={{ height: '400px' }}
+                        />
+
                         {/* only activate review form for logged in user */}
                         {appContext.currentUser && (
                             <>
