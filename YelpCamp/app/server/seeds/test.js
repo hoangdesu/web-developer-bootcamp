@@ -48,14 +48,14 @@ const geocodingClient = mbxGeocoding({ accessToken: process.env.MAP_BOX_ACCESS_T
 const testMapbox = async () => {
     const geoData = await geocodingClient
         .forwardGeocode({
-            query: 'osaka',
+            query: 'alskjdasd',
             limit: 3, // optinal, default to 5
         })
         .send();
     // const match = response.body;
-    // console.log(geoData.body.features);
+    console.log('features:', geoData.body.features);
     geoData.body.features.forEach(f => {
-        console.log(f.geometry.coordinates, f.place_name);
+        console.log(f, f.geometry.coordinates, f.place_name);
     })
 };
 

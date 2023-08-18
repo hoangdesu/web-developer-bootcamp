@@ -7,6 +7,11 @@ const YelpcampError = require('../utilities/YelpcampError');
 
 const geocodingClient = require('../configs/mapbox');
 
+const VietnamCoordinates = {
+    type: 'Point',
+    coordinates: [108.7017555, 14.0]
+}
+
 const getAllCamgrounds = catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({}).populate('author', '_id username').exec();
     return res.status(200).json(campgrounds);
@@ -30,15 +35,14 @@ const getACampground = catchAsync(async (req, res, next) => {
 
     if (!campground) next(new (YelpcampError(404, 'Campground not found'))());
 
-    const geoData = await geocodingClient
-        .forwardGeocode({
-            query: campground.location,
-            limit: 1,
-        })
-        .send();
-    console.log("🚀 ~ file: campground.js:39 ~ getACampground ~ geoData:", geoData.body.features[0].geometry)
+    // const geoData = await geocodingClient
+    //     .forwardGeocode({
+    //         query: campground.location,
+    //         limit: 1,
+    //     })
+    //     .send();
+    // console.log("🚀 ~ file: campground.js:39 ~ getACampground ~ geoData:", geoData.body.features[0].geometry)
 
-    
     // console.log(campground.images[0].thumbnail);
     res.status(200).json(campground);
 });
@@ -69,7 +73,7 @@ const createCampground = catchAsync(async (req, res, next) => {
             limit: 1,
         })
         .send();
-    const geometry = geoData.body.features[0].geometry;
+    const geometry = geoData.body?.features?.[0]?.geometry || null;
 
     const savedCampground = await Campground({
         title,
@@ -167,6 +171,17 @@ const editCampground = catchAsync(async (req, res, next) => {
 
         if (!updatedCampground) return next(new YelpcampError(400, 'Failed deleting images in db'));
     }
+
+    // geometry data
+    const geoData = await geocodingClient
+        .forwardGeocode({
+            query: updatedCampground.location,
+            limit: 1,
+        })
+        .send();
+    updatedCampground.geometry = geoData.body?.features?.[0]?.geometry || null;
+
+    await updatedCampground.save();
 
     if (!updatedCampground) return next(new YelpcampError(400, 'Failed saving campground'));
 

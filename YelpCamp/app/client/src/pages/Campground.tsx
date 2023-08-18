@@ -18,9 +18,8 @@ import FlashAlert from '../components/FlashAlert';
 import { USDtoVND } from '../utils/currency';
 import { Box, Rating } from '@mui/material';
 import CampgroundCardCarousel from '../components/CampgroundCardCarousel';
-
-import mapboxgl from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+import Map from '../components/Map';
+// import Map from 'react-map-gl';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -36,38 +35,37 @@ const Campground: React.FunctionComponent = () => {
     const [ratingValue, setRatingValue] = useState<number>(3);
     const [validated, setValidated] = useState<boolean>(false);
 
-    // mapbox
-    const mapContainer = useRef(null);
-    const map = useRef(null);
-    const [lng, setLng] = useState(-70.9);
-    const [lat, setLat] = useState(42.35);
-    const [zoom, setZoom] = useState(10);
-
-    
+    const [mapViewState, setMapViewState] = useState<null | object>(null);
 
     const {
         isLoading,
         error,
+        isError,
         data: campground,
         refetch,
     } = useQuery({
         queryKey: ['campgroundData'],
         queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
+        onSuccess: data => {
+            if (data.geometry) {
+                setMapViewState({
+                    mapCoordinates: data.geometry.coordinates,
+                    zoom: 10,
+                });
+            } else {
+                // if no geometry data, default location to Vietnam
+                setMapViewState({
+                    mapCoordinates: [108.7017555, 14.0],
+                    zoom: 3,
+                });
+            }
+        },
     });
-
-    // useEffect (() => {
-    //     if (campground.geometry && campground.coordinates) {
-    //     setLng(campground?.geometry?.coordinates?.[0]);
-    //     setLat(campground?.geometry?.coordinates?.[1]);
-    //     }
-    // }, [campground?.geometry])
-
 
     const onReviewSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget;
 
-        // return;
         if (form.checkValidity() === false) {
             e.stopPropagation();
         } else {
@@ -160,7 +158,7 @@ const Campground: React.FunctionComponent = () => {
 
     if (isLoading) return <Loading />;
 
-    if (error || !campground) {
+    if (isError) {
         appContext.setAlert({
             message: 'Invalid campground!',
             variant: 'info',
@@ -168,14 +166,14 @@ const Campground: React.FunctionComponent = () => {
         navigate('/');
     }
 
+    if (!campground) return <>No campground</>;
+
     const formattedPrice = `$${campground.price}/night (~${USDtoVND(campground.price)})`;
 
     const isAuthor = () => {
         if (appContext.currentUser) return campground.author?._id === appContext.currentUser.id;
         return false;
     };
-
-    // console.log('reviews:', campground.reviews);
 
     const averageRating = () => {
         const result = (
@@ -185,35 +183,6 @@ const Campground: React.FunctionComponent = () => {
         if (result === 'NaN') return '-';
         return result;
     };
-
-    // console.log(campground.images);
-
-    // if (campground && campground.geometry) {
-    //     setLng(campground?.geometry?.coordinates?.[0]);
-    //     setLat(campground?.geometry?.coordinates?.[1]);
-    // }
-
-    useEffect(() => {
-        if (!campground) return;
-        if (!mapContainer.current) return;
-        if (map.current) return; // initialize map only once
-        map.current = new mapboxgl.Map({
-            container: mapContainer.current,
-            style: 'mapbox://styles/mapbox/streets-v12',
-            center: campground.geometry.coordinates,
-            zoom: zoom,
-        });
-
-        // map.current.on('move', () => {
-        //     setLng(map.current.getCenter().lng.toFixed(4));
-        //     setLat(map.current.getCenter().lat.toFixed(4));
-        //     setZoom(map.current.getZoom().toFixed(2));
-        // });
-    });
-    
-
-
-    
 
     return (
         <PageContainer>
@@ -268,11 +237,19 @@ const Campground: React.FunctionComponent = () => {
                     </Col>
 
                     <Col lg={5}>
-                        <div
-                            ref={mapContainer}
-                            className="map-container"
-                            style={{ height: '400px' }}
-                        />
+                        {mapViewState && <Map viewState={mapViewState} />}
+
+                        {/* <Map
+                            mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+                            // initialViewState={{
+                            //     longitude: campground?.geometry?.coordinates?.[0],
+                            //     latitude: campground?.geometry?.coordinates?.[1],
+                            //     zoom: 10,
+                            // }}
+                            {...viewState}
+                            style={{ width: 600, height: 400 }}
+                            mapStyle="mapbox://styles/mapbox/streets-v12"
+                        /> */}
 
                         {/* only activate review form for logged in user */}
                         {appContext.currentUser && (

@@ -41,7 +41,7 @@ const campgroundSchema = new Schema(
         location: String,
         geometry: {
             type: pointSchema,
-            required: true,
+            // required: true,
         },
         images: [ImageSchema],
         author: {

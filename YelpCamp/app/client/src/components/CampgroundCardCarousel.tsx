@@ -38,8 +38,8 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
     return (
         <>
             <Carousel activeIndex={activeIndex} onSelect={changeImageHandler}>
-                {campground.images?.map(image => (
-                    <Carousel.Item key={image.url}>
+                {campground.images?.map((image, index) => (
+                    <Carousel.Item key={index}>
                         <Card.Img
                             variant="top"
                             src={image.url}
@@ -53,7 +53,7 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
             <ImageThumbnails>
                 {campground.images?.map((image, i) => (
                     <Image
-                        key={image.url}
+                        key={i}
                         src={image.thumbnail} // using cloudinary img transform API
                         alt={image.filename}
                         width={'100px'}
