@@ -34,9 +34,12 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
         // console.log(index);
         setActiveIndex(index);
     };
+    
+    // if (campground.images.length > 0) console.log('images')
 
     return (
         <>
+            {/* TODO: DEFAULT IMAGE IF NO IMAGE SELECTED */}
             <Carousel activeIndex={activeIndex} onSelect={changeImageHandler}>
                 {campground.images?.map((image, index) => (
                     <Carousel.Item key={index}>

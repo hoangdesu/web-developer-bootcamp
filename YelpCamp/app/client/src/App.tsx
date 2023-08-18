@@ -23,9 +23,9 @@ const CampgroundsContainer = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 16px;
+    /* gap: 16px; */
     /* align-items: center; */
-    /* justify-content: space-between; */
+    justify-content: space-between;
 `;
 
 const App: React.FunctionComponent = () => {
@@ -78,11 +78,10 @@ const App: React.FunctionComponent = () => {
             <Navbar />
 
             <Container className="my-5">
+                <Map viewState={{ mapCoordinates: coordinates, zoom: 5 }} />
                 <Row className="justify-content-center">
                     <Col md="10">
                         <FlashAlert />
-
-                        <Map viewState={{ mapCoordinates: coordinates, zoom: 5 }} />
 
                         <div
                             style={{

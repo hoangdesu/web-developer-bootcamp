@@ -16,7 +16,7 @@ module.exports.campgroundSchema = Joi.object({
                     filename: Joi.string().required(),
                 }),
             )
-            .required(),
+            .required(), // BUG: empty images array can still be valid
         description: Joi.string(),
         author: Joi.string().required(),
     }).required(),
