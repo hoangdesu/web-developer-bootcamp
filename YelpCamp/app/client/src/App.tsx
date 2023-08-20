@@ -1,23 +1,21 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
+import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 
 import { Button, Col, Container, Row } from 'react-bootstrap';
 
 import './App.css';
-
 import AppContext from './store/app-context';
 
 import PageContainer from './components/PageContainer';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import CampgroundCard from './components/CampgroundCard';
-import Loading from './pages/Loading';
-
-import FlashAlert from './components/FlashAlert';
-import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
 import ClusterMap from './components/ClusterMap';
+import CampgroundCard from './components/CampgroundCard';
+import FlashAlert from './components/FlashAlert';
+import Loading from './pages/Loading';
 
 const CampgroundsContainer = styled.div`
     display: flex;
@@ -33,8 +31,6 @@ const App: React.FunctionComponent = () => {
     const navigate = useNavigate();
 
     const searchRef = useRef(null);
-
-    const [coordinates, setCoordinates] = useState([108.7017555, 14.0]); // default coordinate to vietnam
 
     useEffect(() => {
         axios.get('/api/v1/auth/currentuser').then(res => {
@@ -67,20 +63,16 @@ const App: React.FunctionComponent = () => {
         navigate(`/search?q=${searchRef.current?.value}`);
     };
 
-    navigator.geolocation.getCurrentPosition(pos => {
-        // console.log('lng:', pos.coords.longitude);
-        // console.log('lat:', pos.coords.latitude);
-        setCoordinates([pos.coords.longitude, pos.coords.latitude]);
-    });
-
     return (
         <PageContainer>
             <Navbar />
 
+            <div>
+                <ClusterMap campgrounds={campgroundsData} />
+            </div>
+
             <Container className="my-5">
                 {/* <Map viewState={{ mapCoordinates: coordinates, zoom: 5 }} /> */}
-
-                <ClusterMap campgrounds={campgroundsData} />
 
                 <Row className="justify-content-center">
                     <Col md="10">
