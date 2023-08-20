@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { Alert, User } from '../types';
+import { Alert, User, MapViewState } from '../types';
 
 const AppContext = createContext({
     alert: {

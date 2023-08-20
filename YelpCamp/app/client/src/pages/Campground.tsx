@@ -18,7 +18,8 @@ import FlashAlert from '../components/FlashAlert';
 import { USDtoVND } from '../utils/currency';
 import { Box, Rating } from '@mui/material';
 import CampgroundCardCarousel from '../components/CampgroundCardCarousel';
-import Map from '../components/Map';
+import CampgroundMap from '../components/CampgroundMap';
+import { Campground } from '../types';
 // import Map from 'react-map-gl';
 
 export async function loader({ params }) {
@@ -35,30 +36,19 @@ const Campground: React.FunctionComponent = () => {
     const [ratingValue, setRatingValue] = useState<number>(3);
     const [validated, setValidated] = useState<boolean>(false);
 
-    const [mapViewState, setMapViewState] = useState<null | object>(null);
+    const [campground, setCampground] = useState<Campground | null>(null);
 
     const {
         isLoading,
         error,
         isError,
-        data: campground,
+        data,
         refetch,
     } = useQuery({
         queryKey: ['campgroundData'],
         queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
         onSuccess: data => {
-            if (data.geometry) {
-                setMapViewState({
-                    mapCoordinates: data.geometry.coordinates,
-                    zoom: 10,
-                });
-            } else {
-                // if no geometry data, default location to Vietnam
-                setMapViewState({
-                    mapCoordinates: [108.7017555, 14.0],
-                    zoom: 3,
-                });
-            }
+            setCampground(data); // setting campground specifically to ensure new data
         },
     });
 
@@ -156,7 +146,7 @@ const Campground: React.FunctionComponent = () => {
         }
     };
 
-    if (isLoading) return <Loading />;
+    if (isLoading || !campground) return <Loading />;
 
     if (isError) {
         appContext.setAlert({
@@ -165,8 +155,6 @@ const Campground: React.FunctionComponent = () => {
         });
         navigate('/');
     }
-
-    if (!campground) return <>No campground</>;
 
     const formattedPrice = `$${campground.price}/night (~${USDtoVND(campground.price)})`;
 
@@ -184,6 +172,8 @@ const Campground: React.FunctionComponent = () => {
         return result;
     };
 
+    console.log(campground);
+
     return (
         <PageContainer>
             <Navbar />
@@ -194,7 +184,7 @@ const Campground: React.FunctionComponent = () => {
                         <Card>
                             <CampgroundCardCarousel campground={campground} />
 
-                            <Card.Body>
+                            <Card.Body >
                                 <Card.Title>{campground.title}</Card.Title>
                                 <Card.Text>{campground.description}</Card.Text>
                             </Card.Body>
@@ -237,19 +227,9 @@ const Campground: React.FunctionComponent = () => {
                     </Col>
 
                     <Col lg={5}>
-                        {mapViewState && <Map viewState={mapViewState} />}
-
-                        {/* <Map
-                            mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-                            // initialViewState={{
-                            //     longitude: campground?.geometry?.coordinates?.[0],
-                            //     latitude: campground?.geometry?.coordinates?.[1],
-                            //     zoom: 10,
-                            // }}
-                            {...viewState}
-                            style={{ width: 600, height: 400 }}
-                            mapStyle="mapbox://styles/mapbox/streets-v12"
-                        /> */}
+                        {/* {mapViewState && <Map viewState={mapViewState} />} */}
+                        {/* using react-map-gl */}
+                        {campground && <CampgroundMap campground={campground} />}
 
                         {/* only activate review form for logged in user */}
                         {appContext.currentUser && (

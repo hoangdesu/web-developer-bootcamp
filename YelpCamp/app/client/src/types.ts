@@ -4,9 +4,12 @@ export interface Campground {
     price: number;
     description?: string;
     location: string;
+    geometry: Point;
     images: Image[];
     author: User;
     reviews: Review;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Image {
@@ -36,3 +39,13 @@ export interface User {
     email: string;
 }
 
+interface Point {
+    type: 'Point';
+    coordinates: number[];
+}
+
+export interface MapViewState {
+    longitude: number;
+    latitude: number;
+    zoom: number;
+}

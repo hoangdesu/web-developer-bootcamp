@@ -57,7 +57,6 @@ const AppContextProvider = ({ children }) => {
         //     });
         const user = localStorage.getItem('currentUser');
         setCurrentUser(JSON.parse(user));
-        // console.log('user', user);
     }, []);
 
     return <AppContext.Provider value={appContext}>{children}</AppContext.Provider>;
