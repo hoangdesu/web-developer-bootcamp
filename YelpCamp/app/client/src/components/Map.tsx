@@ -46,6 +46,8 @@ const Map: React.FC<MapProps> = ({ viewState }) => {
 
         map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
+        // map.current.flyTo({center: [-122.4, 37.8]})
+
         // map.current = new mapboxgl.Marker()
         //     .setLngLat(coordinates)
         //     .setPopup(

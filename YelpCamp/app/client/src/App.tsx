@@ -17,7 +17,7 @@ import Loading from './pages/Loading';
 import FlashAlert from './components/FlashAlert';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
-import Map from './components/Map';
+import ClusterMap from './components/ClusterMap';
 
 const CampgroundsContainer = styled.div`
     display: flex;
@@ -78,7 +78,10 @@ const App: React.FunctionComponent = () => {
             <Navbar />
 
             <Container className="my-5">
-                <Map viewState={{ mapCoordinates: coordinates, zoom: 5 }} />
+                {/* <Map viewState={{ mapCoordinates: coordinates, zoom: 5 }} /> */}
+
+                <ClusterMap campgrounds={campgroundsData} />
+
                 <Row className="justify-content-center">
                     <Col md="10">
                         <FlashAlert />
