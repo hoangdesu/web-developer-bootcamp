@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, useContext, createRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Map, {
     Source,
     Layer,
@@ -12,7 +12,6 @@ import Map, {
 import type { MapRef, GeoJSONSource } from 'react-map-gl';
 import { clusterLayer, clusterCountLayer, unclusteredPointLayer } from './layers';
 import { Campground } from '../../types';
-import mapboxgl from 'mapbox-gl';
 import { Link } from 'react-router-dom';
 
 interface ClusterMapProps {
@@ -31,10 +30,6 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
     });
     const [cursor, setCursor] = useState<string>('grab');
 
-    // useEffect(() => {
-
-    // }, []);
-
     const clusterData = {
         features: campgrounds.map(campground => ({
             type: 'Feature',
@@ -45,7 +40,6 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                 image: campground.images[0].url,
                 price: campground.price,
                 // rating: // avg rating
-                    
             },
             geometry: campground.geometry,
         })),
@@ -170,6 +164,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                 // onMove={onMove}
                 style={{ width: '100%', height: 400 }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
+                attributionControl={false}
                 interactiveLayerIds={[clusterLayer.id, unclusteredPointLayer.id]}
                 onClick={onMapClick}
                 ref={mapRef}
@@ -197,7 +192,6 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
 
                     {popupInfo && (
                         <>
-                        
                             <Popup
                                 anchor="bottom"
                                 longitude={popupInfo.longitude}
@@ -207,7 +201,6 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                                     console.log('pop', e);
                                     setPopupInfo(null);
                                 }}
-                                
                                 // onClick={e => {
                                 //     e.originalEvent.stopPropagation();
                                 // }}
@@ -238,12 +231,15 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                                     </Link>
                                 </div>
                             </Popup>
+
                             <Marker
                                 longitude={popupInfo.longitude}
                                 latitude={popupInfo.latitude}
                                 // onClick={e => {
                                 //     e.originalEvent.stopPropagation();
                                 // }}
+
+                                // onClick={togglePopup}
 
                                 // setPopupInfo(city);
                             />

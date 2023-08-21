@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useCallback } from 'react';
-import Map, { Marker } from 'react-map-gl';
+import Map, { Marker, NavigationControl  } from 'react-map-gl';
 import mapboxgl from 'mapbox-gl';
 
 const CampgroundMap = ({ campground }) => {
@@ -32,7 +32,9 @@ const CampgroundMap = ({ campground }) => {
                 }}
                 style={{ width: '100%', height: 400 }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
+                attributionControl={false}
             >
+                <NavigationControl />
                 <Marker
                     {...coordinates}
                     anchor="top"

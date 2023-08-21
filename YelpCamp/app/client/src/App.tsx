@@ -79,12 +79,13 @@ const App: React.FunctionComponent = () => {
                         <FlashAlert />
 
                         <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'baseline',
-                                justifyContent: 'space-between',
-                            }}
+                            // style={{
+                            //     display: 'flex',
+                            //     flexDirection: 'row',
+                            //     alignItems: 'baseline',
+                            //     justifyContent: 'space-between',
+                            // }}
+                            className="flex flex-row align-baseline justify-between"
                         >
                             <span className="my-3">
                                 Total: {campgroundsData && campgroundsData.length} campgrounds
