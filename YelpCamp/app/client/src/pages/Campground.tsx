@@ -5,8 +5,19 @@ import axios from 'axios';
 
 import AppContext from '../store/app-context';
 
-import { Container, Button, Card, ListGroup, Form, Col, Row } from 'react-bootstrap';
-import { LocationOn, Sell, Person, Star } from '@mui/icons-material';
+import {
+    Container,
+    Button,
+    Card,
+    ListGroup,
+    Form,
+    Col,
+    Row,
+    Popover,
+    OverlayTrigger,
+    Tooltip,
+} from 'react-bootstrap';
+import { LocationOn, Sell, Person, Star, Event } from '@mui/icons-material';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -15,12 +26,17 @@ import Loading from './Loading';
 import Review from '../components/Review';
 import { Review as ReviewType } from '../types';
 import FlashAlert from '../components/FlashAlert';
-import { USDtoVND } from '../utils/currency';
 import { Box, Rating } from '@mui/material';
 import CampgroundCardCarousel from '../components/CampgroundCardCarousel';
 import CampgroundMap from '../components/CampgroundMap';
 import { Campground } from '../types';
-// import Map from 'react-map-gl';
+import {
+    isAuthor,
+    formatDate,
+    timeDifference,
+    formattedPrice,
+    averageRating,
+} from '../helpers/campground';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -38,13 +54,7 @@ const Campground: React.FunctionComponent = () => {
 
     const [campground, setCampground] = useState<Campground | null>(null);
 
-    const {
-        isLoading,
-        error,
-        isError,
-        data,
-        refetch,
-    } = useQuery({
+    const { isLoading, error, isError, data, refetch } = useQuery({
         queryKey: ['campgroundData'],
         queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
         onSuccess: data => {
@@ -156,23 +166,12 @@ const Campground: React.FunctionComponent = () => {
         navigate('/');
     }
 
-    const formattedPrice = `$${campground.price}/night (~${USDtoVND(campground.price)})`;
-
-    const isAuthor = () => {
-        if (appContext.currentUser) return campground.author?._id === appContext.currentUser.id;
-        return false;
-    };
-
-    const averageRating = () => {
-        const result = (
-            campground?.reviews?.reduce((accumulator, review) => accumulator + review.rating, 0) /
-            campground?.reviews?.length
-        ).toFixed(1);
-        if (result === 'NaN') return '-';
-        return result;
-    };
-
-    console.log(campground);
+    const popover = (
+        <Popover id="popover-basic">
+            <Popover.Header as="h4">Created at</Popover.Header>
+            <Popover.Body>{formatDate(campground.createdAt)}</Popover.Body>
+        </Popover>
+    );
 
     return (
         <PageContainer>
@@ -184,7 +183,7 @@ const Campground: React.FunctionComponent = () => {
                         <Card>
                             <CampgroundCardCarousel campground={campground} />
 
-                            <Card.Body >
+                            <Card.Body>
                                 <Card.Title>{campground.title}</Card.Title>
                                 <Card.Text>{campground.description}</Card.Text>
                             </Card.Body>
@@ -193,7 +192,7 @@ const Campground: React.FunctionComponent = () => {
                                     <LocationOn /> {campground.location}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
-                                    <Sell /> {formattedPrice}
+                                    <Sell /> {formattedPrice(campground.price)}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <Person />{' '}
@@ -201,9 +200,23 @@ const Campground: React.FunctionComponent = () => {
                                         {campground.author?.username || 'annonymous'}
                                     </Link>
                                 </ListGroup.Item>
+                                <ListGroup.Item className="text-muted">
+                                    <Event />
+                                    <OverlayTrigger
+                                        placement="top"
+                                        overlay={popover}
+                                    >
+                                        <span>
+                                            {timeDifference(
+                                                Date.now(),
+                                                Date.parse(campground.createdAt),
+                                            )}
+                                        </span>
+                                    </OverlayTrigger>
+                                </ListGroup.Item>
                             </ListGroup>
 
-                            {isAuthor() && (
+                            {isAuthor(appContext, campground) && (
                                 <Card.Body>
                                     <Link to={`/campgrounds/${campgroundId}/edit`}>
                                         <Button variant="info">Edit</Button>
@@ -278,10 +291,10 @@ const Campground: React.FunctionComponent = () => {
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                <p>Average rating: {averageRating()}</p>
+                                <p>Average rating: {averageRating(campground)}</p>
                                 <Rating
                                     name="read-only"
-                                    value={parseFloat(averageRating()) || 1}
+                                    value={parseFloat(averageRating(campground)) || 1}
                                     readOnly
                                     precision={0.5}
                                     emptyIcon={
