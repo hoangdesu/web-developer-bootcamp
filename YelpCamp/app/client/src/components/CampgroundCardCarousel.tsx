@@ -30,7 +30,7 @@ interface CarouselProps {
 const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campground }) => {
     const [activeIndex, setActiveIndex] = useState<number>(0);
 
-    const changeImageHandler = index => {
+    const changeImageHandler = (index: number) => {
         // console.log(index);
         setActiveIndex(index);
     };

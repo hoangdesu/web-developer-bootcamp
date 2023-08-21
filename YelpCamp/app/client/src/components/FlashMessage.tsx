@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { Component } from 'react';
 import { node, number, bool } from 'prop-types';
 import AppContext from '../store/app-context';

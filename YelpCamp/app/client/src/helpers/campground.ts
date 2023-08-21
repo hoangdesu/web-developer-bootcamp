@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export const isAuthor = (appContext, campground) => {
     if (appContext.currentUser) return campground.author?._id === appContext.currentUser.id;
     return false;

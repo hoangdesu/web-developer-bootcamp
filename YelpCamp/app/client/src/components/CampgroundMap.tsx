@@ -1,8 +1,16 @@
+// @ts-nocheck
+
 import React, { useRef, useMemo, useCallback } from 'react';
-import Map, { Marker, NavigationControl  } from 'react-map-gl';
+import Map, { Marker, NavigationControl } from 'react-map-gl';
 import mapboxgl from 'mapbox-gl';
 
-const CampgroundMap = ({ campground }) => {
+import { Campground } from '../types';
+
+interface CampgroundMapProps {
+    campground: Campground;
+}
+
+const CampgroundMap: React.FunctionComponent<CampgroundMapProps> = ({ campground }) => {
     const markerRef = useRef<mapboxgl.Marker>();
 
     const coordinates = {

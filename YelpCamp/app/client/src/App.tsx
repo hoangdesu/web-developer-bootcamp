@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';

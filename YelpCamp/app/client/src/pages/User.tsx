@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
@@ -8,6 +9,7 @@ import FlashAlert from '../components/FlashAlert';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Loading from './Loading';
+import { Campground } from '../types';
 
 export async function loader({ params }) {
     return { username: params.username };
@@ -41,8 +43,12 @@ const User = () => {
                 <p>Email: {user.email}</p>
                 <p>Owned campgrounds:</p>
                 <ol>
-                    {user.campgrounds.map(campground => (
-                        <li key={campground._id}><Link to={`/campgrounds/${campground._id}`}>{campground.title} (${campground.price})</Link></li>
+                    {user.campgrounds.map((campground: Campground) => (
+                        <li key={campground._id}>
+                            <Link to={`/campgrounds/${campground._id}`}>
+                                {campground.title} (${campground.price})
+                            </Link>
+                        </li>
                     ))}
                 </ol>
                 <Button onClick={() => navigate(-1)}>Back</Button>

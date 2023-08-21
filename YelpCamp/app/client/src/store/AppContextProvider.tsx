@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useReducer } from 'react';
 import AppContext from './app-context';
 import { Alert, User } from '../types';

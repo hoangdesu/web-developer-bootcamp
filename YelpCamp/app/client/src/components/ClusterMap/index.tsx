@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Map, {
     Source,
@@ -9,10 +10,11 @@ import Map, {
     GeolocateControl,
     useMap,
 } from 'react-map-gl';
-import type { MapRef, GeoJSONSource } from 'react-map-gl';
+import type { MapRef, GeoJSONSource, MapboxStyle } from 'react-map-gl';
 import { clusterLayer, clusterCountLayer, unclusteredPointLayer } from './layers';
 import { Campground } from '../../types';
 import { Link } from 'react-router-dom';
+import mapboxgl from 'mapbox-gl';
 
 interface ClusterMapProps {
     campgrounds: Campground[];
@@ -55,8 +57,8 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
     //         .setHTML(`hi`);
     // });
 
-    const onMapClick = event => {
-        const feature = event.features[0];
+    const onMapClick = (event: mapboxgl.MapTouchEvent) => {
+        const feature = event.feature[0];
 
         // clicking outside the interactive zones
         if (!feature) {

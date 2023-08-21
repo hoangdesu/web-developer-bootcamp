@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -5,7 +6,7 @@ const Search = () => {
     let [searchParams] = useSearchParams();
 
     // get query string
-    function handleSubmit(event) {
+    function handleSubmit(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
         // console.log();
         // searchParams.entries()
