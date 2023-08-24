@@ -4,8 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
+    "start-dev": "nodemon index.js",
     "start:server": "node index.js"
+
   },
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.15.3",

@@ -18,8 +18,8 @@ const sessionConfigs = require('./configs/sessionConfigs');
 
 // Mongoose
 mongoose.set('strictQuery', true);
-const URI = `${process.env.MONGO_URI}/${process.env.DB_NAME}`;
-// const URI = `${process.env.MONGO_URI}`;
+// const URI = `${process.env.MONGO_URI}/${process.env.DB_NAME}`;
+const URI = `${process.env.MONGO_URI}`;
 mongoose.connect(URI);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
