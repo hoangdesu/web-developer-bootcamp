@@ -13,5 +13,6 @@ export default defineConfig({
         secure: false
       }
     }
-  }
+  },
+  base: '/web-developer-bootcamp/'
 })
