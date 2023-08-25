@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import React from 'react';
 import { useRouteError, useNavigate } from 'react-router-dom';
 import { Container, Alert, Button } from 'react-bootstrap';

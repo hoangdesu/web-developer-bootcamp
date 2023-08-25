@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
@@ -17,7 +17,6 @@ import {
     Row,
     Popover,
     OverlayTrigger,
-    Tooltip,
 } from 'react-bootstrap';
 import { LocationOn, Sell, Person, Star, Event } from '@mui/icons-material';
 
@@ -178,7 +177,8 @@ const Campground: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <Navbar />
-            <Container className="col-9 my-5">
+            {/* <Container className="col-9 my-5"> */}
+            <div className="px-40">
                 <FlashAlert />
                 <Row>
                     <Col>
@@ -235,9 +235,9 @@ const Campground: React.FunctionComponent = () => {
                         </Card>
 
                         <Link to="/">
-                            <Button variant="secondary" className="my-3">
+                            <button variant="secondary" className="my-3">
                                 Back
-                            </Button>
+                            </button>
                         </Link>
                     </Col>
 
@@ -274,9 +274,9 @@ const Campground: React.FunctionComponent = () => {
                                         </Form.Control.Feedback>
                                     </Form.Group>
 
-                                    <Button variant="primary" className="my-3" type="submit">
+                                    <button className="my-3  bg-primary-dark-color text-white rounded-none outline-0 px-5 py-2 border-0" type="submit">
                                         Submit
-                                    </Button>
+                                    </button>
                                 </Form>
                             </>
                         )}
@@ -316,7 +316,8 @@ const Campground: React.FunctionComponent = () => {
                         )}
                     </Col>
                 </Row>
-            </Container>
+            {/* </Container> */}
+            </div>
             <Footer />
         </PageContainer>
     );

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Map, {
     Source,
@@ -58,6 +58,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
     // });
 
     const onMapClick = (event: mapboxgl.MapTouchEvent) => {
+        // TODO: fix click on map error "Uncaught TypeError: Cannot read properties of undefined (reading '0')"
         const feature = event.feature[0];
 
         // clicking outside the interactive zones
@@ -164,7 +165,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                 }}
                 // {...viewState}
                 // onMove={onMove}
-                style={{ width: '100%', height: 400 }}
+                style={{ height: 500 }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 attributionControl={false}
                 interactiveLayerIds={[clusterLayer.id, unclusteredPointLayer.id]}

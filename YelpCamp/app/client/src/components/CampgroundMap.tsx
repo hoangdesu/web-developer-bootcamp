@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 import React, { useRef, useMemo, useCallback } from 'react';
 import Map, { Marker, NavigationControl } from 'react-map-gl';

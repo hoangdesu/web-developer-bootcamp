@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
@@ -69,11 +67,23 @@ const App: React.FunctionComponent = () => {
         <PageContainer>
             <Navbar />
 
-            <div>
+            <div className="px-[8rem] pt-7">
                 <ClusterMap campgrounds={campgroundsData} />
             </div>
 
-            <Container className="my-5">
+            {/* searchbox */}
+            <section className="flex flex-row w-100 justify-center ">
+                <form action="">
+                    <input
+                        className="p-3 mb-[50px] w-[50rem] border-1"
+                        type="text"
+                        placeholder="Search campground"
+                    />
+                    <button>Search</button>
+                </form>
+            </section>
+
+            <div className="my-5 bg-secondary-color">
                 {/* <Map viewState={{ mapCoordinates: coordinates, zoom: 5 }} /> */}
 
                 <Row className="justify-content-center">
@@ -117,7 +127,7 @@ const App: React.FunctionComponent = () => {
                         </CampgroundsContainer>
                     </Col>
                 </Row>
-            </Container>
+            </div>
 
             <Footer />
         </PageContainer>

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';

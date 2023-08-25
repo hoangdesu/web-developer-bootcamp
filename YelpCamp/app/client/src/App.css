@@ -1,8 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Lora&family=Merriweather&family=Montserrat:ital,wght@0,600;0,700;1,400&family=Poppins&family=Roboto&display=swap');
 /* @tailwind base; */
-/* @tailwind components; */
-/* @tailwind utilities; */
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --primary-color: #fffcf9;
+    --secondary-color: #f9f5f1;
+    --primary-dark-color: #222325;
+}
 
 body {
     margin: 0;
     padding: 0;
+    /* font-family: 'Inter', sans-serif; */
+    /* font-family: 'Roboto', sans-serif; */
+    /* font-family: 'Poppins', sans-serif; */
+    /* font-family: 'Helvetica', sans-serif; */
+    /* font-family: 'Montserrat', sans-serif; */
+    font-family: 'Lora', serif;
+/* font-family: 'Merriweather', serif; */
 }

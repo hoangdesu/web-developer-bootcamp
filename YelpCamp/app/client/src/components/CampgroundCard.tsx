@@ -23,7 +23,8 @@ const StyledCard = styled(Card)`
 const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
     // console.log(campground);
     return (
-        <StyledCard>
+        // <StyledCard>
+        <div className="flex flex-col w-50">
             <Link
                 to={`campgrounds/${campground._id}`}
                 style={{ textDecoration: 'none', color: '#212529', height: '25em' }}
@@ -45,11 +46,16 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                         ))}
                     </Carousel> */}
 
-                    <Card.Img
+                    {/* <Card.Img
                         variant="top"
                         src={campground?.images?.[0]?.url}
                         height={'200'}
                         style={{ objectFit: 'cover' }}
+                    /> */}
+
+                    <img
+                        src={campground?.images?.[0]?.url}
+                        className="h-50 w-90 object-cover"
                     />
 
                     <Col>
@@ -69,7 +75,8 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                     </Col>
                 </Row>
             </Link>
-        </StyledCard>
+            {/* </StyledCard> */}
+        </div>
     );
 };
 
