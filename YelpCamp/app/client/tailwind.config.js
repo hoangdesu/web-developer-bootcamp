@@ -14,6 +14,14 @@ export default {
         "secondary-color": "var(--secondary-color)",
         "primary-dark-color": "var(--primary-dark-color)",
       },
+      height: {
+        '128': '32rem',
+        '144': '36rem'
+      },
+      width: {
+        '128': '32rem',
+        '144': '36rem'
+      }
     },
   },
   plugins: [],

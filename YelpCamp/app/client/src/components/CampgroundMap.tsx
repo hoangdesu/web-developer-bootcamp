@@ -1,5 +1,3 @@
-
-
 import React, { useRef, useMemo, useCallback } from 'react';
 import Map, { Marker, NavigationControl } from 'react-map-gl';
 import mapboxgl from 'mapbox-gl';
@@ -31,14 +29,14 @@ const CampgroundMap: React.FunctionComponent<CampgroundMapProps> = ({ campground
     }, []);
 
     return (
-        <div className="mb-3">
+        <div>
             <Map
                 mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                 initialViewState={{
                     ...coordinates,
                     zoom: 8,
                 }}
-                style={{ width: '100%', height: 400 }}
+                style={{ height: 500 }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 attributionControl={false}
             >
@@ -51,6 +49,8 @@ const CampgroundMap: React.FunctionComponent<CampgroundMapProps> = ({ campground
                     ref={markerRef}
                 ></Marker>
             </Map>
+
+            
         </div>
     );
 };

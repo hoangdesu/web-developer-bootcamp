@@ -127,9 +127,9 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
 
     const isEdited = () => {
         if (review.createdAt !== review.updatedAt) {
-            return <small className="text-muted">(Edited)</small>
+            return <small className="text-muted">(Edited)</small>;
         }
-    }
+    };
 
     return (
         <Card className="mb-3">
@@ -172,11 +172,19 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                     </>
                 ) : (
                     <>
-                        <Card.Title>
-                            <StyledLink to={`/users/${review.author?.username}`}>{review.author?.username}</StyledLink>
-                        </Card.Title>
+                        <div className="flex flex-row justify-between">
+                            <Card.Title>
+                                <StyledLink to={`/users/${review.author?.username}`}>
+                                    {review.author?.username}
+                                </StyledLink>
+                            </Card.Title>
+                            {/* TODO: parse date this shit */}
+                            <span>{review.updatedAt}</span>
+                        </div>
                         <Rating name="read-only" value={review.rating} readOnly size="small" />
-                        <Card.Text>{review.comment} {isEdited()}</Card.Text>
+                        <Card.Text>
+                            {review.comment} {isEdited()}
+                        </Card.Text>
                     </>
                 )}
             </StyledCardBody>

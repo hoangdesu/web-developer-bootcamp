@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
@@ -17,6 +15,7 @@ import {
     Row,
     Popover,
     OverlayTrigger,
+    Image,
 } from 'react-bootstrap';
 import { LocationOn, Sell, Person, Star, Event } from '@mui/icons-material';
 
@@ -38,10 +37,26 @@ import {
     formattedPrice,
     averageRating,
 } from '../helpers/campground';
+import styled from '@emotion/styled';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
 }
+
+const StyledSection = styled.section`
+    /* margin-top: 20px; */
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(54, 46, 46, 0.1);
+`;
+
+const ReserveSection = styled.div`
+    background: white;
+    box-shadow: 0px 1px 5px 5px #d8e7e4; // find better values
+    border: 1px solid pink;
+    border-radius: 8px;
+    padding: 12px;
+    width: fit-content;
+`;
 
 const Campground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData();
@@ -174,21 +189,122 @@ const Campground: React.FunctionComponent = () => {
         </Popover>
     );
 
-    return (
+    const v1 = (
         <PageContainer>
             <Navbar />
-            {/* <Container className="col-9 my-5"> */}
-            <div className="px-40">
+            <Container className="col-9 my-4">
                 <FlashAlert />
-                <Row>
+                <Row className="mb-3">
                     <Col>
+                        <section className="my-2">
+                            <h1 className="font-bold">{campground.title}</h1>
+                            <div className="flex flex-row justify-between">
+                                <span>
+                                    ★ {averageRating(campground)} · {campground.reviews.length}{' '}
+                                    reviews · {campground.location}
+                                </span>
+                                {/* show buttons to edit and delete campground for author */}
+                                {isAuthor(appContext, campground) ? (
+                                    <div>
+                                        <button>Edit</button>
+                                        <button>Delete</button>
+                                    </div>
+                                ) : (
+                                    <span className="">Save Share</span>
+                                )}
+                            </div>
+                        </section>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col lg={7}>
+                        <CampgroundCardCarousel campground={campground} />
+
+                        <StyledSection>
+                            <h3>
+                                Campground hosted by{' '}
+                                <Link
+                                    to={`/users/${campground.author?.username}`}
+                                    className="text-primary-dark-color"
+                                >
+                                    {campground.author?.username || 'annonymous'}
+                                </Link>
+                            </h3>
+                        </StyledSection>
+
+                        <StyledSection>
+                            <h3>About</h3>
+                            <p>{campground.description}</p>
+                        </StyledSection>
+
+                        <StyledSection>
+                            <h3>Location</h3>
+                            <p>{campground.location}</p>
+                        </StyledSection>
+
+                        <StyledSection>
+                            <h3>Price</h3>
+                            <p>${campground.price} night</p>
+                        </StyledSection>
+
+                        <StyledSection>
+                            // TODO: RESERVE SECTION
+                            <ReserveSection>
+                                <div>$10 night</div>
+                                <div>2 reviews</div>
+                                <div>
+                                    Check in <input type="date" name="" id="" />
+                                    Check out <input type="date" name="" id="" />
+                                </div>
+                                <section>
+                                    <p>$480 x 5 nights ---- $2400</p>
+                                    <p>Service fee -------- $59</p>
+                                </section>
+
+                                <section>
+                                    <p>Total -------------- $2459</p>
+                                </section>
+
+                                <button
+                                        className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300"
+                                
+                                >RESERVE →</button>
+                            </ReserveSection>
+                        </StyledSection>
+
                         <Card>
-                            <CampgroundCardCarousel campground={campground} />
+                            {/* <CampgroundCardCarousel campground={campground} />
 
                             <Card.Body>
                                 <Card.Title>{campground.title}</Card.Title>
+                                <h2 className="font-bold">{campground.title}</h2>
                                 <Card.Text>{campground.description}</Card.Text>
-                            </Card.Body>
+                            </Card.Body> */}
+
+
+                                {/* can consider using the card component */}
+<div>$10 night</div>
+                                <div>2 reviews</div>
+                                <div>
+                                    Check in <input type="date" name="" id="" />
+                                    Check out <input type="date" name="" id="" />
+                                </div>
+                                <section>
+                                    <p>$480 x 5 nights ---- $2400</p>
+                                    <p>Service fee -------- $59</p>
+                                </section>
+
+                                <section>
+                                    <p>Total -------------- $2459</p>
+                                </section>
+
+                                <button
+                                        className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300 place-self-end"
+                                
+                                >RESERVE →</button>
+
+
                             <ListGroup className="list-group-flush">
                                 <ListGroup.Item className="text-muted">
                                     <LocationOn /> {campground.location}
@@ -204,10 +320,7 @@ const Campground: React.FunctionComponent = () => {
                                 </ListGroup.Item>
                                 <ListGroup.Item className="text-muted">
                                     <Event />
-                                    <OverlayTrigger
-                                        placement="top"
-                                        overlay={popover}
-                                    >
+                                    <OverlayTrigger placement="top" overlay={popover}>
                                         <span>
                                             {timeDifference(
                                                 Date.now(),
@@ -247,15 +360,15 @@ const Campground: React.FunctionComponent = () => {
                         {campground && <CampgroundMap campground={campground} />}
 
                         {/* only activate review form for logged in user */}
-                        {appContext.currentUser && (
+                        {appContext.currentUser ? (
                             <>
-                                <h2>Leave a review</h2>
                                 <Form
-                                    className="mb-5"
+                                    className="my-3 flex flex-column"
                                     noValidate
                                     validated={validated}
                                     onSubmit={onReviewSubmit}
                                 >
+                                    <h2>Leave a review</h2>
                                     <Form.Group className="mb-2" controlId="reviewRating">
                                         <Rating
                                             name="simple-controlled"
@@ -269,16 +382,24 @@ const Campground: React.FunctionComponent = () => {
                                     <Form.Group className="mb-3" controlId="reviewComment">
                                         <Form.Label>Comment</Form.Label>
                                         <Form.Control as="textarea" ref={reviewText} required />
+                                        {/* TODO: style this motherfucker */}
+                                        {/* <div> */}
+                                        {/* <input type="textarea" ref={reviewText} required /> */}
+                                        {/* </div> */}
                                         <Form.Control.Feedback type="invalid">
                                             Please add your comment
                                         </Form.Control.Feedback>
                                     </Form.Group>
-
-                                    <button className="my-3  bg-primary-dark-color text-white rounded-none outline-0 px-5 py-2 border-0" type="submit">
+                                    <button
+                                        className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300 place-self-end"
+                                        type="submit"
+                                    >
                                         Submit
                                     </button>
                                 </Form>
                             </>
+                        ) : (
+                            <Link to="/login">Login to add your review</Link>
                         )}
                         <h2>
                             {campground.reviews?.length || 0}{' '}
@@ -316,11 +437,13 @@ const Campground: React.FunctionComponent = () => {
                         )}
                     </Col>
                 </Row>
-            {/* </Container> */}
-            </div>
+            </Container>
+            {/* </div> */}
             <Footer />
         </PageContainer>
     );
+
+    return <>{v1}</>;
 };
 
 export default Campground;

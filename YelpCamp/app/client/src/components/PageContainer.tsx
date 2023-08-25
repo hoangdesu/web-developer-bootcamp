@@ -5,7 +5,11 @@ interface PageContainerProps {
 }
 
 const PageContainer: React.FunctionComponent<PageContainerProps> = ({ children }) => {
-    return <div className="flex flex-column vh-100 bg-primary-color">{children}</div>;
+    // vh-100
+    // return <div className="flex flex-column justify-center w-[100vw] bg-primary-color">{children}</div>;
+    return <div className="flex flex-column justify-center  bg-primary-color">{children}</div>;
+
+    // w-screen h-screen
 };
 
 export default PageContainer;

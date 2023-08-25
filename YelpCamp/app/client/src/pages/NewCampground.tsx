@@ -116,7 +116,7 @@ const NewCampground: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <Navbar />
-            <Container className="col-6 offset-3 mt-5">
+            <Container className="my-10">
                 <FlashAlert />
                 <h1 className="text-center mb-4">New Campground</h1>
                 <Form

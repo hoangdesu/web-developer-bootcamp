@@ -38,7 +38,7 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
     // if (campground.images.length > 0) console.log('images')
 
     return (
-        <>
+        <section className="mb-5">
             {/* TODO: DEFAULT IMAGE IF NO IMAGE SELECTED */}
             <Carousel activeIndex={activeIndex} onSelect={changeImageHandler}>
                 {campground.images?.map((image, index) => (
@@ -46,7 +46,7 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
                         <Card.Img
                             variant="top"
                             src={image.url}
-                            height={'400px'}
+                            height={'500px'}
                             style={{ objectFit: 'cover' }}
                         />
                     </Carousel.Item>
@@ -70,7 +70,7 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
                     />
                 ))}
             </ImageThumbnails>
-        </>
+        </section>
     );
 };
 

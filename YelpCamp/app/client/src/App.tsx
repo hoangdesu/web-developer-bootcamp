@@ -72,10 +72,11 @@ const App: React.FunctionComponent = () => {
             </div>
 
             {/* searchbox */}
-            <section className="flex flex-row w-100 justify-center ">
+            <section className="w-[50%] mx-auto mt-[-30px] z-10 flex flex-row justify-center p-2 bg-primary-color">
+                <p>hi</p>
                 <form action="">
                     <input
-                        className="p-3 mb-[50px] w-[50rem] border-1"
+                        className="px-5 py-2 drop-shadow-xl"
                         type="text"
                         placeholder="Search campground"
                     />

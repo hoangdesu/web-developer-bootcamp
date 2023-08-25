@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Lora&family=Merriweather&family=Montserrat:ital,wght@0,600;0,700;1,400&family=Poppins&family=Roboto&display=swap');
+@import url('https://fonts.cdnfonts.com/css/helveticaneue-2?styles=15761,30115,30116,30117');
+@import url('https://fonts.cdnfonts.com/css/helvetica-neue-5');
 /* @tailwind base; */
 @tailwind components;
 @tailwind utilities;
@@ -17,6 +19,23 @@ body {
     /* font-family: 'Poppins', sans-serif; */
     /* font-family: 'Helvetica', sans-serif; */
     /* font-family: 'Montserrat', sans-serif; */
+    /* font-family: 'Merriweather', serif; */
+    /* font-family: 'Helvetica Neue', sans-serif; */
     font-family: 'Lora', serif;
-/* font-family: 'Merriweather', serif; */
+}
+
+/* customize Bootstrap elements */
+/* https://stackoverflow.com/questions/55849635/how-to-change-the-primary-color-of-the-react-built-in-bootstrap */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--primary-dark-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+.form-control:focus {
+    border-color: #b5c4c1;
+    box-shadow: 0 0 0 0.1rem #d8e7e4;
 }

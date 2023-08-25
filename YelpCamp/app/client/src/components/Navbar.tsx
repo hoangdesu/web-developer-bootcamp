@@ -73,7 +73,7 @@ const Navbar: React.FunctionComponent = () => {
     };
 
     return (
-        <BootstrapNavbar bg="dark" variant="dark">
+        <BootstrapNavbar variant="dark" className="bg-primary-dark-color">
             <Container>
                 <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
                 <Nav className="me-auto">
@@ -85,8 +85,8 @@ const Navbar: React.FunctionComponent = () => {
                 </Nav>
                 
                 {/* testing */}
-                <Link to="/testing">Testing</Link>
-                <button onClick={quickLoginHandler}>Quick login</button>
+                {/* <Link to="/testing">Testing</Link>
+                <button onClick={quickLoginHandler}>Quick login</button> */}
 
                 <Nav activeKey="/home">
                     {currentUser ? (

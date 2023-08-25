@@ -24,7 +24,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
     // console.log(campground);
     return (
         // <StyledCard>
-        <div className="flex flex-col w-50">
+        <div className="flex flex-col w-[20rem] h-[30rem]">
             <Link
                 to={`campgrounds/${campground._id}`}
                 style={{ textDecoration: 'none', color: '#212529', height: '25em' }}
@@ -55,7 +55,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
 
                     <img
                         src={campground?.images?.[0]?.url}
-                        className="h-50 w-90 object-cover"
+                        className="h-[20rem] w-full object-cover"
                     />
 
                     <Col>
@@ -63,13 +63,13 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                             <Card.Title>{campground.title}</Card.Title>
                             <Card.Subtitle>
                                 <small className="text-muted">
-                                    <Place />
+                                    {/* <Place /> */}
                                     {campground.location}
                                 </small>
                             </Card.Subtitle>
                             <Card.Text className="my-3">$ {campground.price}</Card.Text>
                             <Card.Text className="my-3">
-                                Created by {campground.author?.username}
+                                Hosted by {campground.author?.username}
                             </Card.Text>
                         </Card.Body>
                     </Col>
