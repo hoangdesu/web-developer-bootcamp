@@ -65,7 +65,7 @@ const seedDatabase = async totalCamps => {
         const newCampground = new Campground({
             title: `${sample(descriptors)} ${sample(places)}`,
             price: (Math.random() * 50).toFixed(1),
-            description: 'campground description placeholder',
+            description: loremIpsum(),
             location: `${city}, ${admin_name}`,
             // image: 'https://source.unsplash.com/collection/1114848', // random photo in "camping" collection
             author: randomUser._id,

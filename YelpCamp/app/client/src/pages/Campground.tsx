@@ -192,7 +192,7 @@ const Campground: React.FunctionComponent = () => {
     const v1 = (
         <PageContainer>
             <Navbar />
-            <Container className="col-9 my-4">
+            <Container className=" my-4 px-10">
                 <FlashAlert />
                 <Row className="mb-3">
                     <Col>
@@ -203,15 +203,7 @@ const Campground: React.FunctionComponent = () => {
                                     ★ {averageRating(campground)} · {campground.reviews.length}{' '}
                                     reviews · {campground.location}
                                 </span>
-                                {/* show buttons to edit and delete campground for author */}
-                                {isAuthor(appContext, campground) ? (
-                                    <div>
-                                        <button>Edit</button>
-                                        <button>Delete</button>
-                                    </div>
-                                ) : (
-                                    <span className="">Save Share</span>
-                                )}
+                                <span className="">Save Share</span>
                             </div>
                         </section>
                     </Col>
@@ -222,15 +214,27 @@ const Campground: React.FunctionComponent = () => {
                         <CampgroundCardCarousel campground={campground} />
 
                         <StyledSection>
-                            <h3>
-                                Campground hosted by{' '}
-                                <Link
-                                    to={`/users/${campground.author?.username}`}
-                                    className="text-primary-dark-color"
-                                >
-                                    {campground.author?.username || 'annonymous'}
-                                </Link>
-                            </h3>
+                            <div className="flex flex-row justify-between">
+                                <h3>
+                                    Campground hosted by{' '}
+                                    <Link
+                                        to={`/users/${campground.author?.username}`}
+                                        className="text-primary-dark-color"
+                                    >
+                                        {campground.author?.username || 'annonymous'}
+                                    </Link>
+                                </h3>
+
+                                {/* show buttons to edit and delete campground for author */}
+                                {isAuthor(appContext, campground) && (
+                                    <div>
+                                        <Link to={`/campgrounds/${campgroundId}/edit`}>
+                                            <button>Edit</button>
+                                        </Link>
+                                        <button onClick={deleteCampgroundHandler}>Delete</button>
+                                    </div>
+                                )}
+                            </div>
                         </StyledSection>
 
                         <StyledSection>
@@ -266,10 +270,9 @@ const Campground: React.FunctionComponent = () => {
                                     <p>Total -------------- $2459</p>
                                 </section>
 
-                                <button
-                                        className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300"
-                                
-                                >RESERVE →</button>
+                                <button className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300">
+                                    RESERVE →
+                                </button>
                             </ReserveSection>
                         </StyledSection>
 
@@ -282,28 +285,25 @@ const Campground: React.FunctionComponent = () => {
                                 <Card.Text>{campground.description}</Card.Text>
                             </Card.Body> */}
 
+                            {/* can consider using the card component */}
+                            <div>$10 night</div>
+                            <div>2 reviews</div>
+                            <div>
+                                Check in <input type="date" name="" id="" />
+                                Check out <input type="date" name="" id="" />
+                            </div>
+                            <section>
+                                <p>$480 x 5 nights ---- $2400</p>
+                                <p>Service fee -------- $59</p>
+                            </section>
 
-                                {/* can consider using the card component */}
-<div>$10 night</div>
-                                <div>2 reviews</div>
-                                <div>
-                                    Check in <input type="date" name="" id="" />
-                                    Check out <input type="date" name="" id="" />
-                                </div>
-                                <section>
-                                    <p>$480 x 5 nights ---- $2400</p>
-                                    <p>Service fee -------- $59</p>
-                                </section>
+                            <section>
+                                <p>Total -------------- $2459</p>
+                            </section>
 
-                                <section>
-                                    <p>Total -------------- $2459</p>
-                                </section>
-
-                                <button
-                                        className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300 place-self-end"
-                                
-                                >RESERVE →</button>
-
+                            <button className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300 place-self-end">
+                                RESERVE →
+                            </button>
 
                             <ListGroup className="list-group-flush">
                                 <ListGroup.Item className="text-muted">
@@ -390,6 +390,7 @@ const Campground: React.FunctionComponent = () => {
                                             Please add your comment
                                         </Form.Control.Feedback>
                                     </Form.Group>
+                                    {/* TODO: STYLE PRIMARY AND SECONDARY BUTTONS */}
                                     <button
                                         className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300 place-self-end"
                                         type="submit"
@@ -439,6 +440,7 @@ const Campground: React.FunctionComponent = () => {
                 </Row>
             </Container>
             {/* </div> */}
+            {/* // TODO: fix footer size */}
             <Footer />
         </PageContainer>
     );

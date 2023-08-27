@@ -69,8 +69,8 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
 
         const clusterId = feature?.properties?.cluster_id;
 
-        if (clusterId) {
-            const mapboxSource = mapRef.current.getSource('campgrounds') as GeoJSONSource;
+        if (clusterId) { // clicking on a cluster
+            const mapboxSource = mapRef.current?.getSource('campgrounds') as GeoJSONSource;
 
             mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
                 console.log('cluster id:', clusterId);
@@ -82,7 +82,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                     duration: 500,
                 });
             });
-        } else {
+        } else { // clicking on a single campground
             console.log(feature.properties);
             setPopupInfo({
                 campground: feature.properties,
@@ -208,6 +208,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                                 //     e.originalEvent.stopPropagation();
                                 // }}
                             >
+                                {/* TODO: style this motherfucker and separate into a component */}
                                 <div>
                                     <div
                                         style={{ display: 'flex', justifyContent: 'space-between' }}

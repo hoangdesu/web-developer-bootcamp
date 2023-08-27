@@ -1,9 +1,6 @@
-
-
 import React, { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import { Navbar as BootstrapNavbar, Button, NavDropdown } from 'react-bootstrap';
+import { Navbar as BootstrapNavbar, Nav, Button, NavDropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import AppContext from '../store/app-context';
 import axios from 'axios';
@@ -72,67 +69,159 @@ const Navbar: React.FunctionComponent = () => {
             });
     };
 
-    return (
-        <BootstrapNavbar variant="dark" className="bg-primary-dark-color">
-            <Container>
-                <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
-                <Nav className="me-auto">
-                    {pages.map(page => (
-                        <Link to={page.href} style={{ textDecoration: 'none' }} key={page.title}>
-                            <span className="nav-link">{page.title}</span>
-                        </Link>
-                    ))}
-                </Nav>
-                
-                {/* testing */}
-                <Link to="/testing">Testing</Link>
-                <button onClick={quickLoginHandler}>Quick login</button>
+    const original = (
+        <>
+            <BootstrapNavbar variant="dark" className="bg-primary-dark-color ">
+                <Container>
+                    <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
+                    <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
+                    <BootstrapNavbar.Collapse id="basic-navbar-nav">
+                        <Nav >
+                            <Nav className="me-auto">
+                                {pages.map(page => (
+                                    <Link
+                                        to={page.href}
+                                        style={{ textDecoration: 'none' }}
+                                        key={page.title}
+                                    >
+                                        <span className="nav-link">{page.title}</span>
+                                    </Link>
+                                ))}
+                            </Nav>
 
-                <Nav activeKey="/home">
-                    {currentUser ? (
-                        <NavDropdown
-                            title={currentUser?.username}
-                            id="nav-dropdown"
-                            className="pe-2"
-                        >
-                            <Link
-                                to={`/users/${currentUser.username}`}
-                                key={'user'}
-                                className="dropdown-item"
-                            >
-                                <span>View</span>
-                            </Link>
-                            <Button
-                                variant="secondary"
-                                onClick={logoutHandler}
-                                className="dropdown-item"
-                            >
-                                Logout
-                            </Button>
-                        </NavDropdown>
-                    ) : (
-                        <>
-                            <Link
-                                to={'/login'}
-                                key={'login'}
-                                style={{ textDecoration: 'none' }}
-                                className="nav-link"
-                            >
-                                <span>Login</span>
-                            </Link>
-                            <Link
-                                to={'/register'}
-                                key={'register'}
-                                style={{ textDecoration: 'none' }}
-                                className="nav-link"
-                            >
-                                <span>Register</span>
-                            </Link>
-                        </>
-                    )}
-                </Nav>
-            </Container>
-        </BootstrapNavbar>
+                            {/* testing */}
+                            <Link to="/testing">Testing</Link>
+                            <button onClick={quickLoginHandler}>Quick login</button>
+
+                            <Nav activeKey="/home">
+                                {currentUser ? (
+                                    <NavDropdown
+                                        title={currentUser?.username}
+                                        id="nav-dropdown"
+                                        className="pe-2"
+                                    >
+                                        <Link
+                                            to={`/users/${currentUser.username}`}
+                                            key={'user'}
+                                            className="dropdown-item"
+                                        >
+                                            <span>View</span>
+                                        </Link>
+                                        <Button
+                                            variant="secondary"
+                                            onClick={logoutHandler}
+                                            className="dropdown-item"
+                                        >
+                                            Logout
+                                        </Button>
+                                    </NavDropdown>
+                                ) : (
+                                    <>
+                                        <Link
+                                            to={'/login'}
+                                            key={'login'}
+                                            style={{ textDecoration: 'none' }}
+                                            className="nav-link"
+                                        >
+                                            <span>Login</span>
+                                        </Link>
+                                        <Link
+                                            to={'/register'}
+                                            key={'register'}
+                                            style={{ textDecoration: 'none' }}
+                                            className="nav-link"
+                                        >
+                                            <span>Register</span>
+                                        </Link>
+                                    </>
+                                )}
+                            </Nav>
+                        </Nav>
+                    </BootstrapNavbar.Collapse>
+                </Container>
+            </BootstrapNavbar>
+        </>
+    );
+
+    return (
+        <div>
+            {/* {original} */}
+            <BootstrapNavbar expand="md" variant="dark" className="bg-primary-dark-color">
+                <Container className="px-10">
+                    <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
+                    <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
+                    <BootstrapNavbar.Collapse id="basic-navbar-nav">
+                        <Nav className="me-auto">
+                            {/* <Nav.Link href="#home">Home</Nav.Link>
+                            <Nav.Link href="#link">Link</Nav.Link>
+                            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+                                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+                                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
+                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                            </NavDropdown> */}
+
+                            {pages.map(page => (
+                                <Link
+                                    to={page.href}
+                                    style={{ textDecoration: 'none' }}
+                                    key={page.title}
+                                >
+                                    <span className="nav-link">{page.title}</span>
+                                </Link>
+                            ))}
+                        </Nav>
+                        <Nav activeKey="/home">
+                            {/* testing */}
+                            <Link to="/testing">Testing</Link>
+                            <button onClick={quickLoginHandler}>Quick login</button>
+                            {currentUser ? (
+                                <NavDropdown
+                                    title={currentUser?.username}
+                                    id="nav-dropdown"
+                                    className="pe-2"
+                                >
+                                    <Link
+                                        to={`/users/${currentUser.username}`}
+                                        key={'user'}
+                                        className="dropdown-item"
+                                    >
+                                        <span>View</span>
+                                    </Link>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={logoutHandler}
+                                        className="dropdown-item"
+                                    >
+                                        Logout
+                                    </Button>
+                                </NavDropdown>
+                            ) : (
+                                <>
+                                    <Link
+                                        to={'/login'}
+                                        key={'login'}
+                                        style={{ textDecoration: 'none' }}
+                                        className="nav-link"
+                                    >
+                                        <span>Login</span>
+                                    </Link>
+                                    <Link
+                                        to={'/register'}
+                                        key={'register'}
+                                        style={{ textDecoration: 'none' }}
+                                        className="nav-link"
+                                    >
+                                        <span>Register</span>
+                                    </Link>
+                                </>
+                            )}
+                        </Nav>
+                    </BootstrapNavbar.Collapse>
+                </Container>
+            </BootstrapNavbar>
+        </div>
     );
 };
 

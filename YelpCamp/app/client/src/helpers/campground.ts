@@ -1,5 +1,3 @@
-
-
 export const isAuthor = (appContext, campground) => {
     if (appContext.currentUser) return campground.author?._id === appContext.currentUser.id;
     return false;
@@ -41,12 +39,15 @@ export const timeDifference = (current, previous) => {
 };
 
 const USDtoVND = (usd: number) => {
-    return `${(usd * 24000).toFixed(1).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}₫`;
+    return `${(usd * 24000)
+        .toFixed(1)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}₫`;
 };
 
 export const formattedPrice = (price: number) => `$${price}/night (~${USDtoVND(price)})`;
 
-export const averageRating = (campground) => {
+export const averageRating = campground => {
     const result = (
         campground?.reviews?.reduce((accumulator, review) => accumulator + review.rating, 0) /
         campground?.reviews?.length

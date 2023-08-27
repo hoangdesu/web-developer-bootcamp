@@ -66,31 +66,16 @@ const App: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <Navbar />
+            <Container className="my-5 px-10">
+                <FlashAlert />
+                <div className="z-0">
+                    <ClusterMap campgrounds={campgroundsData} />
+                </div>
 
-            <div className="px-[8rem] pt-7">
-                <ClusterMap campgrounds={campgroundsData} />
-            </div>
-
-            {/* searchbox */}
-            <section className="w-[50%] mx-auto mt-[-30px] z-10 flex flex-row justify-center p-2 bg-primary-color">
-                <p>hi</p>
-                <form action="">
-                    <input
-                        className="px-5 py-2 drop-shadow-xl"
-                        type="text"
-                        placeholder="Search campground"
-                    />
-                    <button>Search</button>
-                </form>
-            </section>
-
-            <div className="my-5 bg-secondary-color">
                 {/* <Map viewState={{ mapCoordinates: coordinates, zoom: 5 }} /> */}
 
-                <Row className="justify-content-center">
-                    <Col md="10">
-                        <FlashAlert />
-
+                <Row className="justify-content-center my-5">
+                    <Col>
                         <div
                             // style={{
                             //     display: 'flex',
@@ -128,9 +113,9 @@ const App: React.FunctionComponent = () => {
                         </CampgroundsContainer>
                     </Col>
                 </Row>
-            </div>
 
-            <Footer />
+                <Footer />
+            </Container>
         </PageContainer>
     );
 };

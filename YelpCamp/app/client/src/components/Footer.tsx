@@ -10,7 +10,6 @@ const Footer: React.FunctionComponent = () => {
         console.log(appContext);
     };
 
-
     return (
         <footer className="footer bg-dark py-3 mt-auto">
             <Container>
