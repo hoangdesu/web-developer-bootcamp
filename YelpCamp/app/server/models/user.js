@@ -15,15 +15,21 @@ const userSchema = new Schema(
         campgrounds: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'Campground'
-            }
+                ref: 'Campground',
+            },
         ],
         reviews: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'Review'
-            }
-        ]
+                ref: 'Review',
+            },
+        ],
+        favoritedCampgrounds: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Campground',
+            },
+        ],
     },
     {
         timestamps: true,

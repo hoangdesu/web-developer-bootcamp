@@ -1,11 +1,20 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const Testing = () => {
     const reader = new FileReader();
 
     const [selectedImages, setSelectedImages] = React.useState([]);
+    const [inputStartDate, setInputStartDate] = useState('');
+    const [inputEndDate, setInputEndDate] = useState('');
+
+    // const [today, setToday] = useState(new Date().toISOString().slice(0, 10));
+    const today = new Date().toISOString().slice(0, 10);
+
+    // useEffect(() => {
+    //     console.log(new Date())
+    // }, []);
 
     const changeHandler = e => {
         // if (e.target.files && e.target.files.length > 0) {
@@ -16,6 +25,21 @@ const Testing = () => {
         console.log(images);
         setSelectedImages(images);
     };
+
+    const getDays = (e) => {
+        e.preventDefault();
+
+        const ONE_DAY = 1000 * 60 * 60 * 24;
+
+    // Calculate the difference in milliseconds
+        const differenceMs = Math.round(new Date(inputEndDate) - new Date(inputStartDate));
+
+    // Convert back to days and return
+        const days = Math.round(differenceMs / ONE_DAY);
+        console.log(days, 'days')
+        console.log(inputStartDate, inputEndDate);
+        
+    }
 
     return (
         <div>
@@ -87,6 +111,20 @@ const Testing = () => {
                 <input type="text" name="count" id="" placeholder="campgrounds (default=5)" />
                 <button type="submit">Reseed database</button>
             </form>
+
+            <div>
+                <h1>Test date input</h1>
+                <form action="">
+                    <input type="date" min={today} onChange={e => {
+                        setInputStartDate(e.currentTarget?.value);
+                    }} />
+                    <Form.Control type="date" min={inputStartDate} onChange={(e) => {
+                        // console.log(e.currentTarget?.value)
+                        setInputEndDate(e.currentTarget?.value);
+                    }}></Form.Control>
+                    <button onClick={getDays}>Click</button>
+                </form>
+            </div>
         </div>
     );
 };

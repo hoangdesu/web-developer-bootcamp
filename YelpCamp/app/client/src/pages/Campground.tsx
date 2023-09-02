@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQueries, useQuery } from 'react-query';
 import axios from 'axios';
 
 import AppContext from '../store/app-context';
@@ -17,7 +17,15 @@ import {
     OverlayTrigger,
     Image,
 } from 'react-bootstrap';
-import { LocationOn, Sell, Person, Star, Event } from '@mui/icons-material';
+import {
+    LocationOn,
+    Sell,
+    Person,
+    Star,
+    Event,
+    Favorite,
+    FavoriteBorder,
+} from '@mui/icons-material';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -69,14 +77,41 @@ const Campground: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
 
     const [campground, setCampground] = useState<Campground | null>(null);
+    const [isFavorited, setIsFavorited] = useState(false);
 
-    const { isLoading, error, isError, data, refetch } = useQuery({
-        queryKey: ['campgroundData'],
-        queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
-        onSuccess: data => {
-            setCampground(data); // setting campground specifically to ensure new data
+    // const { isLoading, error, isError, data, refetch } = useQuery({
+    //     queryKey: ['campgroundData'],
+    //     queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
+    //     onSuccess: data => {
+    //         setCampground(data); // setting campground specifically to ensure new data
+    //     },
+    // });
+
+    const [campgroundQuery, favoritedCampgroundsQuery] = useQueries([
+        {
+            queryKey: ['campgroundData'],
+            queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
+            onSuccess: data => {
+                setCampground(data); // setting campground specifically to ensure new data
+            },
         },
-    });
+        {
+            queryKey: ['favoritedCampgrounds'],
+            queryFn: () =>
+                axios
+                    .get(
+                        `/api/v1/users/${appContext.currentUser.id.toString()}/favorited-campgrounds`,
+                    )
+                    .then(res => res.data),
+            enabled: !!appContext.currentUser,
+            onSuccess: data => {
+                console.log('fav campground:', data);
+                data.forEach(favCamp => {
+                    if (favCamp._id === campgroundId) setIsFavorited(true);
+                });
+            },
+        },
+    ]);
 
     const onReviewSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -106,7 +141,7 @@ const Campground: React.FunctionComponent = () => {
                         message: 'Thank you for your review!',
                         variant: 'info',
                     });
-                    refetch();
+                    campgroundQuery.refetch();
                     form.reset();
                     setValidated(false); // reset the form validated state
                     setRatingValue(3);
@@ -172,9 +207,34 @@ const Campground: React.FunctionComponent = () => {
         }
     };
 
-    if (isLoading || !campground) return <Loading />;
+    const toggleFavoriteCampground = evt => {
+        if (!appContext.currentUser) {
+            appContext.setAlert({
+                message: `You need to log in first!`,
+                variant: 'info',
+            });
+            return;
+        }
 
-    if (isError) {
+        axios
+            .post(
+                `/api/v1/users/${appContext.currentUser.id.toString()}/favorite-campground`,
+                { campgroundId },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: appContext.currentUser.id.toString(),
+                    },
+                },
+            )
+            .then(res => {
+                setIsFavorited(res.data.isFavorited);
+            });
+    };
+
+    if (campgroundQuery.isLoading || !campground) return <Loading />;
+
+    if (campgroundQuery.isError) {
         appContext.setAlert({
             message: 'Invalid campground!',
             variant: 'info',
@@ -201,9 +261,25 @@ const Campground: React.FunctionComponent = () => {
                             <div className="flex flex-row justify-between">
                                 <span>
                                     ★ {averageRating(campground)} · {campground.reviews?.length}{' '}
-                                    reviews · {campground.location}
+                                    reviews ·{' '}
+                                    <a
+                                        href={`https://www.google.com/search?q=${campground.location}`}
+                                        style={{ color: 'inherit' }}
+                                        target="_blank"
+                                    >
+                                        {campground.location}
+                                    </a>
                                 </span>
-                                <span className="">Save Share</span>
+
+                                <span
+                                    onClick={toggleFavoriteCampground}
+                                    className="hover:cursor-pointer"
+                                >
+                                    <span style={{ color: 'red' }}>
+                                        {isFavorited ? <Favorite /> : <FavoriteBorder />}{' '}
+                                    </span>{' '}
+                                    Save - Share
+                                </span>
                             </div>
                         </section>
                     </Col>
@@ -432,7 +508,11 @@ const Campground: React.FunctionComponent = () => {
                             <>
                                 {campground.reviews?.length === 0 && 'Add your first review!'}
                                 {campground.reviews.map((review: ReviewType) => (
-                                    <Review key={review._id} review={review} refetch={refetch} />
+                                    <Review
+                                        key={review._id}
+                                        review={review}
+                                        refetch={campgroundQuery.refetch}
+                                    />
                                 ))}
                             </>
                         )}
@@ -440,7 +520,6 @@ const Campground: React.FunctionComponent = () => {
                 </Row>
             </Container>
             {/* </div> */}
-            {/* // TODO: fix footer size */}
             <Footer />
         </PageContainer>
     );

@@ -13,6 +13,11 @@ const ImageThumbnails = styled.div`
     gap: 6px;
     /* opacity: 0.8; */
 
+    // TODO: use GRID display for thumbnail container
+    /* display: grid;
+    grid-gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 100px)); */
+
     & > img {
         transition: 0.3s all;
     }

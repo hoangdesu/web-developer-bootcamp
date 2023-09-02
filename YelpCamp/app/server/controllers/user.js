@@ -2,6 +2,7 @@ const { catchAsync } = require('../utilities/helpers');
 const YelpcampError = require('../utilities/YelpcampError');
 
 const User = require('../models/user');
+const Campground = require('../models/campground');
 
 // GET /api/v1/users
 const getAllUsers = async (req, res) => {
@@ -36,11 +37,11 @@ const getUserByUsername = async (req, res, next) => {
         const user = await User.findOne({ username })
             .select('_id username email')
             .populate('campgrounds', '_id title price')
+            .populate('favoritedCampgrounds', '_id title images location')
             .exec();
 
         if (!user) return next(new YelpcampError(404, 'User not found'));
 
-        // console.log(user);
         res.status(200).send(user);
     } catch (err) {
         console.error(err);
@@ -52,7 +53,6 @@ const getUserById = async (req, res) => {
         const { id } = req.params;
         const user = await User.findById(id);
         res.json(user);
-        console.log();
     } catch (e) {
         console.error(e);
         res.send(e);
@@ -74,6 +74,58 @@ const logout = (req, res, next) => {
     });
 };
 
+const getAllFavoritedCampgrounds = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findById(id)
+        // .select('')
+        .populate('favoritedCampgrounds', '_id title')
+        .exec();
+    if (!user) return next(new YelpcampError(404, 'User not found'));
+
+    // console.log(user);
+    res.status(200).json(user.favoritedCampgrounds);
+});
+
+const toggleFavoriteCampground = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) return next(new YelpcampError(404, 'User not found'));
+
+    const { campgroundId } = req.body;
+    const campground = await Campground.findById(campgroundId);
+
+    if (!campground) return next(new YelpcampError(404, 'Campground not found'));
+
+    let campgroundExisted = false;
+    user.favoritedCampgrounds.forEach(favCampground => {
+        console.log('===:', campground._id, favCampground._id);
+        if (campground._id.equals(favCampground._id)) {
+            campgroundExisted = true;
+        }
+    });
+
+    // toggle favoriting campground
+    // if not exists, add to favorite list
+    // if exists, remove from the list by filtering the list
+    if (!campgroundExisted) {
+        user.favoritedCampgrounds.push(campground);
+        await user.save();
+        return res.status(200).send({
+            message: 'added campground to favorite',
+            isFavorited: true,
+        });
+    } else {
+        user.favoritedCampgrounds = user.favoritedCampgrounds.filter(
+            favCampground => !favCampground._id.equals(campground._id),
+        );
+        await user.save();
+        return res.status(200).send({
+            message: 'removed campground from favorite',
+            isFavorited: false,
+        });
+    }
+});
+
 module.exports = {
     getAllUsers,
     createUser,
@@ -81,4 +133,6 @@ module.exports = {
     getUserById,
     login,
     logout,
+    getAllFavoritedCampgrounds,
+    toggleFavoriteCampground,
 };
