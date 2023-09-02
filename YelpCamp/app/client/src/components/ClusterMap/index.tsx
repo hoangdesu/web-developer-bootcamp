@@ -165,7 +165,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                 }}
                 // {...viewState}
                 // onMove={onMove}
-                style={{ height: 500 }}
+                style={{ height: 450 }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 attributionControl={false}
                 interactiveLayerIds={[clusterLayer.id, unclusteredPointLayer.id]}

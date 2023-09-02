@@ -192,7 +192,7 @@ const Campground: React.FunctionComponent = () => {
     const v1 = (
         <PageContainer>
             <Navbar />
-            <Container className=" my-4 px-10">
+            <Container className=" my-4 px-[5%]">
                 <FlashAlert />
                 <Row className="mb-3">
                     <Col>
@@ -200,7 +200,7 @@ const Campground: React.FunctionComponent = () => {
                             <h1 className="font-bold">{campground.title}</h1>
                             <div className="flex flex-row justify-between">
                                 <span>
-                                    ★ {averageRating(campground)} · {campground.reviews.length}{' '}
+                                    ★ {averageRating(campground)} · {campground.reviews?.length}{' '}
                                     reviews · {campground.location}
                                 </span>
                                 <span className="">Save Share</span>

@@ -147,7 +147,7 @@ const Navbar: React.FunctionComponent = () => {
         <div>
             {/* {original} */}
             <BootstrapNavbar expand="md" variant="dark" className="bg-primary-dark-color">
-                <Container className="px-10">
+                <Container className="px-[5%]">
                     <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
                     <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
                     <BootstrapNavbar.Collapse id="basic-navbar-nav">
@@ -176,6 +176,7 @@ const Navbar: React.FunctionComponent = () => {
                             {/* testing */}
                             <Link to="/testing">Testing</Link>
                             <button onClick={quickLoginHandler}>Quick login</button>
+
                             {currentUser ? (
                                 <NavDropdown
                                     title={currentUser?.username}

@@ -4,7 +4,7 @@ import AppContext from '../store/app-context';
 
 const Footer: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
-    const debuggingMode = false;
+    const debuggingMode = false; // TODO: remove in production
 
     const handler = () => {
         console.log(appContext);
@@ -12,7 +12,7 @@ const Footer: React.FunctionComponent = () => {
 
     return (
         <footer className="footer bg-dark py-3 mt-auto">
-            <Container>
+            <Container className="px-[5%]">
                 <span className="text-muted">YelpCamp &copy; Hoang Nguyen 2023</span>
                 {debuggingMode && (
                     <div>

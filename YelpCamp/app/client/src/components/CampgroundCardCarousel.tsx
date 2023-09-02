@@ -46,7 +46,7 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
                         <Card.Img
                             variant="top"
                             src={image.url}
-                            height={'500px'}
+                            height={'450px'}
                             style={{ objectFit: 'cover' }}
                         />
                     </Carousel.Item>

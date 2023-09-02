@@ -10,21 +10,21 @@ interface CardProps {
     campground: Campground;
 }
 
-const StyledCard = styled(Card)`
-    width: 16rem;
-    box-shadow: 0 0 8px #f1e0e0;
-    transition: 0.2s ease;
+const StyledCard = styled('div')`
+    // can use styled(Card)
+    position: relative;
+    /* box-shadow: 0 0 8px #f1e0e0; */
+    /* transition: 0.2s ease;
 
-    &:hover {
-        box-shadow: 1px 1px 10px #d3c4c4;
-    }
+    /* &:hover {
+        box-shadow: 0px 1px 10px #e0d6d6;
+    } */
 `;
 
 const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
     // console.log(campground);
     return (
-        // <StyledCard>
-        <div className="flex flex-col w-[20rem] h-[30rem]">
+        <StyledCard>
             <Link
                 to={`campgrounds/${campground._id}`}
                 style={{ textDecoration: 'none', color: '#212529', height: '25em' }}
@@ -46,26 +46,18 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                         ))}
                     </Carousel> */}
 
-                    {/* <Card.Img
+                    <Card.Img
                         variant="top"
                         src={campground?.images?.[0]?.url}
-                        height={'200'}
+                        height={'250px'}
                         style={{ objectFit: 'cover' }}
-                    /> */}
-
-                    <img
-                        src={campground?.images?.[0]?.url}
-                        className="h-[20rem] w-full object-cover"
                     />
 
                     <Col>
                         <Card.Body>
                             <Card.Title>{campground.title}</Card.Title>
                             <Card.Subtitle>
-                                <small className="text-muted">
-                                    {/* <Place /> */}
-                                    {campground.location}
-                                </small>
+                                <small className="text-muted">{campground.location}</small>
                             </Card.Subtitle>
                             <Card.Text className="my-3">$ {campground.price}</Card.Text>
                             <Card.Text className="my-3">
@@ -75,8 +67,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                     </Col>
                 </Row>
             </Link>
-            {/* </StyledCard> */}
-        </div>
+        </StyledCard>
     );
 };
 

@@ -90,7 +90,7 @@ const Register: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <Navbar />
-            <Container className="col-6 offset-3 mt-5">
+            <Container className="mt-5 px-[30%]">
                 <FlashAlert />
                 <h1 className="text-center mb-4">Register</h1>
                 <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>

@@ -18,12 +18,16 @@ import FlashAlert from './components/FlashAlert';
 import Loading from './pages/Loading';
 
 const CampgroundsContainer = styled.div`
-    display: flex;
+    /* display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: wrap; */
     /* gap: 16px; */
     /* align-items: center; */
-    justify-content: space-between;
+    /* justify-content: space-between; */
+
+    display: grid;
+    grid-gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(262px, 1fr));
 `;
 
 const App: React.FunctionComponent = () => {
@@ -66,25 +70,15 @@ const App: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <Navbar />
-            <Container className="my-5 px-10">
+            <Container className="my-5 px-[5%]">
                 <FlashAlert />
-                <div className="z-0">
+                <div className="">
                     <ClusterMap campgrounds={campgroundsData} />
                 </div>
 
-                {/* <Map viewState={{ mapCoordinates: coordinates, zoom: 5 }} /> */}
-
                 <Row className="justify-content-center my-5">
                     <Col>
-                        <div
-                            // style={{
-                            //     display: 'flex',
-                            //     flexDirection: 'row',
-                            //     alignItems: 'baseline',
-                            //     justifyContent: 'space-between',
-                            // }}
-                            className="flex flex-row align-baseline justify-between"
-                        >
+                        <div className="flex flex-row align-baseline justify-between">
                             <span className="my-3">
                                 Total: {campgroundsData && campgroundsData.length} campgrounds
                             </span>
@@ -113,13 +107,10 @@ const App: React.FunctionComponent = () => {
                         </CampgroundsContainer>
                     </Col>
                 </Row>
-
-                <Footer />
             </Container>
+            <Footer />
         </PageContainer>
     );
 };
 
 export default App;
-
-// style={{backgroundColor: 'red', display: 'flex', alignItems: 'center', justifyContent: 'center'}}

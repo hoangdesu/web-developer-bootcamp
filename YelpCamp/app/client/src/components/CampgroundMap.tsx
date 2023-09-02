@@ -36,7 +36,7 @@ const CampgroundMap: React.FunctionComponent<CampgroundMapProps> = ({ campground
                     ...coordinates,
                     zoom: 8,
                 }}
-                style={{ height: 500 }}
+                style={{ height: '450px' }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 attributionControl={false}
             >
