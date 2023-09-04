@@ -72,9 +72,9 @@ const App: React.FunctionComponent = () => {
             <Navbar />
             <Container className="my-5 px-[5%]">
                 <FlashAlert />
-                <div className="">
+                {/* <div className=""> */}
                     <ClusterMap campgrounds={campgroundsData} />
-                </div>
+                {/* </div> */}
 
                 <Row className="justify-content-center my-5">
                     <Col>

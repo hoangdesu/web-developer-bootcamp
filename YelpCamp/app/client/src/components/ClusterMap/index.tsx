@@ -59,7 +59,11 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
 
     const onMapClick = (event: mapboxgl.MapTouchEvent) => {
         // TODO: fix click on map error "Uncaught TypeError: Cannot read properties of undefined (reading '0')"
+        // console.dir(event);
+        // return;
         const feature = event.feature[0];
+        // return;
+        
 
         // clicking outside the interactive zones
         if (!feature) {

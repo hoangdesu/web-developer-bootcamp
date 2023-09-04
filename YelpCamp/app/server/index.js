@@ -12,6 +12,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const YelpcampError = require('./utilities/YelpcampError');
 const sessionConfigs = require('./configs/sessionConfigs');
@@ -60,6 +61,12 @@ app.use(express.json());
 app.use(cors());
 app.use(methodOverride('_method'));
 app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use(
+    mongoSanitize({
+        allowDots: true,
+        replaceWith: '_',
+    }),
+);
 app.use(flash());
 app.use(morgan('dev'));
 app.use(logger());
