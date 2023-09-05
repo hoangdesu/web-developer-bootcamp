@@ -125,6 +125,15 @@ const Testing = () => {
                     <button onClick={getDays}>Click</button>
                 </form>
             </div>
+
+            <div>
+                <h1>Simple input for XSS</h1>
+                <form action="" method="GET">
+                    <input type="text" />
+                    <button>Submit</button>
+                </form>
+
+            </div>
         </div>
     );
 };

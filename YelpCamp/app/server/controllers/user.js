@@ -98,7 +98,6 @@ const toggleFavoriteCampground = catchAsync(async (req, res) => {
 
     let campgroundExisted = false;
     user.favoritedCampgrounds.forEach(favCampground => {
-        console.log('===:', campground._id, favCampground._id);
         if (campground._id.equals(favCampground._id)) {
             campgroundExisted = true;
         }
