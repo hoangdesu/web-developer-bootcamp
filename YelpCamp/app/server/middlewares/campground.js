@@ -1,7 +1,7 @@
 const YelpcampError = require('../utilities/YelpcampError');
 
 const Campground = require('../models/campground');
-const { campgroundSchema } = require('../schemas');
+const campgroundSchema = require('../schemas/campground');
 
 const validateCampground = (req, res, next) => {
     // validating request body with Joi before extracting data
@@ -16,8 +16,8 @@ const validateCampground = (req, res, next) => {
             location,
             price,
             description,
-            author
-        }
+            author,
+        },
     };
 
     body.campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));

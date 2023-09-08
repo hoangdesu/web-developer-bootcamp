@@ -1,0 +1,13 @@
+{
+  "name": "60_deploying_env_test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "NODE_ENV=dev node index.js",
+    "start:prod": "NODE_ENV=prod node index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}

@@ -1,0 +1,25 @@
+services:
+  client:
+    build:
+      context: ./app/client
+      # dockefile: Dockerfile
+    ports:
+      - "5173:5173"   
+    # depends_on:
+    #   - db
+  # server:
+  #   build:
+  #     context: ./app/server
+  #     dockerfile: Dockerfile
+  #   ports:
+      # - "3001:3001"
+    # depends_on:
+      # - db
+#   db:
+#     volumes:
+#       - yelp-camp-db:/data/db
+#     image: mongo:latest
+#     ports:
+#       - "27017:27017" 
+# volumes:
+#   yelp-camp-db:

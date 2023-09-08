@@ -1,5 +1,5 @@
 {
-  "name": "yelp-camp-fullstack-app",
+  "name": "yelp-camp-fullstack-mern-app",
   "author": "Brian Nguyen",
   "version": "1.0.0",
   "main": "index.js",
@@ -7,9 +7,11 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"yarn run start:server\"  \"yarn run start:client\"",
-    "start:server": "yarn workspace server run start",
-    "start:client": "yarn workspace client run dev",
+    "start:all:dev": "concurrently \"yarn run start:server:dev\"  \"yarn run start:client:dev\"",
+    "start:all:prod": "concurrently \"yarn run start:server:dev\"  \"yarn run start:client:prod\"",
+    "start:server:dev": "yarn workspace server run start:dev",
+    "start:client:dev": "yarn workspace client run start:dev",
+    "start:client:prod": "yarn workspace client run start:prod",
     "install:all": "yarn --cwd client && yarn --cwd server",
     "start:db": "brew services start mongodb-community@6.0",
     "stop:db": "brew services stop mongodb-community@6.0"

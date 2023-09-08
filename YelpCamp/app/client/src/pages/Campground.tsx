@@ -94,6 +94,13 @@ const Campground: React.FunctionComponent = () => {
             onSuccess: data => {
                 setCampground(data); // setting campground specifically to ensure new data
             },
+            onError: err => {
+                appContext.setAlert({
+                    message: 'Invalid campground!',
+                    variant: 'warning',
+                });
+                navigate('/');
+            }
         },
         {
             queryKey: ['favoritedCampgrounds'],

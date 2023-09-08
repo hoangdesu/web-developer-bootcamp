@@ -1,6 +1,7 @@
 const Campground = require('../models/campground');
 const Review = require('../models/review');
-const { reviewSchema } = require('../schemas');
+const reviewSchema = require('../schemas/review');
+
 const YelpcampError = require('../utilities/YelpcampError');
 
 const validateReview = (req, res, next) => {

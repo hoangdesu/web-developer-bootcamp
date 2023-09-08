@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Map, {
     Source,
@@ -57,13 +56,8 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
     //         .setHTML(`hi`);
     // });
 
-    const onMapClick = (event: mapboxgl.MapTouchEvent) => {
-        // TODO: fix click on map error "Uncaught TypeError: Cannot read properties of undefined (reading '0')"
-        // console.dir(event);
-        // return;
-        const feature = event.feature[0];
-        // return;
-        
+    const onMapClick = event => {
+        const feature = event.features[0];
 
         // clicking outside the interactive zones
         if (!feature) {
@@ -73,7 +67,8 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
 
         const clusterId = feature?.properties?.cluster_id;
 
-        if (clusterId) { // clicking on a cluster
+        if (clusterId) {
+            // clicking on a cluster
             const mapboxSource = mapRef.current?.getSource('campgrounds') as GeoJSONSource;
 
             mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
@@ -86,8 +81,9 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                     duration: 500,
                 });
             });
-        } else { // clicking on a single campground
-            console.log(feature.properties);
+        } else {
+            // clicking on a single campground
+            // console.log(feature.properties);
             setPopupInfo({
                 campground: feature.properties,
                 longitude: feature.geometry.coordinates[0],
@@ -95,7 +91,8 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
             });
         }
 
-        console.log(popupInfo);
+        // TODO: fix clicking on consecutive single campground does NOT show popup, just marker :/ ?
+        console.log('popupInfo:', popupInfo);
     };
 
     const onMove = useCallback(evt => {

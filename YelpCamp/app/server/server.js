@@ -1,37 +1,22 @@
-// if (process.env.NODE_ENV !== 'production') {
-// }
-require('dotenv').config();
+const path = require('path');
+if (!process.env.NODE_ENV)
+    throw new Error('Missing .env file. Please set NODE_ENV to one of these values: dev | prod');
+require('dotenv').config({ path: path.join(__dirname, `./.env.${process.env.NODE_ENV}`) });
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const logger = require('./configs/logger');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
-const path = require('path');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
 
 const YelpcampError = require('./utilities/YelpcampError');
 const sessionConfigs = require('./configs/sessionConfigs');
-
-// Mongoose
-mongoose.set('strictQuery', true);
-
-// local
-const URI = `${process.env.MONGO_URI}/${process.env.DB_NAME}`;
-
-// Atlas
-// const URI = `${process.env.MONGO_URI}`;
-
-mongoose.connect(URI);
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-    console.log(`Mongoose: connected to db "${process.env.DB_NAME}"`);
-});
 
 // Routers
 const campgroundRoutes = require('./routes/campground');
@@ -47,6 +32,20 @@ const User = require('./models/user');
 const PORT = process.env.PORT || 3001;
 const app = express();
 app.use(express.urlencoded({ extended: true }));
+
+// Mongoose
+mongoose.set('strictQuery', true);
+const URI = `${process.env.MONGO_URI}`;
+mongoose.connect(URI);
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+    console.log(`💾 [mongoose] Connected to db "${process.env.DB_NAME}"`);
+    // ensure connection to db before starting for serverless functions
+    app.listen(PORT, () => {
+        console.log(`🚀 [${process.env.NODE_ENV}] Server running at http://localhost:${PORT}`);
+    });
+});
 
 // Passport
 app.use(session(sessionConfigs));
@@ -67,6 +66,7 @@ app.use(
         replaceWith: '_',
     }),
 );
+app.use(helmet());
 app.use(flash());
 app.use(morgan('dev'));
 app.use(logger());
@@ -87,8 +87,4 @@ app.all('*', (req, res, next) => {
 app.use((err, req, res, next) => {
     const { statusCode = 500, message = 'Something went wrong :(' } = err;
     res.status(statusCode).send(message);
-});
-
-app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

@@ -46,6 +46,10 @@ const App: React.FunctionComponent = () => {
                 localStorage.setItem('currentUser', JSON.stringify(res.data));
             }
         });
+        
+        console.log('env:', import.meta.env);
+        // console.log('process.env config:', process.env);
+
     }, [localStorage]);
 
     const {
@@ -73,7 +77,7 @@ const App: React.FunctionComponent = () => {
             <Container className="my-5 px-[5%]">
                 <FlashAlert />
                 {/* <div className=""> */}
-                    <ClusterMap campgrounds={campgroundsData} />
+                <ClusterMap campgrounds={campgroundsData} />
                 {/* </div> */}
 
                 <Row className="justify-content-center my-5">

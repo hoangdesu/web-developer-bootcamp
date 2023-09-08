@@ -33,7 +33,7 @@ const getACampground = catchAsync(async (req, res, next) => {
         })
         .exec();
 
-    if (!campground) next(new (YelpcampError(404, 'Campground not found'))());
+    if (!campground) return next(new YelpcampError(404, 'Campground not found'));
 
     // const geoData = await geocodingClient
     //     .forwardGeocode({

@@ -1,9 +1,9 @@
-const Joi = require('joi');
+const Joi = require('./extendedJoi');
 
-module.exports.campgroundSchema = Joi.object({
+module.exports = Joi.object({
     campground: Joi.object({
-        title: Joi.string().required(),
-        location: Joi.string().required(),
+        title: Joi.string().required().sanitizeHTML(),
+        location: Joi.string().required().sanitizeHTML(),
         geometry: Joi.object({
             type: Joi.string(),
             coordinates: Joi.array(),
@@ -17,14 +17,7 @@ module.exports.campgroundSchema = Joi.object({
                 }),
             )
             .required(), // BUG: empty images array can still be valid
-        description: Joi.string(),
+        description: Joi.string().sanitizeHTML(),
         author: Joi.string().required(),
-    }).required(),
-});
-
-module.exports.reviewSchema = Joi.object({
-    review: Joi.object({
-        comment: Joi.string().required(),
-        rating: Joi.number().required().min(1).max(5),
     }).required(),
 });

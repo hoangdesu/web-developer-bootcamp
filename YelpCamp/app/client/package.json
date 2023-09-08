@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "start": "yarn run dev"
+    "dev": "vite --mode dev",
+    "build": "tsc && vite build --mode prod",
+    "preview": "vite preview --mode dev",
+    "start:dev": "yarn run dev",
+    "start:prod": "vite --mode prod"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
