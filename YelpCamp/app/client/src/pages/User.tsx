@@ -26,7 +26,12 @@ const User = () => {
     } = useQuery({
         queryKey: ['userData'],
         queryFn: () => axios.get(`/api/v1/users/username/${username}`).then(res => res.data),
+        onSuccess: (user) => {
+            document.title = `YelpCamp | ${user.username}`;
+        }
     });
+
+    
 
     if (isLoading) return <Loading />;
 

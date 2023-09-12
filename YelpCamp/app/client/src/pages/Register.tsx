@@ -33,7 +33,8 @@ const Register: React.FunctionComponent = () => {
     const formPassword = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        document.title = 'YelpCamp | Register';
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
         if (currentUser) {
             appContext.setAlert({
                 message: `You're already logged in as ${currentUser.username}`,

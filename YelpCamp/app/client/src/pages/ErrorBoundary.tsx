@@ -1,14 +1,16 @@
-
-import React from 'react';
-import { useRouteError, useNavigate } from 'react-router-dom';
+import React, { FunctionComponent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Alert, Button } from 'react-bootstrap';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 
-const ErrorBoundary = () => {
-    const error = useRouteError();
+interface ErrorBoundaryProps {
+    error?: Error;
+}
+
+const ErrorBoundary: FunctionComponent<ErrorBoundaryProps> = ({ error = null }) => {
     const navigate = useNavigate();
 
     return (

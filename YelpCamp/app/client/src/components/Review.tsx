@@ -149,6 +149,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                     </span>
                 )}
 
+                {/* TODO: style this again when mouse over editable field */}
                 {isEditingReview ? (
                     <>
                         <Rating
@@ -173,7 +174,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                 ) : (
                     <>
                         <div className="flex flex-row justify-between">
-                            <Card.Title>
+                            <Card.Title className="font-normal">
                                 <StyledLink to={`/users/${review.author?.username}`}>
                                     {review.author?.username}
                                 </StyledLink>

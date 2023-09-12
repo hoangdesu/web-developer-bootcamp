@@ -48,11 +48,12 @@ const EditCampground: React.FunctionComponent = () => {
     const [showDeleteCheckboxes, setShowDeleteCheckboxes] = useState(false);
     const [deletingImages, setDeletingImages] = useState<String[]>([]);
 
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
     // console.log(currentUser);
 
     // protect route when user is not logged in
     useEffect(() => {
+        document.title = 'YelpCamp | Edit Campground';
         if (!currentUser) navigate('/login');
     }, []);
 

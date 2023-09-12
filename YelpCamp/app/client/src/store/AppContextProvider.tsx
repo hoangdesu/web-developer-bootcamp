@@ -1,8 +1,10 @@
-
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, ReactNode, FunctionComponent } from 'react';
 import AppContext from './app-context';
 import { Alert, User } from '../types';
-import axios from 'axios';
+
+interface ContextProviderProps {
+    children?: ReactNode;
+}
 
 interface appState {
     alert: Alert | null;
@@ -34,14 +36,14 @@ const appReducer = (state, action) => {
     }
 };
 
-const AppContextProvider = ({ children }) => {
+const AppContextProvider: FunctionComponent<ContextProviderProps> = ({ children }) => {
     const [appState, dispatchAppAction] = useReducer(appReducer, initialAppState);
 
     const setAlert = (alert: Alert) => {
         dispatchAppAction({ type: 'SET_ALERT', alert: alert });
     };
 
-    const setCurrentUser = (user: User) => {
+    const setCurrentUser = (user: User | null) => {
         dispatchAppAction({ type: 'SET_CURRENT_USER', user: user });
     };
 
@@ -53,10 +55,7 @@ const AppContextProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        //     axios.get('/api/v1/auth/currentuser').then(res => {
-        //         setCurrentUser(res.data);
-        //     });
-        const user = localStorage.getItem('currentUser');
+        const user = localStorage.getItem('currentUser') as string;
         setCurrentUser(JSON.parse(user));
     }, []);
 

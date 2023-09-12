@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
-import { useQuery } from 'react-query';
+import React, { useState, useContext, useRef, FormEvent } from 'react';
+import { useQueries } from 'react-query';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 
 import './App.css';
 import AppContext from './store/app-context';
@@ -16,15 +16,11 @@ import ClusterMap from './components/ClusterMap';
 import CampgroundCard from './components/CampgroundCard';
 import FlashAlert from './components/FlashAlert';
 import Loading from './pages/Loading';
+import { Campground, User } from './types';
+import ErrorBoundary from './pages/ErrorBoundary';
+import PrimaryBlackButton from './components/Buttons/PrimaryBlackButton';
 
 const CampgroundsContainer = styled.div`
-    /* display: flex;
-    flex-direction: row;
-    flex-wrap: wrap; */
-    /* gap: 16px; */
-    /* align-items: center; */
-    /* justify-content: space-between; */
-
     display: grid;
     grid-gap: 25px;
     grid-template-columns: repeat(auto-fit, minmax(262px, 1fr));
@@ -33,42 +29,78 @@ const CampgroundsContainer = styled.div`
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
+    const [campgrounds, setCampgrounds] = useState<Campground[]>([]);
+    const [filteredCampgroundList, setFilteredCampgroundList] = useState<Campground[]>([]);
+    const [page, setPage] = useState(1);
 
     const searchRef = useRef(null);
 
-    useEffect(() => {
-        axios.get('/api/v1/auth/currentuser').then(res => {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const [userAuthQuery, campgroundsQuery] = useQueries([
+        {
+            queryKey: ['userAuth'],
+            queryFn: () => axios.get('/api/v1/auth/currentuser').then(res => res.data),
+            onSuccess: (authUser: User) => {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
 
-            if (!currentUser) {
-                localStorage.removeItem('currentUser');
-            } else {
-                localStorage.setItem('currentUser', JSON.stringify(res.data));
-            }
-        });
-        
-        console.log('env:', import.meta.env);
-        // console.log('process.env config:', process.env);
+                if (!currentUser) {
+                    localStorage.removeItem('currentUser');
+                } else {
+                    localStorage.setItem('currentUser', JSON.stringify(authUser));
+                }
+            },
+        },
+        {
+            queryKey: ['campgroundsData'],
+            queryFn: () => axios.get(`/api/v1/campgrounds`).then(res => res.data),
+            onSuccess: (campgroundList: Campground[]) => {
+                document.title = 'YelpCamp | Homepage';
+                setCampgrounds(() => {
+                    setFilteredCampgroundList(campgroundList.slice(0, 12));
+                    return campgroundList;
+                });
+            },
+        },
+    ]);
 
-    }, [localStorage]);
+    if (campgroundsQuery.isLoading) return <Loading />;
 
-    const {
-        isLoading,
-        error,
-        data: campgroundsData,
-    } = useQuery({
-        queryKey: ['campgroundsData'],
-        queryFn: () => axios.get(`/api/v1/campgrounds`).then(res => res.data),
-    });
+    if (campgroundsQuery.error) {
+        console.error(campgroundsQuery.error);
+        // return <p>An error has occurred: {campgroundsQuery.error.message}</p>;
+        return <ErrorBoundary error={campgroundsQuery.error} />;
+    }
 
-    if (isLoading) return <Loading />;
-
-    if (error) return <p>An error has occurred: {error.message}</p>;
-
-    const onSearchSubmit = evt => {
+    const onSearchSubmit = (evt: FormEvent) => {
         evt.preventDefault();
         if (!searchRef.current?.value) return;
         navigate(`/search?q=${searchRef.current?.value}`);
+    };
+
+    // pagination:
+    // page 1: 0 - 11
+    // page 2: 12 - 23
+    // page 3: 24 - 35
+    // => index of page x = (page - 1) * 12
+    const onPrevPageClick = () => {
+        setPage(p => {
+            --p;
+            const startingIndex = (p - 1) * 12;
+            setFilteredCampgroundList(campgrounds.slice(startingIndex, 12));
+            console.log(p, startingIndex, filteredCampgroundList);
+
+            return p;
+        });
+    };
+
+    const onNextPageClick = () => {
+        setPage(p => {
+            ++p;
+            const startingIndex = (p - 1) * 12;
+            setFilteredCampgroundList(campgrounds.slice(startingIndex, 12));
+            console.log(p, startingIndex, filteredCampgroundList);
+
+            return p;
+        });
     };
 
     return (
@@ -76,31 +108,42 @@ const App: React.FunctionComponent = () => {
             <Navbar />
             <Container className="my-5 px-[5%]">
                 <FlashAlert />
-                {/* <div className=""> */}
-                <ClusterMap campgrounds={campgroundsData} />
-                {/* </div> */}
+                <ClusterMap campgrounds={campgrounds} />
 
                 <Row className="justify-content-center my-5">
                     <Col>
-                        <div className="flex flex-row align-baseline justify-between">
+                        <div className="flex flex-row align-baseline justify-between mb-3">
                             <span className="my-3">
-                                Total: {campgroundsData && campgroundsData.length} campgrounds
+                                Total: {filteredCampgroundList && filteredCampgroundList.length}{' '}
+                                campgrounds
                             </span>
                             <form action="" onSubmit={onSearchSubmit}>
                                 <input
                                     type="text"
                                     placeholder="Search campground..."
                                     ref={searchRef}
+                                    className="px-3"
                                 />
-                                <Button variant="info" type="submit">
+                                <PrimaryBlackButton px={4} py={1}>
                                     Search
-                                </Button>
+                                </PrimaryBlackButton>
                             </form>
                         </div>
 
                         <CampgroundsContainer>
-                            {Array.isArray(campgroundsData) &&
-                                campgroundsData.map(campground => {
+                            {/* TODO: PAGINATION */}
+                            {/* {Array.isArray(filteredCampgroundList) &&
+                                filteredCampgroundList.map(campground => {
+                                    return (
+                                        <CampgroundCard
+                                            key={campground._id}
+                                            campground={campground}
+                                        />
+                                    );
+                                })} */}
+
+                            {Array.isArray(campgrounds) &&
+                                campgrounds.map(campground => {
                                     return (
                                         <CampgroundCard
                                             key={campground._id}
@@ -109,6 +152,13 @@ const App: React.FunctionComponent = () => {
                                     );
                                 })}
                         </CampgroundsContainer>
+
+                        {/* TODO: pagination */}
+                        <div>
+                            <p>Page: {page}</p>
+                            <button onClick={onPrevPageClick}>Prev</button>
+                            <button onClick={onNextPageClick}>Next</button>
+                        </div>
                     </Col>
                 </Row>
             </Container>

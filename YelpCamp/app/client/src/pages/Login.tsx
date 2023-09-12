@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -31,7 +30,8 @@ const Login: React.FunctionComponent = () => {
     const formPassword = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        document.title = 'YelpCamp | Login';
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
         if (currentUser) {
             appContext.setAlert({
                 message: `Welcome back, ${currentUser.username}`,
@@ -96,18 +96,26 @@ const Login: React.FunctionComponent = () => {
                         <Form.Label>Username</Form.Label>
                         <Form.Control type="text" ref={formUsername} required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Username is required!</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">
+                            Username is required!
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="password">
                         <Form.Label>Password</Form.Label>
                         <InputGroup className="mb-2">
-                            <Form.Control type={showPassword ? 'text' : 'password'} ref={formPassword} required />
+                            <Form.Control
+                                type={showPassword ? 'text' : 'password'}
+                                ref={formPassword}
+                                required
+                            />
                             <InputGroupText onClick={() => setShowPassword(show => !show)}>
                                 {showPassword ? <Visibility /> : <VisibilityOff />}
                             </InputGroupText>
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">Password is required!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                Password is required!
+                            </Form.Control.Feedback>
                         </InputGroup>
                     </Form.Group>
 

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -25,9 +24,10 @@ const NewCampground: React.FunctionComponent = () => {
     const formImages = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
 
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
+    
     useEffect(() => {
+        document.title = 'YelpCamp | New Campground';
         if (!currentUser) {
             appContext.setAlert({
                 message: 'Please log in first',
@@ -35,7 +35,7 @@ const NewCampground: React.FunctionComponent = () => {
             });
             navigate('/login');
         }
-    }, [currentUser]);
+    }, []);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

@@ -1,3 +1,5 @@
+import { Campground } from '../types';
+
 export const isAuthor = (appContext, campground) => {
     if (appContext.currentUser) return campground.author?._id === appContext.currentUser.id;
     return false;
@@ -14,7 +16,7 @@ export const formatDate = createdTime => {
     return `${format(date)}`;
 };
 
-export const timeDifference = (current, previous) => {
+export const timeDifference = (current: number, previous: number) => {
     var msPerMinute = 60 * 1000;
     var msPerHour = msPerMinute * 60;
     var msPerDay = msPerHour * 24;
@@ -47,11 +49,11 @@ const USDtoVND = (usd: number) => {
 
 export const formattedPrice = (price: number) => `$${price}/night (~${USDtoVND(price)})`;
 
-export const averageRating = campground => {
+export const averageRating = (campground: Campground) => {
     const result = (
         campground?.reviews?.reduce((accumulator, review) => accumulator + review.rating, 0) /
         campground?.reviews?.length
     ).toFixed(1);
-    if (result === 'NaN') return '-';
+    if (result === 'NaN') return 'New';
     return result;
 };

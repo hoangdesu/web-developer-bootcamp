@@ -46,6 +46,7 @@ import {
     averageRating,
 } from '../helpers/campground';
 import styled from '@emotion/styled';
+import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -91,7 +92,8 @@ const Campground: React.FunctionComponent = () => {
         {
             queryKey: ['campgroundData'],
             queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
-            onSuccess: data => {
+            onSuccess: (data: Campground) => {
+                document.title = `YelpCamp | ${data.title}`;
                 setCampground(data); // setting campground specifically to ensure new data
             },
             onError: err => {
@@ -100,7 +102,7 @@ const Campground: React.FunctionComponent = () => {
                     variant: 'warning',
                 });
                 navigate('/');
-            }
+            },
         },
         {
             queryKey: ['favoritedCampgrounds'],
@@ -174,6 +176,7 @@ const Campground: React.FunctionComponent = () => {
     };
 
     const deleteCampgroundHandler = () => {
+        // TODO: replace with Modal
         if (confirm(`Delete ${campground.title}?`)) {
             axios
                 .delete(`/api/v1/campgrounds/${campgroundId}`, {
@@ -264,8 +267,9 @@ const Campground: React.FunctionComponent = () => {
                 <Row className="mb-3">
                     <Col>
                         <section className="my-2">
-                            <h1 className="font-bold">{campground.title}</h1>
+                            <h1 className="font-normal">{campground.title}</h1>
                             <div className="flex flex-row justify-between">
+                                {/* TODO: fix */}
                                 <span>
                                     ★ {averageRating(campground)} · {campground.reviews?.length}{' '}
                                     reviews ·{' '}
@@ -298,7 +302,7 @@ const Campground: React.FunctionComponent = () => {
 
                         <StyledSection>
                             <div className="flex flex-row justify-between">
-                                <h3>
+                                <h4 className="font-normal">
                                     Campground hosted by{' '}
                                     <Link
                                         to={`/users/${campground.author?.username}`}
@@ -306,7 +310,7 @@ const Campground: React.FunctionComponent = () => {
                                     >
                                         {campground.author?.username || 'annonymous'}
                                     </Link>
-                                </h3>
+                                </h4>
 
                                 {/* show buttons to edit and delete campground for author */}
                                 {isAuthor(appContext, campground) && (
@@ -321,17 +325,17 @@ const Campground: React.FunctionComponent = () => {
                         </StyledSection>
 
                         <StyledSection>
-                            <h3>About</h3>
+                            <h4 className="font-normal">About</h4>
                             <p>{campground.description}</p>
                         </StyledSection>
 
                         <StyledSection>
-                            <h3>Location</h3>
+                            <h4 className="font-normal">Location</h4>
                             <p>{campground.location}</p>
                         </StyledSection>
 
                         <StyledSection>
-                            <h3>Price</h3>
+                            <h4 className="font-normal">Price</h4>
                             <p>${campground.price} night</p>
                         </StyledSection>
 
@@ -446,12 +450,12 @@ const Campground: React.FunctionComponent = () => {
                         {appContext.currentUser ? (
                             <>
                                 <Form
-                                    className="my-3 flex flex-column"
+                                    className="mt-5 flex flex-column"
                                     noValidate
                                     validated={validated}
                                     onSubmit={onReviewSubmit}
                                 >
-                                    <h2>Leave a review</h2>
+                                    <h3 className="font-normal">Leave a review</h3>
                                     <Form.Group className="mb-2" controlId="reviewRating">
                                         <Rating
                                             name="simple-controlled"
@@ -474,21 +478,16 @@ const Campground: React.FunctionComponent = () => {
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     {/* TODO: STYLE PRIMARY AND SECONDARY BUTTONS */}
-                                    <button
-                                        className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300 place-self-end"
-                                        type="submit"
-                                    >
-                                        Submit
-                                    </button>
+                                    <PrimaryBlackButton>Submit</PrimaryBlackButton>
                                 </Form>
                             </>
                         ) : (
                             <Link to="/login">Login to add your review</Link>
                         )}
-                        <h2>
+                        <h4 className="font-normal">
                             {campground.reviews?.length || 0}{' '}
                             {campground.reviews?.length === 0 ? 'review' : 'reviews'}
-                        </h2>
+                        </h4>
 
                         {campground.reviews?.length > 0 && (
                             <Box

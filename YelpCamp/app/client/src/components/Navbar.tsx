@@ -24,7 +24,7 @@ const Navbar: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
     // console.log(currentUser);
 
     const logoutHandler = async () => {

@@ -4,7 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 import { Campground } from '../types';
 import styled from '@emotion/styled';
-import { Place } from '@mui/icons-material';
+import { averageRating } from '../helpers/campground';
 
 interface CardProps {
     campground: Campground;
@@ -22,7 +22,6 @@ const StyledCard = styled('div')`
 `;
 
 const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
-    // console.log(campground);
     return (
         <StyledCard>
             <Link
@@ -34,8 +33,8 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                     {/* // TODO: fix this shit again -> Warning: validateDOMNesting(...): <a> cannot appear as a descendant of <a>. */}
 
                     {/* <Carousel interval={null}>
-                        {campground.images?.map(image => (
-                            <Carousel.Item key={image.url}>
+                        {campground.images.map((image, index) => (
+                            <Carousel.Item key={`${image.url}-${index}}`}>
                                 <Card.Img
                                     variant="top"
                                     src={image.url}
@@ -46,7 +45,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                         ))}
                     </Carousel> */}
 
-                    <Card.Img
+                    {/* <Card.Img
                         variant="top"
                         src={campground?.images?.[0]?.url}
                         height={'250px'}
@@ -63,6 +62,35 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                             <Card.Text className="my-3">
                                 Hosted by {campground.author?.username}
                             </Card.Text>
+                        </Card.Body>
+                    </Col> */}
+
+                    <Col>
+                        <Card.Img
+                            variant="top"
+                            src={campground?.images?.[0]?.url}
+                            height={'250px'}
+                            style={{
+                                objectFit: 'cover',
+                                borderRadius: '6px',
+                            }}
+                        />
+                        <Card.Body className="flex flex-column gap-1">
+                            <div className="flex flex-row justify-between items-baseline mt-2 gap-3">
+                                <Card.Title className="font-normal">{campground.title}</Card.Title>
+                                <span className="min-w-fit text-sm">
+                                    ★ {averageRating(campground)}
+                                </span>
+                            </div>
+                            <Card.Subtitle>
+                                <small className="text-muted font-normal">
+                                    {campground.location}
+                                </small>
+                            </Card.Subtitle>
+                            <div className="mb-4">
+                                <span className="font-semibold">${campground.price}</span>
+                                <span> night</span>
+                            </div>
                         </Card.Body>
                     </Col>
                 </Row>
