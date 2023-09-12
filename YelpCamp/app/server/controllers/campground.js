@@ -9,11 +9,14 @@ const geocodingClient = require('../configs/mapbox');
 
 const VietnamCoordinates = {
     type: 'Point',
-    coordinates: [108.7017555, 14.0]
-}
+    coordinates: [108.7017555, 14.0],
+};
 
 const getAllCamgrounds = catchAsync(async (req, res) => {
-    const campgrounds = await Campground.find({}).populate('author', '_id username').exec();
+    const campgrounds = await Campground.find({})
+        .populate('author', '_id username')
+        .populate('reviews', 'rating')
+        .exec();
     return res.status(200).json(campgrounds);
 });
 

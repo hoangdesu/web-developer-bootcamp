@@ -14,10 +14,12 @@ const reviewSchema = new Schema(
         author: {
             type: Schema.Types.ObjectId,
             ref: 'User',
+            required: true,
         },
         campground: {
             type: Schema.Types.ObjectId,
             ref: 'Campground',
+            required: true,
         },
     },
     {

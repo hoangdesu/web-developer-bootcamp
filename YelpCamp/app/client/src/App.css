@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Lora&family=Merriweather&family=Montserrat:ital,wght@0,600;0,700;1,400&family=Poppins&family=Roboto&display=swap');
 @import url('https://fonts.cdnfonts.com/css/helveticaneue-2?styles=15761,30115,30116,30117');
 @import url('https://fonts.cdnfonts.com/css/helvetica-neue-5');
+
+/* Lora different font weights */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+
 /* @tailwind base; */
 @tailwind components;
 @tailwind utilities;

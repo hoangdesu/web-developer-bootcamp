@@ -7,6 +7,7 @@ import PageContainer from '../components/PageContainer';
 import Footer from '../components/Footer';
 
 const About: React.FunctionComponent = () => {
+    document.title = 'YelpCamp | About';
     return (
         <PageContainer>
             <Navbar />
