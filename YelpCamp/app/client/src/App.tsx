@@ -67,8 +67,7 @@ const App: React.FunctionComponent = () => {
 
     if (campgroundsQuery.error) {
         console.error(campgroundsQuery.error);
-        // return <p>An error has occurred: {campgroundsQuery.error.message}</p>;
-        return <ErrorBoundary error={campgroundsQuery.error} />;
+        return <ErrorBoundary err={campgroundsQuery.error} />;
     }
 
     const onSearchSubmit = (evt: FormEvent) => {
@@ -82,36 +81,12 @@ const App: React.FunctionComponent = () => {
     // page 2: 12 - 23
     // page 3: 24 - 35
     // => index of page x = (page - 1) * 12
-    const onPrevPageClick = () => {
-        if (page === 1) return;
-        setPage(p => {
-            --p;
-            const startingIndex = (p - 1) * 12;
-            const endingIndex = startingIndex + 12;
-            setFilteredCampgroundList(campgrounds.slice(startingIndex, endingIndex));
-            return p;
-        });
-    };
-
-    const onNextPageClick = () => {
-        const lastPage = Math.ceil(campgrounds.length / 12);
-        if (page === lastPage) return;
-        setPage(p => {
-            ++p;
-            const startingIndex = (p - 1) * 12;
-            const endingIndex = startingIndex + 12;
-            setFilteredCampgroundList(campgrounds.slice(startingIndex, endingIndex));
-            return p;
-        });
-    };
-
     const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-        setPage(value)
-        console.log(value);
-        console.log(event);
-
-        
-    }
+        setPage(value);
+        const startingIndex = (value - 1) * 12;
+        const endingIndex = startingIndex + 12;
+        setFilteredCampgroundList(campgrounds.slice(startingIndex, endingIndex));
+    };
 
     return (
         <PageContainer>
@@ -124,8 +99,12 @@ const App: React.FunctionComponent = () => {
                     <Col>
                         <div className="flex flex-row align-baseline justify-between mb-3">
                             <span className="my-3">
-                                Total: {filteredCampgroundList && filteredCampgroundList.length}{' '}
+                                Total: {campgrounds && campgrounds.length}{' '}
                                 campgrounds
+
+                                {/* {`Showing ${(page - 1) * 12 + 1}-${(page - 1) * 12 + 1 + 11} of ${
+                                    campgrounds.length
+                                } campgrounds`} */}
                             </span>
                             <form action="" onSubmit={onSearchSubmit}>
                                 <input
@@ -141,7 +120,6 @@ const App: React.FunctionComponent = () => {
                         </div>
 
                         <CampgroundsContainer>
-                            {/* TODO: PAGINATION */}
                             {Array.isArray(filteredCampgroundList) &&
                                 filteredCampgroundList.map(campground => {
                                     return (
@@ -151,30 +129,15 @@ const App: React.FunctionComponent = () => {
                                         />
                                     );
                                 })}
-
-                            {/* {Array.isArray(campgrounds) &&
-                                campgrounds.map(campground => {
-                                    return (
-                                        <CampgroundCard
-                                            key={campground._id}
-                                            campground={campground}
-                                        />
-                                    );
-                                })} */}
                         </CampgroundsContainer>
 
-                        {/* TODO: pagination */}
-                        <div>
-                            <p>Page: {page}</p>
-                            <button onClick={onPrevPageClick}>Prev</button>
-                            <button onClick={onNextPageClick}>Next</button>
-                        </div>
+                        
 
-                        <div className="w-full flex flex-column items-center">
+                        <div className="w-full flex flex-column items-center mt-5">
                             <Pagination
                                 page={page}
                                 count={Math.ceil(campgrounds.length / 12)}
-                                color="secondary"
+                                color="primary"
                                 variant="outlined"
                                 shape="rounded"
                                 onChange={handlePageChange}

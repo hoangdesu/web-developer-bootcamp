@@ -7,10 +7,10 @@ import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 
 interface ErrorBoundaryProps {
-    error?: Error;
+    err?: Error;
 }
 
-const ErrorBoundary: FunctionComponent<ErrorBoundaryProps> = ({ error = null }) => {
+const ErrorBoundary: FunctionComponent<ErrorBoundaryProps> = ({ err = null }) => {
     const navigate = useNavigate();
 
     return (
@@ -19,9 +19,9 @@ const ErrorBoundary: FunctionComponent<ErrorBoundaryProps> = ({ error = null }) 
             <Container className="mt-3">
                 <Alert variant="danger">
                     <Alert.Heading>
-                        {error?.message || error?.data || 'Something went wrong'}
+                        {err?.message || err?.data || 'Something went wrong'}
                     </Alert.Heading>
-                    <p>{error?.stack || ':/'}</p>
+                    <p>{err?.stack || ':/'}</p>
                 </Alert>
 
                 <Button variant="secondary" onClick={() => navigate('/')}>

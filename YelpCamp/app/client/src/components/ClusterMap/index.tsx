@@ -9,20 +9,28 @@ import Map, {
     GeolocateControl,
     useMap,
 } from 'react-map-gl';
-import type { MapRef, GeoJSONSource, MapboxStyle } from 'react-map-gl';
+import type { MapRef, MapboxStyle } from 'react-map-gl';
 import { clusterLayer, clusterCountLayer, unclusteredPointLayer } from './layers';
 import { Campground } from '../../types';
 import { Link } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
+import { averageRating } from '../../helpers/campground';
+import PopupBox from './PopupBox';
 
 interface ClusterMapProps {
     campgrounds: Campground[];
 }
 
+interface PopupInfoType {
+    campground: {};
+    longitude: number;
+    latitude: number;
+}
+
 const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) => {
     const mapRef = useRef<MapRef>(null);
     // const { current: map }= useMap();
-    const [popupInfo, setPopupInfo] = useState(null);
+    const [popupInfo, setPopupInfo] = useState<PopupInfoType | null>(null);
 
     const [viewState, setViewState] = useState({
         longitude: 107.7017555,
@@ -40,13 +48,11 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                 location: campground.location,
                 image: campground.images[0].url,
                 price: campground.price,
-                // rating: // avg rating
+                rating: averageRating(campground),
             },
             geometry: campground.geometry,
         })),
     };
-
-    // console.log("🚀 ~ file: index.tsx:17 ~ clusterData ~ clusterData:", clusterData)
 
     // imperative onclick
     // mapRef.current?.on('click', 'unclustered-point', function (e) {
@@ -56,7 +62,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
     //         .setHTML(`hi`);
     // });
 
-    const onMapClick = event => {
+    const onMapClick = (event: mapboxgl.MapMouseEvent) => {
         const feature = event.features[0];
 
         // clicking outside the interactive zones
@@ -69,10 +75,9 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
 
         if (clusterId) {
             // clicking on a cluster
-            const mapboxSource = mapRef.current?.getSource('campgrounds') as GeoJSONSource;
+            const mapboxSource = mapRef.current?.getSource('campgrounds') as mapboxgl.GeoJSONSource;
 
             mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
-                console.log('cluster id:', clusterId);
                 if (err) return;
 
                 mapRef.current?.easeTo({
@@ -83,7 +88,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
             });
         } else {
             // clicking on a single campground
-            // console.log(feature.properties);
+            event.originalEvent.stopPropagation();
             setPopupInfo({
                 campground: feature.properties,
                 longitude: feature.geometry.coordinates[0],
@@ -92,7 +97,6 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
         }
 
         // TODO: fix clicking on consecutive single campground does NOT show popup, just marker :/ ?
-        console.log('popupInfo:', popupInfo);
     };
 
     const onMove = useCallback(evt => {
@@ -128,33 +132,6 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                 zoom: 8,
             });
         });
-
-        // console.log(mapRef.current?.listImages());
-
-        // mapRef.current.on('move', () => {
-        //     console.log('moving ');
-
-        // });
-
-        // mapRef.current?.addLayer({
-        //     id: "bus-stops-symbol",
-        //     type: "symbol",
-        //     source: "bus-stops",
-        //       layout: {
-        //           'icon-image': 'bus-15',
-        //        }
-        //   });
-
-        //   mapRef.current.add
-        // const map = mapRef.current.getMap();
-        // map.loadImage('https://docs.mapbox.com/mapbox-gl-js/assets/cat.png', (error, image) => {
-        //     if (error) throw error;
-
-        //     console.log('got the pussy');
-
-        //     // Add the image to the map style.
-        //     map.addImage('cat', image);
-        // });
     }, []);
 
     return (
@@ -164,12 +141,10 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                 initialViewState={{
                     ...viewState,
                 }}
-                // {...viewState}
-                // onMove={onMove}
                 style={{ height: 450 }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 attributionControl={false}
-                interactiveLayerIds={[clusterLayer.id, unclusteredPointLayer.id]}
+                interactiveLayerIds={[clusterLayer.id!, unclusteredPointLayer.id!]}
                 onClick={onMapClick}
                 ref={mapRef}
                 onLoad={onMapLoad}
@@ -201,75 +176,16 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                                 longitude={popupInfo.longitude}
                                 latitude={popupInfo.latitude}
                                 offset={30}
-                                onClose={e => {
-                                    console.log('pop', e);
-                                    setPopupInfo(null);
-                                }}
-                                // onClick={e => {
-                                //     e.originalEvent.stopPropagation();
-                                // }}
+                                onClose={() => setPopupInfo(null)}
+                                closeOnClick={true}
+                                maxWidth="300px"
                             >
-                                {/* TODO: style this motherfucker and separate into a component */}
-                                <div>
-                                    <div
-                                        style={{ display: 'flex', justifyContent: 'space-between' }}
-                                    >
-                                        <h6>{popupInfo.campground.title}</h6>
-
-                                        {/* <span>{popupInfo.campground.rating}</span> */}
-                                        <span>${popupInfo.campground.price}</span>
-                                    </div>
-                                    <span>{popupInfo.campground.location}</span>
-
-                                    <img
-                                        src={popupInfo.campground.image}
-                                        alt=""
-                                        style={{
-                                            width: '150px',
-                                            height: '100px',
-                                            objectFit: 'cover',
-                                        }}
-                                    />
-                                    <br />
-                                    <Link to={`/campgrounds/${popupInfo.campground.id}`}>
-                                        View this campground
-                                    </Link>
-                                </div>
+                                <PopupBox campground={popupInfo.campground} />
                             </Popup>
 
-                            <Marker
-                                longitude={popupInfo.longitude}
-                                latitude={popupInfo.latitude}
-                                // onClick={e => {
-                                //     e.originalEvent.stopPropagation();
-                                // }}
-
-                                // onClick={togglePopup}
-
-                                // setPopupInfo(city);
-                            />
+                            <Marker longitude={popupInfo.longitude} latitude={popupInfo.latitude} />
                         </>
                     )}
-
-                    {/* {campgrounds.map(campground => (
-                        <Marker
-                            longitude={campground.geometry.coordinates[0]}
-                            latitude={campground.geometry.coordinates[1]}
-                            anchor="top"
-                        >
-                            <svg
-                                height={20}
-                                viewBox="0 0 24 24"
-                                style={{ cursor: 'pointer', fill: '#d00', stroke: 'none' }}
-                            >
-                                <path
-                                    d={`M20.2,15.7L20.2,15.7c1.1-1.6,1.8-3.6,1.8-5.7c0-5.6-4.5-10-10-10S2,4.5,2,10c0,2,0.6,3.9,1.6,5.4c0,0.1,0.1,0.2,0.2,0.3
-  c0,0,0.1,0.1,0.1,0.2c0.2,0.3,0.4,0.6,0.7,0.9c2.6,3.1,7.4,7.6,7.4,7.6s4.8-4.5,7.4-7.5c0.2-0.3,0.5-0.6,0.7-0.9
-  C20.1,15.8,20.2,15.8,20.2,15.7z`}
-                                />
-                            </svg>
-                        </Marker>
-                    ))} */}
                 </Source>
             </Map>
         </>
