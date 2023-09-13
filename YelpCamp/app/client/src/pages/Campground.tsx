@@ -44,6 +44,7 @@ import {
     timeDifference,
     formattedPrice,
     averageRating,
+    USDtoVND,
 } from '../helpers/campground';
 import styled from '@emotion/styled';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
@@ -322,6 +323,11 @@ const Campground: React.FunctionComponent = () => {
                                     </div>
                                 )}
                             </div>
+                            <OverlayTrigger placement="top" overlay={popover}>
+                                <span className="text-muted">
+                                    Created {timeDifference(Date.now(), Date.parse(campground.createdAt))}
+                                </span>
+                            </OverlayTrigger>
                         </StyledSection>
 
                         <StyledSection>
@@ -336,7 +342,10 @@ const Campground: React.FunctionComponent = () => {
 
                         <StyledSection>
                             <h4 className="font-normal">Price</h4>
-                            <p>${campground.price} night</p>
+                            <p>
+                                <span className="font-semibold">${campground.price}</span> night{' '}
+                                {`(${USDtoVND(campground.price)}₫)`}
+                            </p>
                         </StyledSection>
 
                         <StyledSection>
@@ -435,9 +444,9 @@ const Campground: React.FunctionComponent = () => {
                         </Card>
 
                         <Link to="/">
-                            <button variant="secondary" className="my-3">
+                            <Button variant="secondary" className="my-3">
                                 Back
-                            </button>
+                            </Button>
                         </Link>
                     </Col>
 
@@ -484,10 +493,7 @@ const Campground: React.FunctionComponent = () => {
                         ) : (
                             <Link to="/login">Login to add your review</Link>
                         )}
-                        <h4 className="font-normal">
-                            {campground.reviews?.length || 0}{' '}
-                            {campground.reviews?.length === 0 ? 'review' : 'reviews'}
-                        </h4>
+                        <h4 className="font-normal">Reviews</h4>
 
                         {campground.reviews?.length > 0 && (
                             <Box
@@ -497,7 +503,11 @@ const Campground: React.FunctionComponent = () => {
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                <p>Average rating: {averageRating(campground)}</p>
+                                <p>
+                                    {campground.reviews?.length || 0}{' '}
+                                    {campground.reviews?.length === 0 ? 'review' : 'reviews'} ·
+                                    Average rating: {averageRating(campground)}
+                                </p>
                                 <Rating
                                     name="read-only"
                                     value={parseFloat(averageRating(campground)) || 1}

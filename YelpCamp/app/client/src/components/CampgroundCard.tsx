@@ -72,7 +72,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                             height={'250px'}
                             style={{
                                 objectFit: 'cover',
-                                borderRadius: '6px',
+                                borderRadius: '8px',
                             }}
                         />
                         <Card.Body className="flex flex-column gap-1">

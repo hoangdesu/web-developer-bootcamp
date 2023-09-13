@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
 import { Col, Container, Row } from 'react-bootstrap';
+import { Pagination } from '@mui/material';
 
 import './App.css';
 import AppContext from './store/app-context';
@@ -82,26 +83,35 @@ const App: React.FunctionComponent = () => {
     // page 3: 24 - 35
     // => index of page x = (page - 1) * 12
     const onPrevPageClick = () => {
+        if (page === 1) return;
         setPage(p => {
             --p;
             const startingIndex = (p - 1) * 12;
-            setFilteredCampgroundList(campgrounds.slice(startingIndex, 12));
-            console.log(p, startingIndex, filteredCampgroundList);
-
+            const endingIndex = startingIndex + 12;
+            setFilteredCampgroundList(campgrounds.slice(startingIndex, endingIndex));
             return p;
         });
     };
 
     const onNextPageClick = () => {
+        const lastPage = Math.ceil(campgrounds.length / 12);
+        if (page === lastPage) return;
         setPage(p => {
             ++p;
             const startingIndex = (p - 1) * 12;
-            setFilteredCampgroundList(campgrounds.slice(startingIndex, 12));
-            console.log(p, startingIndex, filteredCampgroundList);
-
+            const endingIndex = startingIndex + 12;
+            setFilteredCampgroundList(campgrounds.slice(startingIndex, endingIndex));
             return p;
         });
     };
+
+    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value)
+        console.log(value);
+        console.log(event);
+
+        
+    }
 
     return (
         <PageContainer>
@@ -132,7 +142,7 @@ const App: React.FunctionComponent = () => {
 
                         <CampgroundsContainer>
                             {/* TODO: PAGINATION */}
-                            {/* {Array.isArray(filteredCampgroundList) &&
+                            {Array.isArray(filteredCampgroundList) &&
                                 filteredCampgroundList.map(campground => {
                                     return (
                                         <CampgroundCard
@@ -140,9 +150,9 @@ const App: React.FunctionComponent = () => {
                                             campground={campground}
                                         />
                                     );
-                                })} */}
+                                })}
 
-                            {Array.isArray(campgrounds) &&
+                            {/* {Array.isArray(campgrounds) &&
                                 campgrounds.map(campground => {
                                     return (
                                         <CampgroundCard
@@ -150,7 +160,7 @@ const App: React.FunctionComponent = () => {
                                             campground={campground}
                                         />
                                     );
-                                })}
+                                })} */}
                         </CampgroundsContainer>
 
                         {/* TODO: pagination */}
@@ -158,6 +168,17 @@ const App: React.FunctionComponent = () => {
                             <p>Page: {page}</p>
                             <button onClick={onPrevPageClick}>Prev</button>
                             <button onClick={onNextPageClick}>Next</button>
+                        </div>
+
+                        <div className="w-full flex flex-column items-center">
+                            <Pagination
+                                page={page}
+                                count={Math.ceil(campgrounds.length / 12)}
+                                color="secondary"
+                                variant="outlined"
+                                shape="rounded"
+                                onChange={handlePageChange}
+                            />
                         </div>
                     </Col>
                 </Row>

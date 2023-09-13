@@ -5,7 +5,7 @@ export const isAuthor = (appContext, campground) => {
     return false;
 };
 
-export const formatDate = createdTime => {
+export const formatDate = (createdTime: string) => {
     const date = new Date(createdTime);
     const { format } = new Intl.DateTimeFormat('en-US', {
         timeZone: 'Asia/Ho_Chi_Minh',
@@ -40,11 +40,11 @@ export const timeDifference = (current: number, previous: number) => {
     }
 };
 
-const USDtoVND = (usd: number) => {
+export const USDtoVND = (usd: number) => {
     return `${(usd * 24000)
-        .toFixed(1)
+        .toFixed(0)
         .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}₫`;
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
 };
 
 export const formattedPrice = (price: number) => `$${price}/night (~${USDtoVND(price)})`;
