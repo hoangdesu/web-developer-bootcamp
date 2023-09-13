@@ -13,12 +13,6 @@ interface CardProps {
 const StyledCard = styled('div')`
     // can use styled(Card)
     position: relative;
-    /* box-shadow: 0 0 8px #f1e0e0; */
-    /* transition: 0.2s ease;
-
-    /* &:hover {
-        box-shadow: 0px 1px 10px #e0d6d6;
-    } */
 `;
 
 const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
@@ -29,42 +23,6 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                 style={{ textDecoration: 'none', color: '#212529', height: '25em' }}
             >
                 <Row>
-                    {/* // might not need carousel in homepage */}
-                    {/* // TODO: fix this shit again -> Warning: validateDOMNesting(...): <a> cannot appear as a descendant of <a>. */}
-
-                    {/* <Carousel interval={null}>
-                        {campground.images.map((image, index) => (
-                            <Carousel.Item key={`${image.url}-${index}}`}>
-                                <Card.Img
-                                    variant="top"
-                                    src={image.url}
-                                    height={'200'}
-                                    style={{ objectFit: 'cover' }}
-                                />
-                            </Carousel.Item>
-                        ))}
-                    </Carousel> */}
-
-                    {/* <Card.Img
-                        variant="top"
-                        src={campground?.images?.[0]?.url}
-                        height={'250px'}
-                        style={{ objectFit: 'cover' }}
-                    />
-
-                    <Col>
-                        <Card.Body>
-                            <Card.Title>{campground.title}</Card.Title>
-                            <Card.Subtitle>
-                                <small className="text-muted">{campground.location}</small>
-                            </Card.Subtitle>
-                            <Card.Text className="my-3">$ {campground.price}</Card.Text>
-                            <Card.Text className="my-3">
-                                Hosted by {campground.author?.username}
-                            </Card.Text>
-                        </Card.Body>
-                    </Col> */}
-
                     <Col>
                         <Card.Img
                             variant="top"
@@ -87,7 +45,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                                     {campground.location}
                                 </small>
                             </Card.Subtitle>
-                            <div className="mb-4">
+                            <div className="mb-3">
                                 <span className="font-semibold">${campground.price}</span>
                                 <span> night</span>
                             </div>

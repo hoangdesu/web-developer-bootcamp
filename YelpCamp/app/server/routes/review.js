@@ -5,6 +5,10 @@ const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 const middlewares = require('../middlewares/review');
 const controller = require('../controllers/review');
 
+/*
+/* @Route: /api/v1/campgrounds/:campgroundId/reviews
+*/
+
 router.route('/').post(requiresLoggedIn, middlewares.validateReview, controller.addReview);
 
 router

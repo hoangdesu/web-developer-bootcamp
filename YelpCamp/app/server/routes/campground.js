@@ -7,6 +7,10 @@ const controller = require('../controllers/campground');
 
 const { upload } = require('../configs/cloudinary');
 
+/*
+/* @Route: /api/v1/campgrounds 
+*/
+
 router
     .route('/')
     .get(controller.getAllCamgrounds)
@@ -16,6 +20,8 @@ router
         middlewares.validateCampground,
         controller.createCampground,
     );
+
+router.get('/search', controller.searchCampgrounds);
 
 router.get(`/makecampground`, controller.addMockCampground);
 

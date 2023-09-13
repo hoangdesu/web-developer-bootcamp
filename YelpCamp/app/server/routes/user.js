@@ -4,6 +4,10 @@ const passport = require('passport');
 const controller = require('../controllers/user');
 const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 
+/*
+/* @Route: /api/v1/users
+*/
+
 router.route('/').get(controller.getAllUsers).post(controller.createUser);
 
 router.get('/username/:username', controller.getUserByUsername);

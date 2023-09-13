@@ -99,9 +99,7 @@ const App: React.FunctionComponent = () => {
                     <Col>
                         <div className="flex flex-row align-baseline justify-between mb-3">
                             <span className="my-3">
-                                Total: {campgrounds && campgrounds.length}{' '}
-                                campgrounds
-
+                                Total: {campgrounds && campgrounds.length} campgrounds
                                 {/* {`Showing ${(page - 1) * 12 + 1}-${(page - 1) * 12 + 1 + 11} of ${
                                     campgrounds.length
                                 } campgrounds`} */}
@@ -130,8 +128,6 @@ const App: React.FunctionComponent = () => {
                                     );
                                 })}
                         </CampgroundsContainer>
-
-                        
 
                         <div className="w-full flex flex-column items-center mt-5">
                             <Pagination
