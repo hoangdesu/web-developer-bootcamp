@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { Card, Carousel, Image } from 'react-bootstrap';
-import { Campground } from '../types';
+import { Campground } from '../../types';
 
 const ImageThumbnails = styled.div`
     display: flex;

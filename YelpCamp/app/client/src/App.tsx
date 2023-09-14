@@ -14,7 +14,7 @@ import PageContainer from './components/PageContainer';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ClusterMap from './components/ClusterMap';
-import CampgroundCard from './components/CampgroundCard';
+import CampgroundCard from './pages/Campground/CampgroundCard';
 import FlashAlert from './components/FlashAlert';
 import Loading from './pages/Loading';
 import { Campground, User } from './types';

@@ -54,6 +54,12 @@ const campgroundSchema = new Schema(
                 ref: 'Review',
             },
         ],
+        reservations: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Reservation',
+            },
+        ],
     },
     {
         timestamps: true,

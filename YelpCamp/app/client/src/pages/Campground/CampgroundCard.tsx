@@ -2,9 +2,9 @@ import React from 'react';
 import { Card, Row, Col, Image, Button, Carousel } from 'react-bootstrap';
 import { Link, NavLink } from 'react-router-dom';
 
-import { Campground } from '../types';
+import { Campground } from '../../types';
 import styled from '@emotion/styled';
-import { averageRating } from '../helpers/campground';
+import { averageRating } from '../../helpers/campground';
 
 interface CardProps {
     campground: Campground;

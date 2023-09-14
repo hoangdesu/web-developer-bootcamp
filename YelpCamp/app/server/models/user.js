@@ -30,6 +30,12 @@ const userSchema = new Schema(
                 ref: 'Campground',
             },
         ],
+        reservations: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Reservation',
+            },
+        ],
     },
     {
         timestamps: true,

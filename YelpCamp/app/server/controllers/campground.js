@@ -227,10 +227,11 @@ const searchCampgrounds = catchAsync(async (req, res) => {
     const { q: query } = req.query;
 
     if (!query) return res.send([]);
-    
+
     const matchedTitles = await Campground.find({ title: new RegExp(query, 'gi') }); // get all occurrences (g), be case insensitive (i)
     const matchedLocations = await Campground.find({ location: new RegExp(query, 'gi') });
     const results = matchedTitles.concat(matchedLocations);
+    // TODO: concat might give duplicated results. Remove duplicated
     res.send(results);
 });
 

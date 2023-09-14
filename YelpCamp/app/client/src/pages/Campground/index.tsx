@@ -3,7 +3,7 @@ import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQueries, useQuery } from 'react-query';
 import axios from 'axios';
 
-import AppContext from '../store/app-context';
+import AppContext from '../../store/app-context';
 
 import {
     Container,
@@ -27,17 +27,17 @@ import {
     FavoriteBorder,
 } from '@mui/icons-material';
 
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import PageContainer from '../components/PageContainer';
-import Loading from './Loading';
-import Review from '../components/Review';
-import { Review as ReviewType } from '../types';
-import FlashAlert from '../components/FlashAlert';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
+import PageContainer from '../../components/PageContainer';
+import Loading from '../Loading';
+import Review from '../../components/Review';
+import { Review as ReviewType } from '../../types';
+import FlashAlert from '../../components/FlashAlert';
 import { Box, Rating } from '@mui/material';
-import CampgroundCardCarousel from '../components/CampgroundCardCarousel';
-import CampgroundMap from '../components/CampgroundMap';
-import { Campground } from '../types';
+import CampgroundCardCarousel from './CampgroundCardCarousel';
+import CampgroundMap from './CampgroundMap';
+import { Campground } from '../../types';
 import {
     isAuthor,
     formatDate,
@@ -45,9 +45,9 @@ import {
     formattedPrice,
     averageRating,
     USDtoVND,
-} from '../helpers/campground';
+} from '../../helpers/campground';
 import styled from '@emotion/styled';
-import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
+import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -260,7 +260,71 @@ const Campground: React.FunctionComponent = () => {
         </Popover>
     );
 
-    const v1 = (
+    const archivedCard = (
+        <Card>
+            {/* <CampgroundCardCarousel campground={campground} />
+
+                            <Card.Body>
+                                <Card.Title>{campground.title}</Card.Title>
+                                <h2 className="font-bold">{campground.title}</h2>
+                                <Card.Text>{campground.description}</Card.Text>
+                            </Card.Body> */}
+
+            {/* can consider using the card component */}
+            <div>$10 night</div>
+            <div>2 reviews</div>
+            <div>
+                Check in <input type="date" name="" id="" />
+                Check out <input type="date" name="" id="" />
+            </div>
+            <section>
+                <p>$480 x 5 nights ---- $2400</p>
+                <p>Service fee -------- $59</p>
+            </section>
+
+            <section>
+                <p>Total -------------- $2459</p>
+            </section>
+
+            <button className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300 place-self-end">
+                RESERVE →
+            </button>
+
+            <ListGroup className="list-group-flush">
+                <ListGroup.Item className="text-muted">
+                    <LocationOn /> {campground.location}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    <Sell /> {formattedPrice(campground.price)}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    <Person />{' '}
+                    <Link to={`/users/${campground.author?.username}`}>
+                        {campground.author?.username || 'annonymous'}
+                    </Link>
+                </ListGroup.Item>
+                <ListGroup.Item className="text-muted">
+                    <Event />
+                    <OverlayTrigger placement="top" overlay={popover}>
+                        <span>{timeDifference(Date.now(), Date.parse(campground.createdAt))}</span>
+                    </OverlayTrigger>
+                </ListGroup.Item>
+            </ListGroup>
+
+            {isAuthor(appContext, campground) && (
+                <Card.Body>
+                    <Link to={`/campgrounds/${campgroundId}/edit`}>
+                        <Button variant="info">Edit</Button>
+                    </Link>
+                    <Button variant="danger" className="mx-2" onClick={deleteCampgroundHandler}>
+                        Delete
+                    </Button>
+                </Card.Body>
+            )}
+        </Card>
+    );
+
+    return (
         <PageContainer>
             <Navbar />
             <Container className=" my-4 px-[5%]">
@@ -325,7 +389,8 @@ const Campground: React.FunctionComponent = () => {
                             </div>
                             <OverlayTrigger placement="top" overlay={popover}>
                                 <span className="text-muted">
-                                    Created {timeDifference(Date.now(), Date.parse(campground.createdAt))}
+                                    Created{' '}
+                                    {timeDifference(Date.now(), Date.parse(campground.createdAt))}
                                 </span>
                             </OverlayTrigger>
                         </StyledSection>
@@ -348,8 +413,12 @@ const Campground: React.FunctionComponent = () => {
                             </p>
                         </StyledSection>
 
-                        <StyledSection>
-                            // TODO: RESERVE SECTION
+                        {/* TODO RESERVATION SECTION */}
+                        {/* <StyledSection>
+                            
+                        </StyledSection> */}
+
+                        <h4 className="font-normal">Reservation</h4>
                             <ReserveSection>
                                 <div>$10 night</div>
                                 <div>2 reviews</div>
@@ -370,78 +439,6 @@ const Campground: React.FunctionComponent = () => {
                                     RESERVE →
                                 </button>
                             </ReserveSection>
-                        </StyledSection>
-
-                        <Card>
-                            {/* <CampgroundCardCarousel campground={campground} />
-
-                            <Card.Body>
-                                <Card.Title>{campground.title}</Card.Title>
-                                <h2 className="font-bold">{campground.title}</h2>
-                                <Card.Text>{campground.description}</Card.Text>
-                            </Card.Body> */}
-
-                            {/* can consider using the card component */}
-                            <div>$10 night</div>
-                            <div>2 reviews</div>
-                            <div>
-                                Check in <input type="date" name="" id="" />
-                                Check out <input type="date" name="" id="" />
-                            </div>
-                            <section>
-                                <p>$480 x 5 nights ---- $2400</p>
-                                <p>Service fee -------- $59</p>
-                            </section>
-
-                            <section>
-                                <p>Total -------------- $2459</p>
-                            </section>
-
-                            <button className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300 place-self-end">
-                                RESERVE →
-                            </button>
-
-                            <ListGroup className="list-group-flush">
-                                <ListGroup.Item className="text-muted">
-                                    <LocationOn /> {campground.location}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <Sell /> {formattedPrice(campground.price)}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <Person />{' '}
-                                    <Link to={`/users/${campground.author?.username}`}>
-                                        {campground.author?.username || 'annonymous'}
-                                    </Link>
-                                </ListGroup.Item>
-                                <ListGroup.Item className="text-muted">
-                                    <Event />
-                                    <OverlayTrigger placement="top" overlay={popover}>
-                                        <span>
-                                            {timeDifference(
-                                                Date.now(),
-                                                Date.parse(campground.createdAt),
-                                            )}
-                                        </span>
-                                    </OverlayTrigger>
-                                </ListGroup.Item>
-                            </ListGroup>
-
-                            {isAuthor(appContext, campground) && (
-                                <Card.Body>
-                                    <Link to={`/campgrounds/${campgroundId}/edit`}>
-                                        <Button variant="info">Edit</Button>
-                                    </Link>
-                                    <Button
-                                        variant="danger"
-                                        className="mx-2"
-                                        onClick={deleteCampgroundHandler}
-                                    >
-                                        Delete
-                                    </Button>
-                                </Card.Body>
-                            )}
-                        </Card>
 
                         <Link to="/">
                             <Button variant="secondary" className="my-3">
@@ -522,6 +519,7 @@ const Campground: React.FunctionComponent = () => {
 
                         {campground.reviews && (
                             <>
+                                {/* a catchphrase with COLUMBUS, EXPLORING... */}
                                 {campground.reviews?.length === 0 && 'Add your first review!'}
                                 {campground.reviews.map((review: ReviewType) => (
                                     <Review
@@ -535,12 +533,9 @@ const Campground: React.FunctionComponent = () => {
                     </Col>
                 </Row>
             </Container>
-            {/* </div> */}
             <Footer />
         </PageContainer>
     );
-
-    return <>{v1}</>;
 };
 
 export default Campground;

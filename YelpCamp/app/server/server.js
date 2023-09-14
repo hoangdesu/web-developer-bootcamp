@@ -19,11 +19,14 @@ const YelpcampError = require('./utilities/YelpcampError');
 const sessionConfigs = require('./configs/sessionConfigs');
 
 // Routers
+const homeRoutes = require('./routes/home');
 const campgroundRoutes = require('./routes/campground');
 const reviewRoutes = require('./routes/review');
 const userRoutes = require('./routes/user');
 const authRoutes = require('./routes/auth');
+const reservationRoutes = require('./routes/reservation');
 const testingRoutes = require('./routes/testing');
+
 
 // Models
 const User = require('./models/user');
@@ -72,10 +75,12 @@ app.use(morgan('dev'));
 app.use(logger());
 
 // Route handlers
+app.use('/', homeRoutes);
 app.use('/api/v1/campgrounds', campgroundRoutes);
 app.use('/api/v1/campgrounds/:campgroundId/reviews', reviewRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/reservation', reservationRoutes);
 app.use('/testing', testingRoutes);
 
 // 404, place after all route handlers

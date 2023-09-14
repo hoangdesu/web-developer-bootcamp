@@ -50,9 +50,10 @@ const Search = () => {
                 {campgrounds.length} results
                 {campgrounds &&
                     campgrounds.map(campground => (
-                        <div>
+                        <div key={campground._id}>
                             <p>{campground.title}</p>
                             <p>- Location: {campground.location}</p>
+                            <Link to={`/campgrounds/${campground._id}`}>Visit</Link>
                         </div>
                     ))}
             </div>

@@ -12,7 +12,6 @@ import Map, {
 import type { MapRef, MapboxStyle } from 'react-map-gl';
 import { clusterLayer, clusterCountLayer, unclusteredPointLayer } from './layers';
 import { Campground } from '../../types';
-import { Link } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
 import { averageRating } from '../../helpers/campground';
 import PopupBox from './PopupBox';

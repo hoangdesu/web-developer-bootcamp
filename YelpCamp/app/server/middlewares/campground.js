@@ -26,9 +26,11 @@ const validateCampground = (req, res, next) => {
 
     const { error: validationError } = campgroundSchema.validate(body);
 
-    validationError && console.log('validationError:', validationError);
+    if (validationError) {
+        console.log('validationError:', validationError);
+        throw new YelpcampError(500, validationError);
+    }
 
-    if (validationError) throw new YelpcampError(500, validationError);
     next(); // dont forget!
 };
 

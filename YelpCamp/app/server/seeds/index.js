@@ -43,7 +43,7 @@ const seedDatabase = async totalCamps => {
         const randomImages = async () => {
             const { resources } = await cloudinary.api.resources({
                 type: 'upload',
-                prefix: 'YelpCamp', // add your folder
+                prefix: 'YelpCamp',
             });
             console.log('🚀 ~ file: index.js:71 ~ randomImages ~ res:', resources);
 
