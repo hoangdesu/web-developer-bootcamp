@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import axios from 'axios';
 
@@ -12,6 +12,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import FlashAlert from '../components/FlashAlert';
+import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {
@@ -119,9 +120,11 @@ const Login: React.FunctionComponent = () => {
                         </InputGroup>
                     </Form.Group>
 
-                    <Button variant="success" type="submit" className="mt-3">
-                        Login
-                    </Button>
+                    <PrimaryBlackButton>Login</PrimaryBlackButton>
+
+                    <Link to="/register" target="_blank" className="block mt-3 mb-0">
+                        New here? Signup
+                    </Link>
                 </Form>
             </Container>
             <Footer />

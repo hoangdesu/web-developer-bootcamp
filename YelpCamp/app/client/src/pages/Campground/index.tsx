@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
-import { useQueries, useQuery } from 'react-query';
+import { useQueries } from 'react-query';
 import axios from 'axios';
 
 import AppContext from '../../store/app-context';
@@ -57,7 +57,6 @@ export async function loader({ params }) {
 const StyledSection = styled.section`
     /* margin-top: 20px; */
     padding: 20px 0;
-    /* border-bottom: 1px solid rgba(54, 46, 46, 0.1); */
     border-top: 1px solid rgba(54, 46, 46, 0.1);
 `;
 

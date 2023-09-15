@@ -70,13 +70,11 @@ export const getNextStartDays = inputStartDate => {
 export const getDaysBetween = (startDate: string, endDate: string) => {
     const ONE_DAY = 1000 * 60 * 60 * 24;
 
-    // When you subtract a Date object from another Date object (in JavaScript), they both get implicitly converted to a number that represents the milliseconds elapsed between January 1st, 1970 and the given date. => use getTime()
+    // When you subtract a Date object from another Date object (in JavaScript), they both get implicitly converted to a number that represents the milliseconds elapsed between January 1st, 1970 and the given date
+    // => use getTime()
     const differenceMs = Math.round(new Date(endDate).getTime() - new Date(startDate).getTime());
-    // console.log(differenceMs);
 
     const days = Math.round(differenceMs / ONE_DAY);
-    // console.log(startDate, endDate);
-    // console.log(days, 'days');
 
     return days;
 };

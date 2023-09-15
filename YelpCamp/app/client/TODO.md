@@ -15,3 +15,7 @@
 [] replace confirm popups with modals
 https://stackoverflow.com/questions/69520848/how-to-get-distance-between-two-coordinates-with-mapbox
 https://labs.mapbox.com/education/proximity-analysis/point-distance/
+
+[] style Campground page
+[] modal elements
+[] QR payment

@@ -64,8 +64,8 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
 
     // numbers for calculations
     const guestsFee = guests * 5;
-    const campgroundFee = campground.price * days;
-    const totalBeforeTax = campgroundFee + guestsFee;
+    const campgroundFee = Number(campground.price * days).toFixed(2);
+    const totalBeforeTax = Number(campgroundFee + guestsFee).toFixed(2);
     const totalAfterTax = Number(totalBeforeTax * 1.08).toFixed(2); // tax = 8%
     const discount = Number(parseInt(new Date().getDate())).toFixed(2) % 10; // lucky number based on the day. max 10% discount
     const totalAfterDiscount = Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2);
@@ -121,7 +121,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
         setModalType('confirm');
         setModalOpen(true);
     };
-    const handleClose = () => setModalOpen(false);
 
     return (
         <ReserveSection>
@@ -189,6 +188,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                                 }
                                 if (!isNaN(e.currentTarget.value))
                                     setGuests(parseInt(e.currentTarget.value));
+
                                 if (e.currentTarget.value === 0) setGuests(1);
                             }}
                         />
@@ -260,7 +260,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             </button>
             <ReservationModal
                 open={modalOpen}
-                onClose={handleClose}
+                onClose={() => setModalOpen(false)}
                 modalType={modalType}
                 makeReservation={makeReservation}
             />

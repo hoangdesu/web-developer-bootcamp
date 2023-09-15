@@ -13,6 +13,7 @@ interface CardProps {
 const StyledCard = styled('div')`
     // can use styled(Card)
     position: relative;
+    max-width: fit-content;
 `;
 
 const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {

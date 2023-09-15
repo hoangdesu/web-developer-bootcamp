@@ -10,17 +10,17 @@ const PrimaryBlackButton: React.FunctionComponent<ButtonProps> = ({ children, px
     return (
         <button
             className={`my-3 
-                        bg-primary-dark-color 
+                      bg-teal-950
                         text-primary-color 
                         transition 
-                        ease-in-out 
+                        ease-in-out
                         outline-0 
                         px-${px} 
                         py-${py}
                         border-0 
                         hover:text-white 
-                        hover:bg-black 
-                        duration-300 
+                        hover:bg-black
+                        duration-200 
                         place-self-end`}
             type="submit"
         >
@@ -30,3 +30,5 @@ const PrimaryBlackButton: React.FunctionComponent<ButtonProps> = ({ children, px
 };
 
 export default PrimaryBlackButton;
+
+// bg-emerald-400
