@@ -9,7 +9,7 @@ const User = require('../models/user');
 const reservationSchema = require('../schemas/reservation');
 
 module.exports.getAllReservations = catchAsync(async (req, res) => {
-    const reservations = await Reservation.find({});
+    const reservations = await Reservation.find({}).exec();
     res.send(reservations);
 });
 
@@ -18,10 +18,10 @@ module.exports.createReservation = catchAsync(async (req, res) => {
     const { error: joiValidationError } = reservationSchema.validate(req.body);
     if (joiValidationError) throw new YelpcampError(500, joiValidationError);
 
-    const user = await User.findById(bookedBy);
+    const user = await User.findById(bookedBy).exec();
     if (!user) throw new YelpcampError(404, 'User not found');
 
-    const reservedCampground = await Campground.findById(campground);
+    const reservedCampground = await Campground.findById(campground).exec();
     if (!reservedCampground) throw new YelpcampError(404, 'Campground not found');
 
     const newReservation = new Reservation({ ...req.body.reservation });

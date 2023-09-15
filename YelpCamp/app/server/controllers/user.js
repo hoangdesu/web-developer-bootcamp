@@ -11,7 +11,7 @@ const getAllUsers = async (req, res) => {
     res.status(200).json(users);
 };
 
-// POST /api/v1/users\
+// POST /api/v1/users
 const createUser = catchAsync(async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -31,22 +31,20 @@ const createUser = catchAsync(async (req, res) => {
     }
 });
 
-const getUserByUsername = async (req, res, next) => {
-    try {
-        const { username } = req.params;
-        const user = await User.findOne({ username })
-            .select('_id username email')
-            .populate('campgrounds', '_id title price')
-            .populate('favoritedCampgrounds', '_id title images location')
-            .exec();
+// GET /api/v1/users/username/:username
+const getUserByUsername = catchAsync(async (req, res, next) => {
+    const { username } = req.params;
+    const user = await User.findOne({ username })
+        .select('_id username email')
+        .populate('campgrounds', '_id title price')
+        .populate('favoritedCampgrounds', '_id title images location')
+        .populate('reservations')
+        .exec();
 
-        if (!user) return next(new YelpcampError(404, 'User not found'));
+    if (!user) return next(new YelpcampError(404, 'User not found'));
 
-        res.status(200).send(user);
-    } catch (err) {
-        console.error(err);
-    }
-};
+    res.status(200).send(user);
+});
 
 const getUserById = async (req, res) => {
     try {

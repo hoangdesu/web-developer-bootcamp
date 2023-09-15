@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import styled from '@emotion/styled';
 import { Campground } from '../../types';
 import { USDtoVND, getDaysBetween, getNextStartDays } from '../../helpers/campground';
@@ -7,6 +7,9 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import axios from 'axios';
+import AppContext from '../../store/app-context';
+import ReservationModal from './ReservationModal';
 
 interface CampgroundResvervationProps {
     campground: Campground;
@@ -33,11 +36,19 @@ const InputButton = props => (
 );
 
 const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campground }) => {
+    const appContext = useContext(AppContext);
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalType, setModalType] = useState<'login' | 'confirm' | null>(null);
+
     const [inputStartDate, setInputStartDate] = useState<string | null>(null);
     const [inputEndDate, setInputEndDate] = useState<string | null>(null);
     const [minEndDate, setMinEndDate] = useState('');
     const [guests, setGuests] = useState<number>(1);
     const [days, setDays] = useState(getDaysBetween(inputStartDate, inputEndDate));
+
+    const checkinDateRef = useRef(null);
+    const checkoutDateRef = useRef(null);
 
     // input min requires date to be in yyyy-mm-dd format
     // Note that en-CA is a locale, not a timezone. Canada uses the YYYY-MM-DD format.
@@ -59,6 +70,59 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     const discount = Number(parseInt(new Date().getDate())).toFixed(2) % 10; // lucky number based on the day. max 10% discount
     const totalAfterDiscount = Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2);
 
+    const makeReservation = () => {
+        console.log('reserved');
+        return;
+
+        const reservation = {
+            bookedBy: appContext.currentUser.id,
+            campground: campground._id,
+            nights: days,
+            checkIn: inputStartDate,
+            checkOut: inputEndDate,
+            guests: parseInt(guests),
+            totalPrice: totalAfterDiscount,
+            status: 'PENDING',
+        };
+
+        axios.post('/api/v1/reservation/new', { reservation }).then(data => {
+            console.log(data.data);
+        });
+    };
+
+    const handleOpen = () => {
+        if (!inputStartDate) {
+            checkinDateRef.current.showPicker();
+            return;
+        }
+
+        if (!inputEndDate) {
+            checkoutDateRef.current.showPicker();
+            return;
+        }
+
+        if (!appContext.currentUser) {
+            setModalType('login');
+            setModalOpen(true);
+            return;
+        }
+
+        const reservation = {
+            bookedBy: appContext.currentUser.id,
+            campground: campground._id,
+            nights: days,
+            checkIn: inputStartDate,
+            checkOut: inputEndDate,
+            guests: parseInt(guests),
+            totalPrice: totalAfterDiscount,
+            status: 'PENDING',
+        };
+
+        setModalType('confirm');
+        setModalOpen(true);
+    };
+    const handleClose = () => setModalOpen(false);
+
     return (
         <ReserveSection>
             {/* PRICE TAG */}
@@ -74,7 +138,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             </div>
 
             {/* DATE PICKER */}
-            <div className="flex flex-row md:flex-col gap-4 mb-4">
+            <div className="flex flex-row md:flex-col gap-5 mb-4">
                 <div>
                     <Form.Label>Check-in</Form.Label>
                     <Form.Control
@@ -91,9 +155,9 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                             }
                             setInputStartDate(e.currentTarget.value);
                         }}
+                        ref={checkinDateRef}
                     />
                 </div>
-
                 <div>
                     <Form.Label>Checkout</Form.Label>
                     <Form.Control
@@ -102,6 +166,8 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                         onChange={e => {
                             setInputEndDate(e.currentTarget.value);
                         }}
+                        autoFocus={true}
+                        ref={checkoutDateRef}
                     />
                 </div>
             </div>
@@ -156,28 +222,28 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                         <AccordionDetails>
                             <div className="flex flex-row justify-between">
                                 <span>Campground fee</span>
-                                <span>
+                                <span className="text-right">
                                     ${campground.price} × {days} {days > 1 ? 'nights' : 'night'} = $
                                     {campgroundFee}
                                 </span>
                             </div>
                             <div className="flex flex-row justify-between">
                                 <span>Service fee</span>
-                                <span>
+                                <span className="text-right">
                                     $5 × {guests} guests = ${guestsFee}
                                 </span>
                             </div>
 
                             <div className="flex flex-row justify-between">
                                 <span>After taxes</span>
-                                <span>
+                                <span className="text-right">
                                     8% × ${totalBeforeTax} = ${totalAfterTax}
                                 </span>
                             </div>
 
                             <div className="flex flex-row justify-between text-red-500">
                                 <span>After discount</span>
-                                <span>
+                                <span className="text-right">
                                     -{discount}% × ${totalAfterTax} = ${totalAfterDiscount}
                                 </span>
                             </div>
@@ -188,10 +254,16 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
 
             <button
                 className="w-full mt-4 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-3 border-0 hover:text-white hover:bg-black duration-300"
-                // onClick={}
+                onClick={handleOpen}
             >
                 RESERVE →
             </button>
+            <ReservationModal
+                open={modalOpen}
+                onClose={handleClose}
+                modalType={modalType}
+                makeReservation={makeReservation}
+            />
         </ReserveSection>
     );
 };

@@ -26,12 +26,12 @@ const User = () => {
     } = useQuery({
         queryKey: ['userData'],
         queryFn: () => axios.get(`/api/v1/users/username/${username}`).then(res => res.data),
-        onSuccess: (user) => {
+        onSuccess: user => {
             document.title = `YelpCamp | ${user.username}`;
-        }
+        },
     });
 
-    
+    console.log(user);
 
     if (isLoading) return <Loading />;
 
@@ -41,7 +41,7 @@ const User = () => {
         <PageContainer>
             <Navbar />
             <Container className="col-9 my-5">
-                {/* <FlashAlert /> */}
+                <FlashAlert />
                 <p>Username: {user.username}</p>
                 <p>UserId: {user._id}</p>
                 <p>Email: {user.email}</p>
@@ -68,6 +68,21 @@ const User = () => {
                             </div>
                         </li>
                     ))}
+                </ol>
+
+                <h3>Reservations</h3>
+                <ol>
+                    {user.reservations &&
+                        user.reservations.map(resv => {
+                            return (
+                                <li key={resv._id}>
+                                    <div>
+                                        {resv.bookedBy} - {resv.campground} - checkin: {resv.checkIn} -{' '}
+                                        checkOut: {resv.checkOut} - nights: {resv.nights} - guests {resv.guests} - totalPrice: {resv.totalPrice}
+                                    </div>
+                                </li>
+                            );
+                        })}
                 </ol>
                 <Button onClick={() => navigate(-1)}>Back</Button>
             </Container>
