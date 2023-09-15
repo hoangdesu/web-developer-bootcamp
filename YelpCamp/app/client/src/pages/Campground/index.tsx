@@ -31,7 +31,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import PageContainer from '../../components/PageContainer';
 import Loading from '../Loading';
-import Review from '../../components/Review';
+import Review from './Review';
 import { Review as ReviewType } from '../../types';
 import FlashAlert from '../../components/FlashAlert';
 import { Box, Rating } from '@mui/material';
@@ -48,6 +48,7 @@ import {
 } from '../../helpers/campground';
 import styled from '@emotion/styled';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
+import CampgroundReservation from './CampgroundReservation';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -56,16 +57,8 @@ export async function loader({ params }) {
 const StyledSection = styled.section`
     /* margin-top: 20px; */
     padding: 20px 0;
-    border-bottom: 1px solid rgba(54, 46, 46, 0.1);
-`;
-
-const ReserveSection = styled.div`
-    background: white;
-    box-shadow: 0px 1px 5px 5px #d8e7e4; // find better values
-    border: 1px solid pink;
-    border-radius: 8px;
-    padding: 12px;
-    width: fit-content;
+    /* border-bottom: 1px solid rgba(54, 46, 46, 0.1); */
+    border-top: 1px solid rgba(54, 46, 46, 0.1);
 `;
 
 const Campground: React.FunctionComponent = () => {
@@ -388,10 +381,10 @@ const Campground: React.FunctionComponent = () => {
                                 )}
                             </div>
                             <OverlayTrigger placement="top" overlay={popover}>
-                                <span className="text-muted">
+                                <p className="text-muted">
                                     Created{' '}
                                     {timeDifference(Date.now(), Date.parse(campground.createdAt))}
-                                </span>
+                                </p>
                             </OverlayTrigger>
                         </StyledSection>
 
@@ -406,39 +399,9 @@ const Campground: React.FunctionComponent = () => {
                         </StyledSection>
 
                         <StyledSection>
-                            <h4 className="font-normal">Price</h4>
-                            <p>
-                                <span className="font-semibold">${campground.price}</span> night{' '}
-                                {`(${USDtoVND(campground.price)}₫)`}
-                            </p>
+                            <h4 className="font-normal">Reservation</h4>
+                            <CampgroundReservation campground={campground} />
                         </StyledSection>
-
-                        {/* TODO RESERVATION SECTION */}
-                        {/* <StyledSection>
-                            
-                        </StyledSection> */}
-
-                        <h4 className="font-normal">Reservation</h4>
-                            <ReserveSection>
-                                <div>$10 night</div>
-                                <div>2 reviews</div>
-                                <div>
-                                    Check in <input type="date" name="" id="" />
-                                    Check out <input type="date" name="" id="" />
-                                </div>
-                                <section>
-                                    <p>$480 x 5 nights ---- $2400</p>
-                                    <p>Service fee -------- $59</p>
-                                </section>
-
-                                <section>
-                                    <p>Total -------------- $2459</p>
-                                </section>
-
-                                <button className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300">
-                                    RESERVE →
-                                </button>
-                            </ReserveSection>
 
                         <Link to="/">
                             <Button variant="secondary" className="my-3">

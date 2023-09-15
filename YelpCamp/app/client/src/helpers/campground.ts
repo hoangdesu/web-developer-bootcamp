@@ -41,7 +41,7 @@ export const timeDifference = (current: number, previous: number) => {
 };
 
 export const USDtoVND = (usd: number) => {
-    return `${(usd * 24000)
+    return `${(usd * 25000)
         .toFixed(0)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
@@ -56,4 +56,27 @@ export const averageRating = (campground: Campground) => {
     ).toFixed(1);
     if (result === 'NaN') return 'New';
     return result;
+};
+
+export const getNextStartDays = inputStartDate => {
+    const ONE_DAY = 1000 * 60 * 60 * 24;
+    const startDate = new Date(inputStartDate);
+    const nextDate = new Date(startDate.getTime() + ONE_DAY);
+    const nextDateStr = nextDate.toISOString().slice(0, 10);
+    // console.log(nextDateStr);
+    return nextDateStr;
+};
+
+export const getDaysBetween = (startDate: string, endDate: string) => {
+    const ONE_DAY = 1000 * 60 * 60 * 24;
+
+    // When you subtract a Date object from another Date object (in JavaScript), they both get implicitly converted to a number that represents the milliseconds elapsed between January 1st, 1970 and the given date. => use getTime()
+    const differenceMs = Math.round(new Date(endDate).getTime() - new Date(startDate).getTime());
+    // console.log(differenceMs);
+
+    const days = Math.round(differenceMs / ONE_DAY);
+    // console.log(startDate, endDate);
+    // console.log(days, 'days');
+
+    return days;
 };

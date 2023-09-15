@@ -5,8 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { Card, Form } from 'react-bootstrap';
 import { Check, Clear, Delete, MoreHoriz } from '@mui/icons-material';
-import { Review } from '../types';
-import AppContext from '../store/app-context';
+import { Review } from '../../types';
+import AppContext from '../../store/app-context';
 import { Rating } from '@mui/material';
 
 interface ReviewProps {
@@ -127,7 +127,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
 
     const isEdited = () => {
         if (review.createdAt !== review.updatedAt) {
-            return <small className="text-muted">(Edited)</small>;
+            return <small className="text-muted">(edited)</small>;
         }
     };
 
