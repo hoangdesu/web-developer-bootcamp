@@ -14,7 +14,11 @@ const InputGroupText = styled(InputGroup.Text)`
     }
 `;
 
-const ModalLogin = () => {
+interface ModalLoginProps {
+    setModalType: React.Dispatch<React.SetStateAction<'login' | 'confirm'>>;
+}
+
+const ModalLogin: React.FC<ModalLoginProps> = ({ setModalType }) => {
     const [validated, setValidated] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -50,8 +54,7 @@ const ModalLogin = () => {
                         });
                         appContext.setCurrentUser(resp.data);
                         localStorage.setItem('currentUser', JSON.stringify(resp.data));
-                        navigate(-1); // back to previous page
-                        // navigate('/');
+                        setModalType('confirm');
                     });
                 })
                 .catch(err => {

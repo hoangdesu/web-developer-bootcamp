@@ -39,7 +39,9 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     const appContext = useContext(AppContext);
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalType, setModalType] = useState<'login' | 'confirm' | null>(null);
+    const [modalType, setModalType] = useState<'login' | 'confirm'>('login');
+
+    // const [modal, setModal] = useState()
 
     const [inputStartDate, setInputStartDate] = useState<string | null>(null);
     const [inputEndDate, setInputEndDate] = useState<string | null>(null);
@@ -63,8 +65,9 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     }, [inputStartDate, inputEndDate]);
 
     // numbers for calculations
-    const guestsFee = guests * 5;
+    // TODO: check calculations
     const campgroundFee = Number(campground.price * days).toFixed(2);
+    const guestsFee = guests * 5;
     const totalBeforeTax = Number(campgroundFee + guestsFee).toFixed(2);
     const totalAfterTax = Number(totalBeforeTax * 1.08).toFixed(2); // tax = 8%
     const discount = Number(parseInt(new Date().getDate())).toFixed(2) % 10; // lucky number based on the day. max 10% discount
@@ -263,6 +266,8 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                 onClose={() => setModalOpen(false)}
                 modalType={modalType}
                 makeReservation={makeReservation}
+                setModalType={setModalType}
+
             />
         </ReserveSection>
     );

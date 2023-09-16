@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -21,7 +21,7 @@ const style = {
 };
 
 const ReservationModal = props => {
-    const { modalType, makeReservation } = props;
+    const { modalType, makeReservation, setModalType } = props;
     const modalProps = {
         open: props.open,
         onClose: props.onClose,
@@ -57,9 +57,15 @@ const ReservationModal = props => {
     //     });
     // };
 
-    console.log(modalType);
+    console.log('modalType', modalType);
 
-    const [content, setContent] = useState(getModalContent(modalType));
+    const [content, setContent] = useState<React.ReactNode>(
+        getModalContent(modalType, setModalType),
+    );
+
+    useEffect(() => {
+        setContent(getModalContent(modalType, setModalType));
+    }, [setContent, setModalType, modalType]);
 
     console.log(content);
 

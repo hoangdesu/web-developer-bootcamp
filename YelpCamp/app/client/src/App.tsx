@@ -133,10 +133,15 @@ const App: React.FunctionComponent = () => {
                             <Pagination
                                 page={page}
                                 count={Math.ceil(campgrounds.length / 12)}
-                                color="primary"
+                                color="secondary"
                                 variant="outlined"
                                 shape="rounded"
                                 onChange={handlePageChange}
+                                disabled
+                                style={{
+                                    border: '1px solid red',
+                                    // backgroundColor: 'black'
+                                }}
                             />
                         </div>
                     </Col>
