@@ -78,8 +78,10 @@ const User = () => {
                                 <li key={resv._id}>
                                     <div>
                                         {resv.bookedBy} - {resv.campground} - checkin: {resv.checkIn} -{' '}
-                                        checkOut: {resv.checkOut} - nights: {resv.nights} - guests {resv.guests} - totalPrice: {resv.totalPrice}
+                                        checkOut: {resv.checkOut} - nights: {resv.nights} - guests {resv.guests} - totalPrice: {resv.totalPrice} - status: {resv.status}
+
                                     </div>
+                                    <div><Link to={`/reservation/${resv._id}/confirm`}>{resv._id}</Link></div>
                                 </li>
                             );
                         })}

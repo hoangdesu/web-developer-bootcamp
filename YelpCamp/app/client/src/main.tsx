@@ -21,7 +21,8 @@ import Login from './pages/Login';
 import User, { loader as usernameLoader } from './pages/User';
 import Testing from './pages/Testing';
 import Search from './pages/Search';
-import Reservation from './pages/Reservation';
+import Reservation, { loader as resvLoader } from './pages/Reservation';
+import Confirm from './pages/Confirm';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -80,12 +81,18 @@ const router = createBrowserRouter([
     {
         path: '/search',
         element: <Search />,
-        // loader: usernameLoader,
+        errorElement: <ErrorBoundary />,
+    },
+    {
+        path: '/reservation/:reservationId',
+        element: <Reservation />,
+        loader: resvLoader,
         errorElement: <ErrorBoundary />,
     },
     {
         path: '/reservation/:reservationId/confirm',
-        element: <Reservation />,
+        element: <Confirm />,
+        loader: resvLoader,
         errorElement: <ErrorBoundary />,
     },
     {

@@ -5,17 +5,28 @@ import Modal from '@mui/material/Modal';
 import { getModalContent } from '../../helpers/modal';
 
 const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    // bottom: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -70%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '1px solid #222325',
-    borderRadius: '6px',
-    boxShadow: 24,
-    p: 4,
+    position: 'fixed',
+    top: '20vh',
+    left: 'calc(50% - (400px/2))',
+    transform: 'translate(-50%, -50%)',
+    width: '400px',
+    backgroundColor: 'white',
+    padding: '1rem',
+    borderRadius: '12px',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+    zIndex: '100',
+    animation: 'slide-down 300ms ease-out forwards',
+
+    '@keyframes slide-down': {
+        from: {
+            opacity: 0,
+            transform: 'translateY(-3rem)',
+        },
+        to: {
+            opacity: '1',
+            transform: 'translateY(0)',
+        },
+    },
 };
 
 const ReservationModal = props => {
@@ -79,12 +90,3 @@ const ReservationModal = props => {
 };
 
 export default ReservationModal;
-
-{
-    /* <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Reserve confirm
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                </Typography> */
-}

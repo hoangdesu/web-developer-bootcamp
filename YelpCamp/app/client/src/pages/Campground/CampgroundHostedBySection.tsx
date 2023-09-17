@@ -11,6 +11,18 @@ interface SectionProps {
     campground: Campground;
 }
 
+const EditButton = styled.button`
+    border: 1px solid black;
+    background-color: transparent;
+    padding: 4px 20px;
+    font-size: 14px;
+    height: fit-content;
+    &:hover {
+        color: white;
+        background-color: black;
+    }
+`
+
 const CampgroundHostedBySection: React.FC<SectionProps> = ({ campground }) => {
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
@@ -78,24 +90,25 @@ const CampgroundHostedBySection: React.FC<SectionProps> = ({ campground }) => {
                 {isAuthor(appContext, campground) && (
                     <div className="flex gap-2">
                         {/* <StyledLink to={`/campgrounds/${campground._id}/edit`}>Edit</StyledLink> */}
-                        <button
+                        {/* <button
                             className="
-                        bg-emerald-700
-                        text-primary-color 
+                        bg-transparent
+                        text-primary-dark-color 
                         transition 
                         ease-in-out
-                        outline-0 
-                        px-3
+                        outline-0
+                        px-2
                         py-1
-                        border-0
-                        rounded
+                        border-[1px]
                         m-0
                         "
-                            onClick={() => navigate(`/campgrounds/${campground._id}/edit`)}
+                        onClick={() => navigate(`/campgrounds/${campground._id}/edit`)}
+                            // rounded
                         >
                             Edit
-                        </button>
-                        <button
+                        </button> */}
+                        <EditButton onClick={() => navigate(`/campgrounds/${campground._id}/edit`)}>Edit</EditButton>
+                        {/* <button
                             className="
                                 bg-red-700
                                 text-primary-color 
@@ -105,13 +118,13 @@ const CampgroundHostedBySection: React.FC<SectionProps> = ({ campground }) => {
                                 px-3
                                 py-1
                                 border-0
-                                rounded
                                 m-0
                                 "
-                            onClick={deleteCampgroundHandler}
+                                onClick={deleteCampgroundHandler}
+                                // rounded
                         >
                             Delete
-                        </button>
+                        </button> */}
                     </div>
                 )}
             </div>

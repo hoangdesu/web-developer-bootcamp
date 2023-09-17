@@ -170,6 +170,19 @@ const Campground: React.FunctionComponent = () => {
         navigate('/');
     }
 
+    const EditButton = styled.button`
+        border: 1px solid black;
+        background-color: transparent;
+        padding: 4px 20px;
+        /* font-size: 14px; */
+        height: fit-content;
+        color: inherit;
+        &:hover {
+            color: white;
+            background-color: black;
+        }
+    `;
+
     return (
         <PageContainer>
             <Navbar />
@@ -178,8 +191,12 @@ const Campground: React.FunctionComponent = () => {
                 <Row className="mb-3">
                     <Col>
                         <section className="my-2">
-                            <h1 className="font-normal">{campground.title}</h1>
-                            <div className="flex flex-row justify-between">
+                            <div className="flex flex-row justify-between items-center">
+                                <h1 className="font-normal">{campground.title}</h1>
+
+                                <EditButton>Edit</EditButton>
+                            </div>
+                            <div className="flex flex-row justify-between gap-3">
                                 {/* TODO: fix */}
                                 <span>
                                     ★ {averageRating(campground)} · {campground.reviews?.length}{' '}

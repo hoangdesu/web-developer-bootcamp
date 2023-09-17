@@ -10,6 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import axios from 'axios';
 import AppContext from '../../store/app-context';
 import ReservationModal from './ReservationModal';
+import { useNavigate } from 'react-router-dom';
 
 interface CampgroundResvervationProps {
     campground: Campground;
@@ -37,6 +38,7 @@ const InputButton = props => (
 
 const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campground }) => {
     const appContext = useContext(AppContext);
+    const navigate = useNavigate();
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modalType, setModalType] = useState<'login' | 'confirm'>('login');
@@ -48,12 +50,18 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     const [days, setDays] = useState(getDaysBetween(inputStartDate, inputEndDate));
 
     // numbers for calculations
-    const [campgroundFee, setCampgroundFee] = useState(Number(campground.price * days).toFixed(2))
+    const [campgroundFee, setCampgroundFee] = useState(Number(campground.price * days).toFixed(2));
     const [guestsFee, setGuestsFee] = useState(guests * 5);
-    const [totalBeforeTax, setTotalBeforeTax] = useState(Number(campgroundFee + guestsFee).toFixed(2));
+    const [totalBeforeTax, setTotalBeforeTax] = useState(
+        Number(campgroundFee + guestsFee).toFixed(2),
+    );
     const [totalAfterTax, setTotalAfterTax] = useState(Number(totalBeforeTax * 1.08).toFixed(2)); // tax = 8%
-    const [discount, setDiscount] = useState(Number(parseInt(new Date().getDate())).toFixed(2) % 10);
-    const [totalAfterDiscount, setTotalAfterDiscount] = useState(Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2));
+    const [discount, setDiscount] = useState(
+        Number(parseInt(new Date().getDate())).toFixed(2) % 10,
+    );
+    const [totalAfterDiscount, setTotalAfterDiscount] = useState(
+        Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2),
+    );
 
     const checkinDateRef = useRef(null);
     const checkoutDateRef = useRef(null);
@@ -80,8 +88,8 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     // const totalAfterDiscount = Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2);
 
     const makeReservation = () => {
-        console.log('reserved');
-        return;
+        // console.log('reserved');
+        // return;
 
         const reservation = {
             bookedBy: appContext.currentUser.id,
@@ -96,10 +104,11 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
 
         axios.post('/api/v1/reservation/new', { reservation }).then(data => {
             console.log(data.data);
+            navigate(`/reservation/${data.data._id}`);
         });
     };
 
-    const handleOpen = () => {
+    const reserveHandler = () => {
         if (!inputStartDate) {
             checkinDateRef.current.showPicker();
             return;
@@ -262,18 +271,19 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
 
             <button
                 className="w-full mt-4 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-3 border-0 hover:text-white hover:bg-black duration-300"
-                onClick={handleOpen}
+                onClick={reserveHandler}
             >
                 RESERVE →
             </button>
             <ReservationModal
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
-                modalType={modalType}
                 makeReservation={makeReservation}
+                modalType={modalType}
                 setModalType={setModalType}
-
             />
+
+            <button onClick={makeReservation}>Test reserve</button>
         </ReserveSection>
     );
 };
