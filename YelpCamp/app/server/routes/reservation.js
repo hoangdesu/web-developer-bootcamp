@@ -13,4 +13,6 @@ router.get('/:id', controller.getReservationById);
 
 router.post('/new', controller.createReservation);
 
+router.get('/:id/qr', controller.getQRCode);
+
 module.exports = router;

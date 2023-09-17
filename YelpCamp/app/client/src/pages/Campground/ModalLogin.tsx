@@ -101,7 +101,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ setModalType }) => {
                     </InputGroup>
                 </Form.Group>
                 <PrimaryBlackButton>Login</PrimaryBlackButton>
-                <Link to="/register" target="_blank" className="block mt-3 mb-0">
+                <Link to="/register" className="block mt-3 mb-0">
                     New here? Signup
                 </Link>
             </Form>

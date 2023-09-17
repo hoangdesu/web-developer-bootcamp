@@ -19,7 +19,7 @@ const PrimaryBlackButton: React.FunctionComponent<ButtonProps> = ({ children, px
                         py-${py}
                         border-0 
                         hover:text-white 
-                        hover:bg-emerald-600
+                        hover:bg-emerald-700
                         duration-200 
                         place-self-end`}
             type="submit"

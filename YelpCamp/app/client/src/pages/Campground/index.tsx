@@ -5,27 +5,8 @@ import axios from 'axios';
 
 import AppContext from '../../store/app-context';
 
-import {
-    Container,
-    Button,
-    Card,
-    ListGroup,
-    Form,
-    Col,
-    Row,
-    Popover,
-    OverlayTrigger,
-    Image,
-} from 'react-bootstrap';
-import {
-    LocationOn,
-    Sell,
-    Person,
-    Star,
-    Event,
-    Favorite,
-    FavoriteBorder,
-} from '@mui/icons-material';
+import { Container, Button, Form, Col, Row } from 'react-bootstrap';
+import { Star, Favorite, FavoriteBorder } from '@mui/icons-material';
 
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -38,17 +19,11 @@ import { Box, Rating } from '@mui/material';
 import CampgroundCardCarousel from './CampgroundCardCarousel';
 import CampgroundMap from './CampgroundMap';
 import { Campground } from '../../types';
-import {
-    isAuthor,
-    formatDate,
-    timeDifference,
-    formattedPrice,
-    averageRating,
-    USDtoVND,
-} from '../../helpers/campground';
+import { averageRating } from '../../helpers/campground';
 import styled from '@emotion/styled';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 import CampgroundReservation from './CampgroundReservation';
+import CampgroundHostedBySection from './CampgroundHostedBySection';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -72,14 +47,6 @@ const Campground: React.FunctionComponent = () => {
 
     const [campground, setCampground] = useState<Campground | null>(null);
     const [isFavorited, setIsFavorited] = useState(false);
-
-    // const { isLoading, error, isError, data, refetch } = useQuery({
-    //     queryKey: ['campgroundData'],
-    //     queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
-    //     onSuccess: data => {
-    //         setCampground(data); // setting campground specifically to ensure new data
-    //     },
-    // });
 
     const [campgroundQuery, favoritedCampgroundsQuery] = useQueries([
         {
@@ -168,48 +135,6 @@ const Campground: React.FunctionComponent = () => {
         setValidated(true);
     };
 
-    const deleteCampgroundHandler = () => {
-        // TODO: replace with Modal
-        if (confirm(`Delete ${campground.title}?`)) {
-            axios
-                .delete(`/api/v1/campgrounds/${campgroundId}`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: appContext.currentUser.id.toString(),
-                    },
-                })
-                .then(() => {
-                    appContext.setAlert({
-                        message: 'Deleted campground successfully',
-                        variant: 'warning',
-                    });
-                    navigate('/');
-                })
-                .catch(err => {
-                    // TODO: write a error handling function for navigating
-                    console.error(err);
-                    let message = '';
-                    if (err.response.status === 401) {
-                        message = 'Unauthorized to delete campground. Please log in again.';
-                        appContext.setAlert({
-                            message,
-                            variant: 'danger',
-                        });
-                        navigate('/login');
-                    } else if (err.response.status === 403) {
-                        message = 'Unauthorized to delete campground';
-                    } else {
-                        message = `${err.response.status} - ${err.response.data}`;
-                    }
-                    appContext.setAlert({
-                        message,
-                        variant: 'danger',
-                    });
-                    // appContext.setCurrentUser(null);
-                });
-        }
-    };
-
     const toggleFavoriteCampground = evt => {
         if (!appContext.currentUser) {
             appContext.setAlert({
@@ -244,77 +169,6 @@ const Campground: React.FunctionComponent = () => {
         });
         navigate('/');
     }
-
-    const popover = (
-        <Popover id="popover-basic">
-            <Popover.Header as="h4">Created at</Popover.Header>
-            <Popover.Body>{formatDate(campground.createdAt)}</Popover.Body>
-        </Popover>
-    );
-
-    const archivedCard = (
-        <Card>
-            {/* <CampgroundCardCarousel campground={campground} />
-
-                            <Card.Body>
-                                <Card.Title>{campground.title}</Card.Title>
-                                <h2 className="font-bold">{campground.title}</h2>
-                                <Card.Text>{campground.description}</Card.Text>
-                            </Card.Body> */}
-
-            {/* can consider using the card component */}
-            <div>$10 night</div>
-            <div>2 reviews</div>
-            <div>
-                Check in <input type="date" name="" id="" />
-                Check out <input type="date" name="" id="" />
-            </div>
-            <section>
-                <p>$480 x 5 nights ---- $2400</p>
-                <p>Service fee -------- $59</p>
-            </section>
-
-            <section>
-                <p>Total -------------- $2459</p>
-            </section>
-
-            <button className="my-3 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-2 border-0 hover:text-white hover:bg-black duration-300 place-self-end">
-                RESERVE →
-            </button>
-
-            <ListGroup className="list-group-flush">
-                <ListGroup.Item className="text-muted">
-                    <LocationOn /> {campground.location}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                    <Sell /> {formattedPrice(campground.price)}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                    <Person />{' '}
-                    <Link to={`/users/${campground.author?.username}`}>
-                        {campground.author?.username || 'annonymous'}
-                    </Link>
-                </ListGroup.Item>
-                <ListGroup.Item className="text-muted">
-                    <Event />
-                    <OverlayTrigger placement="top" overlay={popover}>
-                        <span>{timeDifference(Date.now(), Date.parse(campground.createdAt))}</span>
-                    </OverlayTrigger>
-                </ListGroup.Item>
-            </ListGroup>
-
-            {isAuthor(appContext, campground) && (
-                <Card.Body>
-                    <Link to={`/campgrounds/${campgroundId}/edit`}>
-                        <Button variant="info">Edit</Button>
-                    </Link>
-                    <Button variant="danger" className="mx-2" onClick={deleteCampgroundHandler}>
-                        Delete
-                    </Button>
-                </Card.Body>
-            )}
-        </Card>
-    );
 
     return (
         <PageContainer>
@@ -358,33 +212,7 @@ const Campground: React.FunctionComponent = () => {
                         <CampgroundCardCarousel campground={campground} />
 
                         <StyledSection>
-                            <div className="flex flex-row justify-between">
-                                <h4 className="font-normal">
-                                    Campground hosted by{' '}
-                                    <Link
-                                        to={`/users/${campground.author?.username}`}
-                                        className="text-primary-dark-color"
-                                    >
-                                        {campground.author?.username || 'annonymous'}
-                                    </Link>
-                                </h4>
-
-                                {/* show buttons to edit and delete campground for author */}
-                                {isAuthor(appContext, campground) && (
-                                    <div>
-                                        <Link to={`/campgrounds/${campgroundId}/edit`}>
-                                            <button>Edit</button>
-                                        </Link>
-                                        <button onClick={deleteCampgroundHandler}>Delete</button>
-                                    </div>
-                                )}
-                            </div>
-                            <OverlayTrigger placement="top" overlay={popover}>
-                                <p className="text-muted">
-                                    Created{' '}
-                                    {timeDifference(Date.now(), Date.parse(campground.createdAt))}
-                                </p>
-                            </OverlayTrigger>
+                            <CampgroundHostedBySection campground={campground} />
                         </StyledSection>
 
                         <StyledSection>

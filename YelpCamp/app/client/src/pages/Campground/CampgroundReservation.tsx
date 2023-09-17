@@ -41,13 +41,19 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     const [modalOpen, setModalOpen] = useState(false);
     const [modalType, setModalType] = useState<'login' | 'confirm'>('login');
 
-    // const [modal, setModal] = useState()
-
     const [inputStartDate, setInputStartDate] = useState<string | null>(null);
     const [inputEndDate, setInputEndDate] = useState<string | null>(null);
     const [minEndDate, setMinEndDate] = useState('');
     const [guests, setGuests] = useState<number>(1);
     const [days, setDays] = useState(getDaysBetween(inputStartDate, inputEndDate));
+
+    // numbers for calculations
+    const [campgroundFee, setCampgroundFee] = useState(Number(campground.price * days).toFixed(2))
+    const [guestsFee, setGuestsFee] = useState(guests * 5);
+    const [totalBeforeTax, setTotalBeforeTax] = useState(Number(campgroundFee + guestsFee).toFixed(2));
+    const [totalAfterTax, setTotalAfterTax] = useState(Number(totalBeforeTax * 1.08).toFixed(2)); // tax = 8%
+    const [discount, setDiscount] = useState(Number(parseInt(new Date().getDate())).toFixed(2) % 10);
+    const [totalAfterDiscount, setTotalAfterDiscount] = useState(Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2));
 
     const checkinDateRef = useRef(null);
     const checkoutDateRef = useRef(null);
@@ -66,12 +72,12 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
 
     // numbers for calculations
     // TODO: check calculations
-    const campgroundFee = Number(campground.price * days).toFixed(2);
-    const guestsFee = guests * 5;
-    const totalBeforeTax = Number(campgroundFee + guestsFee).toFixed(2);
-    const totalAfterTax = Number(totalBeforeTax * 1.08).toFixed(2); // tax = 8%
-    const discount = Number(parseInt(new Date().getDate())).toFixed(2) % 10; // lucky number based on the day. max 10% discount
-    const totalAfterDiscount = Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2);
+    // const campgroundFee = Number(campground.price * days).toFixed(2);
+    // const guestsFee = guests * 5;
+    // const totalBeforeTax = Number(campgroundFee + guestsFee).toFixed(2);
+    // const totalAfterTax = Number(totalBeforeTax * 1.08).toFixed(2); // tax = 8%
+    // const discount = Number(parseInt(new Date().getDate())).toFixed(2) % 10; // lucky number based on the day. max 10% discount
+    // const totalAfterDiscount = Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2);
 
     const makeReservation = () => {
         console.log('reserved');
@@ -168,7 +174,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                         onChange={e => {
                             setInputEndDate(e.currentTarget.value);
                         }}
-                        autoFocus={true}
                         ref={checkoutDateRef}
                     />
                 </div>

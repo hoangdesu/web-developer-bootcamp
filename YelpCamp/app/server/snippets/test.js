@@ -59,4 +59,4 @@ const testMapbox = async () => {
     })
 };
 
-testMapbox();
+// testMapbox();
