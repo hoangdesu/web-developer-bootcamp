@@ -19,7 +19,7 @@ import FlashAlert from './components/FlashAlert';
 import Loading from './pages/Loading';
 import { Campground, User } from './types';
 import ErrorBoundary from './pages/ErrorBoundary';
-import PrimaryBlackButton from './components/Buttons/PrimaryBlackButton';
+import SearchBox from './components/SearchBox';
 
 const CampgroundsContainer = styled.div`
     display: grid;
@@ -29,14 +29,11 @@ const CampgroundsContainer = styled.div`
 
 declare global {
     namespace JSX {
-      interface IntrinsicElements {
-        'qr-code': React.DetailedHTMLProps<
-          React.HTMLAttributes<HTMLElement>,
-          HTMLElement
-        >;
-      }
+        interface IntrinsicElements {
+            'qr-code': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+        }
     }
-  }
+}
 
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
@@ -106,28 +103,17 @@ const App: React.FunctionComponent = () => {
                 <FlashAlert />
                 <ClusterMap campgrounds={campgrounds} />
 
-                <Row className="justify-content-center my-5">
+                <Row className="justify-content-center my-4">
                     <Col>
-                        <div className="flex flex-row align-baseline justify-between mb-3">
-                            <span className="my-3">
-                                Total: {campgrounds && campgrounds.length} campgrounds
-                                {/* {`Showing ${(page - 1) * 12 + 1}-${(page - 1) * 12 + 1 + 11} of ${
-                                    campgrounds.length
-                                } campgrounds`} */}
-                            </span>
-                            <form action="" onSubmit={onSearchSubmit}>
-                                <input
-                                    type="text"
-                                    placeholder="Search campground..."
-                                    ref={searchRef}
-                                    className="px-3"
-                                />
-                                <PrimaryBlackButton px={4} py={1}>
-                                    Search
-                                </PrimaryBlackButton>
-                            </form>
+                        <div className="flex flex-row items-center align-middle justify-between mb-3">
+                            <h3 className="my-4">
+                                {/* Total: {campgrounds && campgrounds.length} campgrounds */}
+                                Explore campgrounds
+                            </h3>
+                            <SearchBox />
                         </div>
 
+                        {/* <h3 className="my-5">Browse campgrounds</h3> */}
                         <CampgroundsContainer>
                             {Array.isArray(filteredCampgroundList) &&
                                 filteredCampgroundList.map(campground => {
@@ -148,11 +134,6 @@ const App: React.FunctionComponent = () => {
                                 variant="outlined"
                                 shape="rounded"
                                 onChange={handlePageChange}
-                                disabled
-                                style={{
-                                    border: '1px solid red',
-                                    // backgroundColor: 'black'
-                                }}
                             />
                         </div>
                     </Col>

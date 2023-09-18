@@ -17,56 +17,17 @@ const EditButton = styled.button`
     padding: 4px 20px;
     font-size: 14px;
     height: fit-content;
+    transition: 100ms ease;
     &:hover {
-        color: white;
-        background-color: black;
+        color: #fffcf9;
+        background-color: #222325;
     }
-`
+`;
 
 const CampgroundHostedBySection: React.FC<SectionProps> = ({ campground }) => {
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
-    const deleteCampgroundHandler = () => {
-        // TODO: replace with Modal
-        if (confirm(`Delete ${campground.title}?`)) {
-            axios
-                .delete(`/api/v1/campgrounds/${campgroundId}`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: appContext.currentUser.id.toString(),
-                    },
-                })
-                .then(() => {
-                    appContext.setAlert({
-                        message: 'Deleted campground successfully',
-                        variant: 'warning',
-                    });
-                    navigate('/');
-                })
-                .catch(err => {
-                    // TODO: write a error handling function for navigating
-                    console.error(err);
-                    let message = '';
-                    if (err.response.status === 401) {
-                        message = 'Unauthorized to delete campground. Please log in again.';
-                        appContext.setAlert({
-                            message,
-                            variant: 'danger',
-                        });
-                        navigate('/login');
-                    } else if (err.response.status === 403) {
-                        message = 'Unauthorized to delete campground';
-                    } else {
-                        message = `${err.response.status} - ${err.response.data}`;
-                    }
-                    appContext.setAlert({
-                        message,
-                        variant: 'danger',
-                    });
-                    // appContext.setCurrentUser(null);
-                });
-        }
-    };
+    
     const popover = (
         <Popover id="popover-basic">
             <Popover.Header as="h5">Created at</Popover.Header>
@@ -89,42 +50,9 @@ const CampgroundHostedBySection: React.FC<SectionProps> = ({ campground }) => {
                 {/* show buttons to edit and delete campground for author */}
                 {isAuthor(appContext, campground) && (
                     <div className="flex gap-2">
-                        {/* <StyledLink to={`/campgrounds/${campground._id}/edit`}>Edit</StyledLink> */}
-                        {/* <button
-                            className="
-                        bg-transparent
-                        text-primary-dark-color 
-                        transition 
-                        ease-in-out
-                        outline-0
-                        px-2
-                        py-1
-                        border-[1px]
-                        m-0
-                        "
-                        onClick={() => navigate(`/campgrounds/${campground._id}/edit`)}
-                            // rounded
-                        >
+                        <EditButton onClick={() => navigate(`/campgrounds/${campground._id}/edit`)}>
                             Edit
-                        </button> */}
-                        <EditButton onClick={() => navigate(`/campgrounds/${campground._id}/edit`)}>Edit</EditButton>
-                        {/* <button
-                            className="
-                                bg-red-700
-                                text-primary-color 
-                                transition 
-                                ease-in-out
-                                outline-0 
-                                px-3
-                                py-1
-                                border-0
-                                m-0
-                                "
-                                onClick={deleteCampgroundHandler}
-                                // rounded
-                        >
-                            Delete
-                        </button> */}
+                        </EditButton>
                     </div>
                 )}
             </div>

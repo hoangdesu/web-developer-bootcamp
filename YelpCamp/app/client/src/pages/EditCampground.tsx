@@ -1,4 +1,3 @@
-
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
@@ -99,13 +98,6 @@ const EditCampground: React.FunctionComponent = () => {
 
             deletingImages.forEach(img => formData.append('deletingImages[]', img));
 
-            // Array.from(formData.keys()).forEach(key => {
-            //     console.log(key, formData.get(key))
-            // });
-
-            // console.log(formData.getAll('deletingImages[]'))
-            // return;
-
             axios
                 .put(`/api/v1/campgrounds/${campground._id}`, formData, {
                     headers: {
@@ -135,6 +127,48 @@ const EditCampground: React.FunctionComponent = () => {
                 });
         }
         setValidated(true);
+    };
+
+    const deleteCampgroundHandler = () => {
+        // TODO: replace with Modal
+        if (confirm(`Delete ${campground.title}?`)) {
+            axios
+                .delete(`/api/v1/campgrounds/${campgroundId}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: appContext.currentUser.id.toString(),
+                    },
+                })
+                .then(() => {
+                    appContext.setAlert({
+                        message: 'Deleted campground successfully',
+                        variant: 'warning',
+                    });
+                    navigate('/');
+                })
+                .catch(err => {
+                    // TODO: write a error handling function for navigating
+                    console.error(err);
+                    let message = '';
+                    if (err.response.status === 401) {
+                        message = 'Unauthorized to delete campground. Please log in again.';
+                        appContext.setAlert({
+                            message,
+                            variant: 'danger',
+                        });
+                        navigate('/login');
+                    } else if (err.response.status === 403) {
+                        message = 'Unauthorized to delete campground';
+                    } else {
+                        message = `${err.response.status} - ${err.response.data}`;
+                    }
+                    appContext.setAlert({
+                        message,
+                        variant: 'danger',
+                    });
+                    // appContext.setCurrentUser(null);
+                });
+        }
     };
 
     if (isLoading) return <Loading />;
@@ -364,6 +398,7 @@ const EditCampground: React.FunctionComponent = () => {
                             Cancel
                         </Button>
                     </Link>
+                    <button onClick={deleteCampgroundHandler}>Delete campground</button>
                 </Form>
             </Container>
 

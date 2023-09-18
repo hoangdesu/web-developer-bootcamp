@@ -6,7 +6,7 @@ import axios from 'axios';
 import AppContext from '../../store/app-context';
 
 import { Container, Button, Form, Col, Row } from 'react-bootstrap';
-import { Star, Favorite, FavoriteBorder } from '@mui/icons-material';
+import { Star, Favorite, FavoriteBorder, IosShare } from '@mui/icons-material';
 
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -137,6 +137,7 @@ const Campground: React.FunctionComponent = () => {
 
     const toggleFavoriteCampground = evt => {
         if (!appContext.currentUser) {
+            // TODO: DISPLAY LOGIN MODAL
             appContext.setAlert({
                 message: `You need to log in first!`,
                 variant: 'info',
@@ -170,19 +171,6 @@ const Campground: React.FunctionComponent = () => {
         navigate('/');
     }
 
-    const EditButton = styled.button`
-        border: 1px solid black;
-        background-color: transparent;
-        padding: 4px 20px;
-        /* font-size: 14px; */
-        height: fit-content;
-        color: inherit;
-        &:hover {
-            color: white;
-            background-color: black;
-        }
-    `;
-
     return (
         <PageContainer>
             <Navbar />
@@ -190,34 +178,51 @@ const Campground: React.FunctionComponent = () => {
                 <FlashAlert />
                 <Row className="mb-3">
                     <Col>
-                        <section className="my-2">
-                            <div className="flex flex-row justify-between items-center">
-                                <h1 className="font-normal">{campground.title}</h1>
-
-                                <EditButton>Edit</EditButton>
-                            </div>
-                            <div className="flex flex-row justify-between gap-3">
-                                {/* TODO: fix */}
+                        <section className="mt-3">
+                            <h1 className="font-normal">{campground.title}</h1>
+                            <div className="flex flex-row items-center justify-between gap-3">
                                 <span>
-                                    ★ {averageRating(campground)} · {campground.reviews?.length}{' '}
-                                    reviews ·{' '}
-                                    <a
-                                        href={`https://www.google.com/search?q=${campground.location}`}
-                                        style={{ color: 'inherit' }}
-                                        target="_blank"
-                                    >
-                                        {campground.location}
-                                    </a>
+                                    <span>★ {averageRating(campground)}</span>
+                                    {campground.reviews?.length > 0 && (
+                                        <span>
+                                            {' · '}
+                                            {campground.reviews?.length} reviews
+                                        </span>
+                                    )}
+                                    <span>
+                                        {' · '}
+                                        <a
+                                            href={`https://www.google.com/search?q=${campground.location}`}
+                                            style={{ color: 'inherit' }}
+                                            target="_blank"
+                                        >
+                                            {campground.location}
+                                        </a>
+                                    </span>
                                 </span>
 
-                                <span
-                                    onClick={toggleFavoriteCampground}
-                                    className="hover:cursor-pointer"
-                                >
-                                    <span style={{ color: 'red' }}>
-                                        {isFavorited ? <Favorite /> : <FavoriteBorder />}{' '}
-                                    </span>{' '}
-                                    Save - Share
+                                <span className="flex flex-row items-center">
+                                    <span
+                                        className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
+                                        onClick={toggleFavoriteCampground}
+                                    >
+                                        <span className="text-red-500 mr-1">
+                                            {isFavorited ? <Favorite /> : <FavoriteBorder />}{' '}
+                                        </span>
+                                        <span>Save</span>
+                                    </span>
+
+                                    <span
+                                        className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
+                                        onClick={() => {
+                                            // todo: share
+                                        }}
+                                    >
+                                        <span className="mr-1">
+                                            <IosShare />
+                                        </span>
+                                        <span>Share</span>
+                                    </span>
                                 </span>
                             </div>
                         </section>
@@ -282,10 +287,6 @@ const Campground: React.FunctionComponent = () => {
                                     <Form.Group className="mb-3" controlId="reviewComment">
                                         <Form.Label>Comment</Form.Label>
                                         <Form.Control as="textarea" ref={reviewText} required />
-                                        {/* TODO: style this motherfucker */}
-                                        {/* <div> */}
-                                        {/* <input type="textarea" ref={reviewText} required /> */}
-                                        {/* </div> */}
                                         <Form.Control.Feedback type="invalid">
                                             Please add your comment
                                         </Form.Control.Feedback>
@@ -295,6 +296,7 @@ const Campground: React.FunctionComponent = () => {
                                 </Form>
                             </>
                         ) : (
+                            // TODO: STYLE THIS MF
                             <Link to="/login">Login to add your review</Link>
                         )}
                         <h4 className="font-normal">Reviews</h4>
@@ -326,8 +328,16 @@ const Campground: React.FunctionComponent = () => {
 
                         {campground.reviews && (
                             <>
-                                {/* a catchphrase with COLUMBUS, EXPLORING... */}
-                                {campground.reviews?.length === 0 && 'Add your first review!'}
+                                {campground.reviews?.length === 0 && (
+                                    <span
+                                        className="hover:underline hover:cursor-pointer text-emerald-800"
+                                        onClick={() => {
+                                            reviewText.current?.focus();
+                                        }}
+                                    >
+                                        Add your first review!
+                                    </span>
+                                )}
                                 {campground.reviews.map((review: ReviewType) => (
                                     <Review
                                         key={review._id}

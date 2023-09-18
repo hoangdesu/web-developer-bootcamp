@@ -3,11 +3,12 @@ import styled from '@emotion/styled';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Card, Form } from 'react-bootstrap';
+import { Card, Form, OverlayTrigger, Popover, PopoverHeader } from 'react-bootstrap';
 import { Check, Clear, Delete, MoreHoriz } from '@mui/icons-material';
 import { Review } from '../../types';
 import AppContext from '../../store/app-context';
 import { Rating } from '@mui/material';
+import { formatDate, timeDifference } from '../../helpers/campground';
 
 interface ReviewProps {
     review: Review;
@@ -127,9 +128,26 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
 
     const isEdited = () => {
         if (review.createdAt !== review.updatedAt) {
-            return <small className="text-muted">(edited)</small>;
+            return 'edited';
         }
     };
+
+    const popover = (
+        <Popover id="popover-basic">
+            <Popover.Header as="h6">Review by {review.author.username}</Popover.Header>
+            <Popover.Body>
+                <div>
+                    <u>Created at:</u> {formatDate(review.createdAt)}
+                </div>
+                <div>
+                    <u>Updated at:</u> {formatDate(review.updatedAt)}
+                </div>
+                <div>
+                    <u>Last updated:</u> {timeDifference(Date.now(), Date.parse(review.updatedAt))}
+                </div>
+            </Popover.Body>
+        </Popover>
+    );
 
     return (
         <Card className="mb-3">
@@ -152,6 +170,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                 {/* TODO: style this again when mouse over editable field */}
                 {isEditingReview ? (
                     <>
+                        <Card.Title className="font-normal">{review.author?.username}</Card.Title>
                         <Rating
                             name="simple-controlled"
                             value={formData.rating}
@@ -179,13 +198,30 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                                     {review.author?.username}
                                 </StyledLink>
                             </Card.Title>
-                            {/* TODO: parse date this shit */}
-                            <span>{review.updatedAt}</span>
+                            <span></span>
                         </div>
-                        <Rating name="read-only" value={review.rating} readOnly size="small" />
-                        <Card.Text>
-                            {review.comment} {isEdited()}
-                        </Card.Text>
+                        <div className="flex flex-row gap-2 items-end text-muted text-sm mb-2">
+                            <Rating
+                                name="read-only"
+                                value={review.rating}
+                                readOnly
+                                size="small"
+                                className="bottom-[2px]"
+                            />
+                            <span>{' · '}</span>
+                            <OverlayTrigger placement="top" overlay={popover}>
+                                <span className="hover:underline">
+                                    {timeDifference(Date.now(), Date.parse(review.updatedAt))}
+                                </span>
+                            </OverlayTrigger>
+                            {isEdited() && (
+                                <>
+                                    <span>{' · '}</span>
+                                    <span>{isEdited()}</span>
+                                </>
+                            )}
+                        </div>
+                        <Card.Text>{review.comment}</Card.Text>
                     </>
                 )}
             </StyledCardBody>
