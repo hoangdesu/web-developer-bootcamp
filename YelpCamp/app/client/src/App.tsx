@@ -27,6 +27,17 @@ const CampgroundsContainer = styled.div`
     grid-template-columns: repeat(auto-fit, minmax(262px, 1fr));
 `;
 
+declare global {
+    namespace JSX {
+      interface IntrinsicElements {
+        'qr-code': React.DetailedHTMLProps<
+          React.HTMLAttributes<HTMLElement>,
+          HTMLElement
+        >;
+      }
+    }
+  }
+
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
