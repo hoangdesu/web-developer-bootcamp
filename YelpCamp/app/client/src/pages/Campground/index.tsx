@@ -15,7 +15,7 @@ import Loading from '../Loading';
 import Review from './Review';
 import { Review as ReviewType } from '../../types';
 import FlashAlert from '../../components/FlashAlert';
-import { Box, Rating } from '@mui/material';
+import { Box, Modal, Rating } from '@mui/material';
 import CampgroundCardCarousel from './CampgroundCardCarousel';
 import CampgroundMap from './CampgroundMap';
 import { Campground } from '../../types';
@@ -24,6 +24,9 @@ import styled from '@emotion/styled';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 import CampgroundReservation from './CampgroundReservation';
 import CampgroundHostedBySection from './CampgroundHostedBySection';
+import PageModal from '../../components/Modals/PageModal';
+import ModalShare from '../../components/Modals/ModalShare';
+import ModalLogin from '../../components/Modals/ModalLogin';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -53,8 +56,9 @@ const Campground: React.FunctionComponent = () => {
             queryKey: ['campgroundData'],
             queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
             onSuccess: (data: Campground) => {
-                document.title = `YelpCamp | ${data.title}`;
                 setCampground(data); // setting campground specifically to ensure new data
+                document.title = `YelpCamp | ${data.title}`;
+                appContext.setModal({ open: false, content: null, requiresLoggedIn: false });
             },
             onError: err => {
                 appContext.setAlert({
@@ -137,11 +141,7 @@ const Campground: React.FunctionComponent = () => {
 
     const toggleFavoriteCampground = evt => {
         if (!appContext.currentUser) {
-            // TODO: DISPLAY LOGIN MODAL
-            appContext.setAlert({
-                message: `You need to log in first!`,
-                variant: 'info',
-            });
+            appContext.setModal({ open: true, content: <ModalLogin />, requiresLoggedIn: true });
             return;
         }
 
@@ -176,6 +176,7 @@ const Campground: React.FunctionComponent = () => {
             <Navbar />
             <Container className=" my-4 px-[5%]">
                 <FlashAlert />
+
                 <Row className="mb-3">
                     <Col>
                         <section className="mt-3">
@@ -209,19 +210,23 @@ const Campground: React.FunctionComponent = () => {
                                         <span className="text-red-500 mr-1">
                                             {isFavorited ? <Favorite /> : <FavoriteBorder />}{' '}
                                         </span>
-                                        <span>Save</span>
+                                        <span className="mb-[-8px]">Save</span>
                                     </span>
 
                                     <span
                                         className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
                                         onClick={() => {
-                                            // todo: share
+                                            appContext.setModal({
+                                                open: true,
+                                                content: <ModalShare />,
+                                                // requiresLoggedIn: false,
+                                            });
                                         }}
                                     >
-                                        <span className="mr-1">
+                                        <span className="text-gray-800 mr-1">
                                             <IosShare />
                                         </span>
-                                        <span>Share</span>
+                                        <span className="mb-[-8px]">Share</span>
                                     </span>
                                 </span>
                             </div>
@@ -349,6 +354,7 @@ const Campground: React.FunctionComponent = () => {
                         )}
                     </Col>
                 </Row>
+                <PageModal />
             </Container>
             <Footer />
         </PageContainer>

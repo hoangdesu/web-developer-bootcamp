@@ -12,6 +12,7 @@ const Container = styled.div`
     justify-content: center;
 `;
 
+// TODO: replace Spinner loading with skeleton
 const Loading = () => {
     return (
         <>

@@ -99,37 +99,37 @@ const Reservation = () => {
 
     
 
-    // useEffect(() => {
-    //     const paymentTimer = setInterval(() => {
-    //         axios
-    //             .get(`/api/v1/reservation/${reservationId}/status`)
-    //             .then(res => res.data)
-    //             .then(data => {
-    //                 console.log('STATUS:', data);
-    //                 if (data === 'PAID') {
-    //                     // setStatus('PAID!');
-    //                     reservationQuery.refetch();
-    //                     setTimeout(() => {
-    //                         navigate(-1);
-    //                     }, 1000);
-    //                 }
-    //             });
-    //         // reservationQuery.refetch();
-    //         // axios.get(`/api/v1/reservation/${reservationId}`).then(data => data.data),
+    useEffect(() => {
+        const paymentTimer = setInterval(() => {
+            axios
+                .get(`/api/v1/reservation/${reservationId}/status`)
+                .then(res => res.data)
+                .then(data => {
+                    console.log('STATUS:', data);
+                    if (data === 'PAID') {
+                        // setStatus('PAID!');
+                        reservationQuery.refetch();
+                        setTimeout(() => {
+                            navigate(-1);
+                        }, 1000);
+                    }
+                });
+            // reservationQuery.refetch();
+            // axios.get(`/api/v1/reservation/${reservationId}`).then(data => data.data),
 
-    //         // qrRef.current.animateQRCode('RadialRippleIn')
+            // qrRef.current.animateQRCode('RadialRippleIn')
 
-    //         if (seconds > 0) {
-    //             setSeconds(seconds - 1);
-    //         }
-    //         if (seconds === 0) {
-    //             clearInterval(paymentTimer);
-    //         }
-    //     }, 1000);
-    //     return () => {
-    //         clearInterval(paymentTimer);
-    //     };
-    // });
+            if (seconds > 0) {
+                setSeconds(seconds - 1);
+            }
+            if (seconds === 0) {
+                clearInterval(paymentTimer);
+            }
+        }, 1000);
+        return () => {
+            clearInterval(paymentTimer);
+        };
+    });
 
     
 

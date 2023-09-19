@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from 'react';
+import AppContext from '../../store/app-context';
 import { Form, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import AppContext from '../../store/app-context';
 import styled from '@emotion/styled';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from 'axios';
@@ -14,15 +14,11 @@ const InputGroupText = styled(InputGroup.Text)`
     }
 `;
 
-interface ModalLoginProps {
-    setModalType: React.Dispatch<React.SetStateAction<'login' | 'confirm'>>;
-}
-
-const ModalLogin: React.FC<ModalLoginProps> = ({ setModalType }) => {
+const ModalLogin = () => {
+    const appContext = useContext(AppContext);
     const [validated, setValidated] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
-    const appContext = useContext(AppContext);
 
     const formUsername = useRef<HTMLInputElement>(null);
     const formPassword = useRef<HTMLInputElement>(null);
@@ -54,9 +50,14 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ setModalType }) => {
                         });
                         appContext.setCurrentUser(resp.data);
                         localStorage.setItem('currentUser', JSON.stringify(resp.data));
-                        setModalType('confirm');
+                        appContext.setModal({
+                            open: false,
+                            content: null,
+                        });
                     });
                 })
+
+                // TODO: handle log in error
                 .catch(err => {
                     appContext.setAlert({
                         message: 'Wrong username or password. Please login again',
@@ -71,9 +72,9 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ setModalType }) => {
     };
     return (
         <div>
-            <h1 className="text-center">Login</h1>
-            <p className="text-center text-muted">Please login to confirm your reservation</p>
-            <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
+            <h3 className="">Welcome to YelpCamp</h3>
+            {/* <p className="text-center text-muted">Please login to confirm your reservation</p> */}
+            <Form className="mt-4 mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username</Form.Label>
                     <Form.Control type="text" ref={formUsername} required />
@@ -100,8 +101,9 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ setModalType }) => {
                         </Form.Control.Feedback>
                     </InputGroup>
                 </Form.Group>
+
                 <PrimaryBlackButton>Login</PrimaryBlackButton>
-                <Link to="/register" className="block mt-3 mb-0">
+                <Link to="/register" className="block mt-3 mb-[-40px]">
                     New here? Signup
                 </Link>
             </Form>

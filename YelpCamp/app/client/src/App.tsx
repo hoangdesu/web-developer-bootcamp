@@ -35,6 +35,10 @@ declare global {
     }
 }
 
+const SearchBoxContainer = styled.div`
+    
+`
+
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
@@ -62,7 +66,7 @@ const App: React.FunctionComponent = () => {
             queryKey: ['campgroundsData'],
             queryFn: () => axios.get(`/api/v1/campgrounds`).then(res => res.data),
             onSuccess: (campgroundList: Campground[]) => {
-                document.title = 'YelpCamp | Homepage';
+                document.title = 'YelpCamp';
                 setCampgrounds(() => {
                     setFilteredCampgroundList(campgroundList.slice(0, 12));
                     return campgroundList;
@@ -105,15 +109,18 @@ const App: React.FunctionComponent = () => {
 
                 <Row className="justify-content-center my-4">
                     <Col>
+                        {/* <div className="flex flex-col md:flex-row items-center align-middle justify-between mb-3"> */}
                         <div className="flex flex-row items-center align-middle justify-between mb-3">
+                        {/* <div> */}
                             <h3 className="my-4">
-                                {/* Total: {campgrounds && campgrounds.length} campgrounds */}
                                 Explore campgrounds
                             </h3>
+
                             <SearchBox />
+                            {/* TODO: make this shit repsonsive in mobile */}
+
                         </div>
 
-                        {/* <h3 className="my-5">Browse campgrounds</h3> */}
                         <CampgroundsContainer>
                             {Array.isArray(filteredCampgroundList) &&
                                 filteredCampgroundList.map(campground => {

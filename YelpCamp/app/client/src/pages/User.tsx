@@ -40,7 +40,7 @@ const User = () => {
     return (
         <PageContainer>
             <Navbar />
-            <Container className="col-9 my-5">
+            <Container className="my-5 px-[5%]">
                 <FlashAlert />
                 <p>Username: {user.username}</p>
                 <p>UserId: {user._id}</p>
@@ -77,11 +77,16 @@ const User = () => {
                             return (
                                 <li key={resv._id}>
                                     <div>
-                                        {resv.bookedBy} - {resv.campground} - checkin: {resv.checkIn} -{' '}
-                                        checkOut: {resv.checkOut} - nights: {resv.nights} - guests {resv.guests} - totalPrice: {resv.totalPrice} - status: {resv.status}
-
+                                        {resv.bookedBy} - {resv.campground} - checkin:{' '}
+                                        {resv.checkIn} - checkOut: {resv.checkOut} - nights:{' '}
+                                        {resv.nights} - guests {resv.guests} - totalPrice:{' '}
+                                        {resv.totalPrice} - status: {resv.status}
                                     </div>
-                                    <div><Link to={`/reservation/${resv._id}/confirm`}>{resv._id}</Link></div>
+                                    <div>
+                                        <Link to={`/reservation/${resv._id}/confirm`}>
+                                            {resv._id}
+                                        </Link>
+                                    </div>
                                 </li>
                             );
                         })}

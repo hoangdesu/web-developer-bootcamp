@@ -76,7 +76,7 @@ const Navbar: React.FunctionComponent = () => {
                     <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
                     <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
                     <BootstrapNavbar.Collapse id="basic-navbar-nav">
-                        <Nav >
+                        <Nav>
                             <Nav className="me-auto">
                                 {pages.map(page => (
                                     <Link
@@ -145,23 +145,12 @@ const Navbar: React.FunctionComponent = () => {
 
     return (
         <div>
-            {/* {original} */}
             <BootstrapNavbar expand="md" variant="dark" className="bg-primary-dark-color">
                 <Container className="px-[5%]">
                     <BootstrapNavbar.Brand href="/">YelpCamp</BootstrapNavbar.Brand>
                     <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
                     <BootstrapNavbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            {/* <Nav.Link href="#home">Home</Nav.Link>
-                            <Nav.Link href="#link">Link</Nav.Link>
-                            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown> */}
-
                             {pages.map(page => (
                                 <Link
                                     to={page.href}
@@ -177,6 +166,7 @@ const Navbar: React.FunctionComponent = () => {
                             {/* <Link to="/testing">Testing</Link>
                             <button onClick={quickLoginHandler}>Quick login</button> */}
 
+                            {/* TODO: nice to have: different burger animation */}
                             {currentUser ? (
                                 <NavDropdown
                                     title={currentUser?.username}
@@ -186,9 +176,9 @@ const Navbar: React.FunctionComponent = () => {
                                     <Link
                                         to={`/users/${currentUser.username}`}
                                         key={'user'}
-                                        className="dropdown-item"
+                                        className="dropdown-item active:bg-primary-dark-color" // TODO: change this color
                                     >
-                                        <span>View</span>
+                                        <span className="">View</span>
                                     </Link>
                                     <Button
                                         variant="secondary"

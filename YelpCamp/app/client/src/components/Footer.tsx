@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import AppContext from '../store/app-context';
+import { Link } from 'react-router-dom';
 
 const Footer: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
@@ -19,6 +20,12 @@ const Footer: React.FunctionComponent = () => {
                         <button onClick={handler}>Log current context</button>
                     </div>
                 )}
+                {/* // TODO: move about section down here */}
+                <div>
+                    <Link to="/about" className="text-lg">
+                        About 
+                    </Link>
+                </div>
             </Container>
         </footer>
     );

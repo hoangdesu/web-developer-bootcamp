@@ -9,8 +9,9 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import axios from 'axios';
 import AppContext from '../../store/app-context';
-import ReservationModal from './ReservationModal';
 import { useNavigate } from 'react-router-dom';
+import ModalConfirmReservation from '../../components/Modals/ModalConfirmReservation';
+import ModalLogin from '../../components/Modals/ModalLogin';
 
 interface CampgroundResvervationProps {
     campground: Campground;
@@ -39,9 +40,6 @@ const InputButton = props => (
 const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campground }) => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
-
-    const [modalOpen, setModalOpen] = useState(false);
-    const [modalType, setModalType] = useState<'login' | 'confirm'>('login');
 
     const [inputStartDate, setInputStartDate] = useState<string | null>(null);
     const [inputEndDate, setInputEndDate] = useState<string | null>(null);
@@ -88,9 +86,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     // const totalAfterDiscount = Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2);
 
     const makeReservation = () => {
-        // console.log('reserved');
-        // return;
-
         const reservation = {
             bookedBy: appContext.currentUser.id,
             campground: campground._id,
@@ -110,18 +105,17 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
 
     const reserveHandler = () => {
         if (!inputStartDate) {
-            checkinDateRef.current.showPicker();
+            checkinDateRef.current!.showPicker();
             return;
         }
 
         if (!inputEndDate) {
-            checkoutDateRef.current.showPicker();
+            checkoutDateRef.current!.showPicker();
             return;
         }
 
         if (!appContext.currentUser) {
-            setModalType('login');
-            setModalOpen(true);
+            appContext.setModal({ open: true, content: <ModalLogin />, requiresLoggedIn: true });
             return;
         }
 
@@ -136,8 +130,11 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             status: 'PENDING',
         };
 
-        setModalType('confirm');
-        setModalOpen(true);
+        appContext.setModal({
+            open: true,
+            content: <ModalConfirmReservation reservation={reservation} />,
+            requiresLoggedIn: true,
+        });
     };
 
     return (
@@ -275,13 +272,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             >
                 RESERVE →
             </button>
-            <ReservationModal
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
-                makeReservation={makeReservation}
-                modalType={modalType}
-                setModalType={setModalType}
-            />
 
             <button onClick={makeReservation}>Test reserve</button>
         </ReserveSection>

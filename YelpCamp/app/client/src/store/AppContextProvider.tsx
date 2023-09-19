@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, ReactNode, FunctionComponent } from 'react';
 import AppContext from './app-context';
-import { Alert, User } from '../types';
+import { Alert, Modal, User } from '../types';
 
 interface ContextProviderProps {
     children?: ReactNode;
@@ -9,11 +9,17 @@ interface ContextProviderProps {
 interface appState {
     alert: Alert | null;
     currentUser: User | null;
+    modal: Modal;
 }
 
 const initialAppState: appState = {
     alert: null,
     currentUser: null,
+    modal: {
+        open: false,
+        content: null,
+        requiresLoggedIn: false,
+    },
 };
 
 const appReducer = (state, action) => {
@@ -23,16 +29,18 @@ const appReducer = (state, action) => {
                 ...state,
                 alert: action.alert,
             };
-            break;
         case 'SET_CURRENT_USER':
             return {
                 ...state, // spread to keep other state, otherwise state will be reset
                 currentUser: action.user,
             };
-            break;
+        case 'SET_MODAL':
+            return {
+                ...state,
+                modal: action.modal,
+            };
         default:
             return initialAppState;
-            break;
     }
 };
 
@@ -47,11 +55,17 @@ const AppContextProvider: FunctionComponent<ContextProviderProps> = ({ children 
         dispatchAppAction({ type: 'SET_CURRENT_USER', user: user });
     };
 
+    const setModal = (modal: Modal | null) => {
+        dispatchAppAction({ type: 'SET_MODAL', modal: modal });
+    };
+
     const appContext = {
         alert: appState.alert,
         setAlert: setAlert,
         currentUser: appState.currentUser,
         setCurrentUser: setCurrentUser,
+        modal: appState.modal,
+        setModal: setModal,
     };
 
     useEffect(() => {

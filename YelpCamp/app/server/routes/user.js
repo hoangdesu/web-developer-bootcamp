@@ -26,4 +26,6 @@ router.post('/login', passport.authenticate('local'), controller.login);
 
 router.post('/logout', controller.logout);
 
+// TODO: change user password/email feature
+
 module.exports = router;

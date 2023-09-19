@@ -9,6 +9,7 @@ import Navbar from '../components/Navbar';
 import PageContainer from '../components/PageContainer';
 import Footer from '../components/Footer';
 import Loading from './Loading';
+import PageModal from '../components/Modals/PageModal';
 
 import AppContext from '../store/app-context';
 import FlashAlert from '../components/FlashAlert';
@@ -130,7 +131,15 @@ const EditCampground: React.FunctionComponent = () => {
     };
 
     const deleteCampgroundHandler = () => {
-        // TODO: replace with Modal
+
+        // TODO: handle delete campground in modal
+        appContext.setModal({
+            open: true,
+            content: <p>Confirm Delete campground</p>,
+        })
+
+        return;
+
         if (confirm(`Delete ${campground.title}?`)) {
             axios
                 .delete(`/api/v1/campgrounds/${campgroundId}`, {
@@ -209,7 +218,7 @@ const EditCampground: React.FunctionComponent = () => {
         <PageContainer>
             <Navbar />
 
-            <Container className="col-6 offset-3 my-5">
+            <Container className="my-5 px-[5%]">
                 <FlashAlert />
                 <h1 className="text-center mb-4">Edit Campground</h1>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -398,8 +407,9 @@ const EditCampground: React.FunctionComponent = () => {
                             Cancel
                         </Button>
                     </Link>
-                    <button onClick={deleteCampgroundHandler}>Delete campground</button>
+                    <button onClick={deleteCampgroundHandler} type="button">Delete campground</button>
                 </Form>
+                <PageModal />
             </Container>
 
             <Footer />

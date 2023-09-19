@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface Campground {
     _id: string;
     title: string;
@@ -48,4 +50,10 @@ export interface MapViewState {
     longitude: number;
     latitude: number;
     zoom: number;
+}
+
+export interface Modal {
+    open: boolean;
+    content: React.ReactNode | React.ReactElement | null;
+    requiresLoggedIn?: boolean;
 }

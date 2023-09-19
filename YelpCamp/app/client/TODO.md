@@ -25,3 +25,5 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [x] review box time
 [x] fix edit button
 [] pagination color
+
+[x] reusable modal
