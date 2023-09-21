@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import { Link, useLoaderData, useNavigate, useSearchParams } from 'react-router-dom';
@@ -25,28 +25,38 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     gap: 30px;
-    .active {
+    /* .active {
         cursor: pointer;
         background: gray;
-    }
+    } */
+    position: relative;
 
     .tabs {
-        width: 200px;
+        /* width: 200px; */
+        /* position: absolute; */
+        z-index: 1;
+
         ul,
         li {
             list-style: none;
             padding: 0;
             margin: 0;
+            height: auto;
+	width: auto;
         }
 
         li {
             padding: 10px;
+            /* z-index: 100; */
+            /* display: inline-block; */
+            /* background: transparent; */
+            position: static;
         }
 
-        li:hover {
+        /* li:hover {
             cursor: pointer;
             background-color: pink;
-        }
+        } */
     }
 
     .content {
@@ -55,12 +65,43 @@ const Container = styled.div`
 
     .active {
         cursor: pointer;
-        background: gray;
+        background: gray !important;
     }
 
     .cool {
         border: 10px;
         /* font-size: 20px; */
+    }
+
+    .overlay {
+        position: absolute;
+        /*   for test */
+        /* 	height: 10px;
+	width: 100px; */
+        /*  for test  */
+        background-color: aquamarine;
+        z-index: -1;
+        /* transition: 0.3s ease left, width, opacity; */
+        transition: 0.3s ease all;
+        opacity: 0;
+    }
+
+    .overlay.active {
+        /* z-index: -1; */
+
+        opacity: 1;
+        background: red;
+    }
+
+    .testing-box {
+        /* width: 400px; */
+        height: 700px;
+        background: pink;
+        position: fixed;
+        z-index: -2;
+        top: 150px;
+        left: 150px;
+        /* w-[100px] h-[100px] bg-red-400 fixed -z-2 top-[200px] left-[200px] */
     }
 `;
 
@@ -99,6 +140,15 @@ const User = () => {
     //     appContext.setModal({open: false, content: null})
     // }, []);
 
+    const overlayRef = useRef<HTMLDivElement>(null);
+    // useEffect(() => {
+    //     console.dir(overlayRef);
+    // }, [overlayRef]);
+
+    const printoverlayRef = () => {
+        console.dir(overlayRef.current.getBoundingClientRect());
+    };
+
     const {
         isLoading,
         error,
@@ -120,16 +170,49 @@ const User = () => {
 
     if (error) return <p>Error. User not found</p>;
 
+    const mouseEnterHandler = e => {
+        console.log('mouse enter: ', e.currentTarget.getBoundingClientRect());
+        const position = e.currentTarget.getBoundingClientRect();
+        if (overlayRef.current) {
+            overlayRef.current.classList.add('active');
+            overlayRef.current.style.left = position.x -200 + 'px';
+            overlayRef.current.style.top = position.y - 200 + 'px';
+            overlayRef.current.style.height = position.height + 'px';
+            overlayRef.current.style.width = position.width + 'px';
+            // overlayRef.current.style.background = 'blue';
+            // overlayRef.current.style.opacity = '1';
+
+        }
+    };
+
+    const mouseLeaveHandler = e => {
+        console.log('mouse leave:', e.currentTarget.getBoundingClientRect());
+        const position = e.currentTarget.getBoundingClientRect();
+        // overlayRef.current.style.background = 'pink';
+        // overlayRef.current.style.opacity = 0;
+        if (overlayRef.current) {
+        overlayRef.current.classList.remove('active');
+        }
+
+    };
+
     return (
         <PageContainer>
             <p>
                 Screen width: {width} - Height: {height}
             </p>
+
+            <button onClick={printoverlayRef}>Box ref</button>
             <p>{width < 768 ? 'MOBILE' : 'LAPTOP'} SCREEN</p>
             {/* NEW UI */}
             <Container className="flex flex-row tab">
                 {/* tab */}
                 <div className="tabs">
+                    <div ref={overlayRef} className="overlay">
+                        {/* {searchParams.get('tab')} */}
+                    </div>
+
+                    <div className="testing-box">TESTING</div>
                     <ul>
                         {TABS.map(tab => (
                             <li
@@ -141,8 +224,10 @@ const User = () => {
                                 className={`cool ${
                                     tab.id === searchParams.get('tab') && 'active'
                                 } `}
+                                onMouseEnter={mouseEnterHandler}
+                                onMouseLeave={mouseLeaveHandler}
                             >
-                                {tab.title}
+                                <p>{tab.title}</p>
                             </li>
                         ))}
                     </ul>
@@ -307,3 +392,8 @@ const User = () => {
 };
 
 export default User;
+
+
+// tutorial:
+// https://codepen.io/hoangdesu/pen/poqpLKP
+// https://www.youtube.com/watch?v=rHdfxfuC_8U&ab_channel=WEBCIFAR
