@@ -27,3 +27,5 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [] pagination color
 
 [x] reusable modal
+
+[x] refactor pagecontainer to contain main sections of a page

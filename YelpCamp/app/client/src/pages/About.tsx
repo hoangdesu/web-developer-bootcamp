@@ -10,13 +10,7 @@ const About: React.FunctionComponent = () => {
     document.title = 'YelpCamp | About';
     return (
         <PageContainer>
-            <Navbar />
-
-            <Container>
-                <h1>About</h1>
-            </Container>
-            
-            <Footer />
+            <h1>About</h1>
         </PageContainer>
     );
 };

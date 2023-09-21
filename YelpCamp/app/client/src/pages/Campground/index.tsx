@@ -173,190 +173,182 @@ const Campground: React.FunctionComponent = () => {
 
     return (
         <PageContainer>
-            <Navbar />
-            <Container className=" my-4 px-[5%]">
-                <FlashAlert />
-
-                <Row className="mb-3">
-                    <Col>
-                        <section className="mt-3">
-                            <h1 className="font-normal">{campground.title}</h1>
-                            <div className="flex flex-row items-center justify-between gap-3">
-                                <span>
-                                    <span>★ {averageRating(campground)}</span>
-                                    {campground.reviews?.length > 0 && (
-                                        <span>
-                                            {' · '}
-                                            {campground.reviews?.length} reviews
-                                        </span>
-                                    )}
+            <Row className="mb-3">
+                <Col>
+                    <section className="mt-3">
+                        <h1 className="font-normal">{campground.title}</h1>
+                        <div className="flex flex-row items-center justify-between gap-3">
+                            <span>
+                                <span>★ {averageRating(campground)}</span>
+                                {campground.reviews?.length > 0 && (
                                     <span>
                                         {' · '}
-                                        <a
-                                            href={`https://www.google.com/search?q=${campground.location}`}
-                                            style={{ color: 'inherit' }}
-                                            target="_blank"
-                                        >
-                                            {campground.location}
-                                        </a>
-                                    </span>
-                                </span>
-
-                                <span className="flex flex-row items-center">
-                                    <span
-                                        className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
-                                        onClick={toggleFavoriteCampground}
-                                    >
-                                        <span className="text-red-500 mr-1">
-                                            {isFavorited ? <Favorite /> : <FavoriteBorder />}{' '}
-                                        </span>
-                                        <span className="mb-[-8px]">Save</span>
-                                    </span>
-
-                                    <span
-                                        className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
-                                        onClick={() => {
-                                            appContext.setModal({
-                                                open: true,
-                                                content: <ModalShare />,
-                                                // requiresLoggedIn: false,
-                                            });
-                                        }}
-                                    >
-                                        <span className="text-gray-800 mr-1">
-                                            <IosShare />
-                                        </span>
-                                        <span className="mb-[-8px]">Share</span>
-                                    </span>
-                                </span>
-                            </div>
-                        </section>
-                    </Col>
-                </Row>
-
-                <Row>
-                    <Col lg={7}>
-                        <CampgroundCardCarousel campground={campground} />
-
-                        <StyledSection>
-                            <CampgroundHostedBySection campground={campground} />
-                        </StyledSection>
-
-                        <StyledSection>
-                            <h4 className="font-normal">About</h4>
-                            <p>{campground.description}</p>
-                        </StyledSection>
-
-                        <StyledSection>
-                            <h4 className="font-normal">Location</h4>
-                            <p>{campground.location}</p>
-                        </StyledSection>
-
-                        <StyledSection>
-                            <h4 className="font-normal">Reservation</h4>
-                            <CampgroundReservation campground={campground} />
-                        </StyledSection>
-
-                        <Link to="/">
-                            <Button variant="secondary" className="my-3">
-                                Back
-                            </Button>
-                        </Link>
-                    </Col>
-
-                    <Col lg={5}>
-                        {/* {mapViewState && <Map viewState={mapViewState} />} */}
-                        {/* using react-map-gl */}
-                        {campground && <CampgroundMap campground={campground} />}
-
-                        {/* only activate review form for logged in user */}
-                        {appContext.currentUser ? (
-                            <>
-                                <Form
-                                    className="mt-5 flex flex-column"
-                                    noValidate
-                                    validated={validated}
-                                    onSubmit={onReviewSubmit}
-                                >
-                                    <h3 className="font-normal">Leave a review</h3>
-                                    <Form.Group className="mb-2" controlId="reviewRating">
-                                        <Rating
-                                            name="simple-controlled"
-                                            value={ratingValue}
-                                            onChange={(event, newValue) => {
-                                                setRatingValue(newValue || 1);
-                                            }}
-                                        />
-                                    </Form.Group>
-
-                                    <Form.Group className="mb-3" controlId="reviewComment">
-                                        <Form.Label>Comment</Form.Label>
-                                        <Form.Control as="textarea" ref={reviewText} required />
-                                        <Form.Control.Feedback type="invalid">
-                                            Please add your comment
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                    {/* TODO: STYLE PRIMARY AND SECONDARY BUTTONS */}
-                                    <PrimaryBlackButton>Submit</PrimaryBlackButton>
-                                </Form>
-                            </>
-                        ) : (
-                            // TODO: STYLE THIS MF
-                            <Link to="/login">Login to add your review</Link>
-                        )}
-                        <h4 className="font-normal">Reviews</h4>
-
-                        {campground.reviews?.length > 0 && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'baseline',
-                                    justifyContent: 'space-between',
-                                }}
-                            >
-                                <p>
-                                    {campground.reviews?.length || 0}{' '}
-                                    {campground.reviews?.length === 0 ? 'review' : 'reviews'} ·
-                                    Average rating: {averageRating(campground)}
-                                </p>
-                                <Rating
-                                    name="read-only"
-                                    value={parseFloat(averageRating(campground)) || 1}
-                                    readOnly
-                                    precision={0.5}
-                                    emptyIcon={
-                                        <Star style={{ opacity: 0.55 }} fontSize="inherit" />
-                                    }
-                                />
-                            </Box>
-                        )}
-
-                        {campground.reviews && (
-                            <>
-                                {campground.reviews?.length === 0 && (
-                                    <span
-                                        className="hover:underline hover:cursor-pointer text-emerald-800"
-                                        onClick={() => {
-                                            reviewText.current?.focus();
-                                        }}
-                                    >
-                                        Add your first review!
+                                        {campground.reviews?.length} reviews
                                     </span>
                                 )}
-                                {campground.reviews.map((review: ReviewType) => (
-                                    <Review
-                                        key={review._id}
-                                        review={review}
-                                        refetch={campgroundQuery.refetch}
+                                <span>
+                                    {' · '}
+                                    <a
+                                        href={`https://www.google.com/search?q=${campground.location}`}
+                                        style={{ color: 'inherit' }}
+                                        target="_blank"
+                                    >
+                                        {campground.location}
+                                    </a>
+                                </span>
+                            </span>
+
+                            <span className="flex flex-row items-center">
+                                <span
+                                    className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
+                                    onClick={toggleFavoriteCampground}
+                                >
+                                    <span className="text-red-500 mr-1">
+                                        {isFavorited ? <Favorite /> : <FavoriteBorder />}{' '}
+                                    </span>
+                                    <span className="mb-[-8px]">Save</span>
+                                </span>
+
+                                <span
+                                    className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
+                                    onClick={() => {
+                                        appContext.setModal({
+                                            open: true,
+                                            content: <ModalShare />,
+                                            // requiresLoggedIn: false,
+                                        });
+                                    }}
+                                >
+                                    <span className="text-gray-800 mr-1">
+                                        <IosShare />
+                                    </span>
+                                    <span className="mb-[-8px]">Share</span>
+                                </span>
+                            </span>
+                        </div>
+                    </section>
+                </Col>
+            </Row>
+
+            <Row>
+                <Col lg={7}>
+                    <CampgroundCardCarousel campground={campground} />
+
+                    <StyledSection>
+                        <CampgroundHostedBySection campground={campground} />
+                    </StyledSection>
+
+                    <StyledSection>
+                        <h4 className="font-normal">About</h4>
+                        <p>{campground.description}</p>
+                    </StyledSection>
+
+                    <StyledSection>
+                        <h4 className="font-normal">Location</h4>
+                        <p>{campground.location}</p>
+                    </StyledSection>
+
+                    <StyledSection>
+                        <h4 className="font-normal">Reservation</h4>
+                        <CampgroundReservation campground={campground} />
+                    </StyledSection>
+
+                    <Link to="/">
+                        <Button variant="secondary" className="my-3">
+                            Back
+                        </Button>
+                    </Link>
+                </Col>
+
+                <Col lg={5}>
+                    {/* {mapViewState && <Map viewState={mapViewState} />} */}
+                    {/* using react-map-gl */}
+                    {campground && <CampgroundMap campground={campground} />}
+
+                    {/* only activate review form for logged in user */}
+                    {appContext.currentUser ? (
+                        <>
+                            <Form
+                                className="mt-5 flex flex-column"
+                                noValidate
+                                validated={validated}
+                                onSubmit={onReviewSubmit}
+                            >
+                                <h3 className="font-normal">Leave a review</h3>
+                                <Form.Group className="mb-2" controlId="reviewRating">
+                                    <Rating
+                                        name="simple-controlled"
+                                        value={ratingValue}
+                                        onChange={(event, newValue) => {
+                                            setRatingValue(newValue || 1);
+                                        }}
                                     />
-                                ))}
-                            </>
-                        )}
-                    </Col>
-                </Row>
-                <PageModal />
-            </Container>
-            <Footer />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="reviewComment">
+                                    <Form.Label>Comment</Form.Label>
+                                    <Form.Control as="textarea" ref={reviewText} required />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please add your comment
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                {/* TODO: STYLE PRIMARY AND SECONDARY BUTTONS */}
+                                <PrimaryBlackButton>Submit</PrimaryBlackButton>
+                            </Form>
+                        </>
+                    ) : (
+                        // TODO: STYLE THIS MF
+                        <Link to="/login">Login to add your review</Link>
+                    )}
+                    <h4 className="font-normal">Reviews</h4>
+
+                    {campground.reviews?.length > 0 && (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'baseline',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <p>
+                                {campground.reviews?.length || 0}{' '}
+                                {campground.reviews?.length === 0 ? 'review' : 'reviews'} · Average
+                                rating: {averageRating(campground)}
+                            </p>
+                            <Rating
+                                name="read-only"
+                                value={parseFloat(averageRating(campground)) || 1}
+                                readOnly
+                                precision={0.5}
+                                emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
+                            />
+                        </Box>
+                    )}
+
+                    {campground.reviews && (
+                        <>
+                            {campground.reviews?.length === 0 && (
+                                <span
+                                    className="hover:underline hover:cursor-pointer text-emerald-800"
+                                    onClick={() => {
+                                        reviewText.current?.focus();
+                                    }}
+                                >
+                                    Add your first review!
+                                </span>
+                            )}
+                            {campground.reviews.map((review: ReviewType) => (
+                                <Review
+                                    key={review._id}
+                                    review={review}
+                                    refetch={campgroundQuery.refetch}
+                                />
+                            ))}
+                        </>
+                    )}
+                </Col>
+            </Row>
+            <PageModal />
         </PageContainer>
     );
 };

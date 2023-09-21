@@ -35,9 +35,7 @@ declare global {
     }
 }
 
-const SearchBoxContainer = styled.div`
-    
-`
+const SearchBoxContainer = styled.div``;
 
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
@@ -102,51 +100,40 @@ const App: React.FunctionComponent = () => {
 
     return (
         <PageContainer>
-            <Navbar />
-            <Container className="my-5 px-[5%]">
-                <FlashAlert />
-                <ClusterMap campgrounds={campgrounds} />
+            <ClusterMap campgrounds={campgrounds} />
 
-                <Row className="justify-content-center my-4">
-                    <Col>
-                        {/* <div className="flex flex-col md:flex-row items-center align-middle justify-between mb-3"> */}
-                        <div className="flex flex-row items-center align-middle justify-between mb-3">
+            <Row className="justify-content-center my-4">
+                <Col>
+                    {/* <div className="flex flex-col md:flex-row items-center align-middle justify-between mb-3"> */}
+                    <div className="flex flex-row items-center align-middle justify-between mb-3">
                         {/* <div> */}
-                            <h3 className="my-4">
-                                Explore campgrounds
-                            </h3>
+                        <h3 className="my-4">Explore campgrounds</h3>
 
-                            <SearchBox />
-                            {/* TODO: make this shit repsonsive in mobile */}
+                        <SearchBox />
+                        {/* TODO: make this shit repsonsive in mobile */}
+                    </div>
 
-                        </div>
+                    <CampgroundsContainer>
+                        {Array.isArray(filteredCampgroundList) &&
+                            filteredCampgroundList.map(campground => {
+                                return (
+                                    <CampgroundCard key={campground._id} campground={campground} />
+                                );
+                            })}
+                    </CampgroundsContainer>
 
-                        <CampgroundsContainer>
-                            {Array.isArray(filteredCampgroundList) &&
-                                filteredCampgroundList.map(campground => {
-                                    return (
-                                        <CampgroundCard
-                                            key={campground._id}
-                                            campground={campground}
-                                        />
-                                    );
-                                })}
-                        </CampgroundsContainer>
-
-                        <div className="w-full flex flex-column items-center mt-5">
-                            <Pagination
-                                page={page}
-                                count={Math.ceil(campgrounds.length / 12)}
-                                color="secondary"
-                                variant="outlined"
-                                shape="rounded"
-                                onChange={handlePageChange}
-                            />
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
-            <Footer />
+                    <div className="w-full flex flex-column items-center mt-5">
+                        <Pagination
+                            page={page}
+                            count={Math.ceil(campgrounds.length / 12)}
+                            color="secondary"
+                            variant="outlined"
+                            shape="rounded"
+                            onChange={handlePageChange}
+                        />
+                    </div>
+                </Col>
+            </Row>
         </PageContainer>
     );
 };

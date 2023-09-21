@@ -40,7 +40,7 @@ const CampgroundHostedBySection: React.FC<SectionProps> = ({ campground }) => {
                 <h4 className="font-normal">
                     Campground hosted by{' '}
                     <Link
-                        to={`/users/${campground.author?.username}`}
+                        to={`/user/${campground.author?.username}`}
                         className="text-primary-dark-color"
                     >
                         {campground.author?.username || 'annonymous'}

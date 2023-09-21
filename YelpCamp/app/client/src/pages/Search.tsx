@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link, useSearchParams } from 'react-router-dom';
+import PageContainer from '../components/PageContainer';
 
 const Search = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -41,9 +42,13 @@ const Search = () => {
     if (error) return <p>Error</p>;
 
     return (
-        <div>
+        <PageContainer>
             <form onSubmit={searchHandler}>
-                <input type="text" value={queryValue} onChange={e => setQueryValue(e.currentTarget.value)} />
+                <input
+                    type="text"
+                    value={queryValue}
+                    onChange={e => setQueryValue(e.currentTarget.value)}
+                />
                 <button type="submit">Search</button>
             </form>
             <div>
@@ -60,7 +65,7 @@ const Search = () => {
 
             <button onClick={handleSubmit}>params</button>
             <Link to="/">Home</Link>
-        </div>
+        </PageContainer>
     );
 };
 

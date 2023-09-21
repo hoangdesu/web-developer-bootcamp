@@ -87,7 +87,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
 
     const makeReservation = () => {
         const reservation = {
-            bookedBy: appContext.currentUser.id,
+            bookedBy: appContext.currentUser!.id,
             campground: campground._id,
             nights: days,
             checkIn: inputStartDate,
@@ -132,7 +132,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
 
         appContext.setModal({
             open: true,
-            content: <ModalConfirmReservation reservation={reservation} />,
+            content: <ModalConfirmReservation reservation={reservation} makeReservation={makeReservation} />,
             requiresLoggedIn: true,
         });
     };

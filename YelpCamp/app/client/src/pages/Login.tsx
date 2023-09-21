@@ -88,46 +88,41 @@ const Login: React.FunctionComponent = () => {
 
     return (
         <PageContainer>
-            <Navbar />
-            <Container className="my-5 px-[5%]">
-                <FlashAlert />
-                <h1 className="text-center mb-4">Login</h1>
-                <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="username">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control type="text" ref={formUsername} required />
+            <h1 className="text-center mb-4">Login</h1>
+            <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="username">
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control type="text" ref={formUsername} required />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        Username is required!
+                    </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="password">
+                    <Form.Label>Password</Form.Label>
+                    <InputGroup className="mb-2">
+                        <Form.Control
+                            type={showPassword ? 'text' : 'password'}
+                            ref={formPassword}
+                            required
+                        />
+                        <InputGroupText onClick={() => setShowPassword(show => !show)}>
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </InputGroupText>
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">
-                            Username is required!
+                            Password is required!
                         </Form.Control.Feedback>
-                    </Form.Group>
+                    </InputGroup>
+                </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="password">
-                        <Form.Label>Password</Form.Label>
-                        <InputGroup className="mb-2">
-                            <Form.Control
-                                type={showPassword ? 'text' : 'password'}
-                                ref={formPassword}
-                                required
-                            />
-                            <InputGroupText onClick={() => setShowPassword(show => !show)}>
-                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </InputGroupText>
-                            <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">
-                                Password is required!
-                            </Form.Control.Feedback>
-                        </InputGroup>
-                    </Form.Group>
+                <PrimaryBlackButton>Login</PrimaryBlackButton>
 
-                    <PrimaryBlackButton>Login</PrimaryBlackButton>
-
-                    <Link to="/register" target="_blank" className="block mt-3 mb-0">
-                        New here? Signup
-                    </Link>
-                </Form>
-            </Container>
-            <Footer />
+                <Link to="/register" target="_blank" className="block mt-3 mb-0">
+                    New here? Signup
+                </Link>
+            </Form>
         </PageContainer>
     );
 };

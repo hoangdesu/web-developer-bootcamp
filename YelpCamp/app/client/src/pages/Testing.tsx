@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import PageContainer from '../components/PageContainer';
 
 const Testing = () => {
     const reader = new FileReader();
@@ -26,23 +27,22 @@ const Testing = () => {
         setSelectedImages(images);
     };
 
-    const getDays = (e) => {
+    const getDays = e => {
         e.preventDefault();
 
         const ONE_DAY = 1000 * 60 * 60 * 24;
 
-    // Calculate the difference in milliseconds
+        // Calculate the difference in milliseconds
         const differenceMs = Math.round(new Date(inputEndDate) - new Date(inputStartDate));
 
-    // Convert back to days and return
+        // Convert back to days and return
         const days = Math.round(differenceMs / ONE_DAY);
-        console.log(days, 'days')
+        console.log(days, 'days');
         console.log(inputStartDate, inputEndDate);
-        
-    }
+    };
 
     return (
-        <div>
+        <PageContainer>
             <div>
                 <Link to="/">Home</Link>
             </div>
@@ -115,13 +115,21 @@ const Testing = () => {
             <div>
                 <h1>Test date input</h1>
                 <form action="">
-                    <input type="date" min={today} onChange={e => {
-                        setInputStartDate(e.currentTarget?.value);
-                    }} />
-                    <Form.Control type="date" min={inputStartDate} onChange={(e) => {
-                        // console.log(e.currentTarget?.value)
-                        setInputEndDate(e.currentTarget?.value);
-                    }}></Form.Control>
+                    <input
+                        type="date"
+                        min={today}
+                        onChange={e => {
+                            setInputStartDate(e.currentTarget?.value);
+                        }}
+                    />
+                    <Form.Control
+                        type="date"
+                        min={inputStartDate}
+                        onChange={e => {
+                            // console.log(e.currentTarget?.value)
+                            setInputEndDate(e.currentTarget?.value);
+                        }}
+                    ></Form.Control>
                     <button onClick={getDays}>Click</button>
                 </form>
             </div>
@@ -132,9 +140,8 @@ const Testing = () => {
                     <input type="text" />
                     <button>Submit</button>
                 </form>
-
             </div>
-        </div>
+        </PageContainer>
     );
 };
 

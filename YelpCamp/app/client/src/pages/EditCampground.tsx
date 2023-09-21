@@ -131,12 +131,11 @@ const EditCampground: React.FunctionComponent = () => {
     };
 
     const deleteCampgroundHandler = () => {
-
         // TODO: handle delete campground in modal
         appContext.setModal({
             open: true,
             content: <p>Confirm Delete campground</p>,
-        })
+        });
 
         return;
 
@@ -216,203 +215,196 @@ const EditCampground: React.FunctionComponent = () => {
 
     return (
         <PageContainer>
-            <Navbar />
+            <FlashAlert />
+            <h1 className="text-center mb-4">Edit Campground</h1>
+            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="campgroundTitle">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                        type="text"
+                        ref={formTitle}
+                        defaultValue={campground.title}
+                        required
+                    />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Title is required!</Form.Control.Feedback>
+                </Form.Group>
 
-            <Container className="my-5 px-[5%]">
-                <FlashAlert />
-                <h1 className="text-center mb-4">Edit Campground</h1>
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="campgroundTitle">
-                        <Form.Label>Title</Form.Label>
+                <Form.Group className="mb-3" controlId="campgroundLocation">
+                    <Form.Label>Location</Form.Label>
+                    <Form.Control
+                        type="text"
+                        ref={formLocation}
+                        defaultValue={campground.location}
+                        required
+                    />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        Location is required!
+                    </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="campgroundPrice">
+                    <Form.Label>Price</Form.Label>
+                    <InputGroup className="mb-2">
+                        <InputGroup.Text>$</InputGroup.Text>
                         <Form.Control
-                            type="text"
-                            ref={formTitle}
-                            defaultValue={campground.title}
+                            type="number"
+                            step="0.5"
+                            defaultValue={campground.price}
+                            ref={formPrice}
                             required
                         />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">
-                            Title is required!
+                            Price is required!
                         </Form.Control.Feedback>
-                    </Form.Group>
+                    </InputGroup>
+                </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="campgroundLocation">
-                        <Form.Label>Location</Form.Label>
-                        <Form.Control
-                            type="text"
-                            ref={formLocation}
-                            defaultValue={campground.location}
-                            required
-                        />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Location is required!
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                <Form.Group className="mb-3" controlId="campgroundDescription">
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        ref={formDescription}
+                        defaultValue={campground.description}
+                    />
+                    <Form.Control.Feedback type="valid">
+                        Description is optional
+                    </Form.Control.Feedback>
+                </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="campgroundPrice">
-                        <Form.Label>Price</Form.Label>
-                        <InputGroup className="mb-2">
-                            <InputGroup.Text>$</InputGroup.Text>
-                            <Form.Control
-                                type="number"
-                                step="0.5"
-                                defaultValue={campground.price}
-                                ref={formPrice}
-                                required
-                            />
-                            <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">
-                                Price is required!
-                            </Form.Control.Feedback>
-                        </InputGroup>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="campgroundDescription">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            ref={formDescription}
-                            defaultValue={campground.description}
-                        />
-                        <Form.Control.Feedback type="valid">
-                            Description is optional
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    {/* IMAGES */}
-                    {/* TODO: NICE TO HAVE: select main image -> set selected image to be images[0] */}
-                    <Form.Group className="mb-3" controlId="campgroundImageUrl">
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'flex-start',
-                                marginBottom: '8px',
-                            }}
+                {/* IMAGES */}
+                {/* TODO: NICE TO HAVE: select main image -> set selected image to be images[0] */}
+                <Form.Group className="mb-3" controlId="campgroundImageUrl">
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'flex-start',
+                            marginBottom: '8px',
+                        }}
+                    >
+                        <p>Images uploaded ({campground.images.length})</p>
+                        <Button
+                            variant={showDeleteCheckboxes ? 'secondary' : 'warning'}
+                            type="button"
+                            onClick={() =>
+                                setShowDeleteCheckboxes(show => {
+                                    if (show) setDeletingImages([]);
+                                    return !show;
+                                })
+                            }
+                            size="sm"
                         >
-                            <p>Images uploaded ({campground.images.length})</p>
-                            <Button
-                                variant={showDeleteCheckboxes ? 'secondary' : 'warning'}
-                                type="button"
-                                onClick={() =>
-                                    setShowDeleteCheckboxes(show => {
-                                        if (show) setDeletingImages([]);
-                                        return !show;
-                                    })
-                                }
-                                size="sm"
-                            >
-                                {!showDeleteCheckboxes ? (
-                                    <span>
-                                        <Delete /> Delete images?
-                                    </span>
-                                ) : (
-                                    <span>Cancel</span>
-                                )}
-                            </Button>
-                        </div>
+                            {!showDeleteCheckboxes ? (
+                                <span>
+                                    <Delete /> Delete images?
+                                </span>
+                            ) : (
+                                <span>Cancel</span>
+                            )}
+                        </Button>
+                    </div>
 
-                        {campground.images.map(image => (
-                            <UploadedImagesWrapper key={image.url}>
-                                <Image
-                                    src={image.thumbnail}
-                                    style={{
-                                        width: '160px',
-                                        height: '100px',
-                                        marginRight: '8px',
-                                        marginBottom: '8px',
-                                        objectFit: 'cover',
-                                    }}
-                                    alt="Thumbnail"
-                                    thumbnail
-                                />
-                                {showDeleteCheckboxes && (
-                                    <input
-                                        type="checkbox"
-                                        id={image.url}
-                                        value={image.filename}
-                                        onChange={onDeletingImagesChange}
-                                    />
-                                )}
-                            </UploadedImagesWrapper>
-                        ))}
-                        {deletingImages.length > 0 && (
-                            <p>
-                                Deleting {deletingImages.length}{' '}
-                                {deletingImages.length === 1 ? 'image' : 'images'}
-                            </p>
-                        )}
-
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Image URL is required!
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group controlId="campgroundImages" className="mb-3">
-                        <Form.Label>Add more images</Form.Label>
-                        <Form.Control
-                            type="file"
-                            multiple
-                            ref={formImages}
-                            accept="image/*"
-                            onChange={onSelectImagesHandler}
-                        />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Please select some images
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group controlId="campgroundImages" className="mb-3">
-                        {selectedImages &&
-                            selectedImages.map(img => (
-                                <Image
-                                    key={img}
-                                    src={URL.createObjectURL(img)}
-                                    style={{
-                                        width: '160px',
-                                        height: '100px',
-                                        marginRight: '8px',
-                                        marginBottom: '8px',
-                                        objectFit: 'cover',
-                                    }}
-                                    alt="Thumbnail"
-                                    thumbnail
-                                />
-                            ))}
-                    </Form.Group>
-
-                    {isUpdating ? (
-                        <Button variant="secondary" type="submit" disabled>
-                            <Spinner
-                                animation="border"
-                                size="sm"
-                                role="status"
-                                aria-hidden="true"
-                                as="span"
+                    {campground.images.map(image => (
+                        <UploadedImagesWrapper key={image.url}>
+                            <Image
+                                src={image.thumbnail}
+                                style={{
+                                    width: '160px',
+                                    height: '100px',
+                                    marginRight: '8px',
+                                    marginBottom: '8px',
+                                    objectFit: 'cover',
+                                }}
+                                alt="Thumbnail"
+                                thumbnail
                             />
-                            <span> Updating campground...</span>
-                        </Button>
-                    ) : (
-                        <Button variant="success" type="submit">
-                            Update campground
-                        </Button>
+                            {showDeleteCheckboxes && (
+                                <input
+                                    type="checkbox"
+                                    id={image.url}
+                                    value={image.filename}
+                                    onChange={onDeletingImagesChange}
+                                />
+                            )}
+                        </UploadedImagesWrapper>
+                    ))}
+                    {deletingImages.length > 0 && (
+                        <p>
+                            Deleting {deletingImages.length}{' '}
+                            {deletingImages.length === 1 ? 'image' : 'images'}
+                        </p>
                     )}
 
-                    <Link to={-1}>
-                        <Button variant="secondary" type="submit" className="mx-2">
-                            Cancel
-                        </Button>
-                    </Link>
-                    <button onClick={deleteCampgroundHandler} type="button">Delete campground</button>
-                </Form>
-                <PageModal />
-            </Container>
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        Image URL is required!
+                    </Form.Control.Feedback>
+                </Form.Group>
 
-            <Footer />
+                <Form.Group controlId="campgroundImages" className="mb-3">
+                    <Form.Label>Add more images</Form.Label>
+                    <Form.Control
+                        type="file"
+                        multiple
+                        ref={formImages}
+                        accept="image/*"
+                        onChange={onSelectImagesHandler}
+                    />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        Please select some images
+                    </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId="campgroundImages" className="mb-3">
+                    {selectedImages &&
+                        selectedImages.map(img => (
+                            <Image
+                                key={img}
+                                src={URL.createObjectURL(img)}
+                                style={{
+                                    width: '160px',
+                                    height: '100px',
+                                    marginRight: '8px',
+                                    marginBottom: '8px',
+                                    objectFit: 'cover',
+                                }}
+                                alt="Thumbnail"
+                                thumbnail
+                            />
+                        ))}
+                </Form.Group>
+
+                {isUpdating ? (
+                    <Button variant="secondary" type="submit" disabled>
+                        <Spinner
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            as="span"
+                        />
+                        <span> Updating campground...</span>
+                    </Button>
+                ) : (
+                    <Button variant="success" type="submit">
+                        Update campground
+                    </Button>
+                )}
+
+                <Link to={-1}>
+                    <Button variant="secondary" type="submit" className="mx-2">
+                        Cancel
+                    </Button>
+                </Link>
+                <button onClick={deleteCampgroundHandler} type="button">
+                    Delete campground
+                </button>
+            </Form>
         </PageContainer>
     );
 };

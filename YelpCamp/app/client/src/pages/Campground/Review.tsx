@@ -194,7 +194,7 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                     <>
                         <div className="flex flex-row justify-between">
                             <Card.Title className="font-normal">
-                                <StyledLink to={`/users/${review.author?.username}`}>
+                                <StyledLink to={`/user/${review.author?.username}`}>
                                     {review.author?.username}
                                 </StyledLink>
                             </Card.Title>

@@ -10,17 +10,6 @@ interface AppContextType {
     setModal: (modal: Modal) => void;
 }
 
-const AppContext = createContext<AppContextType>({
-    alert: null,
-    setAlert() {},
-    currentUser: null,
-    setCurrentUser(user) {},
-    modal: {
-        open: false,
-        content: null,
-        requiresLoggedIn: false,
-    },
-    setModal(modal) {},
-});
+const AppContext = createContext<AppContextType>({} as AppContextType);
 
 export default AppContext;

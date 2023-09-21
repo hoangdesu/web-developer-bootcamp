@@ -2,11 +2,9 @@ import React, { useContext } from 'react';
 import AppContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
 
-const ModalConfirmReservation = ({ reservation }) => {
+const ModalConfirmReservation = ({ reservation, makeReservation }) => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
-
-    const makeReservation = () => {};
 
     return (
         <div>

@@ -25,7 +25,7 @@ const NewCampground: React.FunctionComponent = () => {
     const formDescription = useRef<HTMLInputElement>(null);
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
-    
+
     useEffect(() => {
         document.title = 'YelpCamp | New Campground';
         if (!currentUser) {
@@ -115,118 +115,111 @@ const NewCampground: React.FunctionComponent = () => {
 
     return (
         <PageContainer>
-            <Navbar />
-            <Container className="my-5 px-[5%]">
-                <FlashAlert />
-                <h1 className="text-center mb-4">New Campground</h1>
-                <Form
-                    className="mb-5"
-                    noValidate
-                    validated={validated}
-                    onSubmit={handleSubmit}
-                    encType="multipart/form-data"
-                >
-                    <Form.Group className="mb-3" controlId="campgroundTitle">
-                        <Form.Label>Title</Form.Label>
-                        <Form.Control type="text" ref={formTitle} required />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Title is required!
-                        </Form.Control.Feedback>
-                    </Form.Group>
+            <h1 className="text-center mb-4">New Campground</h1>
+            <Form
+                className="mb-5"
+                noValidate
+                validated={validated}
+                onSubmit={handleSubmit}
+                encType="multipart/form-data"
+            >
+                <Form.Group className="mb-3" controlId="campgroundTitle">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control type="text" ref={formTitle} required />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Title is required!</Form.Control.Feedback>
+                </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="campgroundLocation">
-                        <Form.Label>Location</Form.Label>
-                        <Form.Control type="text" ref={formLocation} required />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Location is required!
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                <Form.Group className="mb-3" controlId="campgroundLocation">
+                    <Form.Label>Location</Form.Label>
+                    <Form.Control type="text" ref={formLocation} required />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        Location is required!
+                    </Form.Control.Feedback>
+                </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label htmlFor="inlineFormInputGroup">Price</Form.Label>
-                        <InputGroup className="mb-2">
-                            <InputGroup.Text>$</InputGroup.Text>
-                            <Form.Control
-                                type="number"
-                                step="0.1"
-                                min="0"
-                                id="inlineFormInputGroup"
-                                defaultValue={0.0}
-                                ref={formPrice}
-                                required
-                            />
-                            <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">
-                                Price is required!
-                            </Form.Control.Feedback>
-                        </InputGroup>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="campgroundDescription">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control as="textarea" ref={formDescription} />
-                        <Form.Control.Feedback type="valid">
-                            Description is optional
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group controlId="campgroundImages" className="mb-3">
-                        <Form.Label>Upload images (max 10)</Form.Label>
+                <Form.Group className="mb-3">
+                    <Form.Label htmlFor="inlineFormInputGroup">Price</Form.Label>
+                    <InputGroup className="mb-2">
+                        <InputGroup.Text>$</InputGroup.Text>
                         <Form.Control
-                            type="file"
-                            multiple
-                            ref={formImages}
-                            accept="image/*"
-                            onChange={onSelectImagesHandler}
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            id="inlineFormInputGroup"
+                            defaultValue={0.0}
+                            ref={formPrice}
+                            required
                         />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">
-                            Please select some images
+                            Price is required!
                         </Form.Control.Feedback>
-                    </Form.Group>
+                    </InputGroup>
+                </Form.Group>
 
-                    <Form.Group controlId="campgroundImages" className="mb-3">
-                        {selectedImages &&
-                            selectedImages.map(img => (
-                                <Image
-                                    key={img}
-                                    src={URL.createObjectURL(img)}
-                                    style={{
-                                        width: '160px',
-                                        height: '100px',
-                                        marginRight: '8px',
-                                        marginBottom: '8px',
-                                        objectFit: 'cover',
-                                    }}
-                                    alt="thumbnail"
-                                    thumbnail
-                                />
-                            ))}
-                    </Form.Group>
+                <Form.Group className="mb-3" controlId="campgroundDescription">
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control as="textarea" ref={formDescription} />
+                    <Form.Control.Feedback type="valid">
+                        Description is optional
+                    </Form.Control.Feedback>
+                </Form.Group>
 
-                    {isUploading ? (
-                        <>
-                            <Button variant="secondary" type="submit" disabled>
-                                <Spinner
-                                    animation="border"
-                                    size="sm"
-                                    role="status"
-                                    aria-hidden="true"
-                                    as="span"
-                                />
-                                <span> Creating campground...</span>
-                            </Button>
-                        </>
-                    ) : (
-                        <Button variant="success" type="submit">
-                            Create campground
+                <Form.Group controlId="campgroundImages" className="mb-3">
+                    <Form.Label>Upload images (max 10)</Form.Label>
+                    <Form.Control
+                        type="file"
+                        multiple
+                        ref={formImages}
+                        accept="image/*"
+                        onChange={onSelectImagesHandler}
+                    />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        Please select some images
+                    </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId="campgroundImages" className="mb-3">
+                    {selectedImages &&
+                        selectedImages.map(img => (
+                            <Image
+                                key={img}
+                                src={URL.createObjectURL(img)}
+                                style={{
+                                    width: '160px',
+                                    height: '100px',
+                                    marginRight: '8px',
+                                    marginBottom: '8px',
+                                    objectFit: 'cover',
+                                }}
+                                alt="thumbnail"
+                                thumbnail
+                            />
+                        ))}
+                </Form.Group>
+
+                {isUploading ? (
+                    <>
+                        <Button variant="secondary" type="submit" disabled>
+                            <Spinner
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                                as="span"
+                            />
+                            <span> Creating campground...</span>
                         </Button>
-                    )}
-                </Form>
-            </Container>
-            <Footer />
+                    </>
+                ) : (
+                    <Button variant="success" type="submit">
+                        Create campground
+                    </Button>
+                )}
+            </Form>
         </PageContainer>
     );
 };

@@ -1,5 +1,3 @@
-
-
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -90,43 +88,46 @@ const Register: React.FunctionComponent = () => {
 
     return (
         <PageContainer>
-            <Navbar />
-            <Container className="mt-5 px-[30%]">
-                <FlashAlert />
-                <h1 className="text-center mb-4">Register</h1>
-                <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="username">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control type="text" ref={formUsername} required />
+            <h1 className="text-center mb-4">Register</h1>
+            <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="username">
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control type="text" ref={formUsername} required />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        Username is required!
+                    </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="email">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control type="text" ref={formEmail} required />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Email is required!</Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="password">
+                    <Form.Label>Password</Form.Label>
+                    <InputGroup className="mb-2">
+                        <Form.Control
+                            type={showPassword ? 'text' : 'password'}
+                            ref={formPassword}
+                            required
+                        />
+                        <InputGroupText onClick={() => setShowPassword(show => !show)}>
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </InputGroupText>
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Username is required!</Form.Control.Feedback>
-                    </Form.Group>
+                        <Form.Control.Feedback type="invalid">
+                            Password is required!
+                        </Form.Control.Feedback>
+                    </InputGroup>
+                </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="email">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="text" ref={formEmail} required />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Email is required!</Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="password">
-                        <Form.Label>Password</Form.Label>
-                        <InputGroup className="mb-2">
-                            <Form.Control type={showPassword ? 'text' : 'password'} ref={formPassword} required />
-                            <InputGroupText onClick={() => setShowPassword(show => !show)}>
-                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </InputGroupText>
-                            <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">Password is required!</Form.Control.Feedback>
-                        </InputGroup>
-                    </Form.Group>
-
-                    <Button variant="success" type="submit" className="mt-3">
-                        Register
-                    </Button>
-                </Form>
-            </Container>
-            <Footer />
+                <Button variant="success" type="submit" className="mt-3">
+                    Register
+                </Button>
+            </Form>
         </PageContainer>
     );
 };

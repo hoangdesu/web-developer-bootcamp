@@ -15,20 +15,14 @@ const ErrorBoundary: FunctionComponent<ErrorBoundaryProps> = ({ err = null }) =>
 
     return (
         <PageContainer>
-            <Navbar />
-            <Container className="mt-3">
-                <Alert variant="danger">
-                    <Alert.Heading>
-                        {err?.message || err?.data || 'Something went wrong'}
-                    </Alert.Heading>
-                    <p>{err?.stack || ':/'}</p>
-                </Alert>
+            <Alert variant="danger">
+                <Alert.Heading>{err?.message || err?.data || 'Something went wrong'}</Alert.Heading>
+                <p>{err?.stack || ':/'}</p>
+            </Alert>
 
-                <Button variant="secondary" onClick={() => navigate('/')}>
-                    Home
-                </Button>
-            </Container>
-            <Footer />
+            <Button variant="secondary" onClick={() => navigate('/')}>
+                Home
+            </Button>
         </PageContainer>
     );
 };

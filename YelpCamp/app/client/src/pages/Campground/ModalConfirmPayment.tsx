@@ -10,21 +10,22 @@ export async function loader({ params }) {
 const ModalConfirmPayment = () => {
     const { campgroundId } = useLoaderData();
     console.log('campgroundId', campgroundId);
-    const [seconds, setSeconds ] =  useState(60);
+    const [seconds, setSeconds] = useState(60);
     const [status, setStatus] = useState('PENDING');
 
-    const url = `${window.location.protocol}//${window.location.host}/reservation/abc/confirm`
+    const url = `${window.location.protocol}//${window.location.host}/reservation/abc/confirm`;
 
     useEffect(() => {
         const paymentTimer = setInterval(() => {
-            axios.get('/api/v1/reservation/status')
+            axios
+                .get('/api/v1/reservation/status')
                 .then(res => res.data)
-                .then((data) => {
-                    console.log(data)
+                .then(data => {
+                    console.log(data);
                     if (data === 'PAID') {
                         setStatus('PAID!');
                     }
-                })
+                });
 
             if (seconds > 0) {
                 setSeconds(seconds - 1);
@@ -32,11 +33,11 @@ const ModalConfirmPayment = () => {
             if (seconds === 0) {
                 clearInterval(paymentTimer);
             }
-        }, 1000)
-        return ()=> {
+        }, 1000);
+        return () => {
             clearInterval(paymentTimer);
-          };
-    })
+        };
+    });
     console.log(window.location.protocol, window.location.host, window.location.hostname);
     const urlForQR = `${window.location.protocol}//${window.location.host}`;
 
@@ -45,25 +46,24 @@ const ModalConfirmPayment = () => {
             queryKey: ['reservationQR'],
             queryFn: () =>
                 // axios.get(`/api/v1/reservation/${url}/qr`).then(res => res.data),
-                axios.post(`/api/v1/reservation/qr`, {
-                    url: urlForQR
-                }).then(res => res.data),
+                axios
+                    .post(`/api/v1/reservation/qr`, {
+                        url: urlForQR,
+                    })
+                    .then(res => res.data),
         },
     ]);
 
     if (qrQuery.isLoading) return <>Loading...</>;
 
     if (qrQuery.error) return <>Error</>;
-    
-
-    
 
     return (
         <div>
             <h1>Confirm payment</h1>
             <p>Online payment</p>
 
-            <img src={qrQuery.data} alt="" height={200}/>
+            <img src={qrQuery.data} alt="" height={200} />
             <p>{seconds}</p>
             <p>Status: {status}</p>
         </div>

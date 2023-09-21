@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import axios from 'axios';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { useQueries } from 'react-query';
@@ -6,6 +6,9 @@ import Logo from '../assets/logo.png';
 import styled from '@emotion/styled';
 import * as qrCode from '@bitjson/qr-code';
 import { QRCode } from 'react-qrcode-logo';
+import PageContainer from '../components/PageContainer';
+import AppContext from '../store/app-context';
+import PageModal from '../components/Modals/PageModal';
 
 export async function loader({ params }) {
     return { reservationId: params.reservationId };
@@ -23,6 +26,7 @@ const Reservation = () => {
     const { reservationId } = useLoaderData();
     const [status, setStatus] = useState('PENDING');
     const [seconds, setSeconds] = useState(60);
+    const appContext = useContext(AppContext);
 
     const navigate = useNavigate();
 
@@ -30,14 +34,15 @@ const Reservation = () => {
     const urlForQR = `${window.location.protocol}//${window.location.host}/reservation/${reservationId}/confirm`;
 
     const qrRef = useRef(null);
-    console.log('qrRef',qrRef.current);
-    
+    console.log('qrRef', qrRef.current);
 
     console.log('urlForQR', urlForQR);
     useEffect(() => {
+        appContext.setModal({ open: false, content: null });
+
         const qrEl = qrCode.defineCustomElements(window);
-        console.log('qrEl',qrEl);
-        
+        console.log('qrEl', qrEl);
+
         // qrRef.animateQRCode((targets, _x, _y, _count, entity) => ({
         //     targets,
         //     from: entity === 'module' ? Math.random() * 200 : 200,
@@ -54,21 +59,21 @@ const Reservation = () => {
         //   }));
 
         const qr1 = document.getElementById('qr1');
-        console.log('qr1',qr1);
-        
-        qr1?.addEventListener('click', () => {console.log('hi')})
+        console.log('qr1', qr1);
+
+        qr1?.addEventListener('click', () => {
+            console.log('hi');
+        });
 
         if (!qrRef.current) return;
         qrRef.current.addEventListener('click', () => {
             console.log('clicked qr');
-            
-        })
-        
+        });
     }, []);
 
     React.useEffect(() => {
-        console.log('qrRef',qrRef);
-        console.log('qrRef.current',qrRef.current);
+        console.log('qrRef', qrRef);
+        console.log('qrRef.current', qrRef.current);
         // qrRef.current.animateQRCode('MaterializeIn');
         if (qrRef.current) {
             qrRef.current.animateQRCode('RadialRippleIn');
@@ -76,9 +81,8 @@ const Reservation = () => {
         // if (!qrRef.current) return;
         // qrRef.current.addEventListener('click', () => {
         //     console.log('clicked qr');
-            
+
         // })
-        
     }, [qrRef]);
 
     // axios.post(`/api/v1/reservation/${reservationId}/pay`)
@@ -97,8 +101,6 @@ const Reservation = () => {
         },
     ]);
 
-    
-
     useEffect(() => {
         const paymentTimer = setInterval(() => {
             axios
@@ -108,10 +110,25 @@ const Reservation = () => {
                     console.log('STATUS:', data);
                     if (data === 'PAID') {
                         // setStatus('PAID!');
-                        reservationQuery.refetch();
                         setTimeout(() => {
-                            navigate(-1);
-                        }, 1000);
+                            navigate(`/user/${appContext.currentUser!.username}?tab=reservations`); // TODO: SHIT DOESNT WORK?
+                        }, 5000);
+                        reservationQuery.refetch();
+                        appContext.setModal({
+                            open: true,
+                            content: (
+                                <div>
+                                    <h1>Payment received</h1>
+                                    <p>Thank you for your reservation!</p>
+
+                                    {/* TODO: play animation from beginning */}
+                                    <img
+                                        src="https://cdn.dribbble.com/users/1751799/screenshots/5512482/media/1cbd3594bb5e8d90924a105d4aae924c.gif"
+                                        alt=""
+                                    />
+                                </div>
+                            ),
+                        });
                     }
                 });
             // reservationQuery.refetch();
@@ -131,8 +148,6 @@ const Reservation = () => {
         };
     });
 
-    
-
     if (reservationQuery.isLoading || qrQuery.isLoading) return <>Loading...</>;
     if (reservationQuery.error || qrQuery.isLoading) return <>Error</>;
 
@@ -150,7 +165,7 @@ const Reservation = () => {
     };
 
     return (
-        <div>
+        <PageContainer>
             <h1>Confirm Reservation</h1>
             <p>Confirm Reservation: {reservationId}</p>
             <p>Booked by: {reservation.bookedBy.username}</p>
@@ -175,39 +190,53 @@ const Reservation = () => {
                 position-center-color="#70c559"
                 mask-x-to-y-ratio="1.2"
                 style={{
-                  width: '300px',
-                  height: '300px',
-                  margin: '2em auto',
-                  backgroundColor: '#fff',
+                    width: '300px',
+                    height: '300px',
+                    margin: '2em auto',
+                    backgroundColor: '#fff',
                 }}
                 ref={qrRef}
             >
-                <img src={Logo} alt="logo" slot="icon" style={{background: 'white', width: '100%' }} />
+                <img
+                    src={Logo}
+                    alt="logo"
+                    slot="icon"
+                    style={{ background: 'white', width: '100%' }}
+                />
             </qr-code>
-            <button onClick={() => {console.log(qrRef)
-            qrRef.current.addEventListener('click', () => {
-                console.log('clicked qr');
-                
-            });
-            qrRef.current.animateQRCode('RadialRippleIn')
-            // qrRef.current.animateQRCode((targets, _x, _y, _count, entity) => ({
-            //     targets,
-            //     from: entity === 'module' ? Math.random() * 200 : 200,
-            //     duration: 500,
-            //     easing: 'cubic-bezier(.5,0,1,1)',
-            //     web: { opacity: [1, 0], scale: [1, 1.1, 0.5] },
-            //   }));
-            
-            }}>QRREF</button>
+            <button
+                onClick={() => {
+                    console.log(qrRef);
+                    qrRef.current.addEventListener('click', () => {
+                        console.log('clicked qr');
+                    });
+                    qrRef.current.animateQRCode('RadialRippleIn');
+                    // qrRef.current.animateQRCode((targets, _x, _y, _count, entity) => ({
+                    //     targets,
+                    //     from: entity === 'module' ? Math.random() * 200 : 200,
+                    //     duration: 500,
+                    //     easing: 'cubic-bezier(.5,0,1,1)',
+                    //     web: { opacity: [1, 0], scale: [1, 1.1, 0.5] },
+                    //   }));
+                }}
+            >
+                QRREF
+            </button>
 
-        <QRCode value={urlForQR}
-            logoImage={Logo}
-            ecLevel={'H'}
-            size={300}
-            removeQrCodeBehindLogo
-            logoPadding={10}
-        />
-        </div>
+            <QRCode
+                value={urlForQR}
+                logoImage={Logo}
+                ecLevel={'H'}
+                size={300}
+                removeQrCodeBehindLogo
+                logoPadding={10}
+            />
+{/* 
+            <img
+                src="https://cdn.dribbble.com/users/1751799/screenshots/5512482/media/1cbd3594bb5e8d90924a105d4aae924c.gif"
+                alt=""
+            /> */}
+        </PageContainer>
     );
 };
 
