@@ -45,6 +45,11 @@ const NewCampground: React.FunctionComponent = () => {
             return;
         }
 
+        if (formImages?.current?.files.length < 1) {
+            alert('Please select at least 1 image');
+            return;
+        }
+
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.stopPropagation();
@@ -97,6 +102,7 @@ const NewCampground: React.FunctionComponent = () => {
                         setValidated(false);
                         form.reset();
                         setIsUploading(false);
+                        navigate('/');
                     }
                     appContext.setAlert({
                         message: errorMessage,

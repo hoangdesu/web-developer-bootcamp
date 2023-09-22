@@ -1,31 +1,23 @@
-import React, { useState, useContext, useRef, FormEvent } from 'react';
+import React, { useState, useContext, useRef, FormEvent, useEffect } from 'react';
 import { useQueries } from 'react-query';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { Pagination } from '@mui/material';
 
 import './App.css';
 import AppContext from './store/app-context';
 
 import PageContainer from './components/PageContainer';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
 import ClusterMap from './components/ClusterMap';
 import CampgroundCard from './pages/Campground/CampgroundCard';
-import FlashAlert from './components/FlashAlert';
 import Loading from './pages/Loading';
 import { Campground, User } from './types';
 import ErrorBoundary from './pages/ErrorBoundary';
 import SearchBox from './components/SearchBox';
-
-const CampgroundsContainer = styled.div`
-    display: grid;
-    grid-gap: 25px;
-    grid-template-columns: repeat(auto-fit, minmax(262px, 1fr));
-`;
+import CampgroundsContainer from './components/CampgroundsContainer';
 
 declare global {
     namespace JSX {
@@ -35,8 +27,6 @@ declare global {
     }
 }
 
-const SearchBoxContainer = styled.div``;
-
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
@@ -44,7 +34,10 @@ const App: React.FunctionComponent = () => {
     const [filteredCampgroundList, setFilteredCampgroundList] = useState<Campground[]>([]);
     const [page, setPage] = useState(1);
 
-    const searchRef = useRef(null);
+    useEffect(() => {
+        document.title = 'YelpCamp';
+        appContext.setModal({ open: false, content: null });
+    }, []);
 
     const [userAuthQuery, campgroundsQuery] = useQueries([
         {
@@ -64,7 +57,6 @@ const App: React.FunctionComponent = () => {
             queryKey: ['campgroundsData'],
             queryFn: () => axios.get(`/api/v1/campgrounds`).then(res => res.data),
             onSuccess: (campgroundList: Campground[]) => {
-                document.title = 'YelpCamp';
                 setCampgrounds(() => {
                     setFilteredCampgroundList(campgroundList.slice(0, 12));
                     return campgroundList;
@@ -79,12 +71,6 @@ const App: React.FunctionComponent = () => {
         console.error(campgroundsQuery.error);
         return <ErrorBoundary err={campgroundsQuery.error} />;
     }
-
-    const onSearchSubmit = (evt: FormEvent) => {
-        evt.preventDefault();
-        if (!searchRef.current?.value) return;
-        navigate(`/search?q=${searchRef.current?.value}`);
-    };
 
     // pagination:
     // page 1: 0 - 11

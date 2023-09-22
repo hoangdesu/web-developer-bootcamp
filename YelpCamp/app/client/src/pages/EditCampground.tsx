@@ -215,7 +215,6 @@ const EditCampground: React.FunctionComponent = () => {
 
     return (
         <PageContainer>
-            <FlashAlert />
             <h1 className="text-center mb-4">Edit Campground</h1>
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="campgroundTitle">

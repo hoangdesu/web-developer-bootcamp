@@ -11,9 +11,12 @@ interface CardProps {
 }
 
 const StyledCard = styled('div')`
+    /* PC view */
     position: relative;
-    max-width: fit-content;
+    width: 100%;
+    /* max-width: fit-content; */ // if images < 3, sizing will get f up
 
+    /* Mobile view */
     @media (max-width: 768px) {
         max-width: none;
     }
@@ -35,8 +38,10 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                             style={{
                                 objectFit: 'cover',
                                 borderRadius: '8px',
+                                // width: '100%',
                             }}
                         />
+                        
                         <Card.Body className="flex flex-column gap-1">
                             <div className="flex flex-row justify-between items-baseline mt-2 gap-3">
                                 <Card.Title className="font-normal">{campground.title}</Card.Title>

@@ -66,6 +66,7 @@ const campgroundSchema = new Schema(
     },
 );
 
+// Delete all reviews associated with a campground
 campgroundSchema.post('findOneAndDelete', async function (campground) {
     if (campground) {
         const resp = await Review.deleteMany({ _id: { $in: campground.reviews } });

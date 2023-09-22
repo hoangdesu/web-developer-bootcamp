@@ -23,8 +23,6 @@ router
 
 router.get('/search', controller.searchCampgrounds);
 
-router.get(`/makecampground`, controller.addMockCampground);
-
 router
     .route('/:id')
     .get(controller.getACampground)

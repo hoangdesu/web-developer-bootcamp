@@ -6,6 +6,7 @@ const { cloudinary } = require('../configs/cloudinary');
 const YelpcampError = require('../utilities/YelpcampError');
 
 const geocodingClient = require('../configs/mapbox');
+const CampgroundBuilder = require('../utilities/builders');
 
 const VietnamCoordinates = {
     type: 'Point',
@@ -54,16 +55,9 @@ const getACampground = catchAsync(async (req, res, next) => {
 const createCampground = catchAsync(async (req, res, next) => {
     const { title, location, price, description } = req.body.campground;
 
-    // console.log('--- creating campground...');
-    // console.log(req.headers)
-    // console.log('body:', req.body);
-    // console.log('files:', req.files);
-
     // Authorization
     const author = req.headers.authorization;
-    // console.log('headers:', req.headers, author);
 
-    // TODO: CREATE BUILD CAMPGROUND OBJECT HANDLER, MIGHT USE FACTORY PATTERN
     const images = req.files.map(file => ({
         url: file.path,
         filename: file.filename,
@@ -78,16 +72,19 @@ const createCampground = catchAsync(async (req, res, next) => {
         .send();
     const geometry = geoData.body?.features?.[0]?.geometry || null;
 
-    const savedCampground = await Campground({
-        title,
-        location,
-        geometry,
-        price,
-        images,
-        description,
-        author,
-    }).save();
+    const newCampground = new CampgroundBuilder()
+        .withTitle(title)
+        .withPrice(price)
+        .withDescription(description)
+        .withLocation(location)
+        .withGeometry(geometry)
+        .withImages(images)
+        .withAuthor(author)
+        .withReviews([])
+        .withReservations([])
+        .build();
 
+    const savedCampground = await Campground(newCampground).save();
     console.log('saved campground: ', savedCampground);
 
     // save new campground to user's campgrounds list
@@ -105,34 +102,6 @@ const createCampground = catchAsync(async (req, res, next) => {
 const editCampground = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { campground, deletingImages } = req.body;
-
-    console.log('---editing campground:', req.body, req.files);
-
-    // const newCampgroundData = {
-    //     ...campground,
-    //     images,
-    // };
-
-    // get current campground data
-    // const campground = await Campground.findById(id);
-
-    // adding new images
-
-    // console.log('campground:', campground, campgroundBody);
-
-    // const updatedCampground = {
-    //     ...campground,
-    //     ...campgroundBody
-    // }
-    // console.log('updated campground:', updatedCampground)
-
-    // updatedCampground.images.push(...images);
-
-    // await updatedCampground.save()
-
-    // return;
-
-    // await campground.save();
 
     // update campground text data
     const updatedCampground = await Campground.findByIdAndUpdate(id, campground, {
@@ -211,18 +180,6 @@ const deleteCampground = catchAsync(async (req, res, next) => {
     res.status(200).send('campground deleted');
 });
 
-const addMockCampground = catchAsync(async (req, res, next) => {
-    const campground = new Campground({
-        title: 'Mock campground',
-        price: 123,
-        description: 'just mocking',
-        location: 'Saigon',
-        image: 'https://images.unsplash.com/photo-1568576550491-185584b2145a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
-    });
-    await campground.save();
-    res.status(200).send('saved new campground');
-});
-
 const searchCampgrounds = catchAsync(async (req, res) => {
     const { q: query } = req.query;
 
@@ -241,6 +198,5 @@ module.exports = {
     createCampground,
     editCampground,
     deleteCampground,
-    addMockCampground,
     searchCampgrounds,
 };

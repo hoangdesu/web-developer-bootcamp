@@ -13,22 +13,19 @@ const getAllUsers = async (req, res) => {
 
 // POST /api/v1/users
 const createUser = catchAsync(async (req, res) => {
-    try {
-        const { username, email, password } = req.body;
-        const user = new User({ username, email, plainPassword: password });
+    const { username, email, password } = req.body;
+    const user = new User({ username, email, plainPassword: password });
 
-        // use the static method from passport-local-mongoose to create a new user and save into db
-        await User.register(user, password);
+    // use the static method from passport-local-mongoose to create a new user and save into db
+    await User.register(user, password);
 
-        // establish a login session after user resigter successfully
-        req.login(user, function (err) {
-            if (err) return next(err);
-            return res.sendStatus(200);
-        });
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
-    }
+    // establish a login session after user resigter successfully
+    req.login(user, function (err) {
+        if (err) return next(err);
+        return res.sendStatus(200);
+    });
+
+    res.status(500).send(err);
 });
 
 // GET /api/v1/users/username/:username
@@ -57,8 +54,6 @@ const getUserById = async (req, res) => {
     }
 };
 
-// TODO: change user password/email feature
-
 const login = (req, res, next) => {
     console.log('User logged in:', req.user.username);
     res.sendStatus(200);
@@ -80,7 +75,6 @@ const getAllFavoritedCampgrounds = catchAsync(async (req, res) => {
         .exec();
     if (!user) return next(new YelpcampError(404, 'User not found'));
 
-    // console.log(user);
     res.status(200).json(user.favoritedCampgrounds);
 });
 
@@ -123,6 +117,45 @@ const toggleFavoriteCampground = catchAsync(async (req, res) => {
     }
 });
 
+const updatePersonalInformation = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const { email, currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(id);
+
+    const auth = await user.authenticate(currentPassword);
+    if (!auth.user)
+        return next(new YelpcampError(401, 'Invalid password. User information is NOT updated.'));
+
+    if (email) {
+        user.email = email;
+    }
+
+    if (newPassword) {
+        if (newPassword !== currentPassword) {
+            user.plainPassword = newPassword;
+            await user.setPassword(newPassword);
+        }
+    }
+
+    const updatedUser = await user.save();
+
+    res.status(200).json(updatedUser);
+});
+
+const resetPassword = catchAsync(async (req, res, next) => {
+    const { username, email, newPassword } = req.body;
+
+    const user = await User.findByUsername(username);
+    if (!user) return next(new YelpcampError(404, 'Username not found'));
+
+    if (user.email === email) {
+        await user.setPassword(newPassword);
+        await user.save();
+        return res.send('password changed to ' + newPassword); //todo: remove this
+    }
+});
+
 module.exports = {
     getAllUsers,
     createUser,
@@ -132,4 +165,6 @@ module.exports = {
     logout,
     getAllFavoritedCampgrounds,
     toggleFavoriteCampground,
+    updatePersonalInformation,
+    resetPassword,
 };

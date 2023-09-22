@@ -2,27 +2,26 @@ const YelpcampError = require('../utilities/YelpcampError');
 
 const Campground = require('../models/campground');
 const campgroundSchema = require('../schemas/campground');
+const CampgroundBuilder = require('../utilities/builders');
 
+// validating request body with Joi before extracting data
 const validateCampground = (req, res, next) => {
-    // validating request body with Joi before extracting data
-    // console.log('joi:', req.body, req.files)
-
-    // TODO: CREATE BUILD CAMPGROUND OBJECT HANDLER, MIGHT USE FACTORY PATTERN
     const { title, location, price, description } = req.body.campground;
     const author = req.headers.authorization;
-    const body = {
-        campground: {
-            title,
-            location,
-            price,
-            description,
-            author,
-        },
-    };
+    const images = req.files.map(f => ({ url: f.path, filename: f.filename }));
 
-    body.campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    const campground = new CampgroundBuilder()
+        .withTitle(title)
+        .withPrice(price)
+        .withDescription(description)
+        .withLocation(location)
+        .withImages(images)
+        .withAuthor(author)
+        .withReviews([])
+        .withReservations([])
+        .build();
 
-    // console.log('--- body', body)
+    const body = { campground };
 
     const { error: validationError } = campgroundSchema.validate(body);
 

@@ -51,14 +51,17 @@ const Campground: React.FunctionComponent = () => {
     const [campground, setCampground] = useState<Campground | null>(null);
     const [isFavorited, setIsFavorited] = useState(false);
 
+    useEffect(() => {
+        appContext.setModal({ open: false, content: null, requiresLoggedIn: false });
+    }, []);
+
     const [campgroundQuery, favoritedCampgroundsQuery] = useQueries([
         {
             queryKey: ['campgroundData'],
             queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
             onSuccess: (data: Campground) => {
-                setCampground(data); // setting campground specifically to ensure new data
                 document.title = `YelpCamp | ${data.title}`;
-                appContext.setModal({ open: false, content: null, requiresLoggedIn: false });
+                setCampground(data); // setting campground specifically to ensure new data
             },
             onError: err => {
                 appContext.setAlert({
@@ -78,7 +81,6 @@ const Campground: React.FunctionComponent = () => {
                     .then(res => res.data),
             enabled: !!appContext.currentUser,
             onSuccess: data => {
-                console.log('fav campground:', data);
                 data.forEach(favCamp => {
                     if (favCamp._id === campgroundId) setIsFavorited(true);
                 });
@@ -173,60 +175,58 @@ const Campground: React.FunctionComponent = () => {
 
     return (
         <PageContainer>
-            <Row className="mb-3">
+            <Row className="mb-3 mt-0">
                 <Col>
-                    <section className="mt-3">
-                        <h1 className="font-normal">{campground.title}</h1>
-                        <div className="flex flex-row items-center justify-between gap-3">
-                            <span>
-                                <span>★ {averageRating(campground)}</span>
-                                {campground.reviews?.length > 0 && (
-                                    <span>
-                                        {' · '}
-                                        {campground.reviews?.length} reviews
-                                    </span>
-                                )}
+                    <h1 className="font-normal">{campground.title}</h1>
+                    <div className="flex flex-row items-center justify-between gap-3">
+                        <span>
+                            <span>★ {averageRating(campground)}</span>
+                            {campground.reviews?.length > 0 && (
                                 <span>
                                     {' · '}
-                                    <a
-                                        href={`https://www.google.com/search?q=${campground.location}`}
-                                        style={{ color: 'inherit' }}
-                                        target="_blank"
-                                    >
-                                        {campground.location}
-                                    </a>
+                                    {campground.reviews?.length} reviews
                                 </span>
+                            )}
+                            <span>
+                                {' · '}
+                                <a
+                                    href={`https://www.google.com/search?q=${campground.location}`}
+                                    style={{ color: 'inherit' }}
+                                    target="_blank"
+                                >
+                                    {campground.location}
+                                </a>
+                            </span>
+                        </span>
+
+                        <span className="flex flex-row items-center">
+                            <span
+                                className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
+                                onClick={toggleFavoriteCampground}
+                            >
+                                <span className="text-red-500 mr-1">
+                                    {isFavorited ? <Favorite /> : <FavoriteBorder />}{' '}
+                                </span>
+                                <span className="mb-[-8px]">Save</span>
                             </span>
 
-                            <span className="flex flex-row items-center">
-                                <span
-                                    className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
-                                    onClick={toggleFavoriteCampground}
-                                >
-                                    <span className="text-red-500 mr-1">
-                                        {isFavorited ? <Favorite /> : <FavoriteBorder />}{' '}
-                                    </span>
-                                    <span className="mb-[-8px]">Save</span>
+                            <span
+                                className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
+                                onClick={() => {
+                                    appContext.setModal({
+                                        open: true,
+                                        content: <ModalShare />,
+                                        // requiresLoggedIn: false,
+                                    });
+                                }}
+                            >
+                                <span className="text-gray-800 mr-1">
+                                    <IosShare />
                                 </span>
-
-                                <span
-                                    className="hover:cursor-pointer rounded p-2 hover:bg-neutral-100 active:bg-neutral-200 flex flex-row items-center"
-                                    onClick={() => {
-                                        appContext.setModal({
-                                            open: true,
-                                            content: <ModalShare />,
-                                            // requiresLoggedIn: false,
-                                        });
-                                    }}
-                                >
-                                    <span className="text-gray-800 mr-1">
-                                        <IosShare />
-                                    </span>
-                                    <span className="mb-[-8px]">Share</span>
-                                </span>
+                                <span className="mb-[-8px]">Share</span>
                             </span>
-                        </div>
-                    </section>
+                        </span>
+                    </div>
                 </Col>
             </Row>
 
@@ -348,7 +348,6 @@ const Campground: React.FunctionComponent = () => {
                     )}
                 </Col>
             </Row>
-            <PageModal />
         </PageContainer>
     );
 };
