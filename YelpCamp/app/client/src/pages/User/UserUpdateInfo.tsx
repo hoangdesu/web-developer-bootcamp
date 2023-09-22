@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Form, InputGroup } from 'react-bootstrap';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 import { useNavigate } from 'react-router-dom';
+import CheckmarkCSSAnimation from '../../components/CheckmarkCSSAnimation';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {
@@ -81,7 +82,7 @@ const UserUpdateInfo = ({ user }) => {
 
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Email: (current: {user.email})</Form.Label>
-                    <Form.Control type="text" ref={userEmailRef} required />
+                    <Form.Control type="text" ref={userEmailRef} />
                     <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                     <Form.Control.Feedback type="invalid">Email is required!</Form.Control.Feedback>
                 </Form.Group>
@@ -125,6 +126,8 @@ const UserUpdateInfo = ({ user }) => {
                 </Form.Group>
 
                 <PrimaryBlackButton>Update</PrimaryBlackButton>
+
+                <CheckmarkCSSAnimation />
             </Form>
         </div>
     );

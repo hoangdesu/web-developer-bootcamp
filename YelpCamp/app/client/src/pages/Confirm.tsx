@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
+import CheckmarkCSSAnimation from '../components/CheckmarkCSSAnimation';
 
 const Button = styled.button`
     width: 200px;
@@ -11,11 +12,13 @@ const Button = styled.button`
 const Confirm = () => {
     const { reservationId } = useLoaderData();
     console.log(reservationId);
+    const [showCheckmark, setShowCheckmark] = useState(false);
 
     const makePayment = () => {
         axios.get(`/api/v1/reservation/${reservationId}/pay`).then(data => {
             console.log('AFTER PAY:', data);
             // reservationQuery.refetch();
+            setShowCheckmark(true);
         });
     };
     return (
@@ -24,9 +27,12 @@ const Confirm = () => {
 
             <p>id: {reservationId}</p>
 
+            {showCheckmark && <CheckmarkCSSAnimation />}
+
             <div className="w-screen h-screen flex flex-col items-center justify-center">
                 <Button onClick={makePayment}>Confirm</Button>
             </div>
+
         </div>
     );
 };
