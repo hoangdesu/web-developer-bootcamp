@@ -272,8 +272,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             >
                 RESERVE →
             </button>
-
-            <button onClick={makeReservation}>Test reserve</button>
         </ReserveSection>
     );
 };

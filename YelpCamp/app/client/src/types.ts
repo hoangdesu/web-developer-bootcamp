@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export interface Campground {
     _id: string;
@@ -56,4 +56,14 @@ export interface Modal {
     open: boolean;
     content: React.ReactNode | React.ReactElement | null;
     requiresLoggedIn?: boolean;
+}
+
+type TSeverity = 'info' | 'success' | 'warning' | 'error';
+
+export interface Snackbar {
+    isOpen: boolean;
+    message: string;
+    severity?: string;
+    set: (isOpen: boolean, message: string, severity?: TSeverity) => void;
+    close: () => void;
 }

@@ -154,6 +154,9 @@ const resetPassword = catchAsync(async (req, res, next) => {
         await user.save();
         return res.send('password changed to ' + newPassword); //todo: remove this
     }
+    
+    // reset fail
+    return res.send(500);
 });
 
 module.exports = {

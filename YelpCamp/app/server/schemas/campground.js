@@ -16,7 +16,6 @@ module.exports = Joi.object({
                     filename: Joi.string().required(),
                 }),
             )
-            .min(1)
             .required(),
         description: Joi.string().sanitizeHTML(),
         author: Joi.string().required(),

@@ -5,6 +5,7 @@ import FlashAlert from './FlashAlert';
 import PageModal from '../components/Modals/PageModal';
 import Footer from './Footer';
 import { Snackbar } from '@mui/material';
+import PageSnackbar from './PageSnackbar';
 
 interface PageContainerProps {
     children: ReactNode;
@@ -18,7 +19,7 @@ const PageContainer: React.FunctionComponent<PageContainerProps> = ({ children }
                 <FlashAlert />
                 {children}
                 <PageModal />
-                {/* <Snackbar /> */}
+                <PageSnackbar />
             </Container>
             <Footer />
         </div>

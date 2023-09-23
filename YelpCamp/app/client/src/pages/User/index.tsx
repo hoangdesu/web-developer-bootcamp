@@ -10,6 +10,7 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import styled from '@emotion/styled';
 import AppContext from '../../store/app-context';
 import UserUpdateInfo from './UserUpdateInfo';
+import CheckCSS from '../../components/CheckmarkCSSAnimation';
 
 export async function loader({ params }) {
     return { username: params.username };

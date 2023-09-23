@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, ReactNode, FunctionComponent } from 'react';
 import AppContext from './app-context';
-import { Alert, Modal, User } from '../types';
+import { Alert, Modal, Snackbar, User } from '../types';
 
 interface ContextProviderProps {
     children?: ReactNode;
@@ -10,6 +10,7 @@ interface appState {
     alert: Alert | null;
     currentUser: User | null;
     modal: Modal;
+    snackbar: Snackbar;
 }
 
 const initialAppState: appState = {
@@ -19,6 +20,22 @@ const initialAppState: appState = {
         open: false,
         content: null,
         requiresLoggedIn: false,
+    },
+    snackbar: {
+        isOpen: false,
+        message: '',
+        severity: 'success',
+        set: function (isOpen: boolean, message = 'default message', severity = 'info') {
+            console.log('inside set snackbar', this.isOpen);
+            this.isOpen = isOpen;
+            this.message = message;
+            this.severity = severity;
+        },
+        close: function () {
+            this.isOpen = false;
+            this.message = '';
+            console.log('inside close function', this.isOpen)
+        },
     },
 };
 
@@ -38,6 +55,11 @@ const appReducer = (state, action) => {
             return {
                 ...state,
                 modal: action.modal,
+            };
+        case 'SET_SNACKBAR':
+            return {
+                ...state,
+                snackbar: action.snackbar,
             };
         default:
             return initialAppState;
@@ -59,6 +81,10 @@ const AppContextProvider: FunctionComponent<ContextProviderProps> = ({ children 
         dispatchAppAction({ type: 'SET_MODAL', modal: modal });
     };
 
+    const setSnackbar = (snackbar: Snackbar) => {
+        dispatchAppAction({ type: 'SET_SNACKBAR', snackbar: snackbar });
+    };
+
     const appContext = {
         alert: appState.alert,
         setAlert: setAlert,
@@ -66,6 +92,7 @@ const AppContextProvider: FunctionComponent<ContextProviderProps> = ({ children 
         setCurrentUser: setCurrentUser,
         modal: appState.modal,
         setModal: setModal,
+        snackbar: appState.snackbar,
     };
 
     useEffect(() => {

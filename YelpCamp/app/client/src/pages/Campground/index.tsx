@@ -15,7 +15,7 @@ import Loading from '../Loading';
 import Review from './Review';
 import { Review as ReviewType } from '../../types';
 import FlashAlert from '../../components/FlashAlert';
-import { Box, Modal, Rating } from '@mui/material';
+import { Alert, Box, Modal, Rating, Snackbar } from '@mui/material';
 import CampgroundCardCarousel from './CampgroundCardCarousel';
 import CampgroundMap from './CampgroundMap';
 import { Campground } from '../../types';
@@ -159,7 +159,14 @@ const Campground: React.FunctionComponent = () => {
                 },
             )
             .then(res => {
-                setIsFavorited(res.data.isFavorited);
+                // setIsFavorited(res.data.isFavorited);
+                // appContext.setAlert({
+                //     message: res.data.isFavorited ? 'Added to favorite' : 'Removed from favorite',
+                //     variant: 'info'
+                // })
+                console.log(appContext.snackbar)
+                // appContext.snackbar.set(!appContext.snackbar.open);
+                appContext.snackbar.set(true, res.data.isFavorited+"", 'success');
             });
     };
 
@@ -176,6 +183,7 @@ const Campground: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <Row className="mb-3 mt-0">
+                <button onClick={()=>appContext.snackbar.close()}>close snackbar</button>
                 <Col>
                     <h1 className="font-normal">{campground.title}</h1>
                     <div className="flex flex-row items-center justify-between gap-3">
@@ -348,6 +356,13 @@ const Campground: React.FunctionComponent = () => {
                     )}
                 </Col>
             </Row>
+            {/* <Snackbar
+                open={true}
+                autoHideDuration={6000}
+                //   onClose={}
+                message="Note archived"
+                //   action={action}
+            ><Alert severity="success">This is a success message!</Alert></Snackbar> */}
         </PageContainer>
     );
 };

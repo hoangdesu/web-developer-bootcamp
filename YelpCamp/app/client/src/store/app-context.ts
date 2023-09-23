@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { Alert, User, Modal } from '../types';
+import { Alert, User, Modal, Snackbar } from '../types';
 
 interface AppContextType {
     alert: Alert | null;
@@ -8,6 +8,7 @@ interface AppContextType {
     setCurrentUser: (user: User | null) => void;
     modal: Modal;
     setModal: (modal: Modal) => void;
+    snackbar: Snackbar;
 }
 
 const AppContext = createContext<AppContextType>({} as AppContextType);
