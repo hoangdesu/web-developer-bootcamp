@@ -52,6 +52,8 @@ const UserUpdateInfo = ({ user }) => {
         }
         setValidated(true);
     };
+
+    // TODO: UI design -> separate out changing email with changing password. Wrap in different boxes
     return (
         <div>
             <h1>User info</h1>

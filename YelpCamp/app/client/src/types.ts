@@ -62,8 +62,6 @@ type TSeverity = 'info' | 'success' | 'warning' | 'error';
 
 export interface Snackbar {
     isOpen: boolean;
-    message: string;
-    severity?: string;
-    set: (isOpen: boolean, message: string, severity?: TSeverity) => void;
-    close: () => void;
+    message?: string;
+    severity?: TSeverity;
 }

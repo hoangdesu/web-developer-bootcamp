@@ -1,45 +1,31 @@
 import React, { useEffect, useReducer, ReactNode, FunctionComponent } from 'react';
-import AppContext from './app-context';
+import AppContext, { AppContextType } from './app-context';
 import { Alert, Modal, Snackbar, User } from '../types';
 
 interface ContextProviderProps {
     children?: ReactNode;
 }
 
-interface appState {
-    alert: Alert | null;
-    currentUser: User | null;
-    modal: Modal;
-    snackbar: Snackbar;
-}
-
-const initialAppState: appState = {
+const initialAppState: AppContextType = {
     alert: null,
+    setAlert: () => {},
     currentUser: null,
+    setCurrentUser: () => {},
     modal: {
         open: false,
         content: null,
         requiresLoggedIn: false,
     },
+    setModal: () => {},
     snackbar: {
         isOpen: false,
         message: '',
-        severity: 'success',
-        set: function (isOpen: boolean, message = 'default message', severity = 'info') {
-            console.log('inside set snackbar', this.isOpen);
-            this.isOpen = isOpen;
-            this.message = message;
-            this.severity = severity;
-        },
-        close: function () {
-            this.isOpen = false;
-            this.message = '';
-            console.log('inside close function', this.isOpen)
-        },
+        severity: 'info',
     },
+    setSnackbar: () => {},
 };
 
-const appReducer = (state, action) => {
+const appReducer = (state: AppContextType, action) => {
     switch (action.type) {
         case 'SET_ALERT':
             return {
@@ -81,11 +67,20 @@ const AppContextProvider: FunctionComponent<ContextProviderProps> = ({ children 
         dispatchAppAction({ type: 'SET_MODAL', modal: modal });
     };
 
-    const setSnackbar = (snackbar: Snackbar) => {
+    const setSnackbar = (
+        isOpen: boolean,
+        message: string | React.ReactNode | React.ReactElement,
+        severity = 'info',
+    ) => {
+        const snackbar = {
+            isOpen,
+            message,
+            severity,
+        };
         dispatchAppAction({ type: 'SET_SNACKBAR', snackbar: snackbar });
     };
 
-    const appContext = {
+    const appContext: AppContextType = {
         alert: appState.alert,
         setAlert: setAlert,
         currentUser: appState.currentUser,
@@ -93,6 +88,7 @@ const AppContextProvider: FunctionComponent<ContextProviderProps> = ({ children 
         modal: appState.modal,
         setModal: setModal,
         snackbar: appState.snackbar,
+        setSnackbar: setSnackbar,
     };
 
     useEffect(() => {

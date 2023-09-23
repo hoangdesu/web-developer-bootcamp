@@ -72,7 +72,7 @@ const Navbar: React.FunctionComponent = () => {
                                     className="pe-2"
                                 >
                                     <Link
-                                        to={`/user/${currentUser.username}`}
+                                        to={`/user/${currentUser.username}?tab=info`}
                                         key={'user'}
                                         className="dropdown-item active:bg-primary-dark-color" // TODO: change this color
                                     >

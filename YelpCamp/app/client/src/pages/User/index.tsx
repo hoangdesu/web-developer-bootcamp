@@ -10,7 +10,6 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import styled from '@emotion/styled';
 import AppContext from '../../store/app-context';
 import UserUpdateInfo from './UserUpdateInfo';
-import CheckCSS from '../../components/CheckmarkCSSAnimation';
 
 export async function loader({ params }) {
     return { username: params.username };
@@ -27,9 +26,10 @@ const Container = styled.div`
     flex-direction: row;
     gap: 50px;
     margin-bottom: 50px;
+    /* border-right: 1px solid red; */
 
     .tabs {
-        width: 300px;
+        width: 250px;
         /* position: absolute; */
         /* z-index: 1; */
         /* border-right: 1px solid black; */
@@ -39,7 +39,7 @@ const Container = styled.div`
         ul {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 1px;
         }
 
         ul,
@@ -59,8 +59,8 @@ const Container = styled.div`
 
         li:hover {
             cursor: pointer;
-            /* background-color: gray; */
-            text-decoration: underline;
+            background-color: gray;
+            /* text-decoration: underline; */
         }
     }
 
@@ -78,15 +78,15 @@ const Container = styled.div`
 // TODO: rename these attributes + ids
 const TABS = [
     {
-        id: 'userInfo',
+        id: 'info',
         title: 'User info',
     },
     {
-        id: 'ownedCampgrounds',
+        id: 'owned',
         title: 'Owned campgrounds',
     },
     {
-        id: 'favoritedCampgrounds',
+        id: 'favorite',
         title: 'Favorite campgrounds',
     },
     {
@@ -105,6 +105,8 @@ const User = () => {
 
     useEffect(() => {
         appContext.setModal({ open: false, content: null, requiresLoggedIn: false });
+        appContext.setSnackbar(false);
+        if (!searchParams.get('tab')) setSearchParams({ tab: 'info' });
     }, []);
 
     const {
@@ -117,7 +119,6 @@ const User = () => {
         queryFn: () => axios.get(`/api/v1/users/username/${username}`).then(res => res.data),
         onSuccess: user => {
             document.title = `YelpCamp | ${user.username}`;
-            setSearchParams({ tab: 'userInfo' });
         },
     });
 
@@ -162,9 +163,9 @@ const User = () => {
                 {/* content */}
                 <div className="content">
                     {!searchParams.get('tab') ||
-                        (searchParams.get('tab') === 'userInfo' && <UserUpdateInfo user={user} />)}
+                        (searchParams.get('tab') === 'info' && <UserUpdateInfo user={user} />)}
 
-                    {searchParams.get('tab') === 'ownedCampgrounds' && (
+                    {searchParams.get('tab') === 'owned' && (
                         <div>
                             <h1>Owned campgrounds</h1>
                             <ol>
@@ -179,7 +180,7 @@ const User = () => {
                         </div>
                     )}
 
-                    {searchParams.get('tab') === 'favoritedCampgrounds' && (
+                    {searchParams.get('tab') === 'favorite' && (
                         <div>
                             <h1>Favorite campgrounds</h1>
                             <ol>

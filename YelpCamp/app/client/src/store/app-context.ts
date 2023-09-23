@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { Alert, User, Modal, Snackbar } from '../types';
 
-interface AppContextType {
+export interface AppContextType {
     alert: Alert | null;
     setAlert: (alert: Alert) => void;
     currentUser: User | null;
@@ -9,6 +9,11 @@ interface AppContextType {
     modal: Modal;
     setModal: (modal: Modal) => void;
     snackbar: Snackbar;
+    setSnackbar: (
+        isOpen: boolean,
+        message?: string | React.ReactNode | React.ReactElement,
+        severity?: string,
+    ) => void;
 }
 
 const AppContext = createContext<AppContextType>({} as AppContextType);

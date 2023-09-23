@@ -1,34 +1,25 @@
 import React, { useContext } from 'react';
 import AppContext from '../../store/app-context';
-import { Alert, AlertColor, Snackbar } from '@mui/material';
+import { Alert, AlertColor, Button, IconButton, Snackbar } from '@mui/material';
+import { Close } from '@mui/icons-material';
 
 const PageSnackbar = () => {
     const appContext = useContext(AppContext);
+    const { isOpen, message, severity } = appContext.snackbar;
 
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
-
-        appContext.snackbar.close();
+        // Keep the same UI before closing snackbar.
+        // Otherwise message and severity will be flashed before closing (:/)
+        appContext.setSnackbar(false, message, severity);
     };
 
-    console.log('appContext.snackbar', appContext.snackbar);
-
     return (
-        <Snackbar
-            open={appContext.snackbar.isOpen}
-            autoHideDuration={2000}
-            onClose={handleClose}
-            message="Note archived"
-            //   action={action}
-        >
-            <Alert
-                onClose={handleClose}
-                severity={appContext.snackbar.severity as AlertColor}
-                sx={{ width: '100%' }}
-            >
-                {appContext.snackbar.message}
+        <Snackbar open={isOpen} autoHideDuration={3000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity={severity as AlertColor} sx={{ width: '100%' }}>
+                {message}
             </Alert>
         </Snackbar>
     );

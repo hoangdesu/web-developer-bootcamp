@@ -159,14 +159,29 @@ const Campground: React.FunctionComponent = () => {
                 },
             )
             .then(res => {
-                // setIsFavorited(res.data.isFavorited);
-                // appContext.setAlert({
-                //     message: res.data.isFavorited ? 'Added to favorite' : 'Removed from favorite',
-                //     variant: 'info'
-                // })
-                console.log(appContext.snackbar)
-                // appContext.snackbar.set(!appContext.snackbar.open);
-                appContext.snackbar.set(true, res.data.isFavorited+"", 'success');
+                setIsFavorited(res.data.isFavorited);
+                appContext.setSnackbar(
+                    true,
+                    res.data.isFavorited ? (
+                        <>
+                            <span>Added to your favorite. </span>
+                            <Link
+                                to={`/user/${appContext.currentUser.username}?tab=favorite`}
+                                className="text-inherit"
+                                target="_blank"
+                            >
+                                View all
+                            </Link>
+                        </>
+                    ) : (
+                        <span>Removed from your favorite.</span>
+                    ),
+                    // <Link to='/'>Hi</Link>,
+                    'success',
+                );
+            })
+            .catch(err => {
+                appContext.setSnackbar(true, 'Error adding to your favorite', 'error');
             });
     };
 
@@ -183,7 +198,6 @@ const Campground: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <Row className="mb-3 mt-0">
-                <button onClick={()=>appContext.snackbar.close()}>close snackbar</button>
                 <Col>
                     <h1 className="font-normal">{campground.title}</h1>
                     <div className="flex flex-row items-center justify-between gap-3">
