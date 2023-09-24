@@ -8,7 +8,6 @@ import * as qrCode from '@bitjson/qr-code';
 import { QRCode } from 'react-qrcode-logo';
 import PageContainer from '../components/PageContainer';
 import AppContext from '../store/app-context';
-import PageModal from '../components/Modals/PageModal';
 import CheckmarkCSSAnimation from '../components/CheckmarkCSSAnimation';
 
 export async function loader({ params }) {
@@ -121,12 +120,6 @@ const Reservation = () => {
                                 <div>
                                     <h1>Payment received</h1>
                                     <p>Thank you for your reservation with YelpCamp!</p>
-
-                                    {/* TODO: play animation from beginning */}
-                                    {/* <img
-                                        src="https://cdn.dribbble.com/users/1751799/screenshots/5512482/media/1cbd3594bb5e8d90924a105d4aae924c.gif"
-                                        alt=""
-                                    /> */}
 
                                     <CheckmarkCSSAnimation />
                                 </div>

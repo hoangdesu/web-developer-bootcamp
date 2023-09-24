@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useLayoutEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import appContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
 import AppContext from '../../store/app-context';

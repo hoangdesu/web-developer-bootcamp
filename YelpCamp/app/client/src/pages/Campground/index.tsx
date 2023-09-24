@@ -206,7 +206,8 @@ const Campground: React.FunctionComponent = () => {
                             {campground.reviews?.length > 0 && (
                                 <span>
                                     {' · '}
-                                    {campground.reviews?.length} reviews
+                                    {campground.reviews?.length}{' '}
+                                    {campground.reviews?.length > 1 ? 'reviews' : 'review'}
                                 </span>
                             )}
                             <span>

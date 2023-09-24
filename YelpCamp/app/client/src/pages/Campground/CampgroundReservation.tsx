@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect, useContext, FormEvent } from 'react';
 import styled from '@emotion/styled';
 import { Campground } from '../../types';
 import { USDtoVND, getDaysBetween, getNextStartDays } from '../../helpers/campground';
-import { Form } from 'react-bootstrap';
+import { Form, OverlayTrigger, Tooltip as BSTooltip, InputGroup } from 'react-bootstrap';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -12,6 +12,7 @@ import AppContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
 import ModalConfirmReservation from '../../components/Modals/ModalConfirmReservation';
 import ModalLogin from '../../components/Modals/ModalLogin';
+import { Tooltip } from '@mui/material';
 
 interface CampgroundResvervationProps {
     campground: Campground;
@@ -37,6 +38,12 @@ const InputButton = props => (
     </span>
 );
 
+const DISCOUNT_CODES = {
+    HOANGDEPTRAI: 90,
+    YELPCAMP: 10,
+    A: 2
+};
+
 const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campground }) => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
@@ -44,11 +51,73 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     const [inputStartDate, setInputStartDate] = useState<string | null>(null);
     const [inputEndDate, setInputEndDate] = useState<string | null>(null);
     const [minEndDate, setMinEndDate] = useState('');
+
     const [guests, setGuests] = useState<number>(1);
-    const [days, setDays] = useState(getDaysBetween(inputStartDate, inputEndDate));
+    const [nights, setNights] = useState(
+        getDaysBetween(inputStartDate as string, inputEndDate as string),
+    );
+    const [fees, setFees] = useState({
+        campgroundFee: 0,
+        serviceFee: 0,
+        taxes: 0,
+        discount: {
+            amount: 0,
+            code: '',
+            valid: null,
+            percentage: 0
+        },
+        totalAmount: 0,
+    });
+    
+
+    const checkinDateRef = useRef(null);
+    const checkoutDateRef = useRef(null);
+    const discountCouponRef = useRef(null);
+
+    useEffect(() => {
+        if (!inputStartDate) setMinEndDate(minStartDate);
+        else {
+            setMinEndDate(getNextStartDays(inputStartDate));
+            setNights(getDaysBetween(inputStartDate as string, inputEndDate as string));
+        }
+    }, [inputStartDate, inputEndDate]);
+
+    useEffect(() => {
+        const campgroundFee = campground.price * nights;
+        const serviceFee = guests * 2; // $2 for each guest
+
+        const totalBeforeTax = campgroundFee + serviceFee;
+        const taxes = totalBeforeTax * 0.08; // tax = 8%
+        // const totalAfterTaxes = totalBeforeTax + taxes;
+
+        const totalAmount = totalBeforeTax + taxes;
+        
+
+        // const discountPercentage = (new Date().getDate() % 10) / 100; // lucky number based on the day. max 10% discount
+        // const discount = totalAfterTaxes * discountPercentage;
+
+        // const totalAmount = totalAfterTaxes - fees.discount;
+        // totalAfterTaxes - (discount / 100) * totalAfterTaxes;
+
+        setFees(prev => ({
+            ...prev,
+            campgroundFee,
+            serviceFee,
+            taxes,
+            totalAmount,
+        }));
+    }, [nights, guests]);
+
+    // const calculateFees = (guests,)
+
+    // input min requires date to be in yyyy-mm-dd format
+    // Note that en-CA is a locale, not a timezone. Canada uses the YYYY-MM-DD format.
+    const minStartDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
 
     // numbers for calculations
-    const [campgroundFee, setCampgroundFee] = useState(Number(campground.price * days).toFixed(2));
+    const [campgroundFee, setCampgroundFee] = useState(
+        Number(campground.price * nights).toFixed(2),
+    );
     const [guestsFee, setGuestsFee] = useState(guests * 5);
     const [totalBeforeTax, setTotalBeforeTax] = useState(
         Number(campgroundFee + guestsFee).toFixed(2),
@@ -61,24 +130,9 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
         Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2),
     );
 
-    const checkinDateRef = useRef(null);
-    const checkoutDateRef = useRef(null);
-
-    // input min requires date to be in yyyy-mm-dd format
-    // Note that en-CA is a locale, not a timezone. Canada uses the YYYY-MM-DD format.
-    const minStartDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
-
-    useEffect(() => {
-        if (!inputStartDate) setMinEndDate(minStartDate);
-        else {
-            setMinEndDate(getNextStartDays(inputStartDate));
-            setDays(getDaysBetween(inputStartDate, inputEndDate));
-        }
-    }, [inputStartDate, inputEndDate]);
-
     // numbers for calculations
     // TODO: check calculations
-    // const campgroundFee = Number(campground.price * days).toFixed(2);
+    // const campgroundFee = Number(campground.price * nights).toFixed(2);
     // const guestsFee = guests * 5;
     // const totalBeforeTax = Number(campgroundFee + guestsFee).toFixed(2);
     // const totalAfterTax = Number(totalBeforeTax * 1.08).toFixed(2); // tax = 8%
@@ -89,10 +143,10 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
         const reservation = {
             bookedBy: appContext.currentUser!.id,
             campground: campground._id,
-            nights: days,
+            nights: nights,
             checkIn: inputStartDate,
             checkOut: inputEndDate,
-            guests: parseInt(guests),
+            guests: guests,
             totalPrice: totalAfterDiscount,
             status: 'PENDING',
         };
@@ -122,19 +176,72 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
         const reservation = {
             bookedBy: appContext.currentUser.id,
             campground: campground._id,
-            nights: days,
+            nights: nights,
             checkIn: inputStartDate,
             checkOut: inputEndDate,
-            guests: parseInt(guests),
+            guests: guests,
             totalPrice: totalAfterDiscount,
             status: 'PENDING',
         };
 
         appContext.setModal({
             open: true,
-            content: <ModalConfirmReservation reservation={reservation} makeReservation={makeReservation} />,
+            content: (
+                <ModalConfirmReservation
+                    reservation={reservation}
+                    makeReservation={makeReservation}
+                />
+            ),
             requiresLoggedIn: true,
         });
+    };
+
+    const EditButton = styled.button`
+        /* border: 1px solid black; */
+        background-color: transparent;
+        padding: 2px 20px;
+        /* font-size: 14px; */
+        /* height: fit-content; */
+        border: inherit;
+        transition: 100ms ease;
+        &:hover {
+            color: #fffcf9;
+            background-color: #222325;
+        }
+    `;
+
+    const applyDiscount = (evt: React.FormEvent<HTMLFormElement>) => {
+        evt.preventDefault();
+        console.log(
+            'discountCouponRef.current.value',
+            discountCouponRef.current.value.toUpperCase(),
+        );
+
+        if (fees.discount.code.toUpperCase() in DISCOUNT_CODES) {
+            // console.log('discountPercentage',discountPercentage);
+            const percentage = DISCOUNT_CODES[discountCode];
+            const amount = percentage * fees.totalAmount; // todo calculaet this shit
+
+
+            // TODO: work on discount section
+            // only show after checking discount code
+            setFees(fees => ({
+                ...fees,
+                discount: {
+                    amount,
+                    percentage,
+                    valid: true
+                }
+            }));
+        } else {
+            setFees(fees => ({
+                ...fees,
+                discount: {
+                    valid: null
+                }
+            }));
+        }
+        // discountCouponRef.current.value = '';
     };
 
     return (
@@ -148,11 +255,12 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                         campground.price,
                     )}₫)`}</span>
                 </p>
-                <span className="">{days > 0 && `${days} ${days === 1 ? 'night' : 'nights'}`}</span>
+                <span>
+                    {nights > 0 && `${nights} ${nights === 1 ? 'night' : 'nights'}`}
+                </span>
             </div>
-
             {/* DATE PICKER */}
-            <div className="flex flex-row md:flex-col gap-5 mb-4">
+            <div className="flex flex-row md:flex-col justify-between gap-5 mb-4">
                 <div>
                     <Form.Label>Check-in</Form.Label>
                     <Form.Control
@@ -163,7 +271,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                             // reset the input end date if user choses a date after endDate
                             if (
                                 new Date(e.currentTarget.value).getTime() >
-                                new Date(inputEndDate).getTime()
+                                new Date(inputEndDate as string).getTime()
                             ) {
                                 setInputEndDate(null);
                             }
@@ -184,7 +292,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                     />
                 </div>
             </div>
-
             {/* NUMBER OF GUESTS */}
             <div className="flex flex-row justify-between items-baseline">
                 <Form.Label>Guests</Form.Label>
@@ -200,31 +307,20 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                                     setGuests(1);
                                     return;
                                 }
-                                if (!isNaN(e.currentTarget.value))
+                                if (!isNaN(parseInt(e.currentTarget.value)))
                                     setGuests(parseInt(e.currentTarget.value));
 
-                                if (e.currentTarget.value === 0) setGuests(1);
+                                if (parseInt(e.currentTarget.value) === 0) setGuests(1);
                             }}
                         />
                     </span>
                     <InputButton onClick={() => setGuests(g => g + 1)}>+</InputButton>
                 </span>
             </div>
-
             <hr />
             {/* BILLING */}
             {inputEndDate && inputStartDate && (
                 <div className="flex flex-column gap-1">
-                    <div className="flex flex-row justify-between">
-                        <span className="font-semibold text-lg">Total</span>
-                        <span className="font-semibold text-lg">${totalAfterDiscount}</span>
-                    </div>
-
-                    <div className="text-muted text-sm flex flex-row justify-between">
-                        <span>🇻🇳 Vietnam Dong</span>
-                        <span>{USDtoVND(totalAfterDiscount)}₫</span>
-                    </div>
-
                     <Accordion className="my-2">
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -234,38 +330,90 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                             Show details
                         </AccordionSummary>
                         <AccordionDetails>
-                            <div className="flex flex-row justify-between">
-                                <span>Campground fee</span>
-                                <span className="text-right">
-                                    ${campground.price} × {days} {days > 1 ? 'nights' : 'night'} = $
-                                    {campgroundFee}
-                                </span>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                                <span>Service fee</span>
-                                <span className="text-right">
-                                    $5 × {guests} guests = ${guestsFee}
-                                </span>
-                            </div>
+                            <Tooltip
+                                title={`$${campground.price} × ${nights} nights`}
+                                placement="right"
+                                arrow
+                            >
+                                <div className="flex flex-row justify-between">
+                                    <span>Campground fee</span>
+                                    <span className="text-right">
+                                        ${Number(fees.campgroundFee).toFixed(2)}
+                                    </span>
+                                </div>
+                            </Tooltip>
+                            <Tooltip title={`$2 × ${guests} guests`} placement="right" arrow>
+                                <div className="flex flex-row justify-between">
+                                    <span>Service fee ($2/guest)</span>
+                                    <span className="text-right">
+                                        ${Number(fees.serviceFee).toFixed(2)}
+                                    </span>
+                                </div>
+                            </Tooltip>
 
-                            <div className="flex flex-row justify-between">
-                                <span>After taxes</span>
-                                <span className="text-right">
-                                    8% × ${totalBeforeTax} = ${totalAfterTax}
-                                </span>
-                            </div>
+                            <Tooltip
+                                title={`$Total before taxes: $${1} × 8% taxes`}
+                                placement="right"
+                                arrow
+                            >
+                                <div className="flex flex-row justify-between">
+                                    <span>Taxes (8%)</span>
+                                    <span className="text-right">
+                                        ${Number(fees.taxes).toFixed(2)}
+                                    </span>
+                                </div>
+                            </Tooltip>
+                            <hr />
+                            <Form onSubmit={applyDiscount}>
+                                <InputGroup>
+                                    <Form.Control
+                                        placeholder="Discount coupon"
+                                        aria-label="Recipient's username with two button addons"
+                                        ref={discountCouponRef}
+                                    />
+                                    {/* TODO: style this button with rounded top and bottom right corners. Choose different design/color */}
+                                    <button
+                                        className="border-0 bg-primary-dark-color text-primary-color px-3 text-sm hover:bg-primary-color hover:text-primary-dark-color hover:border-1 hover:border-black"
+                                        type="submit"
+                                    >
+                                        Apply
+                                    </button>
+                                </InputGroup>
+                            </Form>
 
-                            <div className="flex flex-row justify-between text-red-500">
-                                <span>After discount</span>
-                                <span className="text-right">
-                                    -{discount}% × ${totalAfterTax} = ${totalAfterDiscount}
-                                </span>
-                            </div>
+                            {fees.discount.amount > 0 ? (
+                                <>
+                                    <p className='mt-2 text-sm text-muted text-center'>
+                                        {`Applied coupon ${discountCouponRef.current.value.toUpperCase()} successfully!`}
+                                    </p>
+                                    <Tooltip title="DISCOUNT" placement="right" arrow>
+                                        <div className="flex flex-row justify-between text-red-500">
+                                            <span>Discount ({}%)</span>
+                                            <span className="text-right">
+                                                -${Number(fees.discount).toFixed(2)}
+                                            </span>
+                                        </div>
+                                    </Tooltip>
+                                </>
+                            ) : (<p className='mt-2 text-sm text-muted text-center'>
+                            {`Invalid discount coupon`}
+                        </p>)}
                         </AccordionDetails>
                     </Accordion>
+
+                    <div className="flex flex-row justify-between mt-3">
+                        <span className="font-semibold text-lg">Total amount</span>
+                        <span className="font-semibold text-xl">
+                            ${Number(fees.totalAmount).toFixed(2)}
+                        </span>
+                    </div>
+
+                    <div className="text-muted text-sm flex flex-row justify-between">
+                        <span>🇻🇳 Vietnam Dong</span>
+                        <span>{USDtoVND(fees.totalAmount)}₫</span>
+                    </div>
                 </div>
             )}
-
             <button
                 className="w-full mt-4 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-3 border-0 hover:text-white hover:bg-black duration-300"
                 onClick={reserveHandler}

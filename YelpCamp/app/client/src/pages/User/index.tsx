@@ -73,9 +73,43 @@ const Container = styled.div`
         background: pink !important;
         text-decoration: none !important;
     }
+
+    /* MOBILE VIEW */
+    @media (max-width: 768px) {
+        background: #e5dadc;
+        /* height: 100vh; */
+        display: flex;
+        flex-direction: column;
+
+        .tabs {
+            /* width: 250px; */
+            width: 100%;
+            /* position: absolute; */
+            /* z-index: 1; */
+            /* border-right: 1px solid black; */
+            /* margin-top: 4rem; */
+            /* margin-top: 1rem; */
+
+            ul {
+                display: flex;
+                flex-direction: row;
+                gap: 1px;
+            }
+
+            li {
+                /* width: ; */
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                transition: 100ms all ease-out;
+                /* height: auto;
+            width: auto; */
+                border-radius: 6px;
+            }
+        }
+    }
 `;
 
-// TODO: rename these attributes + ids
 const TABS = [
     {
         id: 'info',
@@ -132,33 +166,37 @@ const User = () => {
         <PageContainer>
             {/* NEW UI */}
             {/* Recreate this: https://ui.shadcn.com/examples/forms/account */}
-            <Container className="flex flex-row tab">
+            <Container>
                 {/* tab */}
-                <div className="tabs">
-                    <ul>
-                        {TABS.map(tab => (
-                            <li
-                                key={tab.id}
-                                onClick={() => {
-                                    // setActiveTab(tab.id as ActiveTabType);
-                                    setSearchParams({ tab: tab.id }, { replace: true });
-                                }}
-                                className={`${tab.id === searchParams.get('tab') && 'active'} `}
-                            >
-                                <span>{tab.title}</span>
-                            </li>
-                        ))}
-                    </ul>
-                    {/* debug area */}
-                    <div className="mt-[200px]">
-                        <p>
-                            Screen width: {width} - Height: {height}
-                        </p>
+                {width > 768 ? (
+                    <div className="tabs">
+                        <ul>
+                            {TABS.map(tab => (
+                                <li
+                                    key={tab.id}
+                                    onClick={() => {
+                                        // setActiveTab(tab.id as ActiveTabType);
+                                        setSearchParams({ tab: tab.id }, { replace: true });
+                                    }}
+                                    className={`${tab.id === searchParams.get('tab') && 'active'} `}
+                                >
+                                    <span>{tab.title}</span>
+                                </li>
+                            ))}
+                        </ul>
+                        {/* debug area */}
+                        <div className="mt-[200px]">
+                            <p>
+                                Screen width: {width} - Height: {height}
+                            </p>
 
-                        <p>{width < 768 ? 'MOBILE' : 'LAPTOP'} SCREEN</p>
-                        <Button onClick={() => navigate(-1)}>Back</Button>
+                            <p>{width < 768 ? 'MOBILE' : 'LAPTOP'} SCREEN</p>
+                            <Button onClick={() => navigate(-1)}>Back</Button>
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <button>Show tabs</button>
+                )}
 
                 {/* content */}
                 <div className="content">

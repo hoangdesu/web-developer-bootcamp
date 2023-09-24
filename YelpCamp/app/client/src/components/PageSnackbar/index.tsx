@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import AppContext from '../../store/app-context';
-import { Alert, AlertColor, Button, IconButton, Snackbar } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Alert, AlertColor, Snackbar } from '@mui/material';
 
 const PageSnackbar = () => {
     const appContext = useContext(AppContext);
