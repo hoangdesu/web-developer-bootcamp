@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext, FormEvent } from 'react
 import styled from '@emotion/styled';
 import { Campground } from '../../types';
 import { USDtoVND, getDaysBetween, getNextStartDays } from '../../helpers/campground';
-import { Form, OverlayTrigger, Tooltip as BSTooltip, InputGroup } from 'react-bootstrap';
+import { Form, InputGroup } from 'react-bootstrap';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -38,12 +38,6 @@ const InputButton = props => (
     </span>
 );
 
-const DISCOUNT_CODES = {
-    HOANGDEPTRAI: 90,
-    YELPCAMP: 10,
-    A: 2
-};
-
 const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campground }) => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
@@ -60,15 +54,17 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
         campgroundFee: 0,
         serviceFee: 0,
         taxes: 0,
-        discount: {
-            amount: 0,
-            code: '',
-            valid: null,
-            percentage: 0
-        },
-        totalAmount: 0,
+        totalBeforeTaxes: 0,
+        totalAfterTaxes: 0,
+        totalAfterDiscount: 0,
     });
-    
+    const [discount, setDiscount] = useState({
+        amount: 0,
+        show: false,
+        valid: false,
+        code: '',
+        percentage: 0,
+    });
 
     const checkinDateRef = useRef(null);
     const checkoutDateRef = useRef(null);
@@ -86,12 +82,11 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
         const campgroundFee = campground.price * nights;
         const serviceFee = guests * 2; // $2 for each guest
 
-        const totalBeforeTax = campgroundFee + serviceFee;
-        const taxes = totalBeforeTax * 0.08; // tax = 8%
-        // const totalAfterTaxes = totalBeforeTax + taxes;
+        const totalBeforeTaxes = campgroundFee + serviceFee;
+        const taxes = totalBeforeTaxes * 0.08; // tax = 8%
 
-        const totalAmount = totalBeforeTax + taxes;
-        
+        const totalAfterTaxes = totalBeforeTaxes + taxes;
+        const totalAfterDiscount = totalAfterTaxes;
 
         // const discountPercentage = (new Date().getDate() % 10) / 100; // lucky number based on the day. max 10% discount
         // const discount = totalAfterTaxes * discountPercentage;
@@ -104,40 +99,15 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             campgroundFee,
             serviceFee,
             taxes,
-            totalAmount,
+            totalBeforeTaxes,
+            totalAfterTaxes,
+            totalAfterDiscount,
         }));
     }, [nights, guests]);
-
-    // const calculateFees = (guests,)
 
     // input min requires date to be in yyyy-mm-dd format
     // Note that en-CA is a locale, not a timezone. Canada uses the YYYY-MM-DD format.
     const minStartDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
-
-    // numbers for calculations
-    const [campgroundFee, setCampgroundFee] = useState(
-        Number(campground.price * nights).toFixed(2),
-    );
-    const [guestsFee, setGuestsFee] = useState(guests * 5);
-    const [totalBeforeTax, setTotalBeforeTax] = useState(
-        Number(campgroundFee + guestsFee).toFixed(2),
-    );
-    const [totalAfterTax, setTotalAfterTax] = useState(Number(totalBeforeTax * 1.08).toFixed(2)); // tax = 8%
-    const [discount, setDiscount] = useState(
-        Number(parseInt(new Date().getDate())).toFixed(2) % 10,
-    );
-    const [totalAfterDiscount, setTotalAfterDiscount] = useState(
-        Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2),
-    );
-
-    // numbers for calculations
-    // TODO: check calculations
-    // const campgroundFee = Number(campground.price * nights).toFixed(2);
-    // const guestsFee = guests * 5;
-    // const totalBeforeTax = Number(campgroundFee + guestsFee).toFixed(2);
-    // const totalAfterTax = Number(totalBeforeTax * 1.08).toFixed(2); // tax = 8%
-    // const discount = Number(parseInt(new Date().getDate())).toFixed(2) % 10; // lucky number based on the day. max 10% discount
-    // const totalAfterDiscount = Number(totalAfterTax - (discount / 100) * totalAfterTax).toFixed(2);
 
     const makeReservation = () => {
         const reservation = {
@@ -147,7 +117,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             checkIn: inputStartDate,
             checkOut: inputEndDate,
             guests: guests,
-            totalPrice: totalAfterDiscount,
+            totalPrice: 1, //
             status: 'PENDING',
         };
 
@@ -180,7 +150,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             checkIn: inputStartDate,
             checkOut: inputEndDate,
             guests: guests,
-            totalPrice: totalAfterDiscount,
+            totalPrice: 1, //
             status: 'PENDING',
         };
 
@@ -210,37 +180,86 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
         }
     `;
 
-    const applyDiscount = (evt: React.FormEvent<HTMLFormElement>) => {
+    const applyDiscountCode = (evt: React.FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
-        console.log(
-            'discountCouponRef.current.value',
-            discountCouponRef.current.value.toUpperCase(),
-        );
-
-        if (fees.discount.code.toUpperCase() in DISCOUNT_CODES) {
-            // console.log('discountPercentage',discountPercentage);
-            const percentage = DISCOUNT_CODES[discountCode];
-            const amount = percentage * fees.totalAmount; // todo calculaet this shit
-
-
-            // TODO: work on discount section
-            // only show after checking discount code
-            setFees(fees => ({
-                ...fees,
-                discount: {
-                    amount,
-                    percentage,
-                    valid: true
-                }
+        if (!discountCouponRef.current.value) {
+            setDiscount(prev => ({
+                ...prev,
+                show: false,
+                valid: false,
+                amount: 0,
+                code: '',
+                percentage: 0,
             }));
-        } else {
-            setFees(fees => ({
-                ...fees,
-                discount: {
-                    valid: null
-                }
-            }));
+            return;
         }
+
+        if (discountCouponRef.current) {
+            axios.get('/api/v1/reservation/discount-codes').then(res => {
+                const { data: DISCOUNT_CODES } = res;
+                const discountCode = discountCouponRef.current.value.toUpperCase();
+
+                if (discountCode in DISCOUNT_CODES) {
+                    const percentage = DISCOUNT_CODES[discountCode];
+                    const discountAmount = (fees.totalAfterTaxes * percentage) / 100;
+                    const totalAfterDiscount = fees.totalAfterTaxes - discountAmount;
+                    setDiscount(prev => ({
+                        ...prev,
+                        amount: discountAmount,
+                        show: true,
+                        valid: true,
+                        code: discountCode,
+                        percentage,
+                    }));
+                    setFees(prev => ({
+                        ...prev,
+                        totalAfterDiscount,
+                    }));
+                } else {
+                    setDiscount(prev => ({
+                        ...prev,
+                        show: true,
+                        valid: false,
+                        amount: 0,
+                        code: '',
+                        percentage: 0,
+                    }));
+                    setFees(prev => ({
+                        ...prev,
+                        totalAfterDiscount: prev.totalAfterTaxes,
+                    }));
+                }
+            });
+        }
+
+        // console.log(
+        //     'discountCouponRef.current.value',
+        //     discountCouponRef.current.value.toUpperCase(),
+        // );
+
+        // if (fees.discount.code.toUpperCase() in DISCOUNT_CODES) {
+        //     // console.log('discountPercentage',discountPercentage);
+        //     const percentage = DISCOUNT_CODES[discountCode];
+        //     const amount = percentage * fees.totalAmount; // todo calculaet this shit
+
+        //     // TODO: work on discount section
+        //     // only show after checking discount code
+        //     setFees(fees => ({
+        //         ...fees,
+        //         discount: {
+        //             amount,
+        //             percentage,
+        //             valid: true,
+        //         },
+        //     }));
+        // } else {
+        //     setFees(fees => ({
+        //         ...fees,
+        //         discount: {
+        //             valid: null,
+        //         },
+        //     }));
+        // }
         // discountCouponRef.current.value = '';
     };
 
@@ -255,9 +274,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                         campground.price,
                     )}₫)`}</span>
                 </p>
-                <span>
-                    {nights > 0 && `${nights} ${nights === 1 ? 'night' : 'nights'}`}
-                </span>
+                <span>{nights > 0 && `${nights} ${nights === 1 ? 'night' : 'nights'}`}</span>
             </div>
             {/* DATE PICKER */}
             <div className="flex flex-row md:flex-col justify-between gap-5 mb-4">
@@ -267,7 +284,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                         type="date"
                         min={minStartDate}
                         onChange={e => {
-                            console.log(e.currentTarget.value);
                             // reset the input end date if user choses a date after endDate
                             if (
                                 new Date(e.currentTarget.value).getTime() >
@@ -318,6 +334,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                 </span>
             </div>
             <hr />
+
             {/* BILLING */}
             {inputEndDate && inputStartDate && (
                 <div className="flex flex-column gap-1">
@@ -329,10 +346,12 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                         >
                             Show details
                         </AccordionSummary>
+
                         <AccordionDetails>
                             <Tooltip
                                 title={`$${campground.price} × ${nights} nights`}
                                 placement="right"
+                                enterDelay={200}
                                 arrow
                             >
                                 <div className="flex flex-row justify-between">
@@ -342,7 +361,13 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                                     </span>
                                 </div>
                             </Tooltip>
-                            <Tooltip title={`$2 × ${guests} guests`} placement="right" arrow>
+
+                            <Tooltip
+                                title={`$2 × ${guests} guests`}
+                                placement="right"
+                                enterDelay={200}
+                                arrow
+                            >
                                 <div className="flex flex-row justify-between">
                                     <span>Service fee ($2/guest)</span>
                                     <span className="text-right">
@@ -352,8 +377,9 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                             </Tooltip>
 
                             <Tooltip
-                                title={`$Total before taxes: $${1} × 8% taxes`}
+                                title={`Total before taxes: $${fees.totalBeforeTaxes} × 8%`}
                                 placement="right"
+                                enterDelay={200}
                                 arrow
                             >
                                 <div className="flex flex-row justify-between">
@@ -364,13 +390,21 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                                 </div>
                             </Tooltip>
                             <hr />
-                            <Form onSubmit={applyDiscount}>
+                            {/* DISCOUNT CODE */}
+                            <Form onSubmit={applyDiscountCode}>
                                 <InputGroup>
-                                    <Form.Control
-                                        placeholder="Discount coupon"
-                                        aria-label="Recipient's username with two button addons"
-                                        ref={discountCouponRef}
-                                    />
+                                    <Tooltip
+                                        title="Try HOANGDEPTRAI!"
+                                        placement="top"
+                                        enterDelay={500}
+                                        arrow
+                                    >
+                                        <Form.Control
+                                            placeholder="Discount coupon"
+                                            aria-label="Enter discount coupon"
+                                            ref={discountCouponRef}
+                                        />
+                                    </Tooltip>
                                     {/* TODO: style this button with rounded top and bottom right corners. Choose different design/color */}
                                     <button
                                         className="border-0 bg-primary-dark-color text-primary-color px-3 text-sm hover:bg-primary-color hover:text-primary-dark-color hover:border-1 hover:border-black"
@@ -380,37 +414,35 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                                     </button>
                                 </InputGroup>
                             </Form>
-
-                            {fees.discount.amount > 0 ? (
+                            {discount.show && (
                                 <>
-                                    <p className='mt-2 text-sm text-muted text-center'>
-                                        {`Applied coupon ${discountCouponRef.current.value.toUpperCase()} successfully!`}
+                                    <p className="my-2 text-sm text-muted text-center">
+                                        {discount.valid
+                                            ? `Applied coupon ${discount.code} successfully!`
+                                            : 'Invalid discount coupon'}
                                     </p>
-                                    <Tooltip title="DISCOUNT" placement="right" arrow>
+                                    {discount.percentage > 0 && (
                                         <div className="flex flex-row justify-between text-red-500">
-                                            <span>Discount ({}%)</span>
+                                            <span>Discount ({discount.percentage}%)</span>
                                             <span className="text-right">
-                                                -${Number(fees.discount).toFixed(2)}
+                                                -${Number(discount.amount).toFixed(2)}
                                             </span>
                                         </div>
-                                    </Tooltip>
+                                    )}
                                 </>
-                            ) : (<p className='mt-2 text-sm text-muted text-center'>
-                            {`Invalid discount coupon`}
-                        </p>)}
+                            )}
                         </AccordionDetails>
                     </Accordion>
 
                     <div className="flex flex-row justify-between mt-3">
                         <span className="font-semibold text-lg">Total amount</span>
                         <span className="font-semibold text-xl">
-                            ${Number(fees.totalAmount).toFixed(2)}
+                            ${Number(fees.totalAfterDiscount).toFixed(2)}
                         </span>
                     </div>
-
                     <div className="text-muted text-sm flex flex-row justify-between">
                         <span>🇻🇳 Vietnam Dong</span>
-                        <span>{USDtoVND(fees.totalAmount)}₫</span>
+                        <span>{USDtoVND(fees.totalAfterDiscount)}₫</span>
                     </div>
                 </div>
             )}

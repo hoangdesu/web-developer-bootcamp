@@ -7,6 +7,9 @@ const Reservation = require('../models/reservation');
 const Campground = require('../models/campground');
 const User = require('../models/user');
 
+const fs = require('node:fs/promises');
+const path = require('path');
+
 const reservationSchema = require('../schemas/reservation');
 
 module.exports.getAllReservations = catchAsync(async (req, res) => {
@@ -74,7 +77,7 @@ module.exports.getQRCode = catchAsync(async (req, res) => {
 });
 
 module.exports.checkStatus = catchAsync(async (req, res) => {
-    const {id}=req.params;
+    const { id } = req.params;
     const resv = await Reservation.findById(id);
     if (resv.status === 'PAID') {
         return res.send('PAID');
@@ -102,4 +105,12 @@ module.exports.pending = catchAsync(async (req, res) => {
     resv.status = 'PENDING';
     await resv.save();
     res.send(resv.status);
+});
+
+module.exports.getDiscountCodes = catchAsync(async (req, res) => {
+    const data = await fs.readFile(path.join(__dirname, '../utilities/DISCOUNT_CODES.json'), {
+        encoding: 'utf8',
+    });
+    const DISCOUNT_CODES = JSON.parse(data);
+    res.status(200).json(DISCOUNT_CODES);
 });
