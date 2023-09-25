@@ -12,16 +12,14 @@ interface PageContainerProps {
 }
 
 const PageContainer: React.FunctionComponent<PageContainerProps> = ({ children }) => {
-    // use useeffect to clear the snackbar's object on every page load -> remove redundancies
+    // TODO: use useeffect to clear the snackbar's object on every page load -> remove redundancies
     return (
         <div className="d-flex flex-column min-h-screen bg-primary-color">
             <Navbar />
-            <Container className="my-5 px-[5%]">
-                <FlashAlert />
-                {children}
-                <PageModal />
-                <PageSnackbar />
-            </Container>
+            <FlashAlert />
+            <Container className="my-5 px-[5%]">{children}</Container>
+            <PageModal />
+            <PageSnackbar />
             <Footer />
         </div>
     );

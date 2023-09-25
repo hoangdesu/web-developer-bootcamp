@@ -162,6 +162,8 @@ const User = () => {
 
     console.log('user', user);
 
+    /* TODO: ADD AUTH TO ONLY ALLOW CORRECT LOGGEDIN USER TO SEE CERTAIN PARTS OF THE PAGE. HIDE SOME PARTS (RESERVATIONS) FROM OUTSIDER */
+
     return (
         <PageContainer>
             {/* NEW UI */}

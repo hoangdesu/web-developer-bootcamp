@@ -268,7 +268,13 @@ const Campground: React.FunctionComponent = () => {
 
                     <StyledSection>
                         <h4 className="font-normal">Location</h4>
-                        <p>{campground.location}</p>
+                        <a
+                            href={`https://www.google.com/search?q=${campground.location}`}
+                            style={{ color: 'inherit' }}
+                            target="_blank"
+                        >
+                            {campground.location}
+                        </a>
                     </StyledSection>
 
                     <StyledSection>

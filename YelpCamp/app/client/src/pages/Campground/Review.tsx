@@ -7,7 +7,7 @@ import { Card, Form, OverlayTrigger, Popover, PopoverHeader } from 'react-bootst
 import { Check, Clear, Delete, MoreHoriz } from '@mui/icons-material';
 import { Review } from '../../types';
 import AppContext from '../../store/app-context';
-import { Rating } from '@mui/material';
+import { Rating, Tooltip } from '@mui/material';
 import { formatDate, timeDifference } from '../../helpers/campground';
 
 interface ReviewProps {
@@ -52,6 +52,43 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
     });
 
     const removeReviewHandler = () => {
+        // TODO: REPLACE with modal and snackbar
+
+        const btnonclick = () => {
+            axios
+                .delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`, {
+                    headers: {
+                        Authorization: appContext.currentUser.id.toString(),
+                    },
+                })
+                .then(res => {
+                    appContext.setAlert({
+                        message: 'Comment deleted',
+                        variant: 'success',
+                    });
+                    refetch();
+                })
+                .catch(e => {
+                    // console.log('Delete failed', e);
+                    appContext.setAlert({
+                        message: 'Failed to delete comment',
+                        variant: 'danger',
+                    });
+                });
+        };
+
+        appContext.setModal({
+            open: true,
+            content: (
+                <div>
+                    Delete comment?
+                    <button onClick={btnonclick}>Yes</button>
+                </div>
+            ),
+        });
+
+        return;
+
         if (confirm('Are you sure to delete this comment?')) {
             axios
                 .delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`, {
@@ -80,6 +117,60 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
         if (formData.comment.length === 0) {
             return;
         }
+
+        const btnonclick = () => {
+            axios
+                .put(
+                    `/api/v1/campgrounds/${review.campground}/reviews/${review._id}`,
+                    {
+                        review: {
+                            comment: formData.comment,
+                            rating: formData.rating,
+                        },
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: appContext.currentUser.id.toString(),
+                        },
+                    },
+                )
+                .then(res => {
+                    setIsEditingReview(!isEditingReview);
+                    refetch();
+                })
+                .catch(err => {
+                    console.log('error', err);
+                    if (err.response.status === 401) {
+                        appContext.setAlert({
+                            message: 'Please login again!',
+                            variant: 'info',
+                        });
+                        localStorage.removeItem('currentUser');
+                        navigate('/login');
+                    } else {
+                        appContext.setAlert({
+                            message: 'Something went wrong. Your review was not saved',
+                            variant: 'danger',
+                        });
+                        setIsEditingReview(!isEditingReview);
+                    }
+                });
+        };
+
+        // TODO: REPLACE with modal
+
+        appContext.setModal({
+            open: true,
+            content: (
+                <div>
+                    Save comment?
+                    <button onClick={btnonclick}>save</button>
+                </div>
+            ),
+        });
+
+        return;
 
         if (confirm('Save review?')) {
             axios
@@ -157,9 +248,15 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                     <span className="icons">
                         {isEditingReview ? (
                             <>
-                                <Check onClick={saveChangeReviewHandler} />
-                                <Clear onClick={() => setIsEditingReview(!isEditingReview)} />
-                                <Delete onClick={removeReviewHandler} />
+                                <Tooltip title="Save review" placement="top" enterDelay={300}>
+                                    <Check onClick={saveChangeReviewHandler} />
+                                </Tooltip>
+                                <Tooltip title="Cancel" placement="top" enterDelay={300}>
+                                    <Clear onClick={() => setIsEditingReview(!isEditingReview)} />
+                                </Tooltip>
+                                <Tooltip title="Delete review" placement="top" enterDelay={300}>
+                                    <Delete onClick={removeReviewHandler} />
+                                </Tooltip>
                             </>
                         ) : (
                             <MoreHoriz onClick={() => setIsEditingReview(!isEditingReview)} />
@@ -167,7 +264,6 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
                     </span>
                 )}
 
-                {/* TODO: style this again when mouse over editable field */}
                 {isEditingReview ? (
                     <>
                         <Card.Title className="font-normal">{review.author?.username}</Card.Title>

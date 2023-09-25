@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import ModalConfirmReservation from '../../components/Modals/ModalConfirmReservation';
 import ModalLogin from '../../components/Modals/ModalLogin';
 import { Tooltip } from '@mui/material';
+import ApplyButton from '../../components/Buttons/ApplyButton';
 
 interface CampgroundResvervationProps {
     campground: Campground;
@@ -80,7 +81,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
 
     useEffect(() => {
         const campgroundFee = campground.price * nights;
-        const serviceFee = guests * 2; // $2 for each guest
+        const serviceFee = guests * 2 * nights; // $2 for each guest/night
 
         const totalBeforeTaxes = campgroundFee + serviceFee;
         const taxes = totalBeforeTaxes * 0.08; // tax = 8%
@@ -191,6 +192,10 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                 code: '',
                 percentage: 0,
             }));
+            setFees(prev => ({
+                ...prev,
+                totalAfterDiscount: prev.totalAfterTaxes,
+            }));
             return;
         }
 
@@ -231,36 +236,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                 }
             });
         }
-
-        // console.log(
-        //     'discountCouponRef.current.value',
-        //     discountCouponRef.current.value.toUpperCase(),
-        // );
-
-        // if (fees.discount.code.toUpperCase() in DISCOUNT_CODES) {
-        //     // console.log('discountPercentage',discountPercentage);
-        //     const percentage = DISCOUNT_CODES[discountCode];
-        //     const amount = percentage * fees.totalAmount; // todo calculaet this shit
-
-        //     // TODO: work on discount section
-        //     // only show after checking discount code
-        //     setFees(fees => ({
-        //         ...fees,
-        //         discount: {
-        //             amount,
-        //             percentage,
-        //             valid: true,
-        //         },
-        //     }));
-        // } else {
-        //     setFees(fees => ({
-        //         ...fees,
-        //         discount: {
-        //             valid: null,
-        //         },
-        //     }));
-        // }
-        // discountCouponRef.current.value = '';
     };
 
     return (
@@ -369,7 +344,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                                 arrow
                             >
                                 <div className="flex flex-row justify-between">
-                                    <span>Service fee ($2/guest)</span>
+                                    <span>Service fee ($2/guest/night)</span>
                                     <span className="text-right">
                                         ${Number(fees.serviceFee).toFixed(2)}
                                     </span>
@@ -406,12 +381,13 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                                         />
                                     </Tooltip>
                                     {/* TODO: style this button with rounded top and bottom right corners. Choose different design/color */}
-                                    <button
+                                    {/* <button
                                         className="border-0 bg-primary-dark-color text-primary-color px-3 text-sm hover:bg-primary-color hover:text-primary-dark-color hover:border-1 hover:border-black"
                                         type="submit"
                                     >
                                         Apply
-                                    </button>
+                                    </button> */}
+                                    <ApplyButton>Apply</ApplyButton>
                                 </InputGroup>
                             </Form>
                             {discount.show && (

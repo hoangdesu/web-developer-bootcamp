@@ -27,7 +27,6 @@ const authRoutes = require('./routes/auth');
 const reservationRoutes = require('./routes/reservation');
 const testingRoutes = require('./routes/testing');
 
-
 // Models
 const User = require('./models/user');
 

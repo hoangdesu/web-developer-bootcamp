@@ -23,7 +23,7 @@ const StyledLogo = styled.img`
 `;
 
 const Reservation = () => {
-    const { reservationId } = useLoaderData();
+    const { reservationId } = useLoaderData() as { reservationId: string };
     const [status, setStatus] = useState('PENDING');
     const [seconds, setSeconds] = useState(60);
     const appContext = useContext(AppContext);
