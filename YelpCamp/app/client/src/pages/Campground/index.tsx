@@ -164,7 +164,7 @@ const Campground: React.FunctionComponent = () => {
                     true,
                     res.data.isFavorited ? (
                         <>
-                            <span>Added to your favorite. </span>
+                            <span>Saved to your favorite. </span>
                             <Link
                                 to={`/user/${appContext.currentUser.username}?tab=favorite`}
                                 className="text-inherit"

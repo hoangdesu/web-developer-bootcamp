@@ -46,3 +46,7 @@ const reservationSchema = new Schema(
 );
 
 module.exports = mongoose.model('Reservation', reservationSchema);
+
+// TODO: change shape of reservation. Also change in related files
+// - rename totalPrice to totalAmount
+// - added DISCOUNT CODE field

@@ -58,7 +58,7 @@ export interface Modal {
     requiresLoggedIn?: boolean;
 }
 
-type TSeverity = 'info' | 'success' | 'warning' | 'error';
+export type TSeverity = 'info' | 'success' | 'warning' | 'error';
 
 export interface Snackbar {
     isOpen: boolean;

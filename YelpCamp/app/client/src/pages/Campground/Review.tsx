@@ -9,6 +9,8 @@ import { Review } from '../../types';
 import AppContext from '../../store/app-context';
 import { Rating, Tooltip } from '@mui/material';
 import { formatDate, timeDifference } from '../../helpers/campground';
+import ModalDeleteReview from '../../components/Modals/ModalDeleteReview';
+import ModalSaveReviewChange from '../../components/Modals/ModalSaveReviewChange';
 
 interface ReviewProps {
     review: Review;
@@ -52,165 +54,28 @@ const Review: React.FunctionComponent<ReviewProps> = ({ review, refetch }) => {
     });
 
     const removeReviewHandler = () => {
-        // TODO: REPLACE with modal and snackbar
-
-        const btnonclick = () => {
-            axios
-                .delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`, {
-                    headers: {
-                        Authorization: appContext.currentUser.id.toString(),
-                    },
-                })
-                .then(res => {
-                    appContext.setAlert({
-                        message: 'Comment deleted',
-                        variant: 'success',
-                    });
-                    refetch();
-                })
-                .catch(e => {
-                    // console.log('Delete failed', e);
-                    appContext.setAlert({
-                        message: 'Failed to delete comment',
-                        variant: 'danger',
-                    });
-                });
-        };
-
         appContext.setModal({
             open: true,
-            content: (
-                <div>
-                    Delete comment?
-                    <button onClick={btnonclick}>Yes</button>
-                </div>
-            ),
+            content: <ModalDeleteReview review={review} refetch={refetch} />,
         });
-
-        return;
-
-        if (confirm('Are you sure to delete this comment?')) {
-            axios
-                .delete(`/api/v1/campgrounds/${review.campground}/reviews/${review._id}`, {
-                    headers: {
-                        Authorization: appContext.currentUser.id.toString(),
-                    },
-                })
-                .then(res => {
-                    appContext.setAlert({
-                        message: 'Comment deleted',
-                        variant: 'success',
-                    });
-                    refetch();
-                })
-                .catch(e => {
-                    // console.log('Delete failed', e);
-                    appContext.setAlert({
-                        message: 'Failed to delete comment',
-                        variant: 'danger',
-                    });
-                });
-        }
     };
 
     const saveChangeReviewHandler = () => {
         if (formData.comment.length === 0) {
             return;
         }
-
-        const btnonclick = () => {
-            axios
-                .put(
-                    `/api/v1/campgrounds/${review.campground}/reviews/${review._id}`,
-                    {
-                        review: {
-                            comment: formData.comment,
-                            rating: formData.rating,
-                        },
-                    },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: appContext.currentUser.id.toString(),
-                        },
-                    },
-                )
-                .then(res => {
-                    setIsEditingReview(!isEditingReview);
-                    refetch();
-                })
-                .catch(err => {
-                    console.log('error', err);
-                    if (err.response.status === 401) {
-                        appContext.setAlert({
-                            message: 'Please login again!',
-                            variant: 'info',
-                        });
-                        localStorage.removeItem('currentUser');
-                        navigate('/login');
-                    } else {
-                        appContext.setAlert({
-                            message: 'Something went wrong. Your review was not saved',
-                            variant: 'danger',
-                        });
-                        setIsEditingReview(!isEditingReview);
-                    }
-                });
-        };
-
-        // TODO: REPLACE with modal
-
         appContext.setModal({
             open: true,
             content: (
-                <div>
-                    Save comment?
-                    <button onClick={btnonclick}>save</button>
-                </div>
+                <ModalSaveReviewChange
+                    review={review}
+                    refetch={refetch}
+                    formData={formData}
+                    isEditingReview={isEditingReview}
+                    setIsEditingReview={setIsEditingReview}
+                />
             ),
         });
-
-        return;
-
-        if (confirm('Save review?')) {
-            axios
-                .put(
-                    `/api/v1/campgrounds/${review.campground}/reviews/${review._id}`,
-                    {
-                        review: {
-                            comment: formData.comment,
-                            rating: formData.rating,
-                        },
-                    },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: appContext.currentUser.id.toString(),
-                        },
-                    },
-                )
-                .then(res => {
-                    setIsEditingReview(!isEditingReview);
-                    refetch();
-                })
-                .catch(err => {
-                    console.log('error', err);
-                    if (err.response.status === 401) {
-                        appContext.setAlert({
-                            message: 'Please login again!',
-                            variant: 'info',
-                        });
-                        localStorage.removeItem('currentUser');
-                        navigate('/login');
-                    } else {
-                        appContext.setAlert({
-                            message: 'Something went wrong. Your review was not saved',
-                            variant: 'danger',
-                        });
-                        setIsEditingReview(!isEditingReview);
-                    }
-                });
-        }
     };
 
     const isAuthor = () => {

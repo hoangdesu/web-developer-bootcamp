@@ -72,8 +72,6 @@ module.exports.getQRCode = catchAsync(async (req, res) => {
 
     console.log('body', body);
     res.send(qr);
-
-    // res.send('ok');
 });
 
 module.exports.checkStatus = catchAsync(async (req, res) => {
@@ -98,6 +96,7 @@ module.exports.pay = catchAsync(async (req, res) => {
     res.send(resv.status);
 });
 
+// TODO: remove unnecessary controllers
 module.exports.pending = catchAsync(async (req, res) => {
     const { id } = req.params;
     const resv = await Reservation.findById(id);
@@ -108,9 +107,23 @@ module.exports.pending = catchAsync(async (req, res) => {
 });
 
 module.exports.getDiscountCodes = catchAsync(async (req, res) => {
+    const { discountCode: discountCodeParam } = req.query;
+    const discountCode = discountCodeParam.toUpperCase();
+
     const data = await fs.readFile(path.join(__dirname, '../utilities/DISCOUNT_CODES.json'), {
         encoding: 'utf8',
     });
     const DISCOUNT_CODES = JSON.parse(data);
-    res.status(200).json(DISCOUNT_CODES);
+
+    if (discountCode in DISCOUNT_CODES) {
+        return res.status(200).json({
+            valid: true,
+            percentage: DISCOUNT_CODES[discountCode],
+        });
+    } else {
+        return res.status(200).json({
+            valid: false,
+            percentage: 0,
+        });
+    }
 });

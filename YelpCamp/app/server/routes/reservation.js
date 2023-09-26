@@ -11,7 +11,7 @@ router.get('/all', controller.getAllReservations);
 
 router.post('/new', controller.createReservation);
 
-router.get('/discount-codes', controller.getDiscountCodes);
+router.get('/discount', controller.getDiscountCodes);
 
 router.get('/:id', controller.getReservationById);
 

@@ -36,7 +36,6 @@ const App: React.FunctionComponent = () => {
 
     useEffect(() => {
         document.title = 'YelpCamp';
-        appContext.setModal({ open: false, content: null });
     }, []);
 
     const [userAuthQuery, campgroundsQuery] = useQueries([

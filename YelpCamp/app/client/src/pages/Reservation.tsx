@@ -38,7 +38,6 @@ const Reservation = () => {
 
     console.log('urlForQR', urlForQR);
     useEffect(() => {
-        appContext.setModal({ open: false, content: null });
 
         const qrEl = qrCode.defineCustomElements(window);
         console.log('qrEl', qrEl);

@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { Alert, User, Modal, Snackbar } from '../types';
+import { Alert, User, Modal, Snackbar, TSeverity } from '../types';
 
 export interface AppContextType {
     alert: Alert | null;
@@ -12,7 +12,7 @@ export interface AppContextType {
     setSnackbar: (
         isOpen: boolean,
         message?: string | React.ReactNode | React.ReactElement,
-        severity?: string,
+        severity?: TSeverity,
     ) => void;
 }
 
