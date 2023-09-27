@@ -8,7 +8,8 @@ module.exports = Joi.object({
         checkOut: Joi.date().greater(Joi.ref('checkIn')).required(),
         nights: Joi.number().required(),
         guests: Joi.number().required(),
-        totalPrice: Joi.number().required(),
-        status: Joi.string().required(),
+        totalAmount: Joi.number().required(),
+        discountCode: Joi.string(),
+        status: Joi.string(),
     }).required(),
 });

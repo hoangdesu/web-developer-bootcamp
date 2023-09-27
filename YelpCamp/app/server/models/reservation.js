@@ -30,9 +30,12 @@ const reservationSchema = new Schema(
             type: Number,
             required: true,
         },
-        totalPrice: {
+        totalAmount: {
             type: Number,
             required: true,
+        },
+        discountCode: {
+            type: String,
         },
         status: {
             type: String,

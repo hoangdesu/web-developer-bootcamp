@@ -2,6 +2,11 @@ import React, { useContext } from 'react';
 import AppContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
 
+interface ModalProps {
+    reservation: Reservation; //
+    refetch: () => {};
+}
+
 const ModalConfirmReservation = ({ reservation, makeReservation }) => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();

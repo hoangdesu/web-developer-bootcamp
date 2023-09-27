@@ -13,11 +13,50 @@ import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import FlashAlert from '../components/FlashAlert';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
+import Logo from '../assets/logo.png';
+import LoginBGImage from '../assets/login-bg.jpg';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {
         cursor: pointer;
         background-color: #eff3f6b7;
+    }
+`;
+
+const Div = styled.div`
+    width: 100vw;
+    height: 100vh;
+    /* background-image: url(https://images.unsplash.com/photo-1522660517748-2931a7a4aaf6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2130&q=80); */
+
+    /* top, transparent black, faked with gradient */
+    background: 
+    // linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)),
+        /* bottom, image url(https://images.unsplash.com/photo-1602391833977-358a52198938?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2148&q=80) */
+        /* bottom, image */ url(${LoginBGImage});
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s all ease;
+
+    .login-box {
+        background-color: white;
+        border-radius: 12px;
+        width: 450px;
+        min-height: fit-content;
+        padding: 3rem;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px;
+        /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1); */
+        box-sizing: border-box;
+        margin-left: 50%;
+        /* margin-bottom: 300px; */
+        margin-bottom: 05%;
+
+        @media screen and (max-width: 992px) {
+            margin: 20px;
+            margin-bottom: 100px;
+        }
     }
 `;
 
@@ -87,44 +126,75 @@ const Login: React.FunctionComponent = () => {
     };
 
     return (
-        <PageContainer>
-            <h1 className="text-center mb-4">Login</h1>
-            <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="username">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control type="text" ref={formUsername} required />
-                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">
-                        Username is required!
-                    </Form.Control.Feedback>
-                </Form.Group>
+        // <PageContainer>
+        <>
+            {/* <Navbar /> */}
+            {/* <div className="absolute flex flex-row items-center justify-center gap-2 top-10 left-12 bg-red-0">
+                <img src={Logo} alt="" className="w-[50px]" />
+                <h5 className="">YelpCamp</h5>
+            </div> */}
+            {/* <div>
+                Home
+            </div> */}
+            <Div>
+                {/* w-full flex flex-row items-center justify-center gap-3 mb-5 */}
+                {/* <div className="bg-white">
+                    <img src={Logo} alt="" className="w-[70px]" />
+                    <h2 className="text-center">YelpCamp</h2>
+                </div> */}
+                <div className="login-box">
+                <Link to="/" className="block mt-3 mb-[-3] text-inherit no-underline ">
+                    <div className="w-full flex flex-row items-center justify-center gap-3 mb-5">
+                        <img src={Logo} alt="" className="w-[70px]" />
+                        <h2 className="text-center">YelpCamp</h2>
+                    </div>
+                        </Link>
+                    {/* <h2 className="w-full flex flex-row items-center justify-center gap-3 mb-5">Login</h2> */}
+                    <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3" controlId="username">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="text" ref={formUsername} required />
+                            <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                Username is required!
+                            </Form.Control.Feedback>
+                        </Form.Group>
 
-                <Form.Group className="mb-3" controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <InputGroup className="mb-2">
-                        <Form.Control
-                            type={showPassword ? 'text' : 'password'}
-                            ref={formPassword}
-                            required
-                        />
-                        <InputGroupText onClick={() => setShowPassword(show => !show)}>
-                            {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </InputGroupText>
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Password is required!
-                        </Form.Control.Feedback>
-                    </InputGroup>
-                </Form.Group>
+                        <Form.Group className="mb-3" controlId="password">
+                            <Form.Label>Password</Form.Label>
+                            <InputGroup className="mb-2">
+                                <Form.Control
+                                    type={showPassword ? 'text' : 'password'}
+                                    ref={formPassword}
+                                    required
+                                />
+                                <InputGroupText onClick={() => setShowPassword(show => !show)}>
+                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                </InputGroupText>
+                                <Form.Control.Feedback type="valid">
+                                    Looks good!
+                                </Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    Password is required!
+                                </Form.Control.Feedback>
+                            </InputGroup>
+                        </Form.Group>
 
-                <PrimaryBlackButton>Login</PrimaryBlackButton>
+                        <PrimaryBlackButton className="my-3">Login</PrimaryBlackButton>
 
-                <Link to="/register" target="_blank" className="block mt-3 mb-0">
-                    New here? Signup
-                </Link>
-            </Form>
-        </PageContainer>
+                        <Link to="/register" className="block mt-3 mb-[-3] text-emerald-600">
+                            New here? Signup
+                        </Link>
+                    </Form>
+                </div>
+            </Div>
+            {/* <Footer /> */}
+        </>
     );
 };
 
 export default Login;
+
+{
+    /* </PageContainer> */
+}

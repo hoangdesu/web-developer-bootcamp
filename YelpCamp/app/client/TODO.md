@@ -30,6 +30,11 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 
 [x] replace confirm popups with modals
 
-[] fix reservation calculations
-[] pagination color
+[x] fix reservation calculations
 [] alerts fk up the UI -> replace important ones with snackbars
+
+[x] login screen ui
+[] pagination color
+[] register screen ui
+[] forgot password page
+[] reservation modal

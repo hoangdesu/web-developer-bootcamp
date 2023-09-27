@@ -112,13 +112,13 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             checkIn: inputStartDate,
             checkOut: inputEndDate,
             guests: guests,
-            totalPrice: 1, //
-            status: 'PENDING',
+            totalAmount: fees.totalAfterDiscount, //
+            discountCode: discount.code
         };
 
-        axios.post('/api/v1/reservation/new', { reservation }).then(data => {
-            console.log(data.data);
-            navigate(`/reservation/${data.data._id}`);
+        axios.post('/api/v1/reservation/new', { reservation }).then(res => {
+            console.log(res.data);
+            navigate(`/reservation/${res.data._id}`);
         });
     };
 
@@ -312,11 +312,11 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             {/* BILLING */}
             {inputEndDate && inputStartDate && (
                 <div className="flex flex-column gap-1">
-                    <Accordion className="my-2">
+                    <Accordion className="my-2" expanded={true}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
+                            aria-controls="show-reservation-details"
+                            id="show-reservation-details"
                         >
                             Show details
                         </AccordionSummary>

@@ -28,7 +28,7 @@ module.exports.createReservation = catchAsync(async (req, res) => {
     const reservedCampground = await Campground.findById(campground).exec();
     if (!reservedCampground) throw new YelpcampError(404, 'Campground not found');
 
-    const newReservation = new Reservation({ ...req.body.reservation });
+    const newReservation = new Reservation({ ...req.body.reservation, status: 'PENDING' });
     await newReservation.save();
 
     user.reservations.push(newReservation);

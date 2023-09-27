@@ -3,48 +3,31 @@ import styled from '@emotion/styled';
 
 interface ButtonProps {
     children: React.ReactNode;
-    px?: number;
-    py?: number;
+    className?: string;
 }
 
 const Button = styled.button`
+    background-color: var(--primary-dark-color);
+    color: var(--primary-color);
+    border: none;
+    transition: all 0.1s ease-in-out;
+    padding: 10px 3rem;
+    margin: 1rem 0;
+    /* align-self: flex-end; */
+    /* width: 100%; */
+
     &:hover {
-        border: 1px solid black !important;
-        background-color: transparent;
-        color: black;
+        background-color: var(--primary-accent-color);
     }
 `;
 
-// TODO STYLE THIS BUTTON!!
-const PrimaryBlackButton: React.FunctionComponent<ButtonProps> = ({ children, px = 5, py = 2 }) => {
+const PrimaryBlackButton: React.FunctionComponent<ButtonProps> = props => {
+    const { children, className } = props;
     return (
-        <Button
-            className={`my-3 
-                      bg-primary-dark-color
-                        text-primary-color 
-                        transition 
-                        ease-in-out
-                        outline-0 
-                        px-${px} 
-                        py-${py}
-                        border-0
-                        outline-0
-                        duration-200    
-                        place-self-end`}
-            type="submit"
-        >
+        <Button type="submit" className={className}>
             {children}
         </Button>
     );
 };
 
 export default PrimaryBlackButton;
-
-// bg-emerald-400
-
-// hover:text-white
-// hover:bg-emerald-700
-// hover:text-black
-// hover:bg-white
-// hover:border-1
-// hover:border-black
