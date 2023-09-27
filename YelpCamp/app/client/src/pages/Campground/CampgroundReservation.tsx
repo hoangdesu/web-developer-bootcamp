@@ -267,6 +267,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                             }
                             setInputStartDate(e.currentTarget.value);
                         }}
+                        className="min-w-[120px]"
                         ref={checkinDateRef}
                     />
                 </div>
@@ -278,6 +279,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                         onChange={e => {
                             setInputEndDate(e.currentTarget.value);
                         }}
+                        className="min-w-[120px]"
                         ref={checkoutDateRef}
                     />
                 </div>

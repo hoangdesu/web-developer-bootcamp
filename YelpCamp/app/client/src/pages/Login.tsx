@@ -183,7 +183,7 @@ const Login: React.FunctionComponent = () => {
                             </Form.Control.Feedback>
                         </InputGroup>
                     </Form.Group>
-                    <PrimaryBlackButton className="my-3">Login</PrimaryBlackButton>
+                    <PrimaryBlackButton className="my-4 w-full">Login</PrimaryBlackButton>
                     <p className="mt-3">
                         New here?{' '}
                         <Link to="/register" className="text-emerald-600 hover:text-emerald-800">

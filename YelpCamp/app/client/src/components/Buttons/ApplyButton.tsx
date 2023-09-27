@@ -12,11 +12,14 @@ const Button = styled.button`
     transition-property: background-color, color, border;
     transition-timing-function: ease-in;
     transition-duration: 100ms;
+    color: inherit;
 
     &:hover {
-        background-color: #222325;
+        /* background-color: #222325; */
+        background-color: var(--primary-accent-color);
         color: #f9f5f1;
-        border: 1px solid #222325;
+        /* border: 1px solid #222325; */
+        border: 1px solid var(--primary-accent-color);
     }
 
     &:active {
