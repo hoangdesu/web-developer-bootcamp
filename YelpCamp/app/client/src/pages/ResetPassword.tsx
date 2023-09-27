@@ -50,39 +50,17 @@ const Div = styled.div`
         /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1); */
         box-sizing: border-box;
         margin-left: 50%;
-        margin-bottom: 5%;
+        /* margin-bottom: 300px; */
+        margin-bottom: 05%;
 
         @media screen and (max-width: 992px) {
             margin: 20px;
             margin-bottom: 100px;
         }
     }
-
-    .hover-underline-animation {
-        display: inline-block;
-        position: relative;
-    }
-
-    .hover-underline-animation:after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        transform: scaleX(0);
-        height: 2px;
-        bottom: 0;
-        left: 0;
-        background-color: var(--primary-dark-color);
-        transform-origin: bottom right;
-        transition: transform 0.25s ease-out;
-    }
-
-    .hover-underline-animation:hover:after {
-        transform: scaleX(1);
-        transform-origin: bottom left;
-    }
 `;
 
-const Login: React.FunctionComponent = () => {
+const ResetPassword: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -150,10 +128,13 @@ const Login: React.FunctionComponent = () => {
     return (
         <Div>
             <div className="login-box">
-                <Link to="/" className="block text-inherit no-underline hover:text-black">
+                <Link
+                    to="/"
+                    className="block text-inherit no-underline hover:text-black"
+                >
                     <div className="w-full flex flex-row items-center justify-center gap-3 mb-5">
                         <img src={Logo} alt="yelpcamp-logo" className="w-[70px]" />
-                        <h2 className="text-center hover-underline-animation">YelpCamp</h2>
+                        <h2 className="text-center">Reset password</h2>
                     </div>
                 </Link>
 
@@ -183,11 +164,11 @@ const Login: React.FunctionComponent = () => {
                             </Form.Control.Feedback>
                         </InputGroup>
                     </Form.Group>
-                    <PrimaryBlackButton className="my-3">Login</PrimaryBlackButton>
+                    <PrimaryBlackButton className="my-3">Reset password form</PrimaryBlackButton>
                     <p className="mt-3">
                         New here?{' '}
                         <Link to="/register" className="text-emerald-600 hover:text-emerald-800">
-                            Register an account
+                            ...
                         </Link>{' '}
                     </p>
                     <Link
@@ -202,7 +183,7 @@ const Login: React.FunctionComponent = () => {
     );
 };
 
-export default Login;
+export default ResetPassword;
 
 {
     /* </PageContainer> */

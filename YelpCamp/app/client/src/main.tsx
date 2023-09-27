@@ -23,6 +23,7 @@ import Testing from './pages/Testing';
 import Search from './pages/Search';
 import Reservation, { loader as resvLoader } from './pages/Reservation';
 import Confirm from './pages/Confirm';
+import ResetPassword from './pages/ResetPassword';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
         element: <Login />,
     },
     {
+        path: '/reset',
+        element: <ResetPassword />,
+    },
+    {
         path: '/user/:username',
         element: <User />,
         loader: usernameLoader,
@@ -97,7 +102,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/testing',
-        element: <Testing />
+        element: <Testing />,
     },
     {
         path: '/error',

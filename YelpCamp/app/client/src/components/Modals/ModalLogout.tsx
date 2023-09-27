@@ -9,20 +9,26 @@ const ModalLogout = () => {
     const appContext = useContext(AppContext);
 
     const logoutHandler = async () => {
-        appContext.setModal({ open: true, content: <ModalLogout /> });
+        await axios
+            .post('/api/v1/users/logout')
+            .then(res => {
+                appContext.setModal({ open: false, content: null });
 
-        await axios.post('/api/v1/users/logout');
-        appContext.setCurrentUser(null);
-        localStorage.removeItem('currentUser');
-        appContext.setAlert({
-            message: `Goodbye!`,
-            variant: 'success',
-        });
-        navigate('/');
+                appContext.setCurrentUser(null);
+                // appContext.setSnackbar(true, 'Goodbye', 'success');
+                localStorage.removeItem('currentUser');
+                appContext.setAlert({
+                    message: `Goodbye!`,
+                    variant: 'success',
+                });
+
+                navigate('/');
+            })
+            .catch(err => {});
     };
     return (
         <div>
-            ModalLogout
+            <h1>ModalLogout</h1>
             <button onClick={logoutHandler}>Log out</button>
         </div>
     );

@@ -11,6 +11,7 @@ const getAllUsers = async (req, res) => {
     res.status(200).json(users);
 };
 
+// TODO: this shit somehow stops working :/ => fix
 // POST /api/v1/users
 const createUser = catchAsync(async (req, res) => {
     const { username, email, password } = req.body;
@@ -25,7 +26,7 @@ const createUser = catchAsync(async (req, res) => {
         return res.sendStatus(200);
     });
 
-    res.status(500).send(err);
+    return res.status(500).send('error');
 });
 
 // GET /api/v1/users/username/:username

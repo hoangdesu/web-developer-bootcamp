@@ -19,15 +19,15 @@ const EditButton = styled.button`
     height: fit-content;
     transition: 100ms ease;
     &:hover {
-        color: #fffcf9;
-        background-color: #222325;
+        color: var(--primary-color);
+        background-color: var(--primary-dark-color);
     }
 `;
 
 const CampgroundHostedBySection: React.FC<SectionProps> = ({ campground }) => {
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
-    
+
     const popover = (
         <Popover id="popover-basic">
             <Popover.Header as="h5">Created at</Popover.Header>

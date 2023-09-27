@@ -10,6 +10,12 @@ const requiresLoggedIn = require('../middlewares/requiresLoggedIn');
 
 router.route('/').get(controller.getAllUsers).post(controller.createUser);
 
+router.post('/reset-password', controller.resetPassword);
+
+router.post('/login', passport.authenticate('local'), controller.login);
+
+router.post('/logout', controller.logout);
+
 router.get('/username/:username', controller.getUserByUsername);
 
 router.get('/:id', controller.getUserById);
@@ -19,11 +25,5 @@ router.get('/:id/favorited-campgrounds', controller.getAllFavoritedCampgrounds);
 router.post('/:id/favorite-campground', requiresLoggedIn, controller.toggleFavoriteCampground);
 
 router.put('/:id/update-info', controller.updatePersonalInformation);
-
-router.post('/reset-password', controller.resetPassword);
-
-router.post('/login', passport.authenticate('local'), controller.login);
-
-router.post('/logout', controller.logout);
 
 module.exports = router;

@@ -321,7 +321,9 @@ const Campground: React.FunctionComponent = () => {
                                         Please add your comment
                                     </Form.Control.Feedback>
                                 </Form.Group>
-                                <PrimaryBlackButton className="mt-1 bg-red-400">Submit</PrimaryBlackButton>
+                                <PrimaryBlackButton className="mt-1 bg-red-400 self-end">
+                                    Submit
+                                </PrimaryBlackButton>
                             </Form>
                         </>
                     ) : (
