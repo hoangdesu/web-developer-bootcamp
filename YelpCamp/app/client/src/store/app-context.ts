@@ -3,7 +3,7 @@ import { Alert, User, Modal, Snackbar, TSeverity } from '../types';
 
 export interface AppContextType {
     alert: Alert | null;
-    setAlert: (alert: Alert) => void;
+    setAlert: (alert: Alert | null) => void;
     currentUser: User | null;
     setCurrentUser: (user: User | null) => void;
     modal: Modal;

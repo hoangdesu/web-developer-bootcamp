@@ -21,6 +21,7 @@ const EditButton = styled.button`
     &:hover {
         color: var(--primary-color);
         background-color: var(--primary-dark-color);
+        cursor: pointer;
     }
 `;
 

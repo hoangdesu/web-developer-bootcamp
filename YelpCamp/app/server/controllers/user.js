@@ -11,22 +11,25 @@ const getAllUsers = async (req, res) => {
     res.status(200).json(users);
 };
 
-// TODO: this shit somehow stops working :/ => fix
 // POST /api/v1/users
 const createUser = catchAsync(async (req, res) => {
-    const { username, email, password } = req.body;
-    const user = new User({ username, email, plainPassword: password });
+    try {
+        const { username, email, password } = req.body;
+        const user = new User({ username, email, plainPassword: password });
 
-    // use the static method from passport-local-mongoose to create a new user and save into db
-    await User.register(user, password);
+        // use the static method from passport-local-mongoose to create a new user and save into db
+        // this will not return a null object, but rather throw error if username already exists
+        await User.register(user, password);
 
-    // establish a login session after user resigter successfully
-    req.login(user, function (err) {
-        if (err) return next(err);
-        return res.sendStatus(200);
-    });
-
-    return res.status(500).send('error');
+        // establish a login session after user resigter successfully
+        req.login(user, function (err) {
+            if (err) return next(err);
+            return res.sendStatus(200);
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send(err);
+    }
 });
 
 // GET /api/v1/users/username/:username
@@ -150,14 +153,11 @@ const resetPassword = catchAsync(async (req, res, next) => {
     const user = await User.findByUsername(username);
     if (!user) return next(new YelpcampError(404, 'Username not found'));
 
-    if (user.email === email) {
-        await user.setPassword(newPassword);
-        await user.save();
-        return res.send('password changed to ' + newPassword); //todo: remove this
-    }
-    
-    // reset fail
-    return res.send(500);
+    if (user.email !== email) return next(new YelpcampError(403, 'Error. Unauthorized!'));
+
+    await user.setPassword(newPassword);
+    await user.save();
+    return res.sendStatus(200);
 });
 
 module.exports = {

@@ -36,5 +36,9 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [x] login screen ui
 [] pagination color
 [] register screen ui
-[] forgot password page
 [] reservation modal
+
+[] mobile pay screen: user must enter correct password to pay
+[x] reset password page
+
+[] search page

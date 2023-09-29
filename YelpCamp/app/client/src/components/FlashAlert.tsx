@@ -1,5 +1,3 @@
-
-
 import React, { useContext } from 'react';
 import AppContext from '../store/app-context';
 import FlashMessage from './FlashMessage';
@@ -10,7 +8,11 @@ const FlashAlert: React.FC = () => {
 
     return appContext.alert?.message ? (
         <FlashMessage duration={3 * 1000} persistOnHover={true}>
-            <Alert variant={appContext.alert.variant} onClose={() => appContext.setAlert(null)} dismissible >
+            <Alert
+                variant={appContext.alert.variant}
+                onClose={() => appContext.setAlert(null)}
+                dismissible
+            >
                 <span>{appContext.alert.message}</span>
             </Alert>
         </FlashMessage>

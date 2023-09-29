@@ -26,4 +26,5 @@ router.post('/:id/favorite-campground', requiresLoggedIn, controller.toggleFavor
 
 router.put('/:id/update-info', controller.updatePersonalInformation);
 
+
 module.exports = router;

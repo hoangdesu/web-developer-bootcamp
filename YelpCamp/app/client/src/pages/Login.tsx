@@ -5,16 +5,13 @@ import axios from 'axios';
 
 import AppContext from '../store/app-context';
 
-import { Container, Form, Button, InputGroup } from 'react-bootstrap';
+import { Form, Button, InputGroup } from 'react-bootstrap';
 import { Visibility, VisibilityOff } from '@mui/icons-material/';
 
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import PageContainer from '../components/PageContainer';
-import FlashAlert from '../components/FlashAlert';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 import Logo from '../assets/logo.png';
 import LoginBGImage from '../assets/login-bg.jpg';
+import PageSnackbar from '../components/PageSnackbar';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {
@@ -23,7 +20,7 @@ const InputGroupText = styled(InputGroup.Text)`
     }
 `;
 
-const Div = styled.div`
+const Container = styled.div`
     width: 100vw;
     height: 100vh;
     /* background-image: url(https://images.unsplash.com/photo-1522660517748-2931a7a4aaf6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2130&q=80); */
@@ -49,7 +46,7 @@ const Div = styled.div`
         box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px;
         /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1); */
         box-sizing: border-box;
-        margin-left: 50%;
+        margin-left: 40%;
         margin-bottom: 5%;
 
         @media screen and (max-width: 992px) {
@@ -148,7 +145,7 @@ const Login: React.FunctionComponent = () => {
     };
 
     return (
-        <Div>
+        <Container>
             <div className="login-box">
                 <Link to="/" className="block text-inherit no-underline hover:text-black">
                     <div className="w-full flex flex-row items-center justify-center gap-3 mb-5">
@@ -156,7 +153,6 @@ const Login: React.FunctionComponent = () => {
                         <h2 className="text-center hover-underline-animation">YelpCamp</h2>
                     </div>
                 </Link>
-
                 <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="username">
                         <Form.Label>Username</Form.Label>
@@ -183,27 +179,25 @@ const Login: React.FunctionComponent = () => {
                             </Form.Control.Feedback>
                         </InputGroup>
                     </Form.Group>
-                    <PrimaryBlackButton className="my-4 w-full">Login</PrimaryBlackButton>
-                    <p className="mt-3">
-                        New here?{' '}
-                        <Link to="/register" className="text-emerald-600 hover:text-emerald-800">
-                            Register an account
-                        </Link>{' '}
-                    </p>
-                    <Link
-                        to="/reset"
-                        className="block mt-2 mb-[-24px] text-emerald-600 hover:text-emerald-800"
-                    >
+                    <PrimaryBlackButton className="mt-4 w-full">Login</PrimaryBlackButton>
+                </Form>
+                <p className="mt-3">
+                    New here?{' '}
+                    <Link to="/register" className="text-emerald-600 hover:text-emerald-800">
+                        Register an account
+                    </Link>{' '}
+                </p>
+                <p className="mt-3">
+                    Forgot password?{' '}
+                    <Link to="/reset" className="text-emerald-600 hover:text-emerald-800">
                         Reset password
                     </Link>{' '}
-                </Form>
+                </p>
             </div>
-        </Div>
+
+            <PageSnackbar />
+        </Container>
     );
 };
 
 export default Login;
-
-{
-    /* </PageContainer> */
-}

@@ -12,17 +12,19 @@ const ModalLogout = () => {
         await axios
             .post('/api/v1/users/logout')
             .then(res => {
-                appContext.setModal({ open: false, content: null });
-
                 appContext.setCurrentUser(null);
-                // appContext.setSnackbar(true, 'Goodbye', 'success');
                 localStorage.removeItem('currentUser');
-                appContext.setAlert({
-                    message: `Goodbye!`,
-                    variant: 'success',
-                });
+
+                appContext.setModal({ open: false, content: null });
+                appContext.setSnackbar(true, 'Goodbye!', 'success');
 
                 navigate('/');
+
+                // appContext.setSnackbar(true, 'Goodbye', 'success');
+                // appContext.setAlert({
+                //     message: `Goodbye!`,
+                //     variant: 'success',
+                // });
             })
             .catch(err => {});
     };

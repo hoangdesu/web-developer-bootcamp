@@ -16,6 +16,14 @@ const StyledCard = styled('div')`
     width: 100%;
     /* max-width: fit-content; */ // if images < 3, sizing will get f up
 
+    .img {
+        transition: all 0.15s ease;
+    }
+
+    &:hover .img {
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 16px;
+    }
+
     /* Mobile view */
     @media (max-width: 768px) {
         max-width: none;
@@ -38,6 +46,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                         borderRadius: '8px',
                         // width: '100%',
                     }}
+                    className="img"
                 />
 
                 <Card.Body className="flex flex-column gap-1">

@@ -29,10 +29,12 @@ const NewCampground: React.FunctionComponent = () => {
     useEffect(() => {
         document.title = 'YelpCamp | New Campground';
         if (!currentUser) {
-            appContext.setAlert({
-                message: 'Please log in first',
-                variant: 'warning',
-            });
+            // appContext.setAlert({
+            //     message: 'Please log in first',
+            //     variant: 'warning',
+            // });
+
+            appContext.setSnackbar(true, 'You need to login first', 'warning');
             navigate('/login');
         }
     }, []);
