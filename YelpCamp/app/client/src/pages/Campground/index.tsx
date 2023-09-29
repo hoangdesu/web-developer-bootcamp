@@ -367,13 +367,15 @@ const Campground: React.FunctionComponent = () => {
                                     Add your first review!
                                 </span>
                             )}
-                            {campground.reviews.map((review: ReviewType) => (
-                                <Review
-                                    key={review._id}
-                                    review={review}
-                                    refetch={campgroundQuery.refetch}
-                                />
-                            ))}
+                            <div className="h-[600px] overflow-y-auto">
+                                {campground.reviews.map((review: ReviewType) => (
+                                    <Review
+                                        key={review._id}
+                                        review={review}
+                                        refetch={campgroundQuery.refetch}
+                                    />
+                                ))}
+                            </div>
                         </>
                     )}
                 </Col>

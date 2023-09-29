@@ -76,7 +76,7 @@ const Navbar: React.FunctionComponent = () => {
                                         key={'user'}
                                         className="dropdown-item active:bg-primary-dark-color" // TODO: change this color
                                     >
-                                        <span className="">View</span>
+                                        <span className="">Profile</span>
                                     </Link>
                                     <Button
                                         variant="secondary"

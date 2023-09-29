@@ -100,7 +100,7 @@ const Login: React.FunctionComponent = () => {
         }
     }, []);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const loginHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
@@ -128,7 +128,7 @@ const Login: React.FunctionComponent = () => {
                         appContext.setCurrentUser(resp.data);
                         localStorage.setItem('currentUser', JSON.stringify(resp.data));
                         // navigate(-1); // back to previous page
-                        navigate('/');
+                        navigate(-1);
                     });
                 })
                 .catch(err => {
@@ -153,7 +153,7 @@ const Login: React.FunctionComponent = () => {
                         <h2 className="text-center hover-underline-animation">YelpCamp</h2>
                     </div>
                 </Link>
-                <Form className="mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form className="mb-5" noValidate validated={validated} onSubmit={loginHandler}>
                     <Form.Group className="mb-3" controlId="username">
                         <Form.Label>Username</Form.Label>
                         <Form.Control type="text" ref={formUsername} required />

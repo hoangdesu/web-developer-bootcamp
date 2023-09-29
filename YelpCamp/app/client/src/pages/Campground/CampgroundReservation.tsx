@@ -314,7 +314,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             {/* BILLING */}
             {inputEndDate && inputStartDate && (
                 <div className="flex flex-column gap-1">
-                    <Accordion className="my-2" expanded={true}>
+                    <Accordion className="my-2" defaultExpanded={true} >
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="show-reservation-details"
