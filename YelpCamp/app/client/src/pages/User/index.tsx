@@ -59,7 +59,7 @@ const Container = styled.div`
 
         li:hover {
             cursor: pointer;
-            background-color: gray;
+            background-color: #e9dddd;
             /* text-decoration: underline; */
         }
     }
@@ -70,8 +70,9 @@ const Container = styled.div`
 
     .active {
         cursor: pointer;
-        background: pink !important;
+        background: var(--primary-accent-color) !important;
         text-decoration: none !important;
+        color: white;
     }
 
     /* MOBILE VIEW */

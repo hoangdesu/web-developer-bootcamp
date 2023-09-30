@@ -45,3 +45,7 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [] mobile pay screen: user must enter correct password to pay
 
 [] campgrounds you may like (random)
+
+[x] MODAL CONFIRM RESERVATION
+
+[] Edit + new campground pages

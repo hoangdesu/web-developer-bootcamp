@@ -1,25 +1,117 @@
 import React, { useContext } from 'react';
 import AppContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
+import { Campground, Reservation } from '../../types';
+import axios from 'axios';
+import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
+import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
+import styled from '@emotion/styled';
 
 interface ModalProps {
-    reservation: Reservation; //
-    refetch: () => {};
+    reservation: Reservation;
+    campground: Campground;
+    discountPercentage: number;
 }
 
-const ModalConfirmReservation = ({ reservation, makeReservation }) => {
+const Table = styled.table`
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 6px;
+`;
+
+const ModalConfirmReservation: React.FC<ModalProps> = ({
+    reservation,
+    campground,
+    discountPercentage,
+}) => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
+    const TABLE_FIELDS = [
+        {
+            title: 'Campground',
+            data: campground.title,
+        },
+        {
+            title: 'Location',
+            data: campground.location,
+        },
+        {
+            title: 'Check-in',
+            // data: Date.parse(reservation.checkIn),
+            data: new Date(reservation.checkIn).toLocaleString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit',
+                weekday: 'long',
+            }),
+        },
+        {
+            title: 'Check out',
+            data: new Date(reservation.checkOut).toLocaleString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit',
+                weekday: 'long',
+            }),
+        },
+        {
+            title: 'Total nights',
+            data: reservation.nights,
+        },
+        {
+            title: 'Number of guests',
+            data: reservation.guests,
+        },
+        {
+            title: 'Discount code',
+            data: reservation.discountCode
+                ? `${reservation.discountCode} (${discountPercentage}%)`
+                : '-',
+        },
+        {
+            title: 'Total amount',
+            data: `$${Number(reservation.totalAmount).toFixed(2)}`,
+        },
+    ];
+
+    const makeReservation = () => {
+        axios.post('/api/v1/reservation/new', { reservation }).then(res => {
+            navigate(`/reservation/${res.data._id}`);
+        });
+    };
+
     return (
         <div>
-            ModalConfirmReservation
-            <p>{reservation.bookedBy}</p>
-            <p>{reservation.nights}</p>
-            <button onClick={() => appContext.setModal({ open: false, content: null })}>
-                Cancel
-            </button>
-            <button onClick={makeReservation}>Confirm</button>
+            <h2 className="mb-3">Confirm reservation</h2>
+            <Table className="w-full border-separate">
+                {TABLE_FIELDS.map(({ title, data }) => (
+                    <tr key={title}>
+                        <td>{title}</td>
+                        <td>
+                            <span
+                                className={`font-medium ${
+                                    title === 'Discount code' &&
+                                    discountPercentage > 0 &&
+                                    'text-red-500'
+                                }`}
+                            >
+                                {data}
+                            </span>
+                        </td>
+                    </tr>
+                ))}
+            </Table>
+            <div className="flex flex-row items-center gap-2 mt-3">
+                <SecondaryTransparentButton
+                    onClick={() => appContext.setModal({ open: false, content: null })}
+                >
+                    Cancel
+                </SecondaryTransparentButton>
+                <PrimaryBlackButton onClick={makeReservation} className="w-full">
+                    Checkout →
+                </PrimaryBlackButton>
+            </div>
         </div>
     );
 };

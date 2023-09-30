@@ -36,6 +36,7 @@ const reservationSchema = new Schema(
         },
         discountCode: {
             type: String,
+            required: false,
         },
         status: {
             type: String,

@@ -14,6 +14,7 @@ import ModalConfirmReservation from '../../components/Modals/ModalConfirmReserva
 import ModalLogin from '../../components/Modals/ModalLogin';
 import { Tooltip } from '@mui/material';
 import ApplyButton from '../../components/Buttons/ApplyButton';
+import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 
 interface CampgroundResvervationProps {
     campground: Campground;
@@ -104,24 +105,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     // Note that en-CA is a locale, not a timezone. Canada uses the YYYY-MM-DD format.
     const minStartDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
 
-    const makeReservation = () => {
-        const reservation = {
-            bookedBy: appContext.currentUser!.id,
-            campground: campground._id,
-            nights: nights,
-            checkIn: inputStartDate,
-            checkOut: inputEndDate,
-            guests: guests,
-            totalAmount: fees.totalAfterDiscount, //
-            discountCode: discount.code
-        };
-
-        axios.post('/api/v1/reservation/new', { reservation }).then(res => {
-            console.log(res.data);
-            navigate(`/reservation/${res.data._id}`);
-        });
-    };
-
     const reserveHandler = () => {
         if (!inputStartDate) {
             checkinDateRef.current!.showPicker();
@@ -145,8 +128,8 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             checkIn: inputStartDate,
             checkOut: inputEndDate,
             guests: guests,
-            totalPrice: 1, //
-            status: 'PENDING',
+            totalAmount: fees.totalAfterDiscount,
+            discountCode: discount.code || '',
         };
 
         appContext.setModal({
@@ -154,7 +137,8 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             content: (
                 <ModalConfirmReservation
                     reservation={reservation}
-                    makeReservation={makeReservation}
+                    campground={campground}
+                    discountPercentage={discount.percentage}
                 />
             ),
             requiresLoggedIn: true,
@@ -314,7 +298,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             {/* BILLING */}
             {inputEndDate && inputStartDate && (
                 <div className="flex flex-column gap-1">
-                    <Accordion className="my-2" defaultExpanded={true} >
+                    <Accordion className="my-2" defaultExpanded={true}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="show-reservation-details"
@@ -423,12 +407,9 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                     </div>
                 </div>
             )}
-            <button
-                className="w-full mt-4 bg-primary-dark-color text-primary-color transition ease-in-out outline-0 px-5 py-3 border-0 hover:text-white hover:bg-black duration-300"
-                onClick={reserveHandler}
-            >
+            <PrimaryBlackButton className="w-full mt-4 py-3" onClick={reserveHandler}>
                 RESERVE →
-            </button>
+            </PrimaryBlackButton>
         </ReserveSection>
     );
 };

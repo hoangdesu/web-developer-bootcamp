@@ -65,3 +65,15 @@ export interface Snackbar {
     message?: string;
     severity?: TSeverity;
 }
+
+export interface Reservation {
+    bookedBy: string;
+    campground: string;
+    checkIn: string;
+    checkOut: string;
+    nights: number;
+    guests: number;
+    totalAmount: number;
+    discountCode?: string;
+    status?: 'PENDING' | 'PAID' | 'CANCELLED';
+}

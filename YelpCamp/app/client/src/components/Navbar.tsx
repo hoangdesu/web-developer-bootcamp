@@ -9,8 +9,6 @@ import Logo from '../assets/logo-white.png';
 import { styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import AddIcon from '@mui/icons-material/Add';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -95,7 +93,7 @@ const Navbar: React.FunctionComponent = () => {
                 <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
                 <BootstrapNavbar.Collapse id="basic-navbar-nav" className="">
                     {/* TODO: align this mtfk center of navbar */}
-                    <form action="" onSubmit={onSearchSubmit} className="me-auto">
+                    <form action="" onSubmit={onSearchSubmit} className="ml-auto mr-5">
                         <Search>
                             <SearchIconWrapper>
                                 <SearchIcon />
@@ -134,7 +132,7 @@ const Navbar: React.FunctionComponent = () => {
                                     onClick={logoutHandler}
                                     className="dropdown-item"
                                 >
-                                    Logout
+                                    Log out
                                 </Button>
                             </NavDropdown>
                         ) : (

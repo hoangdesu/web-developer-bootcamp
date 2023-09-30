@@ -36,7 +36,7 @@ module.exports.createReservation = catchAsync(async (req, res) => {
 
     reservedCampground.reservations.push(newReservation);
     await reservedCampground.save();
-
+    
     res.status(200).json(newReservation);
 });
 
@@ -106,7 +106,7 @@ module.exports.pending = catchAsync(async (req, res) => {
     res.send(resv.status);
 });
 
-module.exports.getDiscountCodes = catchAsync(async (req, res) => {
+module.exports.checkDiscountCode = catchAsync(async (req, res) => {
     const { discountCode: discountCodeParam } = req.query;
     const discountCode = discountCodeParam.toUpperCase();
 

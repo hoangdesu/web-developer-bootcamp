@@ -9,7 +9,7 @@ module.exports = Joi.object({
         nights: Joi.number().required(),
         guests: Joi.number().required(),
         totalAmount: Joi.number().required(),
-        discountCode: Joi.string(),
+        discountCode: Joi.string().allow(''),
         status: Joi.string(),
     }).required(),
 });

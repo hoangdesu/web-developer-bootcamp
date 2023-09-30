@@ -15,6 +15,7 @@ import FlashAlert from '../components/FlashAlert';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 import Logo from '../assets/logo.png';
 import ResetPwdImg from '../assets/reset-password.png';
+import SecondaryTransparentButton from '../components/Buttons/SecondaryTransparentButton';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {
@@ -82,20 +83,6 @@ const Container = styled.div`
     .hover-underline-animation:hover:after {
         transform: scaleX(1);
         transform-origin: bottom left;
-    }
-`;
-
-const CancelButton = styled.div`
-    border: 1px solid black;
-    background-color: transparent;
-    padding: 10px 1rem;
-    margin: 1rem 0;
-    height: fit-content;
-    transition: 100ms ease;
-    &:hover {
-        color: var(--primary-color);
-        background-color: var(--primary-dark-color);
-        cursor: pointer;
     }
 `;
 
@@ -340,7 +327,9 @@ const ResetPassword: React.FunctionComponent = () => {
                                 </Form.Group>
 
                                 <div className="flex flex-row items-center justify-between gap-2 mt-4">
-                                    <CancelButton onClick={() => setView('check')}>⬅</CancelButton>
+                                    <SecondaryTransparentButton onClick={() => setView('check')}>
+                                        ⬅
+                                    </SecondaryTransparentButton>
                                     <PrimaryBlackButton className="w-full">
                                         Reset password
                                     </PrimaryBlackButton>
