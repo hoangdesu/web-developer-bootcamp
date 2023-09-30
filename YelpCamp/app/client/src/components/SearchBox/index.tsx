@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 const StyledDiv = styled('div')`
     #wrap {
         position: relative;
-        background: red;
         bottom: 16px;
     }
 

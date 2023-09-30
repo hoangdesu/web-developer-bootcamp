@@ -7,7 +7,8 @@ export default ({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd(), '') };
 
     return defineConfig({
-        plugins: [react(), mkcert()],
+        // plugins: [react(), mkcert()],
+        plugins: [react()],
         server: {
             proxy: {
                 '/api/v1': {
@@ -21,7 +22,7 @@ export default ({ mode }) => {
             },
             host: true, // needed for the Docker Container port mapping to work
             port: parseInt(process.env.PORT),
-            https: true,
+            // https: true,
         },
         // base: '/web-developer-bootcamp/'
     });

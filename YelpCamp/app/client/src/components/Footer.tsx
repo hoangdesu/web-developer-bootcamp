@@ -12,7 +12,7 @@ const Footer: React.FunctionComponent = () => {
     };
 
     return (
-        <footer className="footer bg-dark py-4 mt-auto">
+        <footer className="footer bg-dark fixed bottom-0 w-full z-[-1] h-[150px] py-5">
             <Container className="px-[5%]">
                 <span className="text-muted">YelpCamp &copy; Hoang Nguyen 2023</span>
                 {debuggingMode && (

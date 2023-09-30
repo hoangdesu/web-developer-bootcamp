@@ -3,9 +3,10 @@ import { useQueries } from 'react-query';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
+import { lime, purple, green } from '@mui/material/colors';
 
 import { Col, Row } from 'react-bootstrap';
-import { Pagination } from '@mui/material';
+import { Pagination, ThemeProvider, createTheme } from '@mui/material';
 
 import './App.css';
 import AppContext from './store/app-context';
@@ -27,12 +28,21 @@ declare global {
     }
 }
 
+const paginationTheme = createTheme({
+    palette: {
+        primary: {
+            main: '#059669',
+        },
+    },
+});
+
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
     const [campgrounds, setCampgrounds] = useState<Campground[]>([]);
     const [filteredCampgroundList, setFilteredCampgroundList] = useState<Campground[]>([]);
     const [page, setPage] = useState(1);
+    const itemsPerPage = 12;
 
     useEffect(() => {
         document.title = 'YelpCamp';
@@ -78,8 +88,8 @@ const App: React.FunctionComponent = () => {
     // => index of page x = (page - 1) * 12
     const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
-        const startingIndex = (value - 1) * 12;
-        const endingIndex = startingIndex + 12;
+        const startingIndex = (value - 1) * itemsPerPage;
+        const endingIndex = startingIndex + itemsPerPage;
         setFilteredCampgroundList(campgrounds.slice(startingIndex, endingIndex));
     };
 
@@ -89,13 +99,8 @@ const App: React.FunctionComponent = () => {
 
             <Row className="justify-content-center my-4">
                 <Col>
-                    {/* <div className="flex flex-col md:flex-row items-center align-middle justify-between mb-3"> */}
                     <div className="flex flex-row items-center align-middle justify-between mb-3">
-                        {/* <div> */}
                         <h3 className="my-4">Explore campgrounds</h3>
-
-                        <SearchBox />
-                        {/* TODO: make this shit repsonsive in mobile */}
                     </div>
 
                     <CampgroundsContainer>
@@ -108,14 +113,16 @@ const App: React.FunctionComponent = () => {
                     </CampgroundsContainer>
 
                     <div className="w-full flex flex-column items-center mt-5">
-                        <Pagination
-                            page={page}
-                            count={Math.ceil(campgrounds.length / 12)}
-                            color="secondary"
-                            variant="outlined"
-                            shape="rounded"
-                            onChange={handlePageChange}
-                        />
+                        <ThemeProvider theme={paginationTheme}>
+                            <Pagination
+                                page={page}
+                                count={Math.ceil(campgrounds.length / itemsPerPage)}
+                                color="primary"
+                                variant="outlined"
+                                shape="rounded"
+                                onChange={handlePageChange}
+                            />
+                        </ThemeProvider>
                     </div>
                 </Col>
             </Row>

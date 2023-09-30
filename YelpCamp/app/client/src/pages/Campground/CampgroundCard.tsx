@@ -18,10 +18,18 @@ const StyledCard = styled('div')`
 
     .img {
         transition: all 0.15s ease;
+        object-fit: cover;
+        border-radius: 8px;
+        
+        /* Mobile view */
+        @media (max-width: 640px) {
+            height: 250px;
+        }
     }
 
     &:hover .img {
         box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 16px;
+        border-radius: 0;
     }
 
     /* Mobile view */
@@ -40,12 +48,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                 <Card.Img
                     variant="top"
                     src={campground?.images?.[0]?.url}
-                    height={'250px'}
-                    style={{
-                        objectFit: 'cover',
-                        borderRadius: '8px',
-                        // width: '100%',
-                    }}
+                    height={'200px'}
                     className="img"
                 />
 

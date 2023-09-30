@@ -34,12 +34,14 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [] alerts fk up the UI -> replace important ones with snackbars
 
 [x] login screen ui
-[] pagination color
 [] register screen ui
 [] reservation modal
 
-[] mobile pay screen: user must enter correct password to pay
 [x] reset password page
-
 [] search page
+
+[x] pagination color
 [] Login to add your review text
+[] mobile pay screen: user must enter correct password to pay
+
+[] campgrounds you may like (random)
