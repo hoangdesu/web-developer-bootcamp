@@ -20,13 +20,15 @@ const Footer: React.FunctionComponent = () => {
                         <button onClick={handler}>Log current context</button>
                     </div>
                 )}
-                {/* // TODO: move about section down here */}
+                {/* // TODO: put notes about this project in about section */}
                 <div>
                     <Link to="/about" className="text-lg">
-                        About 
+                        About
                     </Link>
                 </div>
             </Container>
+            {/* // TODO: add social links eg facebook X github ig ... */}
+            {/* button back to top */}
         </footer>
     );
 };

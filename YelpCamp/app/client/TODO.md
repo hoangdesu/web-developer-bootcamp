@@ -49,3 +49,5 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [x] MODAL CONFIRM RESERVATION
 
 [] Edit + new campground pages
+
+[] Campground Thumbnail grid

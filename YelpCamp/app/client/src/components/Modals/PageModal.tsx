@@ -5,7 +5,7 @@ import ModalLogin from './ModalLogin';
 
 const style = {
     position: 'fixed',
-    top: '20vh',
+    top: '20vh', // TODO: different position from top on mobile vs desktop (10vh mobile)
     left: 'calc(50% - (500px/2))',
     transform: 'translate(-50%, -50%)',
     width: '500px',

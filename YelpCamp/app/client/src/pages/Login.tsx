@@ -148,8 +148,8 @@ const Login: React.FunctionComponent = () => {
         <Container>
             <div className="login-box">
                 <Link to="/" className="block text-inherit no-underline hover:text-black">
-                    <div className="w-full flex flex-row items-center justify-center gap-3 mb-5">
-                        <img src={Logo} alt="yelpcamp-logo" className="w-[70px]" />
+                    <div className="w-full flex flex-row items-center justify-center gap-2 mb-5">
+                        <img src={Logo} alt="yelpcamp-logo" className="w-[60px]" />
                         <h2 className="text-center hover-underline-animation">YelpCamp</h2>
                     </div>
                 </Link>

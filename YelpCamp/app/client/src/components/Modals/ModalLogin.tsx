@@ -72,9 +72,9 @@ const ModalLogin = () => {
     };
     return (
         <div>
-            <h3 className="">Welcome to YelpCamp</h3>
+            <h2 className="mb-2">Welcome to YelpCamp</h2>
             {/* <p className="text-center text-muted">Please login to confirm your reservation</p> */}
-            <Form className="mt-4 mb-5" noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form className="mt-4" noValidate validated={validated} onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username</Form.Label>
                     <Form.Control type="text" ref={formUsername} required />
@@ -103,10 +103,19 @@ const ModalLogin = () => {
                 </Form.Group>
 
                 <PrimaryBlackButton>Login</PrimaryBlackButton>
-                <Link to="/register" className="block mt-3 mb-[-40px]">
-                    New here? Signup
-                </Link>
             </Form>
+            <p className="mt-4">
+                New here?{' '}
+                <Link to="/register" className="text-emerald-600 hover:text-emerald-800">
+                    Register an account
+                </Link>{' '}
+            </p>
+            <p className="mt-3">
+                Forgot password?{' '}
+                <Link to="/reset" className="text-emerald-600 hover:text-emerald-800">
+                    Reset password
+                </Link>{' '}
+            </p>
         </div>
     );
 };

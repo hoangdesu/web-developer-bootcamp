@@ -9,7 +9,7 @@ export interface Campground {
     geometry: Point;
     images: Image[];
     author: User;
-    reviews: Review;
+    reviews: Review[];
     createdAt: string;
     updatedAt: string;
 }

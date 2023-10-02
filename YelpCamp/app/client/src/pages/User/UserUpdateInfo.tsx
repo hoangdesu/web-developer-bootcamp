@@ -60,7 +60,7 @@ const UserUpdateInfo = ({ user }) => {
     }
 
     const isAuthor = () => {
-        return user.username.toString() === appContext.currentUser.username.toString();
+        return user.username.toString() === appContext.currentUser?.username.toString(); // TODO: no login -> error -> need to login
     };
 
     // TODO: UI design -> separate out changing email with changing password. Wrap in different boxes

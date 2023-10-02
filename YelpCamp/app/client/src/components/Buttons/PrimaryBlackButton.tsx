@@ -5,6 +5,7 @@ interface ButtonProps {
     children: React.ReactNode;
     className?: string;
     onClick?: () => void;
+    disabled?: boolean;
 }
 
 const Button = styled.button`
@@ -19,12 +20,17 @@ const Button = styled.button`
         background-color: var(--primary-accent-color);
         border: 1px solid var(--primary-accent-color);
     }
+
+    &:disabled {
+        background-color: #10b981;
+        border: 1px solid #10b981;
+    }
 `;
 
 const PrimaryBlackButton: React.FunctionComponent<ButtonProps> = props => {
     const { children, className } = props;
     return (
-        <Button type="submit" className={className} {...props}>
+        <Button type="submit" className={className} {...props} disabled={props.disabled}>
             {children}
         </Button>
     );

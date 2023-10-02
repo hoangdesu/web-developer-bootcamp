@@ -160,8 +160,8 @@ const Register: React.FunctionComponent = () => {
             <div className="login-box">
                 {/* <h1 className="text-center mb-4">Welcome to</h1> */}
                 <Link to="/" className="block text-inherit no-underline hover:text-black">
-                    <div className="w-full flex flex-row items-center justify-center gap-3">
-                        <img src={Logo} alt="yelpcamp-logo" className="w-[70px]" />
+                    <div className="w-full flex flex-row items-center justify-center gap-2">
+                        <img src={Logo} alt="yelpcamp-logo" className="w-[60px]" />
                         <h2 className="text-center hover-underline-animation">YelpCamp</h2>
                     </div>
                 </Link>

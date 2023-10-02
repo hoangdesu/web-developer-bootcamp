@@ -6,11 +6,12 @@ import AppContext from '../store/app-context';
 import ModalLogout from './Modals/ModalLogout';
 import Logo from '../assets/logo-white.png';
 
-import { styled } from '@mui/material/styles';
+import { styled as muistyled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import styled from '@emotion/styled';
 
-const Search = styled('div')(({ theme }) => ({
+const Search = muistyled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: 'var(--secondary-color)',
@@ -26,7 +27,7 @@ const Search = styled('div')(({ theme }) => ({
     },
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
+const SearchIconWrapper = muistyled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
     position: 'absolute',
@@ -36,7 +37,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = muistyled(InputBase)(({ theme }) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 0),
@@ -52,6 +53,31 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         },
     },
 }));
+
+const LogoSection = styled.span`
+    .hover-underline-animation {
+        display: inline-block;
+        position: relative;
+    }
+
+    .hover-underline-animation:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 1px;
+        bottom: 4px;
+        left: 0;
+        background-color: var(--primary-color);
+        transform-origin: bottom right;
+        transition: transform 0.25s ease-out;
+    }
+
+    .hover-underline-animation:hover:after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+`;
 
 const Navbar: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
@@ -84,12 +110,14 @@ const Navbar: React.FunctionComponent = () => {
     return (
         <BootstrapNavbar expand="md" variant="dark" className="bg-primary-dark-color">
             <Container className="px-[5%]">
-                <Link to={'/'} className="no-underline">
-                    <span className="nav-link flex flex-row justify-center items-center gap-2">
-                        <img src={Logo} alt="YelpCamp logo" width={'36px'} />
-                        <span className="navbar-brand">YelpCamp</span>
-                    </span>
-                </Link>
+                <LogoSection>
+                    <Link to={'/'} className="no-underline">
+                        <span className="nav-link flex flex-row justify-center items-center gap-2">
+                            <img src={Logo} alt="YelpCamp logo" width={'35px'} />
+                            <span className="navbar-brand hover-underline-animation">YelpCamp</span>
+                        </span>
+                    </Link>
+                </LogoSection>
                 <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
                 <BootstrapNavbar.Collapse id="basic-navbar-nav" className="">
                     {/* TODO: align this mtfk center of navbar */}

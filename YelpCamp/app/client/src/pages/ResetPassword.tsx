@@ -7,10 +7,6 @@ import AppContext from '../store/app-context';
 
 import { Form, Button, InputGroup, Spinner } from 'react-bootstrap';
 import { Visibility, VisibilityOff } from '@mui/icons-material/';
-
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import PageContainer from '../components/PageContainer';
 import FlashAlert from '../components/FlashAlert';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 import Logo from '../assets/logo.png';
@@ -198,12 +194,12 @@ const ResetPassword: React.FunctionComponent = () => {
 
     return (
         <Container>
-            <div className="w-full flex flex-row items-center justify-center gap-5 py-4">
+            <div className="w-full py-4">
                 <Link
                     to="/"
-                    className="hover:text-black text-primary-dark-color flex flex-row gap-3 no-underline items-center justify-center"
+                    className="hover:text-black text-primary-dark-color flex flex-row gap-2 no-underline items-center justify-center"
                 >
-                    <img src={Logo} alt="yelpcamp-logo" className="w-[60px]" />
+                    <img src={Logo} alt="yelpcamp-logo" className="w-[50px]" />
                     <h4 className="text-center hover-underline-animation">YelpCamp</h4>
                 </Link>
             </div>
@@ -217,7 +213,7 @@ const ResetPassword: React.FunctionComponent = () => {
                                 validated={validated}
                                 onSubmit={checkMatchingHandler}
                             >
-                                <h2>Reset password</h2>
+                                <h1>Reset password</h1>
                                 <Form.Text>
                                     Enter matching username and email to reset your password
                                 </Form.Text>
