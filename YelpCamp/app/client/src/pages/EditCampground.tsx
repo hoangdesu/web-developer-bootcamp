@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useLoaderData, useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import { Container, Button, Form, InputGroup, Image, Spinner } from 'react-bootstrap';
 
@@ -17,6 +17,7 @@ import styled from '@emotion/styled';
 import { Delete } from '@mui/icons-material';
 import EditPreviewMap from '../components/EditPreviewMap';
 import { Campground } from '../types';
+import { Autocomplete, TextField } from '@mui/material';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -33,52 +34,6 @@ const UploadedImagesWrapper = styled.span`
     }
 `;
 
-// {
-//     display: flex;
-//     flex-direction: row;
-//     /* background-color: white; */
-//     /* box-sizing: border-box;
-//     border-radius: 8px;
-
-//     margin-bottom: 50px;
-//     box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px; */
-
-//     .column1 {
-//         width: 50%;
-//         padding: 2rem;
-//     }
-
-//     .form {
-//         padding: clamp(1rem, 3rem, 3rem);
-//     }
-
-//     .column2 {
-//         width: 50%;
-//         padding: 2rem;
-
-//         /* background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
-//         background-size: cover;
-//         background-position: 50%;
-//         border-top-right-radius: 8px;
-//         border-bottom-right-radius: 8px; */
-//     }
-
-//     .thumbnails-container {
-//         display: grid;
-//         grid-gap: 12px;
-//         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-//     }
-
-//     @media (max-width: 1024px) {
-//         flex-direction: column;
-//         .column1 {
-//             width: 100%;
-//         }
-//         .column2 {
-//             width: 100%;
-//         }
-//     }
-// }
 const Wrapper = styled.div`
     margin: auto;
     max-width: 600px;
@@ -98,9 +53,11 @@ const EditCampground: React.FunctionComponent = () => {
     const [selectedImages, setSelectedImages] = useState([]);
     const [isUpdating, setIsUpdating] = useState(false);
 
-    const [formLocation, setFormLocation] = useState('');
+    const [featuredImageIndex, setFeaturedImageIndex] = useState(0);
 
-    const mapRef = useRef(null)
+    const [formLocation, setFormLocation] = useState('');
+    const [suggestedLocations, setSuggestedLocations] = useState([]);
+
     const formTitle = useRef<HTMLInputElement>(null);
     const formPrice = useRef<HTMLInputElement>(null);
     const formImages = useRef<HTMLInputElement>(null);
@@ -121,9 +78,15 @@ const EditCampground: React.FunctionComponent = () => {
         isLoading,
         error,
         data: campground,
-    } = useQuery({
+    } = useQuery<Campground | AxiosError>({
         queryKey: ['campgroundData'],
-        queryFn: () => axios.get(`/api/v1/campgrounds/${campgroundId}`).then(res => res.data),
+        queryFn: () =>
+            axios
+                .get<Campground>(`/api/v1/campgrounds/${campgroundId}`)
+                .then(res => res.data)
+                .catch((err: AxiosError) => {
+                    throw err;
+                }),
         onSuccess: (campground: Campground) => {
             setFormLocation(campground.location);
         },
@@ -144,6 +107,35 @@ const EditCampground: React.FunctionComponent = () => {
         }
     }, [campground]);
 
+    // AUTOCOMPLETE LOCATION SEARCH
+    useEffect(() => {
+        const queryLocationTimeOut = setTimeout(() => {
+            // console.log('formLocation', formLocation);
+            if (!formLocation) setSuggestedLocations([]);
+            axios
+                .get(
+                    `https://api.mapbox.com/geocoding/v5/mapbox.places/${formLocation}.json?access_token=${
+                        import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
+                    }`,
+                )
+                .then(res => {
+                    const coords = res.data.features[0].geometry.coordinates;
+                    const features = res.data.features;
+                    const placeText = features[0]['text'];
+                    console.log('setSuggestedLocations', features);
+                    console.log('placeText[0]', placeText);
+                    // setFormLocation(placeText);
+                    setSuggestedLocations(features);
+
+                    // setCoordinates({ longitude: coords[0], latitude: coords[1] });
+                })
+                .catch(err => {
+                    // ... err msg
+                });
+        }, 1000);
+        return () => clearTimeout(queryLocationTimeOut);
+    }, [formLocation]);
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
@@ -156,11 +148,24 @@ const EditCampground: React.FunctionComponent = () => {
             formData.append('campground[price]', parseFloat(formPrice.current?.value) || 0);
             formData.append('campground[location]', formLocation);
             formData.append('campground[description]', formDescription.current?.value || '');
+
+            // adding new images
+            // TODO: MERGE EXISTED IMAGE AND ADDING MORE IMAGES TO A SINGLE ARRAY
+            // MODIFY ARRAY AND FINALLY APPEND TO FORMDATA BEFORE SAVING
+            // OVERWRITE CURRENT IMAGES ARRAY IN DB
+            formData.append('campground[images]', formImages.current?.files[0]);
             Array.from(formImages.current?.files).forEach(file => {
                 formData.append('campground[images]', file);
             });
 
             deletingImages.forEach(img => formData.append('deletingImages[]', img));
+
+            // swapping featured image
+            formData.append('featuredImageIndex', featuredImageIndex);
+            // if (featuredImageIndex !== 0) {
+            // }
+
+            // formImages.current?.files
 
             axios
                 .put(`/api/v1/campgrounds/${campground._id}`, formData, {
@@ -276,11 +281,28 @@ const EditCampground: React.FunctionComponent = () => {
         }
     };
 
-    const onPreviewLocation = () => {
-        // setPreviewCoordinates([107, 21]);
-        // console.log('formLocation.current?.value', formLocation.current?.value);
-        // console.log('formLocationValue', formLocationValue);
-        mapRef.current.previewLocation();
+    const previewLocation = () => {
+        console.log('inside preview location');
+
+        axios
+            .get(
+                `https://api.mapbox.com/geocoding/v5/mapbox.places/${formLocation}.json?access_token=${
+                    import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
+                }`,
+            )
+            .then(res => {
+                const coords = res.data.features[0].geometry.coordinates;
+                const features = res.data.features;
+                const placeText = features[0]['text'];
+                console.log('res.data.features', features);
+                console.log('placeText', placeText);
+                setFormLocation(placeText);
+
+                // setCoordinates({ longitude: coords[0], latitude: coords[1] });
+            })
+            .catch(err => {
+                // ... err msg
+            });
     };
 
     return (
@@ -302,21 +324,20 @@ const EditCampground: React.FunctionComponent = () => {
                             Title is required!
                         </Form.Control.Feedback>
                     </Form.Group>
+
                     <div className="mb-3">
                         <Form.Group className="mb-3" controlId="campgroundLocation">
                             <Form.Label>Location</Form.Label>
                             <InputGroup className="mb-2">
                                 <Form.Control
                                     type="text"
-                                    // ref={formLocation}
-                                    // defaultValue={campground.location}
                                     required
                                     value={formLocation}
                                     onChange={e => setFormLocation(e.currentTarget.value)}
                                 />
                                 <InputGroup.Text
                                     className="hover:cursor-pointer hover:bg-teal-200"
-                                    onClick={onPreviewLocation}
+                                    onClick={previewLocation}
                                 >
                                     Preview location
                                 </InputGroup.Text>
@@ -328,7 +349,62 @@ const EditCampground: React.FunctionComponent = () => {
                                 </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
-                        <EditPreviewMap campground={campground} queryLocation={formLocation} ref={mapRef} />
+
+                        {/* WORKING: SEARCH AUTO COMPLETE */}
+                        {/* https://mui.com/material-ui/react-autocomplete/#custom-input */}
+                        <Autocomplete
+                            sx={{
+                                // display: 'inline-block',
+                                '& input': {
+                                    // width: 200,
+                                    bgcolor: 'background.paper',
+                                    color: theme =>
+                                        theme.palette.getContrastText(
+                                            theme.palette.background.paper,
+                                        ),
+                                },
+                            }}
+                            // value={formLocation}
+                            // onChange={(event: any, newValue: string | null) => {
+                            //     // setValue(newValue);
+                            //     // setFormLocation(newValue); //lowercase error
+                            //     console.log('on change', 'new value', newValue);
+                            // }}
+                            inputValue={formLocation}
+                            onInputChange={(event, newInputValue) => {
+                                setFormLocation(newInputValue);
+                                console.log('onInputChange');
+                            }}
+                            noOptionsText="Search for campground location"
+                            id="custom-input-demo"
+                            // options={suggestedLocations.map(l => `${l.text} (${l['place_name']})`)}
+
+                            getOptionLabel={location =>
+                                `${location.text} (${location['place_name']})`
+                            }
+                            options={suggestedLocations}
+                            // renderInput={(params) => (
+                            //     <TextField {...params} label="Combo box" variant="outlined" />
+                            //   )}
+
+                            // filterOptions={} // https://stackoverflow.com/questions/70415872/is-there-a-way-to-use-mui-autocomplete-when-the-search-string-is-not-in-the-opti
+                            // ^ when string not in option list
+
+                            filterOptions={(options, state) => options}
+                            // isOptionEqualToValue={(option, value) => option.text.contains(value)}
+
+                            renderInput={params => (
+                                <div ref={params.InputProps.ref}>
+                                    <input
+                                        type="text"
+                                        {...params.inputProps}
+                                        className="form-control"
+                                    />
+                                </div>
+                            )}
+                        />
+
+                        <EditPreviewMap campground={campground} />
                     </div>
 
                     <Form.Group className="mb-3" controlId="campgroundPrice">
@@ -364,10 +440,10 @@ const EditCampground: React.FunctionComponent = () => {
                     {/* IMAGES */}
                     {/* TODO: NICE TO HAVE: select main image -> set selected image to be images[0] */}
                     <Form.Group className="mb-3" controlId="campgroundImageUrl">
-                        <p>Images uploaded ({campground.images.length})</p>
-
+                        <Form.Label>Images uploaded ({campground.images.length})</Form.Label>
+                        <p>Click to change featured image</p>
                         <div className="thumbnails-container">
-                            {campground.images.map(image => (
+                            {campground.images.map((image, index) => (
                                 <UploadedImagesWrapper key={image.url}>
                                     <Image
                                         src={image.thumbnail}
@@ -375,9 +451,15 @@ const EditCampground: React.FunctionComponent = () => {
                                             width: '100%',
                                             height: '120px',
                                             objectFit: 'cover',
+                                            // {index === featuredImageIndex && "border: '2px solid green'" }
                                         }}
                                         alt="Thumbnail"
                                         thumbnail
+                                        className={`${
+                                            index === featuredImageIndex &&
+                                            'border-4 border-emerald-500'
+                                        }`}
+                                        onClick={() => setFeaturedImageIndex(index)}
                                     />
                                     {showDeleteCheckboxes && (
                                         <input

@@ -99,9 +99,13 @@ const createCampground = catchAsync(async (req, res, next) => {
 });
 
 // PUT /api/v1/campgrounds/:id
+// TODO: allow editing current images array to set Featured image
+// TODO: fix not adding new images will crash
 const editCampground = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const { campground, deletingImages } = req.body;
+    const { campground, deletingImages, featuredImageIndex } = req.body;
+
+    console.log('featuredImageIndex', featuredImageIndex)
 
     // update campground text data
     const updatedCampground = await Campground.findByIdAndUpdate(id, campground, {
@@ -109,6 +113,7 @@ const editCampground = catchAsync(async (req, res, next) => {
         new: true,
     });
 
+    
     // add images to array and save to db
     if (req.files) {
         // mapping over image file objects from req.files
@@ -119,6 +124,14 @@ const editCampground = catchAsync(async (req, res, next) => {
 
         // save to db
         updatedCampground.images.push(...uploadingImages);
+        await updatedCampground.save();
+    }
+    
+    // swapping featured image
+    if (featuredImageIndex !== 0) {
+        const temp = updatedCampground.images[0];
+        updatedCampground.images[0] = updatedCampground.images[featuredImageIndex];
+        updatedCampground.images[featuredImageIndex] = temp;
         await updatedCampground.save();
     }
 
