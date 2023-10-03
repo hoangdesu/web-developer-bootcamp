@@ -51,3 +51,7 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [] Edit + new campground pages
 
 [] Campground Thumbnail grid
+[] campground marker style
+[] clustermap error: try using useEffect to reset state for popup
+
+[] map preview in edit and new campground

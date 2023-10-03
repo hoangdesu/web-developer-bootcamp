@@ -6,6 +6,7 @@ import AppContext from '../../store/app-context';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import { Campground } from '../../types';
 import styled from '@emotion/styled';
+import SecondaryTransparentButton from '../../components/Buttons/SecondaryTransparentButton';
 
 interface SectionProps {
     campground: Campground;
@@ -48,7 +49,7 @@ const CampgroundHostedBySection: React.FC<SectionProps> = ({ campground }) => {
                     </Link>
                 </h4>
 
-                {/* show buttons to edit and delete campground for author */}
+                {/* only show edit button to author */}
                 {isAuthor(appContext, campground) && (
                     <div className="flex gap-2">
                         <EditButton onClick={() => navigate(`/campgrounds/${campground._id}/edit`)}>

@@ -1,12 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Campground } from '../../types';
 
 interface PopupBoxProps {
-    campground: {
-        id: string;
-        title: string;
-        price: number;
-        location: string;
+    campground: Pick<Campground, '_id' | 'title' | 'price' | 'location'> & {
         image: string;
         rating: number;
     };
@@ -15,7 +12,7 @@ interface PopupBoxProps {
 const PopupBox: React.FC<PopupBoxProps> = ({ campground }) => {
     return (
         <Link
-            to={`/campgrounds/${campground.id}`}
+            to={`/campgrounds/${campground._id}`}
             className="flex flex-row gap-3 no-underline text-inherit"
         >
             <img src={campground.image} alt="Campground cover" className="w-[120px] object-cover" />

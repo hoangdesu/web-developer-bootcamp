@@ -143,7 +143,7 @@ const NewCampground: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <h1 className="text-center">New Campground</h1>
-            <p className="text-center text-muted mt-2 mb-4">
+            <p className="text-center text-muted mt-2 mb-5">
                 List your campground on YelpCamp - for FREE!
             </p>
             <Wrapper>
@@ -156,7 +156,7 @@ const NewCampground: React.FunctionComponent = () => {
                         encType="multipart/form-data"
                     >
                         <Form.Group className="mb-3" controlId="campgroundTitle">
-                            <Form.Label>Campground title</Form.Label>
+                            <Form.Label>Campground Title</Form.Label>
                             <Form.Control type="text" ref={formTitle} required />
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">
@@ -172,6 +172,8 @@ const NewCampground: React.FunctionComponent = () => {
                                 Location is required!
                             </Form.Control.Feedback>
                         </Form.Group>
+
+                        <div>--- Map location preview...</div>
 
                         <Form.Group className="mb-3">
                             <Form.Label htmlFor="inlineFormInputGroup">Price</Form.Label>
@@ -239,7 +241,7 @@ const NewCampground: React.FunctionComponent = () => {
                         </Form.Group>
 
                         {isUploading ? (
-                            <PrimaryBlackButton className="mt-3" disabled>
+                            <PrimaryBlackButton className="mt-3 w-full" disabled>
                                 <Spinner
                                     animation="border"
                                     size="sm"
@@ -250,7 +252,7 @@ const NewCampground: React.FunctionComponent = () => {
                                 <span className="ml-3">Creating campground...</span>
                             </PrimaryBlackButton>
                         ) : (
-                            <PrimaryBlackButton className="mt-3">
+                            <PrimaryBlackButton className="mt-3 w-full">
                                 Create campground
                             </PrimaryBlackButton>
                         )}

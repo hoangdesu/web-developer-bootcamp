@@ -21,28 +21,29 @@ interface ClusterMapProps {
 }
 
 interface PopupInfoType {
-    campground: {};
+    campground: Pick<Campground, '_id' | 'title' | 'price' | 'location'> & {
+        image: string;
+        rating: number;
+    };
     longitude: number;
     latitude: number;
 }
 
 const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) => {
     const mapRef = useRef<MapRef>(null);
-    // const { current: map }= useMap();
     const [popupInfo, setPopupInfo] = useState<PopupInfoType | null>(null);
-
     const [viewState, setViewState] = useState({
         longitude: 107.7017555,
         latitude: 16.0, // default coordinate to vietnam
         zoom: 4,
     });
-    const [cursor, setCursor] = useState<string>('grab');
+    const [cursor, setCursor] = useState<'pointer' | 'grab' | 'grabbing'>('grab');
 
     const clusterData = {
         features: campgrounds.map(campground => ({
             type: 'Feature',
             properties: {
-                id: campground._id,
+                _id: campground._id,
                 title: campground.title,
                 location: campground.location,
                 image: campground.images[0].url,

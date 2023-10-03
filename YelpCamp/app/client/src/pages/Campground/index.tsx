@@ -33,7 +33,6 @@ export async function loader({ params }) {
 }
 
 const StyledSection = styled.section`
-    /* margin-top: 20px; */
     padding: 20px 0;
     border-top: 1px solid rgba(54, 46, 46, 0.1);
 `;
@@ -107,7 +106,7 @@ const Campground: React.FunctionComponent = () => {
                     {
                         headers: {
                             'Content-Type': 'application/json',
-                            Authorization: appContext.currentUser.id.toString(),
+                            Authorization: appContext.currentUser?.id.toString(),
                         },
                     },
                 )
@@ -166,7 +165,7 @@ const Campground: React.FunctionComponent = () => {
                         <>
                             <span>Saved to your favorite. </span>
                             <Link
-                                to={`/user/${appContext.currentUser.username}?tab=favorite`}
+                                to={`/user/${appContext.currentUser?.username}?tab=favorite`}
                                 className="text-inherit"
                                 target="_blank"
                             >
@@ -176,12 +175,11 @@ const Campground: React.FunctionComponent = () => {
                     ) : (
                         <span>Removed from your favorite.</span>
                     ),
-                    // <Link to='/'>Hi</Link>,
                     'success',
                 );
             })
             .catch(err => {
-                appContext.setSnackbar(true, 'Error adding to your favorite', 'error');
+                appContext.setSnackbar(true, 'Error: Failed adding campground to your favorite', 'error');
             });
     };
 
@@ -239,7 +237,6 @@ const Campground: React.FunctionComponent = () => {
                                     appContext.setModal({
                                         open: true,
                                         content: <ModalShare />,
-                                        // requiresLoggedIn: false,
                                     });
                                 }}
                             >
@@ -281,12 +278,6 @@ const Campground: React.FunctionComponent = () => {
                         <h4 className="font-normal">Reservation</h4>
                         <CampgroundReservation campground={campground} />
                     </StyledSection>
-
-                    <Link to="/">
-                        <Button variant="secondary" className="my-3">
-                            Back
-                        </Button>
-                    </Link>
                 </Col>
 
                 <Col lg={5}>

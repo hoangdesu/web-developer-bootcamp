@@ -16,6 +16,8 @@ import { Tooltip } from '@mui/material';
 import ApplyButton from '../../components/Buttons/ApplyButton';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
 interface CampgroundResvervationProps {
     campground: Campground;
 }
@@ -407,9 +409,16 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                     </div>
                 </div>
             )}
-            <PrimaryBlackButton className="w-full mt-4 py-3" onClick={reserveHandler}>
-                RESERVE →
+            <PrimaryBlackButton
+                className="w-full mt-5 py-3 flex flex-row items-center justify-center gap-1"
+                onClick={reserveHandler}
+            >
+                RESERVE <ArrowForwardIcon />
             </PrimaryBlackButton>
+            {/* <ArrowRightAltIcon/>
+            <ArrowForwardIcon/>
+            <KeyboardArrowRightIcon/> 
+            <ArrowForwardIosIcon/>  */}
         </ReserveSection>
     );
 };
