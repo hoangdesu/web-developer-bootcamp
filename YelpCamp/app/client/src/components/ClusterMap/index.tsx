@@ -34,7 +34,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
     const [popupInfo, setPopupInfo] = useState<PopupInfoType | null>(null);
     const [viewState, setViewState] = useState({
         longitude: 107.7017555,
-        latitude: 16.0, // default coordinate to vietnam
+        latitude: 16.0, // default coordinate to Vietnam
         zoom: 4,
     });
     const [cursor, setCursor] = useState<'pointer' | 'grab' | 'grabbing'>('grab');
@@ -135,60 +135,58 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
     }, []);
 
     return (
-        <>
-            <Map
-                mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-                initialViewState={{
-                    ...viewState,
-                }}
-                style={{ height: 450 }}
-                mapStyle="mapbox://styles/mapbox/streets-v12"
-                attributionControl={false}
-                interactiveLayerIds={[clusterLayer.id!, unclusteredPointLayer.id!]}
-                onClick={onMapClick}
-                ref={mapRef}
-                onLoad={onMapLoad}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-                onDrag={onDrag}
-                onDragEnd={onDragEnd}
-                cursor={cursor}
+        <Map
+            mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+            initialViewState={{
+                ...viewState,
+            }}
+            style={{ height: 450 }}
+            mapStyle="mapbox://styles/mapbox/streets-v12"
+            attributionControl={false}
+            interactiveLayerIds={[clusterLayer.id!, unclusteredPointLayer.id!]}
+            onClick={onMapClick}
+            ref={mapRef}
+            onLoad={onMapLoad}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onDrag={onDrag}
+            onDragEnd={onDragEnd}
+            cursor={cursor}
+        >
+            <GeolocateControl />
+            <FullscreenControl />
+            <NavigationControl />
+            <Source
+                id="campgrounds"
+                type="geojson"
+                data={clusterData}
+                cluster={true}
+                clusterMaxZoom={14}
+                clusterRadius={50}
             >
-                <GeolocateControl />
-                <FullscreenControl />
-                <NavigationControl />
-                <Source
-                    id="campgrounds"
-                    type="geojson"
-                    data={clusterData}
-                    cluster={true}
-                    clusterMaxZoom={14}
-                    clusterRadius={50}
-                >
-                    <Layer {...clusterLayer} />
-                    <Layer {...clusterCountLayer} />
-                    <Layer {...unclusteredPointLayer} />
+                <Layer {...clusterLayer} />
+                <Layer {...clusterCountLayer} />
+                <Layer {...unclusteredPointLayer} />
 
-                    {popupInfo && (
-                        <>
-                            <Popup
-                                anchor="bottom"
-                                longitude={popupInfo.longitude}
-                                latitude={popupInfo.latitude}
-                                offset={30}
-                                onClose={() => setPopupInfo(null)}
-                                closeOnClick={true}
-                                maxWidth="300px"
-                            >
-                                <PopupBox campground={popupInfo.campground} />
-                            </Popup>
+                {popupInfo && (
+                    <>
+                        <Popup
+                            anchor="bottom"
+                            longitude={popupInfo.longitude}
+                            latitude={popupInfo.latitude}
+                            offset={30}
+                            onClose={() => setPopupInfo(null)}
+                            closeOnClick={true}
+                            maxWidth="300px"
+                        >
+                            <PopupBox campground={popupInfo.campground} />
+                        </Popup>
 
-                            <Marker longitude={popupInfo.longitude} latitude={popupInfo.latitude} />
-                        </>
-                    )}
-                </Source>
-            </Map>
-        </>
+                        <Marker longitude={popupInfo.longitude} latitude={popupInfo.latitude} />
+                    </>
+                )}
+            </Source>
+        </Map>
     );
 };
 

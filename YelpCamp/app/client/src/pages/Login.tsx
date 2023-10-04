@@ -127,8 +127,6 @@ const Login: React.FunctionComponent = () => {
                         });
                         appContext.setCurrentUser(resp.data);
                         localStorage.setItem('currentUser', JSON.stringify(resp.data));
-                        // navigate(-1); // back to previous page
-                        // navigate(-1);
                         navigate('/');
                     });
                 })
@@ -149,12 +147,14 @@ const Login: React.FunctionComponent = () => {
         <Container>
             <div className="login-box">
                 <Link to="/" className="block text-inherit no-underline hover:text-black">
-                    <div className="w-full flex flex-row items-center justify-center gap-2 mb-5">
+                    <div className="w-full flex flex-row items-center justify-center gap-2">
                         <img src={Logo} alt="yelpcamp-logo" className="w-[60px]" />
                         <h2 className="text-center hover-underline-animation">YelpCamp</h2>
                     </div>
                 </Link>
-                <p>"// some nice quote here"</p>
+
+                <p className="text-muted text-center italic my-4">"Life is a journey"</p>
+
                 <Form className="mb-5" noValidate validated={validated} onSubmit={loginHandler}>
                     <Form.Group className="mb-3" controlId="username">
                         <Form.Label>Username</Form.Label>

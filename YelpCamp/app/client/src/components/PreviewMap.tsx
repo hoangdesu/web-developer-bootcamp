@@ -4,16 +4,13 @@ import mapboxgl from 'mapbox-gl';
 
 import { Campground } from '../types';
 
-interface EditPreviewMapProps {
-    campground: Campground;
+interface PreviewMapProps {
+    campground?: Campground;
 }
 
 // TODO: FIX THIS MTFK, REMOVE REFS AND IMPERATIVE HANDLE, PASS PROPS AND HANDLER FROM OUTSIDE
 // BRING THE AXIOS OUTSIDE
-const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({
-    campground,
-    coordinates,
-}) => {
+const PreviewMap: React.FunctionComponent<PreviewMapProps> = ({ campground, coordinates }) => {
     const markerRef = useRef<mapboxgl.Marker>();
     const mapRef = useRef<MapRef>();
 
@@ -32,7 +29,7 @@ const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({
     // }, [coordinates]);
 
     useEffect(() => {
-        console.log('-- coords change useeffect')
+        console.log('-- coords change useeffect');
         mapRef.current?.flyTo({
             center: [coordinates[0], coordinates[1]],
             duration: 2000,
@@ -44,7 +41,7 @@ const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({
     const popup = useMemo(() => {
         return new mapboxgl.Popup().setOffset(10).setHTML(`
         <div>
-            <h6>${campground.location}</h6>
+            <h6>${campground?.location || 'Location'}</h6>
             <span>${coordinates[0]}, ${coordinates[0]}</span>
         </div>`);
     }, []);
@@ -109,7 +106,7 @@ const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({
                     // ...coordinates,
                     longitude: coordinates[0],
                     latitude: coordinates[1],
-                    zoom: 8,
+                    zoom: 10,
                 }}
                 style={{ height: '300px' }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
@@ -118,6 +115,9 @@ const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({
             >
                 <NavigationControl />
                 {/* <Marker {...coordinates} anchor="top" onClick={togglePopup} popup={popup}></Marker> */}
+
+                {/* // TODO: new campground should not have marker for initial state. Display marker after user has picked a location. Display VIetnam map by default without marker in NewCampground */}
+
                 <Marker
                     longitude={coordinates[0]}
                     latitude={coordinates[1]}
@@ -130,4 +130,4 @@ const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({
     );
 };
 
-export default EditPreviewMap;
+export default PreviewMap;

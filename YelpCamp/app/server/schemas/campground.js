@@ -7,7 +7,7 @@ module.exports = Joi.object({
         geometry: Joi.object({
             type: Joi.string(),
             coordinates: Joi.array(),
-        }),
+        }).allow(null),
         price: Joi.number().required().min(0),
         images: Joi.array()
             .items(

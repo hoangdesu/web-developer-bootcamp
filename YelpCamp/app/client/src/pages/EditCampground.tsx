@@ -15,9 +15,9 @@ import AppContext from '../store/app-context';
 import FlashAlert from '../components/FlashAlert';
 import styled from '@emotion/styled';
 import { Delete } from '@mui/icons-material';
-import EditPreviewMap from '../components/EditPreviewMap';
+import PreviewMap from '../components/PreviewMap';
 import { Campground } from '../types';
-import { Autocomplete, LinearProgress, TextField } from '@mui/material';
+import { Autocomplete, CircularProgress, LinearProgress, TextField } from '@mui/material';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -308,9 +308,11 @@ const EditCampground: React.FunctionComponent = () => {
 
     return (
         <PageContainer>
-            <h1 className="text-center mb-5">Edit Campground</h1>
             <Wrapper>
+                <h1 className="text-center mb-5">Edit Campground</h1>
                 {/* <div className="form-container"> */}
+                <p> // basic campground information</p>
+                <p>created at:{campground.createdAt}, modified at: {campground.modifiedAt}</p>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="campgroundTitle">
                         <Form.Label>Campground Title</Form.Label>
@@ -329,93 +331,69 @@ const EditCampground: React.FunctionComponent = () => {
                     <div className="mb-3">
                         <Form.Group className="mb-3" controlId="campgroundLocation">
                             <Form.Label>Location</Form.Label>
-                            <InputGroup className="mb-2">
-                                <Form.Control
-                                    type="text"
-                                    required
-                                    value={formLocation}
-                                    onChange={e => setFormLocation(e.currentTarget.value)}
-                                />
-                                <InputGroup.Text
-                                    className="hover:cursor-pointer hover:bg-teal-200"
-                                    onClick={previewLocation}
-                                >
-                                    Preview location
-                                </InputGroup.Text>
-                                <Form.Control.Feedback type="valid">
-                                    Looks good!
-                                </Form.Control.Feedback>
-                                <Form.Control.Feedback type="invalid">
-                                    Location is required!
-                                </Form.Control.Feedback>
-                            </InputGroup>
+                            <Autocomplete
+                                sx={{
+                                    width: '100%',
+                                    marginBottom: '1rem',
+                                    '& input': {
+                                        width: '100%',
+                                        bgcolor: 'background.paper',
+                                        color: theme =>
+                                            theme.palette.getContrastText(
+                                                theme.palette.background.paper,
+                                            ),
+                                    },
+                                }}
+                                // value={formLocation}
+                                onChange={(event: any, location: string | null) => {
+                                    // setValue(newValue);
+                                    // setFormLocation(newValue); //lowercase error
+                                    console.log('on change', 'new value', location);
+                                    setCoordinates(location.geometry.coordinates);
+                                }}
+                                inputValue={formLocation}
+                                onInputChange={(event, newInputValue) => {
+                                    setFormLocation(newInputValue);
+                                    console.log('onInputChange', newInputValue);
+                                }}
+                                id="location-suggestion-input"
+                                getOptionLabel={location =>
+                                    `${location.text} (${location['place_name']})`
+                                }
+                                options={suggestedLocations}
+                                filterOptions={(options, state) => options}
+                                freeSolo
+                                loading={!!formLocation}
+                                // loadingText={
+                                //     <div className="flex flex-row items-center justify-center">
+                                //         <Spinner size="sm" />
+                                //         {/* <CircularProgress /> */}
+                                //         {/* <CircularProgress color="inherit" size={30} /> */}
+                                //     </div>
+                                // }
+                                loadingText={
+                                    <div className="text-primary-accent-color">
+                                        <LinearProgress color="inherit" />
+                                    </div>
+                                }
+                                renderInput={params => (
+                                    <div ref={params.InputProps.ref}>
+                                        <input
+                                            type="text"
+                                            {...params.inputProps}
+                                            className="form-control"
+                                        />
+                                    </div>
+                                )}
+                            />
+
+                            <PreviewMap campground={campground} coordinates={coordinates} />
+
+                            <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                Location is required!
+                            </Form.Control.Feedback>
                         </Form.Group>
-
-                        {/* WORKING: SEARCH AUTO COMPLETE */}
-                        {/* https://mui.com/material-ui/react-autocomplete/#custom-input */}
-                        <Autocomplete
-                            sx={{
-                                // display: 'inline-block',
-                                // '& input': {
-                                //     width: 200,
-                                //     bgcolor: 'background.paper',
-                                //     color: theme =>
-                                //         theme.palette.getContrastText(
-                                //             theme.palette.background.paper,
-                                //         ),
-                                // },
-                            }}
-                            // value={formLocation}
-                            // defaultValue='campground location hehe'
-                            onChange={(event: any, location: string | null) => {
-                                // setValue(newValue);
-                                // setFormLocation(newValue); //lowercase error
-                                console.log('on change', 'new value', location);
-                                setCoordinates(location.geometry.coordinates);
-                            }}
-                            inputValue={formLocation}
-                            onInputChange={(event, newInputValue) => {
-                                setFormLocation(newInputValue);
-                                console.log('onInputChange', newInputValue);
-                            }}
-                            noOptionsText="Search for campground location"
-                            id="custom-input-demo"
-                            // options={suggestedLocations.map(l => `${l.text} (${l['place_name']})`)}
-
-                            getOptionLabel={location =>
-                                `${location.text} (${location['place_name']})`
-
-                            }
-                            options={suggestedLocations}
-                            // renderInput={(params) => (
-                            //     <TextField {...params} label="Combo box" variant="outlined" />
-                            //   )}
-
-                            // filterOptions={} // https://stackoverflow.com/questions/70415872/is-there-a-way-to-use-mui-autocomplete-when-the-search-string-is-not-in-the-opti
-                            // ^ when string not in option list
-
-                            filterOptions={(options, state) => options}
-                            // isOptionEqualToValue={(option, value) => option.text.contains(value)}
-
-                            freeSolo
-                            loading={!!formLocation}
-                            // loadingText={<Spinner />}
-                            loadingText={<LinearProgress color="success" />}
-                            
-                            renderInput={params => (
-                                <div ref={params.InputProps.ref}>
-                                    <input
-                                        type="text"
-                                        {...params.inputProps}
-                                        className="form-control"
-                                    />
-                                </div>
-                            )}
-
-                            // selectOnFocus
-                        />
-
-                        <EditPreviewMap campground={campground} coordinates={coordinates} />
                     </div>
 
                     <Form.Group className="mb-3" controlId="campgroundPrice">

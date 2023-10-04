@@ -55,3 +55,5 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [] clustermap error: try using useEffect to reset state for popup
 
 [] map preview in edit and new campground
+
+[] move flash alert down, inside container

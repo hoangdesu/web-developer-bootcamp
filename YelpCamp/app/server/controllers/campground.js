@@ -54,6 +54,9 @@ const getACampground = catchAsync(async (req, res, next) => {
 // POST /api/v1/campgrounds
 const createCampground = catchAsync(async (req, res, next) => {
     const { title, location, price, description } = req.body.campground;
+    let { geometry } = req.body.campground;
+
+    console.log('GEOMETRY:', geometry);
 
     // Authorization
     const author = req.headers.authorization;
@@ -63,14 +66,20 @@ const createCampground = catchAsync(async (req, res, next) => {
         filename: file.filename,
     }));
 
+    // Using geocoding service in the backend if client doesn't provide geometry object
     // Geometry data
-    const geoData = await geocodingClient
+    if (!geometry) {
+        const geoData = await geocodingClient
         .forwardGeocode({
             query: location,
             limit: 1,
         })
         .send();
-    const geometry = geoData.body?.features?.[0]?.geometry || null;
+
+        geometry = geoData.body?.features?.[0]?.geometry;
+        console.log('No geometry from client, using geometry backend:', geometry);
+    }
+
 
     const newCampground = new CampgroundBuilder()
         .withTitle(title)
@@ -126,7 +135,7 @@ const editCampground = catchAsync(async (req, res, next) => {
         updatedCampground.images.push(...uploadingImages);
         await updatedCampground.save();
     }
-    
+
     // swapping featured image
     if (featuredImageIndex !== 0) {
         const temp = updatedCampground.images[0];

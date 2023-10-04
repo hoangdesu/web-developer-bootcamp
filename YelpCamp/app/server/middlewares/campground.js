@@ -6,7 +6,7 @@ const CampgroundBuilder = require('../utilities/builders');
 
 // validating request body with Joi before extracting data
 const validateCampground = (req, res, next) => {
-    const { title, location, price, description } = req.body.campground;
+    const { title, location, price, description, geometry } = req.body.campground;
     const author = req.headers.authorization;
     const images = req.files.map(f => ({ url: f.path, filename: f.filename }));
 
@@ -15,6 +15,7 @@ const validateCampground = (req, res, next) => {
         .withPrice(price)
         .withDescription(description)
         .withLocation(location)
+        .withGeometry(geometry)
         .withImages(images)
         .withAuthor(author)
         .withReviews([])
@@ -26,7 +27,7 @@ const validateCampground = (req, res, next) => {
     const { error: validationError } = campgroundSchema.validate(body);
 
     if (validationError) {
-        console.log('validationError:', validationError);
+        console.log('Campground validation error:', validationError);
         throw new YelpcampError(500, validationError);
     }
 

@@ -13,8 +13,10 @@ import FlashAlert from '../components/FlashAlert';
 import ArtImage from '../assets/new-campground-art.jpg';
 import styled from '@emotion/styled';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
+import PreviewMap from '../components/PreviewMap';
+import { Autocomplete, LinearProgress } from '@mui/material';
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
     display: flex;
     flex-direction: row;
     background-color: white;
@@ -37,7 +39,8 @@ const Wrapper = styled.div`
         background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)),
             url(${ArtImage});
         background-size: cover;
-        background-position: 50%;
+        /* background-position: 50%; */
+        background-position: calc(70% + ${props => props.mouseCoords.x / 100}%);
         border-top-right-radius: 8px;
         border-bottom-right-radius: 8px;
     }
@@ -64,12 +67,17 @@ const NewCampground: React.FunctionComponent = () => {
     const [selectedImages, setSelectedImages] = useState([]);
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
+    const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
 
     const formTitle = useRef<HTMLInputElement>(null);
-    const formLocation = useRef<HTMLInputElement>(null);
+    // const formLocation = useRef<HTMLInputElement>(null);
     const formPrice = useRef<HTMLInputElement>(null);
     const formImages = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
+
+    const [formLocation, setFormLocation] = useState('');
+    const [suggestedLocations, setSuggestedLocations] = useState([]);
+    const [coordinates, setCoordinates] = useState([105, 20]);
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
 
@@ -84,7 +92,49 @@ const NewCampground: React.FunctionComponent = () => {
             appContext.setSnackbar(true, 'You need to login first', 'warning');
             navigate('/login');
         }
+
+        // for moving background effect
+        const handleWindowMouseMove = event => {
+            setMouseCoords({
+                x: event.clientX,
+                y: event.clientY,
+            });
+        };
+        window.addEventListener('mousemove', handleWindowMouseMove);
+
+        return () => {
+            window.removeEventListener('mousemove', handleWindowMouseMove);
+        };
     }, []);
+
+    // AUTOCOMPLETE LOCATION SEARCH
+    useEffect(() => {
+        const queryLocationTimeOut = setTimeout(() => {
+            // console.log('formLocation', formLocation);
+            if (!formLocation) setSuggestedLocations([]);
+            axios
+                .get(
+                    `https://api.mapbox.com/geocoding/v5/mapbox.places/${formLocation}.json?access_token=${
+                        import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
+                    }`,
+                )
+                .then(res => {
+                    const coords = res.data.features[0].geometry.coordinates;
+                    const features = res.data.features;
+                    const placeText = features[0]['text'];
+                    console.log('setSuggestedLocations', features);
+                    console.log('placeText[0]', placeText);
+                    // setFormLocation(placeText);
+                    setSuggestedLocations(features);
+
+                    // setCoordinates({ longitude: coords[0], latitude: coords[1] });
+                })
+                .catch(err => {
+                    // ... err msg
+                });
+        }, 1000);
+        return () => clearTimeout(queryLocationTimeOut);
+    }, [formLocation]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -109,9 +159,23 @@ const NewCampground: React.FunctionComponent = () => {
             formData.append('campground[price]', parseFloat(formPrice.current?.value) || 0);
             formData.append('campground[location]', formLocation.current?.value || '');
             formData.append('campground[description]', formDescription.current?.value || '');
+
+            // formData.append('geometry', {
+            //     type: 'Point',
+            //     coordinates: [108.339537475899, 14.3154241771087],
+            // });
+
+            // formData.append('campground[geometry][type]', 'Point');
+            // formData.append('campground[geometry][coordinates]', 111);
+            // formData.append('campground[geometry][coordinates]', 11);
+
             Array.from(formImages.current?.files).forEach(file => {
                 formData.append('campground[images]', file);
             });
+
+            console.log('formData', formData.values());
+            // formData.values
+
             axios
                 .post('/api/v1/campgrounds', formData, {
                     headers: {
@@ -146,7 +210,7 @@ const NewCampground: React.FunctionComponent = () => {
             <p className="text-center text-muted mt-2 mb-5">
                 List your campground on YelpCamp - for FREE!
             </p>
-            <Wrapper>
+            <Wrapper mouseCoords={mouseCoords}>
                 <div className="form-container">
                     <Form
                         className="form"
@@ -166,14 +230,64 @@ const NewCampground: React.FunctionComponent = () => {
 
                         <Form.Group className="mb-3" controlId="campgroundLocation">
                             <Form.Label>Location</Form.Label>
-                            <Form.Control type="text" ref={formLocation} required />
+                            <Autocomplete
+                                sx={{
+                                    width: '100%',
+                                    marginBottom: '1rem',
+                                    '& input': {
+                                        width: '100%',
+                                        bgcolor: 'background.paper',
+                                        color: theme =>
+                                            theme.palette.getContrastText(
+                                                theme.palette.background.paper,
+                                            ),
+                                    },
+                                }}
+                                onChange={(event: any, location: string | null) => {
+                                    // setValue(newValue);
+                                    // setFormLocation(newValue); //lowercase error
+                                    console.log('on change', 'new value', location);
+                                    setCoordinates(location.geometry.coordinates);
+                                }}
+                                inputValue={formLocation}
+                                onInputChange={(event, newInputValue) => {
+                                    setFormLocation(newInputValue);
+                                    console.log('onInputChange', newInputValue);
+                                }}
+                                id="location-suggestion-input"
+                                getOptionLabel={location =>
+                                    `${location.text} (${location['place_name']})`
+                                }
+                                options={suggestedLocations}
+                                filterOptions={(options, state) => options}
+                                freeSolo
+                                loading={!!formLocation}
+                                loadingText={
+                                    <div className="text-primary-accent-color">
+                                        <LinearProgress color="inherit" />
+                                    </div>
+                                }
+                                renderInput={params => (
+                                    <div ref={params.InputProps.ref}>
+                                        <input
+                                            type="text"
+                                            {...params.inputProps}
+                                            className="form-control"
+                                            required
+                                            placeholder="Start typing to search..."
+                                        />
+                                    </div>
+                                )}
+                            />
+
+                            {/* // TODO: new campground should not have marker for initial state. Display marker after user has picked a location */}
+                            <PreviewMap campground={null} coordinates={coordinates} />
+
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">
                                 Location is required!
                             </Form.Control.Feedback>
                         </Form.Group>
-
-                        <div>--- Map location preview...</div>
 
                         <Form.Group className="mb-3">
                             <Form.Label htmlFor="inlineFormInputGroup">Price</Form.Label>
