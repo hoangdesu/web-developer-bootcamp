@@ -17,7 +17,7 @@ import styled from '@emotion/styled';
 import { Delete } from '@mui/icons-material';
 import EditPreviewMap from '../components/EditPreviewMap';
 import { Campground } from '../types';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, LinearProgress, TextField } from '@mui/material';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -57,6 +57,7 @@ const EditCampground: React.FunctionComponent = () => {
 
     const [formLocation, setFormLocation] = useState('');
     const [suggestedLocations, setSuggestedLocations] = useState([]);
+    const [coordinates, setCoordinates] = useState([105, 20]);
 
     const formTitle = useRef<HTMLInputElement>(null);
     const formPrice = useRef<HTMLInputElement>(null);
@@ -87,9 +88,9 @@ const EditCampground: React.FunctionComponent = () => {
                 .catch((err: AxiosError) => {
                     throw err;
                 }),
-        onSuccess: (campground: Campground) => {
-            setFormLocation(campground.location);
-        },
+        // onSuccess: (campground: Campground) => {
+        //     setFormLocation(campground.location);
+        // },
     });
 
     // protect route when user is unauthorized to edit
@@ -355,25 +356,27 @@ const EditCampground: React.FunctionComponent = () => {
                         <Autocomplete
                             sx={{
                                 // display: 'inline-block',
-                                '& input': {
-                                    // width: 200,
-                                    bgcolor: 'background.paper',
-                                    color: theme =>
-                                        theme.palette.getContrastText(
-                                            theme.palette.background.paper,
-                                        ),
-                                },
+                                // '& input': {
+                                //     width: 200,
+                                //     bgcolor: 'background.paper',
+                                //     color: theme =>
+                                //         theme.palette.getContrastText(
+                                //             theme.palette.background.paper,
+                                //         ),
+                                // },
                             }}
                             // value={formLocation}
-                            // onChange={(event: any, newValue: string | null) => {
-                            //     // setValue(newValue);
-                            //     // setFormLocation(newValue); //lowercase error
-                            //     console.log('on change', 'new value', newValue);
-                            // }}
+                            // defaultValue='campground location hehe'
+                            onChange={(event: any, location: string | null) => {
+                                // setValue(newValue);
+                                // setFormLocation(newValue); //lowercase error
+                                console.log('on change', 'new value', location);
+                                setCoordinates(location.geometry.coordinates);
+                            }}
                             inputValue={formLocation}
                             onInputChange={(event, newInputValue) => {
                                 setFormLocation(newInputValue);
-                                console.log('onInputChange');
+                                console.log('onInputChange', newInputValue);
                             }}
                             noOptionsText="Search for campground location"
                             id="custom-input-demo"
@@ -381,6 +384,7 @@ const EditCampground: React.FunctionComponent = () => {
 
                             getOptionLabel={location =>
                                 `${location.text} (${location['place_name']})`
+
                             }
                             options={suggestedLocations}
                             // renderInput={(params) => (
@@ -393,6 +397,11 @@ const EditCampground: React.FunctionComponent = () => {
                             filterOptions={(options, state) => options}
                             // isOptionEqualToValue={(option, value) => option.text.contains(value)}
 
+                            freeSolo
+                            loading={!!formLocation}
+                            // loadingText={<Spinner />}
+                            loadingText={<LinearProgress color="success" />}
+                            
                             renderInput={params => (
                                 <div ref={params.InputProps.ref}>
                                     <input
@@ -402,9 +411,11 @@ const EditCampground: React.FunctionComponent = () => {
                                     />
                                 </div>
                             )}
+
+                            // selectOnFocus
                         />
 
-                        <EditPreviewMap campground={campground} />
+                        <EditPreviewMap campground={campground} coordinates={coordinates} />
                     </div>
 
                     <Form.Group className="mb-3" controlId="campgroundPrice">

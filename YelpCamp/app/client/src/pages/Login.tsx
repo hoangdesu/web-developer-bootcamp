@@ -128,7 +128,8 @@ const Login: React.FunctionComponent = () => {
                         appContext.setCurrentUser(resp.data);
                         localStorage.setItem('currentUser', JSON.stringify(resp.data));
                         // navigate(-1); // back to previous page
-                        navigate(-1);
+                        // navigate(-1);
+                        navigate('/');
                     });
                 })
                 .catch(err => {
@@ -153,6 +154,7 @@ const Login: React.FunctionComponent = () => {
                         <h2 className="text-center hover-underline-animation">YelpCamp</h2>
                     </div>
                 </Link>
+                <p>"// some nice quote here"</p>
                 <Form className="mb-5" noValidate validated={validated} onSubmit={loginHandler}>
                     <Form.Group className="mb-3" controlId="username">
                         <Form.Label>Username</Form.Label>

@@ -195,6 +195,7 @@ const ResetPassword: React.FunctionComponent = () => {
     return (
         <Container>
             <div className="w-full py-4">
+                {/* TODO: fix clicking on entire banner */}
                 <Link
                     to="/"
                     className="hover:text-black text-primary-dark-color flex flex-row gap-2 no-underline items-center justify-center"

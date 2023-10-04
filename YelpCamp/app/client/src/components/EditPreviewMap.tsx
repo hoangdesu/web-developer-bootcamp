@@ -10,20 +10,31 @@ interface EditPreviewMapProps {
 
 // TODO: FIX THIS MTFK, REMOVE REFS AND IMPERATIVE HANDLE, PASS PROPS AND HANDLER FROM OUTSIDE
 // BRING THE AXIOS OUTSIDE
-const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({campground}) => {
+const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({
+    campground,
+    coordinates,
+}) => {
     const markerRef = useRef<mapboxgl.Marker>();
     const mapRef = useRef<MapRef>();
 
-    const [coordinates, setCoordinates] = useState({
-        // longitude: campground.geometry.coordinates[0],
-        // latitude: campground.geometry.coordinates[1],
-        longitude: 105.89,
-        latitude: 20,
-    });
+    // const [coordinates, setCoordinates] = useState({
+    //     // longitude: campground.geometry.coordinates[0],
+    //     // latitude: campground.geometry.coordinates[1],
+    //     longitude: 105.89,
+    //     latitude: 20,
+    // });
+
+    // useEffect(() => {
+    //     mapRef.current?.flyTo({
+    //         center: [coordinates.longitude, coordinates.latitude],
+    //         duration: 2000,
+    //     });
+    // }, [coordinates]);
 
     useEffect(() => {
+        console.log('-- coords change useeffect')
         mapRef.current?.flyTo({
-            center: [coordinates.longitude, coordinates.latitude],
+            center: [coordinates[0], coordinates[1]],
             duration: 2000,
         });
     }, [coordinates]);
@@ -34,7 +45,7 @@ const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({campgroun
         return new mapboxgl.Popup().setOffset(10).setHTML(`
         <div>
             <h6>${campground.location}</h6>
-            <span>${coordinates.longitude}, ${coordinates.latitude}</span>
+            <span>${coordinates[0]}, ${coordinates[0]}</span>
         </div>`);
     }, []);
 
@@ -64,8 +75,6 @@ const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({campgroun
     //     });
     // }, [coordinates]);
 
-
-
     /*
         const previewLocation = () => {
             console.log('inside preview location');
@@ -92,22 +101,30 @@ const EditPreviewMap: React.FunctionComponent<EditPreviewMapProps> = ({campgroun
         };
         */
 
-
-
     return (
         <div>
             <Map
                 mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                 initialViewState={{
-                    ...coordinates,
+                    // ...coordinates,
+                    longitude: coordinates[0],
+                    latitude: coordinates[1],
                     zoom: 8,
                 }}
-                style={{ height: '262px' }}
+                style={{ height: '300px' }}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 attributionControl={false}
+                ref={mapRef}
             >
                 <NavigationControl />
-                <Marker {...coordinates} anchor="top" onClick={togglePopup} popup={popup}></Marker>
+                {/* <Marker {...coordinates} anchor="top" onClick={togglePopup} popup={popup}></Marker> */}
+                <Marker
+                    longitude={coordinates[0]}
+                    latitude={coordinates[1]}
+                    anchor="top"
+                    onClick={togglePopup}
+                    popup={popup}
+                ></Marker>
             </Map>
         </div>
     );

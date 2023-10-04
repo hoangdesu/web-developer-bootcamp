@@ -6,6 +6,7 @@ import axios from 'axios';
 import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
 import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
 import styled from '@emotion/styled';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 interface ModalProps {
     reservation: Reservation;
@@ -109,7 +110,7 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
                     Cancel
                 </SecondaryTransparentButton>
                 <PrimaryBlackButton onClick={makeReservation} className="w-full">
-                    Checkout →
+                    Checkout <ArrowForwardIcon />
                 </PrimaryBlackButton>
             </div>
         </div>
