@@ -44,28 +44,24 @@ const ModalLogin = () => {
                 )
                 .then(res => {
                     axios.get('/api/v1/auth/currentuser').then(resp => {
-                        appContext.setAlert({
-                            message: `Welcome back, ${resp.data.username}!`,
-                            variant: 'success',
-                        });
                         appContext.setCurrentUser(resp.data);
                         localStorage.setItem('currentUser', JSON.stringify(resp.data));
                         appContext.setModal({
                             open: false,
                             content: null,
                         });
+                        appContext.setSnackbar(
+                            true,
+                            `Welcome back, ${resp.data.username}!`,
+                            'success',
+                        );
                     });
                 })
-
-                // TODO: handle log in error
                 .catch(err => {
-                    appContext.setAlert({
-                        message: 'Wrong username or password. Please login again',
-                        variant: 'warning',
-                    });
                     appContext.setCurrentUser(null);
                     setValidated(false);
                     form.reset();
+                    appContext.setSnackbar(true, 'Error: failed to login', 'error');
                 });
         }
         setValidated(true);
@@ -73,7 +69,6 @@ const ModalLogin = () => {
     return (
         <div>
             <h2 className="mb-2">Welcome to YelpCamp</h2>
-            {/* <p className="text-center text-muted">Please login to confirm your reservation</p> */}
             <Form className="mt-4" noValidate validated={validated} onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username</Form.Label>
@@ -102,7 +97,7 @@ const ModalLogin = () => {
                     </InputGroup>
                 </Form.Group>
 
-                <PrimaryBlackButton>Login</PrimaryBlackButton>
+                <PrimaryBlackButton className="w-full">Login</PrimaryBlackButton>
             </Form>
             <p className="mt-4">
                 New here?{' '}

@@ -56,4 +56,6 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 
 [] map preview in edit and new campground
 
-[] move flash alert down, inside container
+[x] move flash alert down, inside container
+
+[] drag and drop for grid images in edit and new campground pages

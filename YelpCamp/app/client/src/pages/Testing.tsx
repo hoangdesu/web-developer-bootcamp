@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 const Testing = () => {
     const reader = new FileReader();
@@ -40,6 +41,21 @@ const Testing = () => {
         console.log(days, 'days');
         console.log(inputStartDate, inputEndDate);
     };
+
+    function onDragEnd(result) {
+        console.log('result', result)
+        const newItems = [...items];
+        const [removed] = newItems.splice(result.source.index, 1);
+        newItems.splice(result.destination.index, 0, removed);
+        setItems(newItems);
+    }
+    const elements = [
+        { id: 'one', content: 'one' },
+        { id: 'two', content: 'two' },
+        { id: 'three', content: 'three' },
+        { id: 'four', content: 'four' },
+    ];
+    const [items, setItems] = useState(elements);
 
     return (
         <PageContainer>
@@ -140,6 +156,59 @@ const Testing = () => {
                     <input type="text" />
                     <button>Submit</button>
                 </form>
+            </div>
+
+            <div>
+                <h2>Test drag and drop</h2>
+
+                {/* <DragDropContext>
+                    <Droppable droppableId="droppable">
+                        {(provided, snapshot) => (
+                            <div {...provided.droppableProps} ref={provided.innerRef}>
+                                {items.map((item, index) => (
+                                    <Draggable draggableId={item.id} index={index}>
+                                        {(provided, snapshot) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                className='bg-red-500 m-3'
+                                            >
+                                                <div>
+                                                    {item.content}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext> */}
+
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="images">
+                        {provided => (
+                            <div {...provided.droppableProps} ref={provided.innerRef}>
+                                {items.map((el, index) => (
+                                    <Draggable key={el.id} draggableId={el.id} index={index}>
+                                        {provided => (
+                                            <li
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                ref={provided.innerRef}
+                                                className="border-black border rounded m-3 p-3"
+                                            >
+                                                {el.id} - {el.content}
+                                            </li>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
             </div>
         </PageContainer>
     );

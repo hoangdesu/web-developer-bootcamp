@@ -14,13 +14,12 @@ const StyledCard = styled('div')`
     /* PC view */
     position: relative;
     width: 100%;
-    /* max-width: fit-content; */ // if images < 3, sizing will get f up
 
     .img {
         transition: all 0.15s ease;
         object-fit: cover;
         border-radius: 8px;
-        
+
         /* Mobile view */
         @media (max-width: 640px) {
             height: 250px;

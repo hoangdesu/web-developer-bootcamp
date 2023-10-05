@@ -24,6 +24,8 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-dom": "^18.2.0",
+    "react-gesture-responder": "^2.1.0",
+    "react-grid-dnd": "^2.1.2",
     "react-map-gl": "^7.1.4",
     "react-qrcode-logo": "^2.9.0",
     "react-query": "^3.39.3",

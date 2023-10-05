@@ -18,6 +18,10 @@ import { Delete } from '@mui/icons-material';
 import PreviewMap from '../components/PreviewMap';
 import { Campground } from '../types';
 import { Autocomplete, CircularProgress, LinearProgress, TextField } from '@mui/material';
+import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
+import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
+
+import './styles.css';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -34,14 +38,17 @@ const UploadedImagesWrapper = styled.span`
     }
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ length: number }>`
     margin: auto;
     max-width: 600px;
 
     .thumbnails-container {
         display: grid;
         grid-gap: 12px;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(
+            auto-fit,
+            minmax(160px, ${props => (props.length < 3 ? '160px' : '1fr')})
+        );
     }
 `;
 
@@ -69,6 +76,44 @@ const EditCampground: React.FunctionComponent = () => {
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
 
+    const [editingImages, setEditingImages] = useState([]);
+
+    const [items, setItems] = React.useState({
+        left: [
+            { position: 0, name: 'ben' },
+            { position: 1, name: 'joe' },
+            { position: 2, name: 'jason' },
+            { position: 3, name: 'chris' },
+            { position: 4, name: 'heather' },
+        ],
+        right: [
+            { position: 5, name: 'george' },
+            { position: 6, name: 'rupert' },
+            { position: 7, name: 'alice' },
+            { position: 8, name: 'katherine' },
+            { position: 8, name: 'pam' },
+            { position: 10, name: 'katie' },
+        ],
+    });
+
+    function onChange(sourceId, sourceIndex, targetIndex, targetId) {
+        console.log(targetId, sourceId);
+        if (targetId) {
+            const result = move(items[sourceId], items[targetId], sourceIndex, targetIndex);
+            return setItems({
+                ...items,
+                [sourceId]: result[0],
+                [targetId]: result[1],
+            });
+        }
+
+        const result = swap(items[sourceId], sourceIndex, targetIndex);
+        return setItems({
+            ...items,
+            [sourceId]: result,
+        });
+    }
+
     // protect route when user is not logged in
     useEffect(() => {
         document.title = 'YelpCamp | Edit Campground';
@@ -79,7 +124,7 @@ const EditCampground: React.FunctionComponent = () => {
         isLoading,
         error,
         data: campground,
-    } = useQuery<Campground | AxiosError>({
+    } = useQuery({
         queryKey: ['campgroundData'],
         queryFn: () =>
             axios
@@ -88,9 +133,10 @@ const EditCampground: React.FunctionComponent = () => {
                 .catch((err: AxiosError) => {
                     throw err;
                 }),
-        // onSuccess: (campground: Campground) => {
-        //     setFormLocation(campground.location);
-        // },
+        onSuccess: (campground: Campground) => {
+            setFormLocation(campground.location);
+            setEditingImages(campground.images);
+        },
     });
 
     // protect route when user is unauthorized to edit
@@ -306,13 +352,48 @@ const EditCampground: React.FunctionComponent = () => {
             });
     };
 
+    function onDragEnd(result) {
+        console.log('result', result);
+        const newItems = [...editingImages];
+        const [removed] = newItems.splice(result.source.index, 1);
+        newItems.splice(result.destination.index, 0, removed);
+        setEditingImages(newItems);
+        console.log('editingImages before', editingImages);
+    }
+
+    function onImagesChange(sourceId, sourceIndex, targetIndex, targetId) {
+        console.log(targetId, sourceId);
+        if (targetId) {
+            // const result = move(items[sourceId], items[targetId], sourceIndex, targetIndex);
+            // return setItems({
+            //     ...items,
+            //     [sourceId]: result[0],
+            //     [targetId]: result[1],
+            // });
+        }
+
+        // const result = swap(items[sourceId], sourceIndex, targetIndex);
+        // return setItems({
+        //     ...items,
+        //     [sourceId]: result,
+        // });
+
+        console.log('source:', sourceIndex, 'targetInd', targetIndex);
+        const result = swap(editingImages, sourceIndex, targetIndex);
+        console.log('result', result);
+        setEditingImages(result);
+    }
+
     return (
         <PageContainer>
-            <Wrapper>
+            <Wrapper length={campground.images.length}>
                 <h1 className="text-center mb-5">Edit Campground</h1>
                 {/* <div className="form-container"> */}
                 <p> // basic campground information</p>
-                <p>created at:{campground.createdAt}, modified at: {campground.modifiedAt}</p>
+                <p>
+                    created at:{campground.createdAt}, modified at: {campground.modifiedAt}
+                </p>
+
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="campgroundTitle">
                         <Form.Label>Campground Title</Form.Label>
@@ -364,13 +445,6 @@ const EditCampground: React.FunctionComponent = () => {
                                 filterOptions={(options, state) => options}
                                 freeSolo
                                 loading={!!formLocation}
-                                // loadingText={
-                                //     <div className="flex flex-row items-center justify-center">
-                                //         <Spinner size="sm" />
-                                //         {/* <CircularProgress /> */}
-                                //         {/* <CircularProgress color="inherit" size={30} /> */}
-                                //     </div>
-                                // }
                                 loadingText={
                                     <div className="text-primary-accent-color">
                                         <LinearProgress color="inherit" />
@@ -428,11 +502,12 @@ const EditCampground: React.FunctionComponent = () => {
 
                     {/* IMAGES */}
                     {/* TODO: NICE TO HAVE: select main image -> set selected image to be images[0] */}
+                    {/* // TODO: replace selecting images to delete mechanism. Hover to display a delete icon. Click to add to delete list */}
                     <Form.Group className="mb-3" controlId="campgroundImageUrl">
                         <Form.Label>Images uploaded ({campground.images.length})</Form.Label>
                         <p>Click to change featured image</p>
                         <div className="thumbnails-container">
-                            {campground.images.map((image, index) => (
+                            {/* {campground.images.map((image, index) => (
                                 <UploadedImagesWrapper key={image.url}>
                                     <Image
                                         src={image.thumbnail}
@@ -440,7 +515,6 @@ const EditCampground: React.FunctionComponent = () => {
                                             width: '100%',
                                             height: '120px',
                                             objectFit: 'cover',
-                                            // {index === featuredImageIndex && "border: '2px solid green'" }
                                         }}
                                         alt="Thumbnail"
                                         thumbnail
@@ -459,8 +533,122 @@ const EditCampground: React.FunctionComponent = () => {
                                         />
                                     )}
                                 </UploadedImagesWrapper>
-                            ))}
+                            ))} */}
+
+                            {/* // EDITING IMAGES */}
+                            {/* <DragDropContext onDragEnd={onDragEnd}>
+                                <Droppable droppableId="images">
+                                    {provided => (
+                                        <div
+                                            {...provided.droppableProps}
+                                            ref={provided.innerRef}
+                                            className="thumbnails-container"
+                                        >
+                                            {editingImages.map((image, index) => (
+                                                <div
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '120px',
+                                                        objectFit: 'cover',
+                                                    }}
+                                                >
+                                                    <Draggable
+                                                        key={image.url}
+                                                        draggableId={image.url}
+                                                        index={index}
+                                                        // style={{
+                                                        //     width: '100%',
+                                                        //     height: '120px',
+                                                        //     objectFit: 'cover',
+                                                        // }}
+                                                    >
+                                                        {provided => (
+                                                            <img
+                                                                src={image.thumbnail}
+                                                                style={{
+                                                                    width: '100%',
+                                                                    height: '120px',
+                                                                    objectFit: 'cover',
+                                                                }}
+                                                                alt="Thumbnail"
+                                                                thumbnail
+                                                                className={`${
+                                                                    index === featuredImageIndex &&
+                                                                    'border-4 border-emerald-500'
+                                                                }`}
+                                                                onClick={() =>
+                                                                    setFeaturedImageIndex(index)
+                                                                }
+                                                                key={image.url}
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                ref={provided.innerRef}
+                                                            />
+                                                        )}
+                                                    </Draggable>
+                                                </div>
+                                            ))}
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            </DragDropContext> */}
                         </div>
+
+                        <GridContextProvider onChange={onChange}>
+                            <div className="container">
+                                <GridDropZone
+                                    className="dropzone left"
+                                    id="left"
+                                    boxesPerRow={3}
+                                    rowHeight={150}
+                                >
+                                    {items.left.map(item => (
+                                        <GridItem key={item.position}>
+                                            <div className="grid-item">
+                                                <div className="grid-item-content">
+                                                    {item.name.toUpperCase()}
+                                                </div>
+                                            </div>
+                                        </GridItem>
+                                    ))}
+                                </GridDropZone>
+                            </div>
+                        </GridContextProvider>
+
+                        <GridContextProvider onChange={onImagesChange}>
+                            <div className="container">
+                                <GridDropZone
+                                    className="dropzone left"
+                                    id="images"
+                                    boxesPerRow={3}
+                                    rowHeight={150}
+                                >
+                                    {/* {items.left.map(item => (
+                                        <GridItem key={item.position}>
+                                            <div className="grid-item">
+                                                <div className="grid-item-content">
+                                                    {item.name.toUpperCase()}
+                                                </div>
+                                            </div>
+                                        </GridItem>
+                                    ))} */}
+
+                                    {editingImages.map(image => (
+                                        <GridItem key={image.url}>
+                                            <div className="grid-item-">
+                                            <Image src={image.url} alt="" width={'100%'} />
+
+                                                {/* <div className="grid-item-content-">
+                                                    <img src={image.url} alt="" width={'100%'} />
+                                                </div> */}
+                                            </div>
+                                        </GridItem>
+                                    ))}
+                                </GridDropZone>
+                            </div>
+                        </GridContextProvider>
+
                         <Button
                             variant={showDeleteCheckboxes ? 'secondary' : 'warning'}
                             type="button"
@@ -509,17 +697,16 @@ const EditCampground: React.FunctionComponent = () => {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group controlId="campgroundImages" className="mb-3">
+                    <Form.Group controlId="updloadImages" className="mb-3 thumbnails-container">
                         {selectedImages &&
                             selectedImages.map(img => (
                                 <Image
                                     key={img}
                                     src={URL.createObjectURL(img)}
                                     style={{
-                                        width: '160px',
-                                        height: '100px',
-                                        marginRight: '8px',
-                                        marginBottom: '8px',
+                                        width: '100%',
+                                        // width: selectedImages.length < 3 ? '160px' : '100%',
+                                        height: '120px',
                                         objectFit: 'cover',
                                     }}
                                     alt="Thumbnail"

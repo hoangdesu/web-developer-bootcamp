@@ -157,7 +157,7 @@ const NewCampground: React.FunctionComponent = () => {
             const formData = new FormData();
             formData.append('campground[title]', formTitle.current?.value || '');
             formData.append('campground[price]', parseFloat(formPrice.current?.value) || 0);
-            formData.append('campground[location]', formLocation.current?.value || '');
+            formData.append('campground[location]', formLocation);
             formData.append('campground[description]', formDescription.current?.value || '');
 
             // formData.append('geometry', {
@@ -344,7 +344,7 @@ const NewCampground: React.FunctionComponent = () => {
                                         key={img}
                                         src={URL.createObjectURL(img)}
                                         style={{
-                                            width: '100%',
+                                            width: selectedImages.length < 2 ? '33%' : '100%',
                                             height: '120px',
                                             objectFit: 'cover',
                                         }}

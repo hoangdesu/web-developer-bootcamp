@@ -103,7 +103,7 @@ const App: React.FunctionComponent = () => {
                         <h3 className="my-4">Explore campgrounds</h3>
                     </div>
 
-                    <CampgroundsContainer>
+                    <CampgroundsContainer length={filteredCampgroundList.length}>
                         {Array.isArray(filteredCampgroundList) &&
                             filteredCampgroundList.map(campground => {
                                 return (
