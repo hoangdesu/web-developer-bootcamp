@@ -1,20 +1,23 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import AppContext from '../store/app-context';
+import AppContext from '../../store/app-context';
 
 import { Container, Form, Button, InputGroup, Spinner, Image } from 'react-bootstrap';
 
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import PageContainer from '../components/PageContainer';
-import FlashAlert from '../components/FlashAlert';
-import ArtImage from '../assets/new-campground-art.jpg';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
+import PageContainer from '../../components/PageContainer';
+import FlashAlert from '../../components/FlashAlert';
+import ArtImage from '../../assets/new-campground-art.jpg';
 import styled from '@emotion/styled';
-import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
-import PreviewMap from '../components/PreviewMap';
+import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
+import PreviewMap from '../../components/PreviewMap';
 import { Autocomplete, LinearProgress } from '@mui/material';
+import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
+import DraggableImage from './DraggableImage';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
     display: flex;
@@ -39,16 +42,17 @@ const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
         background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)),
             url(${ArtImage});
         background-size: cover;
-        /* background-position: 50%; */
         background-position: calc(70% + ${props => props.mouseCoords.x / 100}%);
         border-top-right-radius: 8px;
         border-bottom-right-radius: 8px;
     }
 
-    .thumbnails-container {
-        display: grid;
-        grid-gap: 12px;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    .grid-item {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        padding: 5px;
+        position: relative;
     }
 
     @media (max-width: 1024px) {
@@ -64,10 +68,13 @@ const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
 const NewCampground: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
     const [isUploading, setIsUploading] = useState<boolean>(false);
-    const [selectedImages, setSelectedImages] = useState([]);
+    const [selectedImages, setSelectedImages] = useState<{ id: string; file: File[] | Blob[] }[]>(
+        [],
+    );
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
     const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
+    const { width: screenWidth } = useWindowDimensions();
 
     const formTitle = useRef<HTMLInputElement>(null);
     // const formLocation = useRef<HTMLInputElement>(null);
@@ -78,6 +85,9 @@ const NewCampground: React.FunctionComponent = () => {
     const [formLocation, setFormLocation] = useState('');
     const [suggestedLocations, setSuggestedLocations] = useState([]);
     const [coordinates, setCoordinates] = useState([105, 20]);
+    const [boxesPerRow, setBoxesPerRow] = useState(
+        screenWidth > 768 ? 3 : screenWidth < 476 ? 1 : 2,
+    );
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
 
@@ -136,15 +146,22 @@ const NewCampground: React.FunctionComponent = () => {
         return () => clearTimeout(queryLocationTimeOut);
     }, [formLocation]);
 
+    // resizing preview thumbnail container based on screenWidth
+    useEffect(() => {
+        setBoxesPerRow(screenWidth > 768 ? 3 : screenWidth < 476 ? 1 : 2);
+    }, [screenWidth]);
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (formImages?.current?.files.length > 10) {
+        // if (formImages?.current?.files.length > 10) {
+        if (selectedImages.length > 12) {
             alert('Please only select maximum 10 images');
             return;
         }
 
-        if (formImages?.current?.files.length < 1) {
+        // if (formImages?.current?.files.length < 1) {
+        if (selectedImages.length < 1) {
             alert('Please select at least 1 image');
             return;
         }
@@ -165,16 +182,14 @@ const NewCampground: React.FunctionComponent = () => {
             //     coordinates: [108.339537475899, 14.3154241771087],
             // });
 
+            // GETTING GEOMETRY DATA FROM CLIENT:
             // formData.append('campground[geometry][type]', 'Point');
             // formData.append('campground[geometry][coordinates]', 111);
             // formData.append('campground[geometry][coordinates]', 11);
 
-            Array.from(formImages.current?.files).forEach(file => {
-                formData.append('campground[images]', file);
+            Array.from(selectedImages).forEach(image => {
+                formData.append('campground[images]', image.file);
             });
-
-            console.log('formData', formData.values());
-            // formData.values
 
             axios
                 .post('/api/v1/campgrounds', formData, {
@@ -201,7 +216,23 @@ const NewCampground: React.FunctionComponent = () => {
 
     const onSelectImagesHandler = evt => {
         const imageFiles = Array.from(evt.target.files).map(f => f);
-        setSelectedImages(imageFiles);
+        // setSelectedImages(prev => prev.concat(imageFiles));
+
+        // file names can be duplicated
+        // using index for the image file causes a tiny flashing animation -> annoying => dont use index for map
+        // cannot use math.random() cuz the function component gets rerendering constantly
+        const images = imageFiles.map(file => ({
+            id: Math.random().toString(),
+            file: file,
+        }));
+
+        console.log('images', images);
+        setSelectedImages(prev => prev.concat(images));
+    };
+
+    const draggingImagesHandler = (sourceId, sourceIndex, targetIndex, targetId) => {
+        const rearrangedImages = swap(selectedImages, sourceIndex, targetIndex);
+        return setSelectedImages(rearrangedImages);
     };
 
     return (
@@ -228,6 +259,7 @@ const NewCampground: React.FunctionComponent = () => {
                             </Form.Control.Feedback>
                         </Form.Group>
 
+                        {/* -- LOCATION -- */}
                         <Form.Group className="mb-3" controlId="campgroundLocation">
                             <Form.Label>Location</Form.Label>
                             <Autocomplete
@@ -290,14 +322,14 @@ const NewCampground: React.FunctionComponent = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label htmlFor="inlineFormInputGroup">Price</Form.Label>
+                            <Form.Label htmlFor="priceInput">Price</Form.Label>
                             <InputGroup className="mb-2">
                                 <InputGroup.Text>$</InputGroup.Text>
                                 <Form.Control
                                     type="number"
                                     step="0.1"
                                     min="0"
-                                    id="inlineFormInputGroup"
+                                    id="priceInput"
                                     defaultValue={0.0}
                                     ref={formPrice}
                                     required
@@ -319,8 +351,9 @@ const NewCampground: React.FunctionComponent = () => {
                             </Form.Control.Feedback>
                         </Form.Group>
 
+                        {/* IMAGES */}
                         <Form.Group controlId="campgroundImages" className="mb-3">
-                            <Form.Label>Upload images (max 10)</Form.Label>
+                            <Form.Label>Upload images (max 12)</Form.Label>
                             <Form.Control
                                 type="file"
                                 multiple
@@ -334,24 +367,30 @@ const NewCampground: React.FunctionComponent = () => {
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group
-                            controlId="campgroundImages"
-                            className="mb-3 thumbnails-container"
-                        >
-                            {selectedImages &&
-                                selectedImages.map(img => (
-                                    <Image
-                                        key={img}
-                                        src={URL.createObjectURL(img)}
-                                        style={{
-                                            width: selectedImages.length < 2 ? '33%' : '100%',
-                                            height: '120px',
-                                            objectFit: 'cover',
-                                        }}
-                                        alt="thumbnail"
-                                        thumbnail
-                                    />
-                                ))}
+                        <Form.Group controlId="campgroundImages" className="mb-3">
+                            <GridContextProvider onChange={draggingImagesHandler}>
+                                <GridDropZone
+                                    id="images"
+                                    boxesPerRow={boxesPerRow}
+                                    rowHeight={130}
+                                    style={{
+                                        height: `${
+                                            130 * Math.ceil(selectedImages.length / boxesPerRow)
+                                        }px`,
+                                    }}
+                                >
+                                    {selectedImages.map(image => (
+                                        <GridItem key={`${image.id}`}>
+                                            <div className="grid-item">
+                                                <DraggableImage
+                                                    image={image.file}
+                                                    setSelectedImages={setSelectedImages}
+                                                />
+                                            </div>
+                                        </GridItem>
+                                    ))}
+                                </GridDropZone>
+                            </GridContextProvider>
                         </Form.Group>
 
                         {isUploading ? (

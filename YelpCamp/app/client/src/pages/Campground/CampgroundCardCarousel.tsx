@@ -8,20 +8,25 @@ import { Box, Modal } from '@mui/material';
 const ImageThumbnails = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
+    /* justify-content: center; */
+    /* flex-wrap: wrap; */
     align-items: center;
     margin-top: 8px;
     gap: 6px;
     /* opacity: 0.8; */
+    width: 100%;
+    overflow: scroll;
 
     // TODO: use GRID display for thumbnail container
     /* display: grid;
     grid-gap: 25px;
     grid-template-columns: repeat(auto-fit, minmax(100px, 100px)); */
 
-    & > img {
+    & img {
         transition: 0.3s all;
+        width: 100px;
+        height: 60px;
+        object-fit: cover;
     }
 
     & > img:hover {
@@ -48,6 +53,7 @@ const style = {
     zIndex: '100',
     animation: 'slide-down 300ms ease-out forwards',
     outline: 'none',
+    // overflow: 'scroll',
 
     '@keyframes slide-down': {
         from: {
@@ -61,7 +67,6 @@ const style = {
     },
 
     '@media (max-width: 600px)': {
-        // background: 'red',
         left: 'calc(50% - (90%/2))',
         width: '90%',
     },
@@ -106,15 +111,12 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
                 {campground.images?.map((image, i) => (
                     <Image
                         key={i}
-                        src={image.thumbnail} // using cloudinary img transform API
+                        src={image.thumbnail}
                         alt={image.filename}
-                        width={'100px'}
-                        height={'60px'}
                         rounded
                         onClick={() => changeImageHandler(i)}
                         style={{
                             opacity: activeIndex === i ? 1 : 0.6,
-                            objectFit: 'cover',
                         }}
                     />
                 ))}

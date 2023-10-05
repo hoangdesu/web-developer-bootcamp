@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useCallback, useEffect, useState } from 'react';
+import React, { useRef, useMemo, useCallback, useEffect, useState, memo } from 'react';
 import Map, { MapRef, Marker, NavigationControl } from 'react-map-gl';
 import mapboxgl from 'mapbox-gl';
 
@@ -130,4 +130,4 @@ const PreviewMap: React.FunctionComponent<PreviewMapProps> = ({ campground, coor
     );
 };
 
-export default PreviewMap;
+export default memo(PreviewMap);

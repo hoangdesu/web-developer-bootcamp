@@ -16,7 +16,7 @@ router
     .get(controller.getAllCamgrounds)
     .post(
         requiresLoggedIn,
-        upload.array('campground[images]', 10),
+        upload.array('campground[images]', 12),
         middlewares.validateCampground,
         controller.createCampground,
     );
