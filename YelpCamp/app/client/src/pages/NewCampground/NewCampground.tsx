@@ -16,7 +16,7 @@ import { Autocomplete, LinearProgress } from '@mui/material';
 import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
 import DraggableImage from './DraggableImage';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { UploadImage } from '../../types';
+import { MapboxFeature, UploadImage } from '../../types';
 
 const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
     display: flex;
@@ -72,15 +72,15 @@ const NewCampground: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
-    const [selectedImages, setSelectedImages] = useState<UploadImage[]>([]);
+    const [formSelectedImages, setFormSelectedImages] = useState<UploadImage[]>([]);
     const [boxesPerRow, setBoxesPerRow] = useState(
         screenWidth > 768 ? 3 : screenWidth < 476 ? 1 : 2,
     );
 
-    const [suggestedLocations, setSuggestedLocations] = useState([]);
-    const [coordinates, setCoordinates] = useState([]);
+    const [suggestedLocations, setSuggestedLocations] = useState<MapboxFeature[]>([]);
+    const [formCoordinates, setFormCoordinates] = useState<number[]>([]);
     const [formLocation, setFormLocation] = useState('');
-    const [previewGeometry, setPreviewGeometry] = useState(null);
+    const [previewLocation, setPreviewLocation] = useState('');
 
     const formTitle = useRef<HTMLInputElement>(null);
     const formPrice = useRef<HTMLInputElement>(null);
@@ -110,13 +110,16 @@ const NewCampground: React.FunctionComponent = () => {
         };
     }, []);
 
-    // AUTOCOMPLETE LOCATION SEARCH
+    // Autocomplete Location Search
     useEffect(() => {
+        if (!formLocation) {
+            setSuggestedLocations([]);
+            setFormCoordinates([]);
+            return;
+        }
+
+        // wait 0.5s before querying feature (location) data from mapbox
         const queryLocationTimeOut = setTimeout(() => {
-            if (!formLocation) {
-                setSuggestedLocations([])
-                // setCoordinates([]);
-            };
             axios
                 .get(
                     `https://api.mapbox.com/geocoding/v5/mapbox.places/${formLocation}.json?access_token=${
@@ -124,20 +127,18 @@ const NewCampground: React.FunctionComponent = () => {
                     }`,
                 )
                 .then(res => {
-                    const coords = res.data.features[0].geometry.coordinates;
-                    const features = res.data.features;
-                    // const placeText = features[0]['text'];
+                    const features: MapboxFeature[] = res.data.features;
                     setSuggestedLocations(features);
-
-                    console.log('setSuggestedLocations', features);
-                    // console.log('placeText[0]', placeText);
-                    // setFormLocation(placeText);
-                    // setCoordinates({ longitude: coords[0], latitude: coords[1] });
+                    // console.log('setSuggestedLocations', features);
                 })
                 .catch(err => {
-                    // ... err msg
+                    appContext.setSnackbar(
+                        true,
+                        "Error: Couldn't query location data from mapbox",
+                        'error',
+                    );
                 });
-        }, 1000);
+        }, 500);
         return () => clearTimeout(queryLocationTimeOut);
     }, [formLocation]);
 
@@ -149,14 +150,13 @@ const NewCampground: React.FunctionComponent = () => {
     const createCampgroundHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        // if (formImages?.current?.files.length > 10) {
-        if (selectedImages.length > 12) {
+        if (formSelectedImages.length > 12) {
             alert('Please only select maximum 12 images');
             return;
         }
 
         // if (formImages?.current?.files.length < 1) {
-        if (selectedImages.length < 1) {
+        if (formSelectedImages.length < 1) {
             alert('Please select at least 1 image');
             return;
         }
@@ -166,23 +166,21 @@ const NewCampground: React.FunctionComponent = () => {
             event.stopPropagation();
         } else {
             setIsUploading(true);
+
             const formData = new FormData();
             formData.append('campground[title]', formTitle.current?.value || '');
-            formData.append('campground[price]', parseFloat(formPrice.current?.value) || 0);
+            formData.append('campground[price]', formPrice.current?.value.toString() || 0);
             formData.append('campground[location]', formLocation);
             formData.append('campground[description]', formDescription.current?.value || '');
 
-            // formData.append('geometry', {
-            //     type: 'Point',
-            //     coordinates: [108.339537475899, 14.3154241771087],
-            // });
+            // USING GEOMETRY DATA FROM CLIENT
+            if (formCoordinates.length > 0) {
+                formData.append('campground[geometry][type]', 'Point');
+                formData.append('campground[geometry][coordinates]', formCoordinates[0].toString());
+                formData.append('campground[geometry][coordinates]', formCoordinates[1].toString());
+            }
 
-            // GETTING GEOMETRY DATA FROM CLIENT:
-            // formData.append('campground[geometry][type]', 'Point');
-            // formData.append('campground[geometry][coordinates]', 111);
-            // formData.append('campground[geometry][coordinates]', 11);
-
-            Array.from(selectedImages).forEach(image => {
+            Array.from(formSelectedImages).forEach(image => {
                 formData.append('campground[images]', image.file);
             });
 
@@ -218,7 +216,7 @@ const NewCampground: React.FunctionComponent = () => {
             id: Math.random().toString(),
             file: file,
         }));
-        setSelectedImages(prev => prev.concat(images)); // adding new images to selected images array
+        setFormSelectedImages(prev => prev.concat(images)); // adding new images to selected images array
     };
 
     const draggingImagesHandler = (
@@ -227,8 +225,8 @@ const NewCampground: React.FunctionComponent = () => {
         targetIndex: number,
         targetId: string,
     ) => {
-        const rearrangedImages = swap(selectedImages, sourceIndex, targetIndex);
-        return setSelectedImages(rearrangedImages);
+        const rearrangedImages = swap(formSelectedImages, sourceIndex, targetIndex);
+        return setFormSelectedImages(rearrangedImages);
     };
 
     return (
@@ -271,20 +269,21 @@ const NewCampground: React.FunctionComponent = () => {
                                             ),
                                     },
                                 }}
-                                onChange={(event, location) => {
-                                    // setValue(newValue);
-                                    // setFormLocation(newValue); //lowercase error
-                                    console.log('on change', 'new value', location);
-                                    setCoordinates(location.geometry.coordinates);
+                                options={suggestedLocations}
+                                onChange={(
+                                    event: React.SyntheticEvent<Element, Event>,
+                                    feature: MapboxFeature,
+                                ) => {
+                                    console.log('on change', 'new value', feature);
+                                    setFormCoordinates(feature.geometry.coordinates);
+                                    setPreviewLocation(feature.place_name);
                                 }}
                                 inputValue={formLocation}
-                                onInputChange={(event, newInputValue) => {
+                                onInputChange={(event: any, newInputValue: string) => {
                                     setFormLocation(newInputValue);
-                                    console.log('onInputChange', newInputValue);
                                 }}
                                 id="location-suggestion-input"
-                                getOptionLabel={location => `${location['place_name']}`}
-                                options={suggestedLocations}
+                                getOptionLabel={(feature: MapboxFeature) => `${feature.place_name}`}
                                 filterOptions={(options, state) => options}
                                 freeSolo
                                 loading={!!formLocation}
@@ -306,12 +305,7 @@ const NewCampground: React.FunctionComponent = () => {
                                 )}
                             />
 
-                            {/* // TODO: new campground should not have marker for initial state. Display marker after user has picked a location */}
-                            <PreviewMap
-                                campground={null}
-                                coordinates={coordinates}
-                                location={formLocation}
-                            />
+                            <PreviewMap coordinates={formCoordinates} location={previewLocation} />
 
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">
@@ -351,7 +345,9 @@ const NewCampground: React.FunctionComponent = () => {
 
                         {/* IMAGES */}
                         <Form.Group controlId="campgroundImages" className="mb-3">
-                            <Form.Label>Upload images (max 12)</Form.Label>
+                            <Form.Label>
+                                Upload images <span className="text-muted text-sm">(maximum 12)</span>
+                            </Form.Label>
                             <Form.Control
                                 type="file"
                                 multiple
@@ -373,16 +369,16 @@ const NewCampground: React.FunctionComponent = () => {
                                     rowHeight={130}
                                     style={{
                                         height: `${
-                                            130 * Math.ceil(selectedImages.length / boxesPerRow)
+                                            130 * Math.ceil(formSelectedImages.length / boxesPerRow)
                                         }px`,
                                     }}
                                 >
-                                    {selectedImages.map(image => (
+                                    {formSelectedImages.map(image => (
                                         <GridItem key={`${image.id}`}>
                                             <div className="grid-item">
                                                 <DraggableImage
                                                     image={image}
-                                                    setSelectedImages={setSelectedImages}
+                                                    setFormSelectedImages={setFormSelectedImages}
                                                 />
                                             </div>
                                         </GridItem>

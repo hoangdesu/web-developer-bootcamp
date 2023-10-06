@@ -43,7 +43,7 @@ export interface User {
 
 interface Point {
     type: 'Point';
-    coordinates: number[];
+    coordinates: [number, number];
 }
 
 export interface MapViewState {
@@ -81,4 +81,14 @@ export interface Reservation {
 export interface UploadImage {
     id: string;
     file: File | Blob;
+}
+
+export interface MapboxFeature {
+    center: [number, number];
+    geometry: Point;
+    id: string;
+    place_name: string;
+    text: string;
+    type: 'Feature';
+    bbox: number[];
 }

@@ -62,7 +62,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
     //         .setHTML(`hi`);
     // });
 
-    const onMapClick = (event: mapboxgl.MapMouseEvent) => {
+    const onMapClick = (event: mapboxgl.MapMouseEvent | any) => {
         const feature = event.features[0];
 
         // clicking outside the interactive zones

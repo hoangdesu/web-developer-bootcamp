@@ -90,6 +90,8 @@ const createCampground = catchAsync(async (req, res, next) => {
         .withReservations([])
         .build();
 
+        console.log('newCampground',newCampground)
+
     const savedCampground = await Campground(newCampground).save();
     console.log('saved campground: ', savedCampground);
 

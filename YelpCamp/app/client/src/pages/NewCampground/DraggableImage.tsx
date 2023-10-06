@@ -46,14 +46,14 @@ const Container = styled.div<{ image: File | Blob }>`
 
 interface DraggableImageProps {
     image: UploadImage;
-    setSelectedImages: React.Dispatch<React.SetStateAction<UploadImage[]>>;
+    setFormSelectedImages: React.Dispatch<React.SetStateAction<UploadImage[]>>;
 }
 
-const DraggableImage: React.FC<DraggableImageProps> = ({ image, setSelectedImages }) => {
+const DraggableImage: React.FC<DraggableImageProps> = ({ image, setFormSelectedImages }) => {
     console.log(image);
 
     const removeImageHandler = () => {
-        setSelectedImages(prev =>
+        setFormSelectedImages(prev =>
             prev.filter((uploadImg: UploadImage) => uploadImg.id !== image.id),
         );
     };
