@@ -6,8 +6,6 @@ import AppContext from '../../store/app-context';
 
 import { Container, Form, Button, InputGroup, Spinner, Image } from 'react-bootstrap';
 
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
 import PageContainer from '../../components/PageContainer';
 import FlashAlert from '../../components/FlashAlert';
 import ArtImage from '../../assets/new-campground-art.jpg';
@@ -18,6 +16,7 @@ import { Autocomplete, LinearProgress } from '@mui/material';
 import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
 import DraggableImage from './DraggableImage';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { UploadImage } from '../../types';
 
 const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
     display: flex;
@@ -66,39 +65,33 @@ const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
 `;
 
 const NewCampground: React.FunctionComponent = () => {
-    const [validated, setValidated] = useState<boolean>(false);
-    const [isUploading, setIsUploading] = useState<boolean>(false);
-    const [selectedImages, setSelectedImages] = useState<{ id: string; file: File[] | Blob[] }[]>(
-        [],
-    );
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
-    const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
     const { width: screenWidth } = useWindowDimensions();
 
-    const formTitle = useRef<HTMLInputElement>(null);
-    // const formLocation = useRef<HTMLInputElement>(null);
-    const formPrice = useRef<HTMLInputElement>(null);
-    const formImages = useRef<HTMLInputElement>(null);
-    const formDescription = useRef<HTMLInputElement>(null);
-
-    const [formLocation, setFormLocation] = useState('');
-    const [suggestedLocations, setSuggestedLocations] = useState([]);
-    const [coordinates, setCoordinates] = useState([105, 20]);
+    const [validated, setValidated] = useState<boolean>(false);
+    const [isUploading, setIsUploading] = useState<boolean>(false);
+    const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
+    const [selectedImages, setSelectedImages] = useState<UploadImage[]>([]);
     const [boxesPerRow, setBoxesPerRow] = useState(
         screenWidth > 768 ? 3 : screenWidth < 476 ? 1 : 2,
     );
+
+    const [suggestedLocations, setSuggestedLocations] = useState([]);
+    const [coordinates, setCoordinates] = useState([]);
+    const [formLocation, setFormLocation] = useState('');
+    const [previewGeometry, setPreviewGeometry] = useState(null);
+
+    const formTitle = useRef<HTMLInputElement>(null);
+    const formPrice = useRef<HTMLInputElement>(null);
+    const formImages = useRef<HTMLInputElement>(null);
+    const formDescription = useRef<HTMLInputElement>(null);
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
 
     useEffect(() => {
         document.title = 'YelpCamp | New Campground';
         if (!currentUser) {
-            // appContext.setAlert({
-            //     message: 'Please log in first',
-            //     variant: 'warning',
-            // });
-
             appContext.setSnackbar(true, 'You need to login first', 'warning');
             navigate('/login');
         }
@@ -120,8 +113,10 @@ const NewCampground: React.FunctionComponent = () => {
     // AUTOCOMPLETE LOCATION SEARCH
     useEffect(() => {
         const queryLocationTimeOut = setTimeout(() => {
-            // console.log('formLocation', formLocation);
-            if (!formLocation) setSuggestedLocations([]);
+            if (!formLocation) {
+                setSuggestedLocations([])
+                // setCoordinates([]);
+            };
             axios
                 .get(
                     `https://api.mapbox.com/geocoding/v5/mapbox.places/${formLocation}.json?access_token=${
@@ -131,12 +126,12 @@ const NewCampground: React.FunctionComponent = () => {
                 .then(res => {
                     const coords = res.data.features[0].geometry.coordinates;
                     const features = res.data.features;
-                    const placeText = features[0]['text'];
-                    console.log('setSuggestedLocations', features);
-                    console.log('placeText[0]', placeText);
-                    // setFormLocation(placeText);
+                    // const placeText = features[0]['text'];
                     setSuggestedLocations(features);
 
+                    console.log('setSuggestedLocations', features);
+                    // console.log('placeText[0]', placeText);
+                    // setFormLocation(placeText);
                     // setCoordinates({ longitude: coords[0], latitude: coords[1] });
                 })
                 .catch(err => {
@@ -151,12 +146,12 @@ const NewCampground: React.FunctionComponent = () => {
         setBoxesPerRow(screenWidth > 768 ? 3 : screenWidth < 476 ? 1 : 2);
     }, [screenWidth]);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const createCampgroundHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         // if (formImages?.current?.files.length > 10) {
         if (selectedImages.length > 12) {
-            alert('Please only select maximum 10 images');
+            alert('Please only select maximum 12 images');
             return;
         }
 
@@ -215,22 +210,23 @@ const NewCampground: React.FunctionComponent = () => {
     };
 
     const onSelectImagesHandler = evt => {
-        const imageFiles = Array.from(evt.target.files).map(f => f);
-        // setSelectedImages(prev => prev.concat(imageFiles));
-
+        const imageFiles = Array.from(evt.target.files) as File[];
         // file names can be duplicated
         // using index for the image file causes a tiny flashing animation -> annoying => dont use index for map
         // cannot use math.random() cuz the function component gets rerendering constantly
-        const images = imageFiles.map(file => ({
+        const images: UploadImage[] = imageFiles.map(file => ({
             id: Math.random().toString(),
             file: file,
         }));
-
-        console.log('images', images);
-        setSelectedImages(prev => prev.concat(images));
+        setSelectedImages(prev => prev.concat(images)); // adding new images to selected images array
     };
 
-    const draggingImagesHandler = (sourceId, sourceIndex, targetIndex, targetId) => {
+    const draggingImagesHandler = (
+        sourceId: string,
+        sourceIndex: number,
+        targetIndex: number,
+        targetId: string,
+    ) => {
         const rearrangedImages = swap(selectedImages, sourceIndex, targetIndex);
         return setSelectedImages(rearrangedImages);
     };
@@ -247,7 +243,7 @@ const NewCampground: React.FunctionComponent = () => {
                         className="form"
                         noValidate
                         validated={validated}
-                        onSubmit={handleSubmit}
+                        onSubmit={createCampgroundHandler}
                         encType="multipart/form-data"
                     >
                         <Form.Group className="mb-3" controlId="campgroundTitle">
@@ -275,7 +271,7 @@ const NewCampground: React.FunctionComponent = () => {
                                             ),
                                     },
                                 }}
-                                onChange={(event: any, location: string | null) => {
+                                onChange={(event, location) => {
                                     // setValue(newValue);
                                     // setFormLocation(newValue); //lowercase error
                                     console.log('on change', 'new value', location);
@@ -287,9 +283,7 @@ const NewCampground: React.FunctionComponent = () => {
                                     console.log('onInputChange', newInputValue);
                                 }}
                                 id="location-suggestion-input"
-                                getOptionLabel={location =>
-                                    `${location.text} (${location['place_name']})`
-                                }
+                                getOptionLabel={location => `${location['place_name']}`}
                                 options={suggestedLocations}
                                 filterOptions={(options, state) => options}
                                 freeSolo
@@ -313,7 +307,11 @@ const NewCampground: React.FunctionComponent = () => {
                             />
 
                             {/* // TODO: new campground should not have marker for initial state. Display marker after user has picked a location */}
-                            <PreviewMap campground={null} coordinates={coordinates} />
+                            <PreviewMap
+                                campground={null}
+                                coordinates={coordinates}
+                                location={formLocation}
+                            />
 
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">
@@ -383,7 +381,7 @@ const NewCampground: React.FunctionComponent = () => {
                                         <GridItem key={`${image.id}`}>
                                             <div className="grid-item">
                                                 <DraggableImage
-                                                    image={image.file}
+                                                    image={image}
                                                     setSelectedImages={setSelectedImages}
                                                 />
                                             </div>

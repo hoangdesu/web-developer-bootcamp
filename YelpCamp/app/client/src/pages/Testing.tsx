@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 const Testing = () => {
     const reader = new FileReader();
@@ -186,7 +185,7 @@ const Testing = () => {
                     </Droppable>
                 </DragDropContext> */}
 
-                <DragDropContext onDragEnd={onDragEnd}>
+                {/* <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="images">
                         {provided => (
                             <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -208,7 +207,7 @@ const Testing = () => {
                             </div>
                         )}
                     </Droppable>
-                </DragDropContext>
+                </DragDropContext> */}
             </div>
         </PageContainer>
     );

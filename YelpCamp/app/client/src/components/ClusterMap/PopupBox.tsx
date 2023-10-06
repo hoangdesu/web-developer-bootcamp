@@ -15,7 +15,7 @@ const PopupBox: React.FC<PopupBoxProps> = ({ campground }) => {
             to={`/campgrounds/${campground._id}`}
             className="flex flex-row gap-3 no-underline text-inherit"
         >
-            <img src={campground.image} alt="Campground cover" className="w-[120px] object-cover" />
+            <img src={campground.image} alt="Campground cover" className="w-[120px] object-cover max-h-[100px]" />
             <div className="flex flex-col w-[150px]">
                 <h6 className=" mb-1">{campground.title}</h6>
                 <span className="text-muted text-xs">{campground.location}</span>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import Map, {
     Source,
     Layer,
@@ -190,4 +190,4 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
     );
 };
 
-export default ClusterMap;
+export default memo(ClusterMap);

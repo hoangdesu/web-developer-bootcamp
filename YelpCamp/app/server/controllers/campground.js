@@ -56,30 +56,27 @@ const createCampground = catchAsync(async (req, res, next) => {
     const { title, location, price, description } = req.body.campground;
     let { geometry } = req.body.campground;
 
-    console.log('GEOMETRY:', geometry);
-
     // Authorization
     const author = req.headers.authorization;
 
+    // Uploaded images using cloudinary + multer are stored in req.files obj
     const images = req.files.map(file => ({
         url: file.path,
         filename: file.filename,
     }));
 
     // Using geocoding service in the backend if client doesn't provide geometry object
-    // Geometry data
     if (!geometry) {
         const geoData = await geocodingClient
-        .forwardGeocode({
-            query: location,
-            limit: 1,
-        })
-        .send();
+            .forwardGeocode({
+                query: location,
+                limit: 1,
+            })
+            .send();
 
         geometry = geoData.body?.features?.[0]?.geometry;
         console.log('No geometry from client, using geometry backend:', geometry);
     }
-
 
     const newCampground = new CampgroundBuilder()
         .withTitle(title)
@@ -114,7 +111,7 @@ const editCampground = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { campground, deletingImages, featuredImageIndex } = req.body;
 
-    console.log('featuredImageIndex', featuredImageIndex)
+    console.log('featuredImageIndex', featuredImageIndex);
 
     // update campground text data
     const updatedCampground = await Campground.findByIdAndUpdate(id, campground, {
@@ -122,7 +119,6 @@ const editCampground = catchAsync(async (req, res, next) => {
         new: true,
     });
 
-    
     // add images to array and save to db
     if (req.files) {
         // mapping over image file objects from req.files

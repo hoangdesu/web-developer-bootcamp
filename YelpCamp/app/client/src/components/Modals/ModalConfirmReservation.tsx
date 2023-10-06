@@ -104,6 +104,7 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
                 ))}
             </Table>
             <div className="flex flex-row items-center gap-2 mt-3">
+                {/* // TODO: button sizes are wrong */}
                 <SecondaryTransparentButton
                     onClick={() => appContext.setModal({ open: false, content: null })}
                 >

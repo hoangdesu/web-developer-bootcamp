@@ -1,6 +1,9 @@
 import React, { memo } from 'react';
 import styled from '@emotion/styled';
 
+import ClearIcon from '@mui/icons-material/Clear';
+import { UploadImage } from '../../types';
+
 const Container = styled.div<{ image: File | Blob }>`
     .img {
         width: 100%;
@@ -13,14 +16,20 @@ const Container = styled.div<{ image: File | Blob }>`
 
     .remove-icon {
         position: absolute;
-        top: 10px;
-        right: 16px;
+        top: 6px;
+        right: 6px;
         z-index: 10;
         display: none;
+        color: white;
+        background: rgba(82, 72, 72, 0.3);
+        border-radius: 50%;
+        padding: 6px;
+        transform: scale(0.6);
     }
 
     .remove-icon:hover {
         cursor: pointer;
+        background: rgba(82, 72, 72, 0.5);
     }
 
     &:hover {
@@ -36,23 +45,25 @@ const Container = styled.div<{ image: File | Blob }>`
 `;
 
 interface DraggableImageProps {
-    image: File | Blob;
-    setSelectedImages: () => void;
+    image: UploadImage;
+    setSelectedImages: React.Dispatch<React.SetStateAction<UploadImage[]>>;
 }
 
 const DraggableImage: React.FC<DraggableImageProps> = ({ image, setSelectedImages }) => {
     console.log(image);
 
     const removeImageHandler = () => {
-        setSelectedImages(prev => prev.filter((img: File | Blob) => img.file.name !== image.name));
+        setSelectedImages(prev =>
+            prev.filter((uploadImg: UploadImage) => uploadImg.id !== image.id),
+        );
     };
+
     return (
-        <Container image={image}>
+        <Container image={image.file}>
             <div className="img img-thumbnail" />
 
-            {/* // TODO: hover on image should display X icon to remove */}
             <span className="remove-icon" onClick={removeImageHandler}>
-                X
+                <ClearIcon />
             </span>
         </Container>
     );

@@ -49,6 +49,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                     src={campground?.images?.[0]?.url}
                     height={'200px'}
                     className="img"
+                    draggable={false}
                 />
 
                 <Card.Body className="flex flex-column gap-1">

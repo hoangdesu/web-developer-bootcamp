@@ -18,7 +18,6 @@ import { Delete } from '@mui/icons-material';
 import PreviewMap from '../components/PreviewMap';
 import { Campground } from '../types';
 import { Autocomplete, CircularProgress, LinearProgress, TextField } from '@mui/material';
-import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
 import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
 
 import './styles.css';
@@ -252,7 +251,7 @@ const EditCampground: React.FunctionComponent = () => {
             content: <p>Confirm Delete campground</p>,
         });
 
-        return;
+        // return;
 
         if (confirm(`Delete ${campground.title}?`)) {
             axios

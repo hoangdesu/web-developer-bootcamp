@@ -77,3 +77,8 @@ export interface Reservation {
     discountCode?: string;
     status?: 'PENDING' | 'PAID' | 'CANCELLED';
 }
+
+export interface UploadImage {
+    id: string;
+    file: File | Blob;
+}
