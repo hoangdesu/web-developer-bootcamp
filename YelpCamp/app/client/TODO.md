@@ -59,3 +59,20 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [x] move flash alert down, inside container
 
 [] drag and drop for grid images in edit and new campground pages
+
+[] remove "featured image" in edit. implement drag and drop. use PreviewMap
+
+// note on edit page:
+
+uploading data:
+{
+    ...
+    current images array[]
+    new images[] to updload
+    images[] to delete -> soft delete -> user click on delete = dont delete, just add to this array and blur image 
+}
+
+if possible: can use 1 array to preview / edit images. or just use 2 arrays :/
+
+[] fix DraggableImage type
+[] fix editcampground map

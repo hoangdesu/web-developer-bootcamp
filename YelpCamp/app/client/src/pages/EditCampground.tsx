@@ -1,26 +1,25 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import { Link, useLoaderData, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios, { AxiosError } from 'axios';
 
 import { Container, Button, Form, InputGroup, Image, Spinner } from 'react-bootstrap';
 
-import Navbar from '../components/Navbar';
 import PageContainer from '../components/PageContainer';
-import Footer from '../components/Footer';
 import Loading from './Loading';
-import PageModal from '../components/Modals/PageModal';
 
 import AppContext from '../store/app-context';
-import FlashAlert from '../components/FlashAlert';
 import styled from '@emotion/styled';
 import { Delete } from '@mui/icons-material';
 import PreviewMap from '../components/PreviewMap';
 import { Campground } from '../types';
-import { Autocomplete, CircularProgress, LinearProgress, TextField } from '@mui/material';
+import { Autocomplete, LinearProgress } from '@mui/material';
 import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
 
 import './styles.css';
+import Campground from './Campground';
+import useWindowDimensions from '../hooks/useWindowDimensions';
+import DraggableImage from './NewCampground/DraggableImage';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -55,15 +54,21 @@ const EditCampground: React.FunctionComponent = () => {
     const { campgroundId } = useLoaderData() as { campgroundId: string };
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
+    const { width: screenWidth } = useWindowDimensions();
+
     const [validated, setValidated] = useState(false);
-    const [selectedImages, setSelectedImages] = useState([]);
     const [isUpdating, setIsUpdating] = useState(false);
 
-    const [featuredImageIndex, setFeaturedImageIndex] = useState(0);
+    const [formSelectedImages, setFormSelectedImages] = useState<UploadImage[]>([]);
+    const [boxesPerRow, setBoxesPerRow] = useState(
+        screenWidth > 768 ? 3 : screenWidth < 476 ? 1 : 2,
+    );
 
-    const [formLocation, setFormLocation] = useState('');
     const [suggestedLocations, setSuggestedLocations] = useState([]);
     const [coordinates, setCoordinates] = useState([105, 20]);
+    const [formCoordinates, setFormCoordinates] = useState<number[]>([]);
+    const [formLocation, setFormLocation] = useState('');
+    const [previewLocation, setPreviewLocation] = useState('');
 
     const formTitle = useRef<HTMLInputElement>(null);
     const formPrice = useRef<HTMLInputElement>(null);
@@ -77,41 +82,23 @@ const EditCampground: React.FunctionComponent = () => {
 
     const [editingImages, setEditingImages] = useState([]);
 
-    const [items, setItems] = React.useState({
-        left: [
-            { position: 0, name: 'ben' },
-            { position: 1, name: 'joe' },
-            { position: 2, name: 'jason' },
-            { position: 3, name: 'chris' },
-            { position: 4, name: 'heather' },
-        ],
-        right: [
-            { position: 5, name: 'george' },
-            { position: 6, name: 'rupert' },
-            { position: 7, name: 'alice' },
-            { position: 8, name: 'katherine' },
-            { position: 8, name: 'pam' },
-            { position: 10, name: 'katie' },
-        ],
-    });
+    // function onChange(sourceId, sourceIndex, targetIndex, targetId) {
+    //     console.log(targetId, sourceId);
+    //     if (targetId) {
+    //         const result = move(items[sourceId], items[targetId], sourceIndex, targetIndex);
+    //         return setItems({
+    //             ...items,
+    //             [sourceId]: result[0],
+    //             [targetId]: result[1],
+    //         });
+    //     }
 
-    function onChange(sourceId, sourceIndex, targetIndex, targetId) {
-        console.log(targetId, sourceId);
-        if (targetId) {
-            const result = move(items[sourceId], items[targetId], sourceIndex, targetIndex);
-            return setItems({
-                ...items,
-                [sourceId]: result[0],
-                [targetId]: result[1],
-            });
-        }
-
-        const result = swap(items[sourceId], sourceIndex, targetIndex);
-        return setItems({
-            ...items,
-            [sourceId]: result,
-        });
-    }
+    //     const result = swap(items[sourceId], sourceIndex, targetIndex);
+    //     return setItems({
+    //         ...items,
+    //         [sourceId]: result,
+    //     });
+    // }
 
     // protect route when user is not logged in
     useEffect(() => {
@@ -134,7 +121,11 @@ const EditCampground: React.FunctionComponent = () => {
                 }),
         onSuccess: (campground: Campground) => {
             setFormLocation(campground.location);
-            setEditingImages(campground.images);
+            setFormCoordinates(campground.geometry.coordinates);
+            setPreviewLocation(campground.location);
+
+            // setEditingImages(campground.images);
+            // setCampground(campground);
         },
     });
 
@@ -207,7 +198,7 @@ const EditCampground: React.FunctionComponent = () => {
             deletingImages.forEach(img => formData.append('deletingImages[]', img));
 
             // swapping featured image
-            formData.append('featuredImageIndex', featuredImageIndex);
+            // formData.append('featuredImageIndex', featuredImageIndex);
             // if (featuredImageIndex !== 0) {
             // }
 
@@ -298,8 +289,8 @@ const EditCampground: React.FunctionComponent = () => {
     if (error) return <p>Error</p>;
 
     const onSelectImagesHandler = evt => {
-        const imageFiles = Array.from(evt.target.files).map(f => f);
-        setSelectedImages(imageFiles);
+        const imageFiles = Array.from(evt.target.files);
+        setFormSelectedImages(imageFiles);
     };
 
     const onDeletingImagesChange = evt => {
@@ -327,29 +318,29 @@ const EditCampground: React.FunctionComponent = () => {
         }
     };
 
-    const previewLocation = () => {
-        console.log('inside preview location');
+    // const previewLocation = () => {
+    //     console.log('inside preview location');
 
-        axios
-            .get(
-                `https://api.mapbox.com/geocoding/v5/mapbox.places/${formLocation}.json?access_token=${
-                    import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
-                }`,
-            )
-            .then(res => {
-                const coords = res.data.features[0].geometry.coordinates;
-                const features = res.data.features;
-                const placeText = features[0]['text'];
-                console.log('res.data.features', features);
-                console.log('placeText', placeText);
-                setFormLocation(placeText);
+    //     axios
+    //         .get(
+    //             `https://api.mapbox.com/geocoding/v5/mapbox.places/${formLocation}.json?access_token=${
+    //                 import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
+    //             }`,
+    //         )
+    //         .then(res => {
+    //             const coords = res.data.features[0].geometry.coordinates;
+    //             const features = res.data.features;
+    //             const placeText = features[0]['text'];
+    //             console.log('res.data.features', features);
+    //             console.log('placeText', placeText);
+    //             setFormLocation(placeText);
 
-                // setCoordinates({ longitude: coords[0], latitude: coords[1] });
-            })
-            .catch(err => {
-                // ... err msg
-            });
-    };
+    //             // setCoordinates({ longitude: coords[0], latitude: coords[1] });
+    //         })
+    //         .catch(err => {
+    //             // ... err msg
+    //         });
+    // };
 
     function onDragEnd(result) {
         console.log('result', result);
@@ -382,6 +373,16 @@ const EditCampground: React.FunctionComponent = () => {
         console.log('result', result);
         setEditingImages(result);
     }
+
+    const draggingImagesHandler = (
+        sourceId: string,
+        sourceIndex: number,
+        targetIndex: number,
+        targetId: string,
+    ) => {
+        const rearrangedImages = swap(formSelectedImages, sourceIndex, targetIndex);
+        return setFormSelectedImages(rearrangedImages);
+    };
 
     return (
         <PageContainer>
@@ -460,7 +461,7 @@ const EditCampground: React.FunctionComponent = () => {
                                 )}
                             />
 
-                            <PreviewMap campground={campground} coordinates={coordinates} />
+                            <PreviewMap coordinates={formCoordinates} location={previewLocation} />
 
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">
@@ -500,153 +501,51 @@ const EditCampground: React.FunctionComponent = () => {
                     </Form.Group>
 
                     {/* IMAGES */}
-                    {/* TODO: NICE TO HAVE: select main image -> set selected image to be images[0] */}
                     {/* // TODO: replace selecting images to delete mechanism. Hover to display a delete icon. Click to add to delete list */}
                     <Form.Group className="mb-3" controlId="campgroundImageUrl">
                         <Form.Label>Images uploaded ({campground.images.length})</Form.Label>
-                        <p>Click to change featured image</p>
+
                         <div className="thumbnails-container">
-                            {/* {campground.images.map((image, index) => (
-                                <UploadedImagesWrapper key={image.url}>
-                                    <Image
-                                        src={image.thumbnail}
+                            <Form.Group controlId="campgroundImageFiles" className="mb-3">
+                                <GridContextProvider onChange={draggingImagesHandler}>
+                                    <GridDropZone
+                                        id="images"
+                                        boxesPerRow={boxesPerRow}
+                                        rowHeight={130}
                                         style={{
-                                            width: '100%',
-                                            height: '120px',
-                                            objectFit: 'cover',
+                                            // height: `${
+                                            //     130 *
+                                            //     Math.ceil(formSelectedImages.length / boxesPerRow)
+                                            // }px`,
+                                            height: '500px'
                                         }}
-                                        alt="Thumbnail"
-                                        thumbnail
-                                        className={`${
-                                            index === featuredImageIndex &&
-                                            'border-4 border-emerald-500'
-                                        }`}
-                                        onClick={() => setFeaturedImageIndex(index)}
-                                    />
-                                    {showDeleteCheckboxes && (
-                                        <input
-                                            type="checkbox"
-                                            id={image.url}
-                                            value={image.filename}
-                                            onChange={onDeletingImagesChange}
-                                        />
-                                    )}
-                                </UploadedImagesWrapper>
-                            ))} */}
+                                    >
+                                        {/* {formSelectedImages.map(image => ( */}
+                                        {/* use a state array to modify */}
+                                        // TODO: fix this
+                                        {campground.images.map(image => (
+                                            <GridItem key={`${image.url}`}>
+                                                <div className="grid-item">
 
-                            {/* // EDITING IMAGES */}
-                            {/* <DragDropContext onDragEnd={onDragEnd}>
-                                <Droppable droppableId="images">
-                                    {provided => (
-                                        <div
-                                            {...provided.droppableProps}
-                                            ref={provided.innerRef}
-                                            className="thumbnails-container"
-                                        >
-                                            {editingImages.map((image, index) => (
-                                                <div
-                                                    style={{
-                                                        width: '100%',
-                                                        height: '120px',
-                                                        objectFit: 'cover',
-                                                    }}
-                                                >
-                                                    <Draggable
-                                                        key={image.url}
-                                                        draggableId={image.url}
-                                                        index={index}
-                                                        // style={{
-                                                        //     width: '100%',
-                                                        //     height: '120px',
-                                                        //     objectFit: 'cover',
-                                                        // }}
-                                                    >
-                                                        {provided => (
-                                                            <img
-                                                                src={image.thumbnail}
-                                                                style={{
-                                                                    width: '100%',
-                                                                    height: '120px',
-                                                                    objectFit: 'cover',
-                                                                }}
-                                                                alt="Thumbnail"
-                                                                thumbnail
-                                                                className={`${
-                                                                    index === featuredImageIndex &&
-                                                                    'border-4 border-emerald-500'
-                                                                }`}
-                                                                onClick={() =>
-                                                                    setFeaturedImageIndex(index)
-                                                                }
-                                                                key={image.url}
-                                                                {...provided.draggableProps}
-                                                                {...provided.dragHandleProps}
-                                                                ref={provided.innerRef}
-                                                            />
-                                                        )}
-                                                    </Draggable>
+                                                    <DraggableImage
+                                                        imageUrl={image.thumbnail}
+                                                        setFormSelectedImages={
+                                                            setFormSelectedImages
+                                                        }
+                                                    />
+
+                                                    {/* <img
+                                                        src={image.thumbnail}
+                                                        alt=""
+                                                        width={'200px'}
+                                                    /> */}
                                                 </div>
-                                            ))}
-                                            {provided.placeholder}
-                                        </div>
-                                    )}
-                                </Droppable>
-                            </DragDropContext> */}
+                                            </GridItem>
+                                        ))}
+                                    </GridDropZone>
+                                </GridContextProvider>
+                            </Form.Group>
                         </div>
-
-                        <GridContextProvider onChange={onChange}>
-                            <div className="container">
-                                <GridDropZone
-                                    className="dropzone left"
-                                    id="left"
-                                    boxesPerRow={3}
-                                    rowHeight={150}
-                                >
-                                    {items.left.map(item => (
-                                        <GridItem key={item.position}>
-                                            <div className="grid-item">
-                                                <div className="grid-item-content">
-                                                    {item.name.toUpperCase()}
-                                                </div>
-                                            </div>
-                                        </GridItem>
-                                    ))}
-                                </GridDropZone>
-                            </div>
-                        </GridContextProvider>
-
-                        <GridContextProvider onChange={onImagesChange}>
-                            <div className="container">
-                                <GridDropZone
-                                    className="dropzone left"
-                                    id="images"
-                                    boxesPerRow={3}
-                                    rowHeight={150}
-                                >
-                                    {/* {items.left.map(item => (
-                                        <GridItem key={item.position}>
-                                            <div className="grid-item">
-                                                <div className="grid-item-content">
-                                                    {item.name.toUpperCase()}
-                                                </div>
-                                            </div>
-                                        </GridItem>
-                                    ))} */}
-
-                                    {editingImages.map(image => (
-                                        <GridItem key={image.url}>
-                                            <div className="grid-item-">
-                                            <Image src={image.url} alt="" width={'100%'} />
-
-                                                {/* <div className="grid-item-content-">
-                                                    <img src={image.url} alt="" width={'100%'} />
-                                                </div> */}
-                                            </div>
-                                        </GridItem>
-                                    ))}
-                                </GridDropZone>
-                            </div>
-                        </GridContextProvider>
 
                         <Button
                             variant={showDeleteCheckboxes ? 'secondary' : 'warning'}
@@ -697,7 +596,9 @@ const EditCampground: React.FunctionComponent = () => {
                     </Form.Group>
 
                     <Form.Group controlId="updloadImages" className="mb-3 thumbnails-container">
-                        {selectedImages &&
+                        {/* use a different array to keep track of images to be uploaded */}
+
+                        {/* {selectedImages &&
                             selectedImages.map(img => (
                                 <Image
                                     key={img}
@@ -711,7 +612,7 @@ const EditCampground: React.FunctionComponent = () => {
                                     alt="Thumbnail"
                                     thumbnail
                                 />
-                            ))}
+                            ))} */}
                     </Form.Group>
 
                     {isUpdating ? (

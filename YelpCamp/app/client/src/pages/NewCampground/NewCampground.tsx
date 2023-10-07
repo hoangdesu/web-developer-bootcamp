@@ -142,7 +142,7 @@ const NewCampground: React.FunctionComponent = () => {
         return () => clearTimeout(queryLocationTimeOut);
     }, [formLocation]);
 
-    // resizing preview thumbnail container based on screenWidth
+    // Resizing preview thumbnail container based on screenWidth
     useEffect(() => {
         setBoxesPerRow(screenWidth > 768 ? 3 : screenWidth < 476 ? 1 : 2);
     }, [screenWidth]);
@@ -344,9 +344,10 @@ const NewCampground: React.FunctionComponent = () => {
                         </Form.Group>
 
                         {/* IMAGES */}
-                        <Form.Group controlId="campgroundImages" className="mb-3">
+                        <Form.Group controlId="campgroundImagesInput" className="mb-3">
                             <Form.Label>
-                                Upload images <span className="text-muted text-sm">(maximum 12)</span>
+                                Upload images{' '}
+                                <span className="text-muted text-sm">(maximum 12)</span>
                             </Form.Label>
                             <Form.Control
                                 type="file"
@@ -361,7 +362,7 @@ const NewCampground: React.FunctionComponent = () => {
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group controlId="campgroundImages" className="mb-3">
+                        <Form.Group controlId="campgroundImageFiles" className="mb-3">
                             <GridContextProvider onChange={draggingImagesHandler}>
                                 <GridDropZone
                                     id="images"
@@ -377,7 +378,7 @@ const NewCampground: React.FunctionComponent = () => {
                                         <GridItem key={`${image.id}`}>
                                             <div className="grid-item">
                                                 <DraggableImage
-                                                    image={image}
+                                                    imageFile={image}
                                                     setFormSelectedImages={setFormSelectedImages}
                                                 />
                                             </div>
