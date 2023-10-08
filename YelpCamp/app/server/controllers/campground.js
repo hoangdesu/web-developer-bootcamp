@@ -111,9 +111,9 @@ const createCampground = catchAsync(async (req, res, next) => {
 // TODO: fix not adding new images will crash
 const editCampground = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const { campground, deletingImages, featuredImageIndex } = req.body;
+    const { campground, deletingImages } = req.body;
 
-    console.log('featuredImageIndex', featuredImageIndex);
+    // console.log('featuredImageIndex', featuredImageIndex);
 
     // update campground text data
     const updatedCampground = await Campground.findByIdAndUpdate(id, campground, {
@@ -135,12 +135,12 @@ const editCampground = catchAsync(async (req, res, next) => {
     }
 
     // swapping featured image
-    if (featuredImageIndex !== 0) {
-        const temp = updatedCampground.images[0];
-        updatedCampground.images[0] = updatedCampground.images[featuredImageIndex];
-        updatedCampground.images[featuredImageIndex] = temp;
-        await updatedCampground.save();
-    }
+    // if (featuredImageIndex !== 0) {
+    //     const temp = updatedCampground.images[0];
+    //     updatedCampground.images[0] = updatedCampground.images[featuredImageIndex];
+    //     updatedCampground.images[featuredImageIndex] = temp;
+    //     await updatedCampground.save();
+    // }
 
     // deleting images
     if (deletingImages) {

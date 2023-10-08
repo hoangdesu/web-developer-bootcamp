@@ -3,7 +3,7 @@ import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import axios, { AxiosError } from 'axios';
 
-import { Container, Button, Form, InputGroup, Image, Spinner } from 'react-bootstrap';
+import { Container, Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 
 import PageContainer from '../components/PageContainer';
 import Loading from './Loading';
@@ -12,33 +12,30 @@ import AppContext from '../store/app-context';
 import styled from '@emotion/styled';
 import { Delete } from '@mui/icons-material';
 import PreviewMap from '../components/PreviewMap';
-import { Campground } from '../types';
+import { Campground, Image, UploadImage } from '../types';
 import { Autocomplete, LinearProgress } from '@mui/material';
 import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
 
-import './styles.css';
-import Campground from './Campground';
 import useWindowDimensions from '../hooks/useWindowDimensions';
-import DraggableImage from './NewCampground/DraggableImage';
+import DraggableUploadingImage from '../components/DraggableUploadingImage';
+import DraggableExistingImage from '../components/DraggableExistingImage';
+import DeletingImage from '../components/DeletingImage';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
 }
 
-const UploadedImagesWrapper = styled.span`
-    display: inline-block;
-
-    position: relative;
-    & > input {
-        position: absolute;
-        right: 12px;
-        top: 6px;
-    }
-`;
-
 const Wrapper = styled.div<{ length: number }>`
     margin: auto;
     max-width: 600px;
+
+    .grid-item {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        padding: 5px;
+        position: relative;
+    }
 
     .thumbnails-container {
         display: grid;
@@ -75,36 +72,25 @@ const EditCampground: React.FunctionComponent = () => {
     const formImages = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
 
-    const [showDeleteCheckboxes, setShowDeleteCheckboxes] = useState(false);
-    const [deletingImages, setDeletingImages] = useState<String[]>([]);
+    // const [showDeleteCheckboxes, setShowDeleteCheckboxes] = useState(false);
+    // const [deletingImages, setDeletingImages] = useState<String[]>([]);
+
+    const [formExistingImages, setFormExistingImages] = useState<Image[]>([]);
+    const [formDeletingImages, setFormDeletingImages] = useState<Image[]>([]);
+    const [formUploadingImages, setFormUploadingImages] = useState<UploadImage[]>([]);
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
-
-    const [editingImages, setEditingImages] = useState([]);
-
-    // function onChange(sourceId, sourceIndex, targetIndex, targetId) {
-    //     console.log(targetId, sourceId);
-    //     if (targetId) {
-    //         const result = move(items[sourceId], items[targetId], sourceIndex, targetIndex);
-    //         return setItems({
-    //             ...items,
-    //             [sourceId]: result[0],
-    //             [targetId]: result[1],
-    //         });
-    //     }
-
-    //     const result = swap(items[sourceId], sourceIndex, targetIndex);
-    //     return setItems({
-    //         ...items,
-    //         [sourceId]: result,
-    //     });
-    // }
 
     // protect route when user is not logged in
     useEffect(() => {
         document.title = 'YelpCamp | Edit Campground';
         if (!currentUser) navigate('/login');
     }, []);
+
+    // Resizing preview thumbnail container based on screenWidth
+    useEffect(() => {
+        setBoxesPerRow(screenWidth > 768 ? 3 : screenWidth < 476 ? 1 : 2);
+    }, [screenWidth]);
 
     const {
         isLoading,
@@ -123,6 +109,8 @@ const EditCampground: React.FunctionComponent = () => {
             setFormLocation(campground.location);
             setFormCoordinates(campground.geometry.coordinates);
             setPreviewLocation(campground.location);
+
+            setFormExistingImages(campground.images);
 
             // setEditingImages(campground.images);
             // setCampground(campground);
@@ -147,7 +135,6 @@ const EditCampground: React.FunctionComponent = () => {
     // AUTOCOMPLETE LOCATION SEARCH
     useEffect(() => {
         const queryLocationTimeOut = setTimeout(() => {
-            // console.log('formLocation', formLocation);
             if (!formLocation) setSuggestedLocations([]);
             axios
                 .get(
@@ -195,6 +182,7 @@ const EditCampground: React.FunctionComponent = () => {
                 formData.append('campground[images]', file);
             });
 
+            // >>> refactor this
             deletingImages.forEach(img => formData.append('deletingImages[]', img));
 
             // swapping featured image
@@ -288,317 +276,273 @@ const EditCampground: React.FunctionComponent = () => {
 
     if (error) return <p>Error</p>;
 
-    const onSelectImagesHandler = evt => {
+    const onSelectUploadingImagesHandler = evt => {
         const imageFiles = Array.from(evt.target.files);
-        setFormSelectedImages(imageFiles);
+        setFormUploadingImages(prev => prev.concat(imageFiles));
     };
 
-    const onDeletingImagesChange = evt => {
-        // console.log(evt.currentTarget?.value, evt.currentTarget?.checked);
+    const restoreImageHandler = (evt, image: Image) => {
+        setFormDeletingImages(prevDeletingImages => {
+            const index = prevDeletingImages.indexOf(image);
+            const restoredImage = prevDeletingImages.splice(index, 1);
+            return [...prevDeletingImages];
+        });
 
-        const fileName = evt.currentTarget?.value;
-
-        if (evt.currentTarget?.checked) {
-            setDeletingImages(prev => {
-                const images = [...prev];
-                images.push(fileName);
-                return images;
-            });
-            // deletingImages.push(evt.currentTarget.value);
-        } else {
-            // if (i > -1) deletingImages.splice(i, 1);
-            // deletingImages.pop(i);
-            setDeletingImages(prev => {
-                const images = [...prev];
-                const i = images.indexOf(fileName);
-                if (i > -1) images.pop(i);
-                // console.log(i, images)
-                return images;
-            });
-        }
+        setFormExistingImages(prev => {
+            return [...prev, image];
+        });
     };
 
-    // const previewLocation = () => {
-    //     console.log('inside preview location');
-
-    //     axios
-    //         .get(
-    //             `https://api.mapbox.com/geocoding/v5/mapbox.places/${formLocation}.json?access_token=${
-    //                 import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
-    //             }`,
-    //         )
-    //         .then(res => {
-    //             const coords = res.data.features[0].geometry.coordinates;
-    //             const features = res.data.features;
-    //             const placeText = features[0]['text'];
-    //             console.log('res.data.features', features);
-    //             console.log('placeText', placeText);
-    //             setFormLocation(placeText);
-
-    //             // setCoordinates({ longitude: coords[0], latitude: coords[1] });
-    //         })
-    //         .catch(err => {
-    //             // ... err msg
-    //         });
-    // };
-
-    function onDragEnd(result) {
-        console.log('result', result);
-        const newItems = [...editingImages];
-        const [removed] = newItems.splice(result.source.index, 1);
-        newItems.splice(result.destination.index, 0, removed);
-        setEditingImages(newItems);
-        console.log('editingImages before', editingImages);
-    }
-
-    function onImagesChange(sourceId, sourceIndex, targetIndex, targetId) {
-        console.log(targetId, sourceId);
-        if (targetId) {
-            // const result = move(items[sourceId], items[targetId], sourceIndex, targetIndex);
-            // return setItems({
-            //     ...items,
-            //     [sourceId]: result[0],
-            //     [targetId]: result[1],
-            // });
-        }
-
-        // const result = swap(items[sourceId], sourceIndex, targetIndex);
-        // return setItems({
-        //     ...items,
-        //     [sourceId]: result,
-        // });
-
-        console.log('source:', sourceIndex, 'targetInd', targetIndex);
-        const result = swap(editingImages, sourceIndex, targetIndex);
-        console.log('result', result);
-        setEditingImages(result);
-    }
-
-    const draggingImagesHandler = (
+    const draggingExistingImagesHandler = (
         sourceId: string,
         sourceIndex: number,
         targetIndex: number,
         targetId: string,
     ) => {
-        const rearrangedImages = swap(formSelectedImages, sourceIndex, targetIndex);
-        return setFormSelectedImages(rearrangedImages);
+        const rearrangedImages = swap(formExistingImages, sourceIndex, targetIndex);
+        return setFormExistingImages(rearrangedImages);
     };
 
     return (
         <PageContainer>
-            <Wrapper length={campground.images.length}>
-                <h1 className="text-center mb-5">Edit Campground</h1>
-                {/* <div className="form-container"> */}
-                <p> // basic campground information</p>
-                <p>
-                    created at:{campground.createdAt}, modified at: {campground.modifiedAt}
-                </p>
+            {campground && (
+                <Wrapper length={formDeletingImages.length}>
+                    <h1 className="text-center mb-5">Edit Campground</h1>
+                    <p> // basic campground information</p>
+                    <p>
+                        created at:{campground.createdAt}, modified at: {campground.modifiedAt}
+                    </p>
 
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="campgroundTitle">
-                        <Form.Label>Campground Title</Form.Label>
-                        <Form.Control
-                            type="text"
-                            ref={formTitle}
-                            defaultValue={campground.title}
-                            required
-                        />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Title is required!
-                        </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <div className="mb-3">
-                        <Form.Group className="mb-3" controlId="campgroundLocation">
-                            <Form.Label>Location</Form.Label>
-                            <Autocomplete
-                                sx={{
-                                    width: '100%',
-                                    marginBottom: '1rem',
-                                    '& input': {
-                                        width: '100%',
-                                        bgcolor: 'background.paper',
-                                        color: theme =>
-                                            theme.palette.getContrastText(
-                                                theme.palette.background.paper,
-                                            ),
-                                    },
-                                }}
-                                // value={formLocation}
-                                onChange={(event: any, location: string | null) => {
-                                    // setValue(newValue);
-                                    // setFormLocation(newValue); //lowercase error
-                                    console.log('on change', 'new value', location);
-                                    setCoordinates(location.geometry.coordinates);
-                                }}
-                                inputValue={formLocation}
-                                onInputChange={(event, newInputValue) => {
-                                    setFormLocation(newInputValue);
-                                    console.log('onInputChange', newInputValue);
-                                }}
-                                id="location-suggestion-input"
-                                getOptionLabel={location =>
-                                    `${location.text} (${location['place_name']})`
-                                }
-                                options={suggestedLocations}
-                                filterOptions={(options, state) => options}
-                                freeSolo
-                                loading={!!formLocation}
-                                loadingText={
-                                    <div className="text-primary-accent-color">
-                                        <LinearProgress color="inherit" />
-                                    </div>
-                                }
-                                renderInput={params => (
-                                    <div ref={params.InputProps.ref}>
-                                        <input
-                                            type="text"
-                                            {...params.inputProps}
-                                            className="form-control"
-                                        />
-                                    </div>
-                                )}
-                            />
-
-                            <PreviewMap coordinates={formCoordinates} location={previewLocation} />
-
-                            <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">
-                                Location is required!
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                    </div>
-
-                    <Form.Group className="mb-3" controlId="campgroundPrice">
-                        <Form.Label>Price</Form.Label>
-                        <InputGroup className="mb-2">
-                            <InputGroup.Text>$</InputGroup.Text>
+                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3" controlId="campgroundTitle">
+                            <Form.Label>Campground Title</Form.Label>
                             <Form.Control
-                                type="number"
-                                step="0.5"
-                                defaultValue={campground.price}
-                                ref={formPrice}
+                                type="text"
+                                ref={formTitle}
+                                defaultValue={campground.title}
                                 required
                             />
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">
-                                Price is required!
+                                Title is required!
                             </Form.Control.Feedback>
-                        </InputGroup>
-                    </Form.Group>
+                        </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="campgroundDescription">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            ref={formDescription}
-                            defaultValue={campground.description}
-                        />
-                        <Form.Control.Feedback type="valid">
-                            Description is optional
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                        <div className="mb-3">
+                            <Form.Group className="mb-3" controlId="campgroundLocation">
+                                <Form.Label>Location</Form.Label>
+                                <Autocomplete
+                                    sx={{
+                                        width: '100%',
+                                        marginBottom: '1rem',
+                                        '& input': {
+                                            width: '100%',
+                                            bgcolor: 'background.paper',
+                                            color: theme =>
+                                                theme.palette.getContrastText(
+                                                    theme.palette.background.paper,
+                                                ),
+                                        },
+                                    }}
+                                    // value={formLocation}
+                                    onChange={(event: any, location: string | null) => {
+                                        // setValue(newValue);
+                                        // setFormLocation(newValue); //lowercase error
+                                        console.log('on change', 'new value', location);
+                                        setCoordinates(location.geometry.coordinates);
+                                    }}
+                                    inputValue={formLocation}
+                                    onInputChange={(event, newInputValue) => {
+                                        setFormLocation(newInputValue);
+                                        console.log('onInputChange', newInputValue);
+                                    }}
+                                    id="location-suggestion-input"
+                                    getOptionLabel={location =>
+                                        `${location?.text} (${location['place_name']})`
+                                    }
+                                    options={suggestedLocations}
+                                    filterOptions={(options, state) => options}
+                                    freeSolo
+                                    loading={!!formLocation}
+                                    loadingText={
+                                        <div className="text-primary-accent-color">
+                                            <LinearProgress color="inherit" />
+                                        </div>
+                                    }
+                                    renderInput={params => (
+                                        <div ref={params.InputProps.ref}>
+                                            <input
+                                                type="text"
+                                                {...params.inputProps}
+                                                className="form-control"
+                                            />
+                                        </div>
+                                    )}
+                                />
 
-                    {/* IMAGES */}
-                    {/* // TODO: replace selecting images to delete mechanism. Hover to display a delete icon. Click to add to delete list */}
-                    <Form.Group className="mb-3" controlId="campgroundImageUrl">
-                        <Form.Label>Images uploaded ({campground.images.length})</Form.Label>
+                                <PreviewMap
+                                    coordinates={formCoordinates}
+                                    location={previewLocation}
+                                />
 
-                        <div className="thumbnails-container">
+                                <Form.Control.Feedback type="valid">
+                                    Looks good!
+                                </Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    Location is required!
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                        </div>
+
+                        <Form.Group className="mb-3" controlId="campgroundPrice">
+                            <Form.Label>Price</Form.Label>
+                            <InputGroup className="mb-2">
+                                <InputGroup.Text>$</InputGroup.Text>
+                                <Form.Control
+                                    type="number"
+                                    step="0.5"
+                                    defaultValue={campground.price}
+                                    ref={formPrice}
+                                    required
+                                />
+                                <Form.Control.Feedback type="valid">
+                                    Looks good!
+                                </Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    Price is required!
+                                </Form.Control.Feedback>
+                            </InputGroup>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="campgroundDescription">
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                ref={formDescription}
+                                defaultValue={campground.description}
+                            />
+                            <Form.Control.Feedback type="valid">
+                                Description is optional
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        {/* IMAGES */}
+                        <Form.Group className="mb-3" controlId="campgroundImageUrl">
+                            <Form.Label className="flex flex-row gap-2 items-center justify-between">
+                                <span className="flex gap-2 items-center">
+                                    Uploaded images
+                                    <span className="text-muted text-sm">
+                                        ({formExistingImages.length})
+                                    </span>
+                                </span>
+
+                                <span className="text-muted text-sm">Drag to rearrange images</span>
+                            </Form.Label>
+
                             <Form.Group controlId="campgroundImageFiles" className="mb-3">
-                                <GridContextProvider onChange={draggingImagesHandler}>
+                                <GridContextProvider onChange={draggingExistingImagesHandler}>
                                     <GridDropZone
                                         id="images"
                                         boxesPerRow={boxesPerRow}
                                         rowHeight={130}
                                         style={{
-                                            // height: `${
-                                            //     130 *
-                                            //     Math.ceil(formSelectedImages.length / boxesPerRow)
-                                            // }px`,
-                                            height: '500px'
+                                            height: `${
+                                                130 *
+                                                Math.ceil(formExistingImages.length / boxesPerRow)
+                                            }px`,
                                         }}
                                     >
-                                        {/* {formSelectedImages.map(image => ( */}
-                                        {/* use a state array to modify */}
-                                        // TODO: fix this
-                                        {campground.images.map(image => (
-                                            <GridItem key={`${image.url}`}>
-                                                <div className="grid-item">
-
-                                                    <DraggableImage
-                                                        imageUrl={image.thumbnail}
-                                                        setFormSelectedImages={
-                                                            setFormSelectedImages
-                                                        }
-                                                    />
-
-                                                    {/* <img
-                                                        src={image.thumbnail}
-                                                        alt=""
-                                                        width={'200px'}
-                                                    /> */}
-                                                </div>
+                                        {formExistingImages.map(image => (
+                                            <GridItem key={`${image.url}`} className="grid-item">
+                                                <DraggableExistingImage
+                                                    image={image}
+                                                    formExistingImages={formExistingImages}
+                                                    setFormExistingImages={setFormExistingImages}
+                                                    setFormDeletingImages={setFormDeletingImages}
+                                                />
                                             </GridItem>
                                         ))}
                                     </GridDropZone>
                                 </GridContextProvider>
                             </Form.Group>
-                        </div>
+                            <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                Image URL is required!
+                            </Form.Control.Feedback>
+                        </Form.Group>
 
-                        <Button
-                            variant={showDeleteCheckboxes ? 'secondary' : 'warning'}
-                            type="button"
-                            onClick={() =>
-                                setShowDeleteCheckboxes(show => {
-                                    if (show) setDeletingImages([]);
-                                    return !show;
-                                })
-                            }
-                            size="sm"
-                        >
-                            {!showDeleteCheckboxes ? (
-                                <span>
-                                    <Delete /> Select images to delete
-                                </span>
-                            ) : (
-                                <span>Cancel</span>
-                            )}
-                        </Button>
+                        {formDeletingImages.length > 0 && (
+                            <Form.Group className="mb-3" controlId="campgroundPrice">
+                                <Form.Label className="flex flex-row gap-2 items-center justify-between">
+                                    <span className="text-red-700">
+                                        Deleting {formDeletingImages.length}{' '}
+                                        {formDeletingImages.length > 1 ? 'images:' : 'image:'}
+                                    </span>
+                                    <span className="text-muted text-sm">Click on image to restore</span>
+                                </Form.Label>
 
-                        {deletingImages.length > 0 && (
-                            <p>
-                                Deleting {deletingImages.length}{' '}
-                                {deletingImages.length === 1 ? 'image' : 'images'}
-                            </p>
+                                <GridContextProvider onChange={() => {}}>
+                                    <GridDropZone
+                                        id="images"
+                                        boxesPerRow={boxesPerRow}
+                                        rowHeight={130}
+                                        style={{
+                                            height: `${
+                                                130 *
+                                                Math.ceil(formDeletingImages.length / boxesPerRow)
+                                            }px`,
+                                        }}
+                                    >
+                                        {formDeletingImages.map(image => (
+                                            <GridItem
+                                                key={`${image.url}`}
+                                                className="grid-item"
+                                                onClick={evt => restoreImageHandler(evt, image)}
+                                            >
+                                                {/* <img
+                                                    src={image.thumbnail}
+                                                    alt=""
+                                                    className="w-full h-[120px] object-cover"
+                                                    draggable={false}
+                                                /> */}
+                                                {/* <DraggableExistingImage
+                                                        image={image}
+                                                        formExistingImages={formExistingImages}
+                                                        setFormExistingImages={
+                                                            setFormExistingImages
+                                                        }
+                                                        setFormDeletingImages={
+                                                            setFormDeletingImages
+                                                        }
+                                                    /> */}
+
+                                                <DeletingImage image={image} />
+                                            </GridItem>
+                                        ))}
+                                    </GridDropZone>
+                                </GridContextProvider>
+                            </Form.Group>
                         )}
 
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Image URL is required!
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                        <Form.Group controlId="campgroundImages" className="mb-3">
+                            <Form.Label>Add more images</Form.Label>
+                            <Form.Control
+                                type="file"
+                                multiple
+                                ref={formImages}
+                                accept="image/*"
+                                onChange={onSelectUploadingImagesHandler}
+                            />
+                            <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                Please select some images
+                            </Form.Control.Feedback>
+                        </Form.Group>
 
-                    <Form.Group controlId="campgroundImages" className="mb-3">
-                        <Form.Label>Add more images</Form.Label>
-                        <Form.Control
-                            type="file"
-                            multiple
-                            ref={formImages}
-                            accept="image/*"
-                            onChange={onSelectImagesHandler}
-                        />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">
-                            Please select some images
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                        <Form.Group controlId="updloadImages" className="mb-3 thumbnails-container">
+                            {/* use a different array to keep track of images to be uploaded */}
 
-                    <Form.Group controlId="updloadImages" className="mb-3 thumbnails-container">
-                        {/* use a different array to keep track of images to be uploaded */}
-
-                        {/* {selectedImages &&
+                            {/* {selectedImages &&
                             selectedImages.map(img => (
                                 <Image
                                     key={img}
@@ -613,36 +557,36 @@ const EditCampground: React.FunctionComponent = () => {
                                     thumbnail
                                 />
                             ))} */}
-                    </Form.Group>
+                        </Form.Group>
 
-                    {isUpdating ? (
-                        <Button variant="secondary" type="submit" disabled>
-                            <Spinner
-                                animation="border"
-                                size="sm"
-                                role="status"
-                                aria-hidden="true"
-                                as="span"
-                            />
-                            <span> Updating campground...</span>
-                        </Button>
-                    ) : (
-                        <Button variant="success" type="submit">
-                            Update campground
-                        </Button>
-                    )}
+                        {isUpdating ? (
+                            <Button variant="secondary" type="submit" disabled>
+                                <Spinner
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                    as="span"
+                                />
+                                <span> Updating campground...</span>
+                            </Button>
+                        ) : (
+                            <Button variant="success" type="submit">
+                                Update campground
+                            </Button>
+                        )}
 
-                    <Link to={-1}>
-                        <Button variant="secondary" type="submit" className="mx-2">
-                            Cancel
-                        </Button>
-                    </Link>
-                    <button onClick={deleteCampgroundHandler} type="button">
-                        Delete campground
-                    </button>
-                </Form>
-            </Wrapper>
-            {/* </div> */}
+                        <Link to={-1}>
+                            <Button variant="secondary" type="submit" className="mx-2">
+                                Cancel
+                            </Button>
+                        </Link>
+                        <button onClick={deleteCampgroundHandler} type="button">
+                            Delete campground
+                        </button>
+                    </Form>
+                </Wrapper>
+            )}
         </PageContainer>
     );
 };

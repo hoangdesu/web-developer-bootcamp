@@ -6,7 +6,7 @@ import App from './App';
 import About from './pages/About';
 import Campground, { loader as addCampgroundLoader } from './pages/Campground';
 import { loader as editCampgroundLoader } from './pages/EditCampground';
-import NewCampground from './pages/NewCampground/NewCampground';
+import NewCampground from './pages/NewCampground';
 import EditCampground from './pages/EditCampground';
 import ErrorBoundary from './pages/ErrorBoundary';
 import Loading from './pages/Loading';

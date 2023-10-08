@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 interface ButtonProps {
     children: React.ReactNode;
     className?: string;
-    onClick?: () => void;
+    onClick?: (event?: any) => void;
     disabled?: boolean;
 }
 

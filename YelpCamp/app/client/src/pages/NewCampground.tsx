@@ -2,21 +2,20 @@ import React, { useState, useRef, useContext, useEffect, useCallback } from 'rea
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import AppContext from '../../store/app-context';
+import AppContext from '../store/app-context';
 
 import { Container, Form, Button, InputGroup, Spinner, Image } from 'react-bootstrap';
 
-import PageContainer from '../../components/PageContainer';
-import FlashAlert from '../../components/FlashAlert';
-import ArtImage from '../../assets/new-campground-art.jpg';
+import PageContainer from '../components/PageContainer';
+import ArtImage from '../assets/new-campground-art.jpg';
 import styled from '@emotion/styled';
-import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
-import PreviewMap from '../../components/PreviewMap';
+import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
+import PreviewMap from '../components/PreviewMap';
 import { Autocomplete, LinearProgress } from '@mui/material';
 import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
-import DraggableImage from './DraggableImage';
-import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { MapboxFeature, UploadImage } from '../../types';
+import DraggableUploadingImage from '../components/DraggableUploadingImage';
+import useWindowDimensions from '../hooks/useWindowDimensions';
+import { MapboxFeature, UploadImage } from '../types';
 
 const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
     display: flex;
@@ -72,7 +71,7 @@ const NewCampground: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
-    const [formSelectedImages, setFormSelectedImages] = useState<UploadImage[]>([]);
+    const [formUploadingImages, setFormUploadingImages] = useState<UploadImage[]>([]);
     const [boxesPerRow, setBoxesPerRow] = useState(
         screenWidth > 768 ? 3 : screenWidth < 476 ? 1 : 2,
     );
@@ -150,13 +149,13 @@ const NewCampground: React.FunctionComponent = () => {
     const createCampgroundHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (formSelectedImages.length > 12) {
+        if (formUploadingImages.length > 12) {
             alert('Please only select maximum 12 images');
             return;
         }
 
         // if (formImages?.current?.files.length < 1) {
-        if (formSelectedImages.length < 1) {
+        if (formUploadingImages.length < 1) {
             alert('Please select at least 1 image');
             return;
         }
@@ -180,7 +179,7 @@ const NewCampground: React.FunctionComponent = () => {
                 formData.append('campground[geometry][coordinates]', formCoordinates[1].toString());
             }
 
-            Array.from(formSelectedImages).forEach(image => {
+            Array.from(formUploadingImages).forEach(image => {
                 formData.append('campground[images]', image.file);
             });
 
@@ -216,7 +215,7 @@ const NewCampground: React.FunctionComponent = () => {
             id: Math.random().toString(),
             file: file,
         }));
-        setFormSelectedImages(prev => prev.concat(images)); // adding new images to selected images array
+        setFormUploadingImages(prev => prev.concat(images)); // adding new images to selected images array
     };
 
     const draggingImagesHandler = (
@@ -225,8 +224,8 @@ const NewCampground: React.FunctionComponent = () => {
         targetIndex: number,
         targetId: string,
     ) => {
-        const rearrangedImages = swap(formSelectedImages, sourceIndex, targetIndex);
-        return setFormSelectedImages(rearrangedImages);
+        const rearrangedImages = swap(formUploadingImages, sourceIndex, targetIndex);
+        return setFormUploadingImages(rearrangedImages);
     };
 
     return (
@@ -370,16 +369,17 @@ const NewCampground: React.FunctionComponent = () => {
                                     rowHeight={130}
                                     style={{
                                         height: `${
-                                            130 * Math.ceil(formSelectedImages.length / boxesPerRow)
+                                            130 *
+                                            Math.ceil(formUploadingImages.length / boxesPerRow)
                                         }px`,
                                     }}
                                 >
-                                    {formSelectedImages.map(image => (
-                                        <GridItem key={`${image.id}`}>
+                                    {formUploadingImages.map(imageFile => (
+                                        <GridItem key={`${imageFile.id}`}>
                                             <div className="grid-item">
-                                                <DraggableImage
-                                                    imageFile={image}
-                                                    setFormSelectedImages={setFormSelectedImages}
+                                                <DraggableUploadingImage
+                                                    imageFile={imageFile}
+                                                    setFormUploadingImages={setFormUploadingImages}
                                                 />
                                             </div>
                                         </GridItem>
