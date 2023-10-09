@@ -56,7 +56,6 @@ const EditCampground: React.FunctionComponent = () => {
     const [validated, setValidated] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
 
-    const [formSelectedImages, setFormSelectedImages] = useState<UploadImage[]>([]);
     const [boxesPerRow, setBoxesPerRow] = useState(
         screenWidth > 768 ? 3 : screenWidth < 476 ? 1 : 2,
     );
@@ -69,7 +68,6 @@ const EditCampground: React.FunctionComponent = () => {
 
     const formTitle = useRef<HTMLInputElement>(null);
     const formPrice = useRef<HTMLInputElement>(null);
-    const formImages = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
 
     const [formExistingImages, setFormExistingImages] = useState<Image[]>([]);
@@ -157,7 +155,7 @@ const EditCampground: React.FunctionComponent = () => {
         return () => clearTimeout(queryLocationTimeOut);
     }, [formLocation]);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleEditCampgroundFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
@@ -183,18 +181,40 @@ const EditCampground: React.FunctionComponent = () => {
             // >>> refactor this
             // deletingImages.forEach(img => formData.append('deletingImages[]', img));
 
-            // --- Testing updating images
+            // Updating existing images
             Array.from(formExistingImages).forEach(image => {
                 formData.append('campground[images]', JSON.stringify(image));
             });
 
             // Images to delete
-            Array.from(formDeletingImages).forEach(imageToDelete => {
-                formData.append('imagesToDelete', JSON.stringify(imageToDelete));
-                console.log('JSON.stringify(imageToDelete)', JSON.stringify(imageToDelete))
-            });
+            // Array.from(formDeletingImages).forEach(imageToDelete => {
+            //     formData.append('imagesToDelete', JSON.stringify(imageToDelete));
+            //     console.log('JSON.stringify(imageToDelete)', JSON.stringify(imageToDelete));
+            // });
 
-            // formImages.current?.files
+            // how about stringify the whole thing?
+            formData.append('imagesToDelete', JSON.stringify(formDeletingImages));
+            console.log('JSON.stringify(formDeletingImages)',JSON.stringify(formDeletingImages));
+            
+
+
+            // New images to upload
+            // Array.from(formUploadingImages).forEach(imageToUpload => {
+            //     formData.append('newImages', JSON.stringify(imageToUpload));
+            //     console.log('JSON.stringify(imageToUpload)', JSON.stringify(imageToUpload));
+            // });
+
+            // formData.append('newImages', JSON.stringify(formUploadingImages));
+            // console.log('JSON.stringify(formUploadingImages)', JSON.stringify(formUploadingImages));
+            //cannot do this. copy from new campground
+
+            // optional
+            if (formUploadingImages.length > 1) {
+                Array.from(formUploadingImages).forEach(image => {
+                    formData.append('campground[newImages]', image.file);
+                });
+            }
+
 
             axios
                 .put(`/api/v1/campgrounds/${campground._id}`, formData, {
@@ -281,8 +301,14 @@ const EditCampground: React.FunctionComponent = () => {
     if (error) return <p>Error</p>;
 
     const onSelectUploadingImagesHandler = evt => {
-        const imageFiles = Array.from(evt.target.files);
-        setFormUploadingImages(prev => prev.concat(imageFiles));
+        const imageFiles = Array.from(evt.target.files) as File[];
+
+        const images: UploadImage[] = imageFiles.map(file => ({
+            id: Math.random().toString(),
+            file: file,
+        }));
+
+        setFormUploadingImages(prev => prev.concat(images));
     };
 
     const restoreImageHandler = (evt, image: Image) => {
@@ -307,6 +333,16 @@ const EditCampground: React.FunctionComponent = () => {
         return setFormExistingImages(rearrangedImages);
     };
 
+    const draggingUploadingImagesHandler = (
+        sourceId: string,
+        sourceIndex: number,
+        targetIndex: number,
+        targetId: string,
+    ) => {
+        const rearrangedImages = swap(formUploadingImages, sourceIndex, targetIndex);
+        return setFormUploadingImages(rearrangedImages);
+    };
+
     return (
         <PageContainer>
             {campground && (
@@ -317,7 +353,11 @@ const EditCampground: React.FunctionComponent = () => {
                         created at:{campground.createdAt}, modified at: {campground.modifiedAt}
                     </p>
 
-                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                    <Form
+                        noValidate
+                        validated={validated}
+                        onSubmit={handleEditCampgroundFormSubmit}
+                    >
                         <Form.Group className="mb-3" controlId="campgroundTitle">
                             <Form.Label>Campground Title</Form.Label>
                             <Form.Control
@@ -331,7 +371,6 @@ const EditCampground: React.FunctionComponent = () => {
                                 Title is required!
                             </Form.Control.Feedback>
                         </Form.Group>
-
                         <div className="mb-3">
                             <Form.Group className="mb-3" controlId="campgroundLocation">
                                 <Form.Label>Location</Form.Label>
@@ -397,7 +436,6 @@ const EditCampground: React.FunctionComponent = () => {
                                 </Form.Control.Feedback>
                             </Form.Group>
                         </div>
-
                         <Form.Group className="mb-3" controlId="campgroundPrice">
                             <Form.Label>Price</Form.Label>
                             <InputGroup className="mb-2">
@@ -417,7 +455,6 @@ const EditCampground: React.FunctionComponent = () => {
                                 </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
-
                         <Form.Group className="mb-3" controlId="campgroundDescription">
                             <Form.Label>Description</Form.Label>
                             <Form.Control
@@ -429,8 +466,7 @@ const EditCampground: React.FunctionComponent = () => {
                                 Description is optional
                             </Form.Control.Feedback>
                         </Form.Group>
-
-                        {/* IMAGES */}
+                        {/* EXISTING IMAGES */}
                         <Form.Group className="mb-3" controlId="campgroundImageUrl">
                             <Form.Label className="flex flex-row gap-2 items-center justify-between">
                                 <span className="flex gap-2 items-center">
@@ -442,7 +478,6 @@ const EditCampground: React.FunctionComponent = () => {
 
                                 {/* <span className="text-muted text-xs">Drag to rearrange images</span> */}
                                 <span>//display tooltip icon here</span>
-
                             </Form.Label>
 
                             <Form.Group controlId="campgroundImageFiles" className="mb-3">
@@ -476,7 +511,7 @@ const EditCampground: React.FunctionComponent = () => {
                                 Image URL is required!
                             </Form.Control.Feedback>
                         </Form.Group>
-
+                        {/* DELETING IMAGES */}
                         {formDeletingImages.length > 0 && (
                             <Form.Group className="mb-3" controlId="campgroundPrice">
                                 <Form.Label className="flex flex-row gap-2 items-center justify-between">
@@ -507,23 +542,6 @@ const EditCampground: React.FunctionComponent = () => {
                                                 className="grid-item"
                                                 onClick={evt => restoreImageHandler(evt, image)}
                                             >
-                                                {/* <img
-                                                    src={image.thumbnail}
-                                                    alt=""
-                                                    className="w-full h-[120px] object-cover"
-                                                    draggable={false}
-                                                /> */}
-                                                {/* <DraggableExistingImage
-                                                        image={image}
-                                                        formExistingImages={formExistingImages}
-                                                        setFormExistingImages={
-                                                            setFormExistingImages
-                                                        }
-                                                        setFormDeletingImages={
-                                                            setFormDeletingImages
-                                                        }
-                                                    /> */}
-
                                                 <DeletingImage image={image} />
                                             </GridItem>
                                         ))}
@@ -532,41 +550,49 @@ const EditCampground: React.FunctionComponent = () => {
                             </Form.Group>
                         )}
 
+                        {/* UPLOADING IMAGES */}
                         <Form.Group controlId="campgroundImages" className="mb-3">
-                            <Form.Label>Add more images</Form.Label>
-                            <Form.Control
-                                type="file"
-                                multiple
-                                ref={formImages}
-                                accept="image/*"
-                                onChange={onSelectUploadingImagesHandler}
-                            />
-                            <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                            <Form.Control.Feedback type="invalid">
-                                Please select some images
-                            </Form.Control.Feedback>
-                        </Form.Group>
-
-                        <Form.Group controlId="updloadImages" className="mb-3 thumbnails-container">
-                            {/* use a different array to keep track of images to be uploaded */}
-
-                            {/* {selectedImages &&
-                            selectedImages.map(img => (
-                                <Image
-                                    key={img}
-                                    src={URL.createObjectURL(img)}
-                                    style={{
-                                        width: '100%',
-                                        // width: selectedImages.length < 3 ? '160px' : '100%',
-                                        height: '120px',
-                                        objectFit: 'cover',
-                                    }}
-                                    alt="Thumbnail"
-                                    thumbnail
+                            <Form.Group className="mb-3">
+                                <Form.Label>Add more images</Form.Label>
+                                <Form.Control
+                                    type="file"
+                                    multiple
+                                    accept="image/*"
+                                    onChange={onSelectUploadingImagesHandler}
                                 />
-                            ))} */}
-                        </Form.Group>
+                                <Form.Control.Feedback type="valid">
+                                    Looks good!
+                                </Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    Please select some images
+                                </Form.Control.Feedback>
+                            </Form.Group>
 
+                            <Form.Group className="mb-3">
+                                <GridContextProvider onChange={draggingUploadingImagesHandler}>
+                                    <GridDropZone
+                                        id="images"
+                                        boxesPerRow={boxesPerRow}
+                                        rowHeight={130}
+                                        style={{
+                                            height: `${
+                                                130 *
+                                                Math.ceil(formUploadingImages.length / boxesPerRow)
+                                            }px`,
+                                        }}
+                                    >
+                                        {formUploadingImages.map(image => (
+                                            <GridItem key={`${image.id}`} className="grid-item">
+                                                <DraggableUploadingImage
+                                                    imageFile={image}
+                                                    setFormUploadingImages={setFormUploadingImages}
+                                                />
+                                            </GridItem>
+                                        ))}
+                                    </GridDropZone>
+                                </GridContextProvider>
+                            </Form.Group>
+                        </Form.Group>
                         {isUpdating ? (
                             <Button variant="secondary" type="submit" disabled>
                                 <Spinner
@@ -583,7 +609,6 @@ const EditCampground: React.FunctionComponent = () => {
                                 Update campground
                             </Button>
                         )}
-
                         <Link to={-1}>
                             <Button variant="secondary" type="submit" className="mx-2">
                                 Cancel

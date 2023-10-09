@@ -83,7 +83,6 @@ const NewCampground: React.FunctionComponent = () => {
 
     const formTitle = useRef<HTMLInputElement>(null);
     const formPrice = useRef<HTMLInputElement>(null);
-    const formImages = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
@@ -357,7 +356,6 @@ const NewCampground: React.FunctionComponent = () => {
                             <Form.Control
                                 type="file"
                                 multiple
-                                ref={formImages}
                                 accept="image/*"
                                 onChange={onSelectImagesHandler}
                             />

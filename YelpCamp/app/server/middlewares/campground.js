@@ -34,10 +34,11 @@ const validateNewCampground = (req, res, next) => {
 
 const validateExistingCampground = (req, res, next) => {
     const { title, location, geometry, price, images, description } = req.body.campground;
-    const { imagesToDelete: imagesToDeleteArray } = req.body;
     const author = req.headers.authorization;
+    const { imagesToDelete } = req.body;
 
-    console.log('images', images);
+    console.log('\n ---body:');
+    console.dir(req.body)
 
     // Parse existing images
     const reOrderedImages = [];
@@ -51,29 +52,32 @@ const validateExistingCampground = (req, res, next) => {
     }
     console.log('reOrderedImages', reOrderedImages);
 
+    // this logic sucks. rework this
     // Parse images to delete
-    const imagesToDelete = [];
-    if (typeof imagesToDeleteArray === 'object') {
-        for (let img of imagesToDeleteArray) {
-            try {
-                imagesToDelete.push(JSON.parse(img));
-            } catch (e) {
-                console.log('Error parsing images data', e);
-                return next(new YelpcampError(500, 'Error parsing images data'));
-            }
-        }
-    } else if (typeof imagesToDeleteArray === 'string') {
-        try {
-            imagesToDelete.push(JSON.parse(imagesToDeleteArray));
-        } catch (e) {
-            console.log('Error parsing images data', e);
-            return next(new YelpcampError(500, 'Error parsing images data'));
-        }
-    }
+    // const imagesToDelete = [];
+    // if (typeof imagesToDeleteArray === 'object') {
+    //     for (let img of imagesToDeleteArray) {
+    //         try {
+    //             imagesToDelete.push(JSON.parse(img));
+    //         } catch (e) {
+    //             console.log('Error parsing images data', e);
+    //             return next(new YelpcampError(500, 'Error parsing images data'));
+    //         }
+    //     }
+    // } else if (typeof imagesToDeleteArray === 'string') {
+    //     try {
+    //         imagesToDelete.push(JSON.parse(imagesToDeleteArray));
+    //     } catch (e) {
+    //         console.log('Error parsing images data', e);
+    //         return next(new YelpcampError(500, 'Error parsing images data'));
+    //     }
+    // }
 
-    console.log('--typeof imagesToDeleteArray', typeof imagesToDeleteArray);
-    console.log('-- imagesToDeleteArray', imagesToDeleteArray);
-    console.log('-- imagesToDelete', imagesToDelete);
+
+    // console.log('--typeof imagesToDeleteArray', typeof imagesToDeleteArray);
+    // console.log('-- imagesToDeleteArray', imagesToDeleteArray);
+
+    
 
     const campground = new CampgroundBuilder()
         .withTitle(title)
@@ -85,11 +89,18 @@ const validateExistingCampground = (req, res, next) => {
         .withAuthor(author)
         .build();
 
+    console.log('-- req.files', req.files);
     const newImages = req.files.map(f => ({ url: f.path, filename: f.filename }));
+
+    console.log('\n--typeof imagesToDelete', typeof imagesToDelete);
+    console.log('-- imagesToDelete', imagesToDelete);
+    console.log('-- newImages', newImages);
+
+    console.log('\n');
 
     const { error: validationError } = existingCampgroundSchema.validate({
         campground,
-        newImages,
+        newImages, // build from req.files, after uploading ok to cloudinary
         imagesToDelete,
     });
 

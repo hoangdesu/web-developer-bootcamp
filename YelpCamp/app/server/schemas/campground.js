@@ -45,15 +45,17 @@ module.exports.existingCampgroundSchema = Joi.object({
         description: Joi.string().sanitizeHTML(),
         author: Joi.string().required(),
     }).required(),
-    imagesToDelete: Joi.array()
-        .items(
-            Joi.object({
-                url: Joi.string().required(),
-                filename: Joi.string().required(),
-                thumbnail: Joi.string(),
-            }),
-        )
+    imagesToDelete: Joi.string()
+        // Joi.array()
+        //     .items(
+        //         Joi.object({
+        //             url: Joi.string().required(),
+        //             filename: Joi.string().required(),
+        //             thumbnail: Joi.string(),
+        //         }),
+        //     )
         .required(),
+    // newImages is not from body, its only from req.files
     newImages: Joi.array()
         .items(
             Joi.object({
