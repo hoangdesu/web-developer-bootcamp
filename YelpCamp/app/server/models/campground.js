@@ -36,12 +36,11 @@ const campgroundSchema = new Schema(
             type: String,
             required: [true, 'Missing campground title'],
         },
-        price: Number,
+        price: { type: Number, required: [true, 'Missing campground price'] },
         description: String,
-        location: String,
+        location: { type: String, required: [true, 'Missing campground location'] },
         geometry: {
             type: pointSchema,
-            // required: true,
         },
         images: [ImageSchema],
         author: {

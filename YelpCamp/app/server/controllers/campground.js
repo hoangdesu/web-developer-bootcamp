@@ -8,11 +8,6 @@ const YelpcampError = require('../utilities/YelpcampError');
 const geocodingClient = require('../configs/mapbox');
 const CampgroundBuilder = require('../utilities/builders');
 
-const VietnamCoordinates = {
-    type: 'Point',
-    coordinates: [108.7017555, 14.0],
-};
-
 const getAllCamgrounds = catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({})
         .populate('author', '_id username')
@@ -86,11 +81,9 @@ const createCampground = catchAsync(async (req, res, next) => {
         .withGeometry(geometry)
         .withImages(images)
         .withAuthor(author)
-        .withReviews([])
-        .withReservations([])
         .build();
 
-        console.log('newCampground',newCampground)
+    console.log('newCampground', newCampground);
 
     const savedCampground = await Campground(newCampground).save();
     console.log('saved campground: ', savedCampground);
@@ -109,9 +102,27 @@ const createCampground = catchAsync(async (req, res, next) => {
 // PUT /api/v1/campgrounds/:id
 // TODO: allow editing current images array to set Featured image
 // TODO: fix not adding new images will crash
+// SOLUTION: USING SAME JOI SCHEMA WONT WORK. MUST CREATE SEPARATE SCHEMA FOR EDITING FORM
+// (current schema requires a list of images in campground object -> but we now have multiple image arrays)
 const editCampground = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const { campground, deletingImages } = req.body;
+    const { campground, deletingImages, existingImages } = req.body;
+    const { images } = campground;
+
+    // --- testing updating images
+    console.log('existingImages parsed:', existingImages);
+    const updatingImages = [];
+
+    for (let img of existingImages) {
+        updatingImages.push(JSON.parse(img));
+    }
+    console.log('updating images[]:', updatingImages);
+
+    const cg = await Campground.findById(id);
+    cg.images = updatingImages;
+    const saved = await cg.save();
+    return res.status(200).json(saved._id);
+    // ---
 
     // console.log('featuredImageIndex', featuredImageIndex);
 
@@ -121,7 +132,9 @@ const editCampground = catchAsync(async (req, res, next) => {
         new: true,
     });
 
+    /*
     // add images to array and save to db
+    // TODO: fix this shit
     if (req.files) {
         // mapping over image file objects from req.files
         const uploadingImages = req.files.map(file => ({
@@ -133,6 +146,7 @@ const editCampground = catchAsync(async (req, res, next) => {
         updatedCampground.images.push(...uploadingImages);
         await updatedCampground.save();
     }
+    */
 
     // swapping featured image
     // if (featuredImageIndex !== 0) {
@@ -165,6 +179,7 @@ const editCampground = catchAsync(async (req, res, next) => {
     }
 
     // geometry data
+    // >>> also, can use either client/server side
     const geoData = await geocodingClient
         .forwardGeocode({
             query: updatedCampground.location,

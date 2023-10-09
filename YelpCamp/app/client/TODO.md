@@ -76,3 +76,5 @@ if possible: can use 1 array to preview / edit images. or just use 2 arrays :/
 
 [] fix DraggableImage type
 [] fix editcampground map
+
+finish edit campground

@@ -7,8 +7,6 @@ class CampgroundBuilder {
         this.geometry;
         this.images;
         this.author;
-        this.reviews;
-        this.reservations;
     }
 
     withTitle(title) {
@@ -46,16 +44,6 @@ class CampgroundBuilder {
         return this;
     }
 
-    withReviews(reviews) {
-        this.reviews = reviews;
-        return this;
-    }
-
-    withReservations(reservations) {
-        this.reservations = reservations;
-        return this;
-    }
-
     build() {
         return {
             title: this.title,
@@ -65,8 +53,6 @@ class CampgroundBuilder {
             geometry: this.geometry,
             images: this.images,
             author: this.author,
-            reviews: this.reviews,
-            reservations: this.reservations,
         };
     }
 }

@@ -172,7 +172,7 @@ const NewCampground: React.FunctionComponent = () => {
             formData.append('campground[location]', formLocation);
             formData.append('campground[description]', formDescription.current?.value || '');
 
-            // USING GEOMETRY DATA FROM CLIENT
+            // Using geometry data from client
             if (formCoordinates.length > 0) {
                 formData.append('campground[geometry][type]', 'Point');
                 formData.append('campground[geometry][coordinates]', formCoordinates[0].toString());
@@ -187,7 +187,7 @@ const NewCampground: React.FunctionComponent = () => {
                 .post('/api/v1/campgrounds', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        Authorization: currentUser?.id,
+                        Authorization: currentUser.id,
                     },
                 })
                 .then(res => {
@@ -198,8 +198,8 @@ const NewCampground: React.FunctionComponent = () => {
                     navigate(`/campgrounds/${res.data}`);
                 })
                 .catch(err => {
-                    const errorMessage = err.response?.data || 'Error: Failed to create campground';
-                    appContext.setSnackbar(true, errorMessage, 'error');
+                    console.log(err.response?.data);
+                    appContext.setSnackbar(true, 'Error: Failed to create campground', 'error');
                     setIsUploading(false);
                 });
         }
@@ -210,7 +210,8 @@ const NewCampground: React.FunctionComponent = () => {
         const imageFiles = Array.from(evt.target.files) as File[];
         // file names can be duplicated
         // using index for the image file causes a tiny flashing animation -> annoying => dont use index for map
-        // cannot use math.random() cuz the function component gets rerendering constantly
+        // cannot use math.random() in map function cuz the function component gets rerendering constantly
+        // image files don't have id just yet, so giving them a temporary id here:
         const images: UploadImage[] = imageFiles.map(file => ({
             id: Math.random().toString(),
             file: file,
@@ -344,10 +345,15 @@ const NewCampground: React.FunctionComponent = () => {
 
                         {/* IMAGES */}
                         <Form.Group controlId="campgroundImagesInput" className="mb-3">
-                            <Form.Label>
-                                Upload images{' '}
-                                <span className="text-muted text-sm">(maximum 12)</span>
-                            </Form.Label>
+                            <div className="flex flex-row justify-between items-center">
+                                <Form.Label>
+                                    Upload images{' '}
+                                    <span className="text-muted text-sm ">(maximum 12)</span>
+                                </Form.Label>
+
+                                {/* <span className="text-muted text-xs">Drag to rearrange images</span> */}
+                                <span>//display tooltip icon here</span>
+                            </div>
                             <Form.Control
                                 type="file"
                                 multiple

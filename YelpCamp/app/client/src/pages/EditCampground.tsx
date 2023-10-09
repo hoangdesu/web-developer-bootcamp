@@ -72,9 +72,6 @@ const EditCampground: React.FunctionComponent = () => {
     const formImages = useRef<HTMLInputElement>(null);
     const formDescription = useRef<HTMLInputElement>(null);
 
-    // const [showDeleteCheckboxes, setShowDeleteCheckboxes] = useState(false);
-    // const [deletingImages, setDeletingImages] = useState<String[]>([]);
-
     const [formExistingImages, setFormExistingImages] = useState<Image[]>([]);
     const [formDeletingImages, setFormDeletingImages] = useState<Image[]>([]);
     const [formUploadingImages, setFormUploadingImages] = useState<UploadImage[]>([]);
@@ -177,18 +174,25 @@ const EditCampground: React.FunctionComponent = () => {
             // TODO: MERGE EXISTED IMAGE AND ADDING MORE IMAGES TO A SINGLE ARRAY
             // MODIFY ARRAY AND FINALLY APPEND TO FORMDATA BEFORE SAVING
             // OVERWRITE CURRENT IMAGES ARRAY IN DB
-            formData.append('campground[images]', formImages.current?.files[0]);
-            Array.from(formImages.current?.files).forEach(file => {
-                formData.append('campground[images]', file);
-            });
+            // ...
+            // formData.append('campground[images]', formImages.current?.files[0]);
+            // Array.from(formImages.current?.files).forEach(file => {
+            //     formData.append('campground[images]', file);
+            // });
 
             // >>> refactor this
-            deletingImages.forEach(img => formData.append('deletingImages[]', img));
+            // deletingImages.forEach(img => formData.append('deletingImages[]', img));
 
-            // swapping featured image
-            // formData.append('featuredImageIndex', featuredImageIndex);
-            // if (featuredImageIndex !== 0) {
-            // }
+            // --- Testing updating images
+            Array.from(formExistingImages).forEach(image => {
+                formData.append('campground[images]', JSON.stringify(image));
+            });
+
+            // Images to delete
+            Array.from(formDeletingImages).forEach(imageToDelete => {
+                formData.append('imagesToDelete', JSON.stringify(imageToDelete));
+                console.log('JSON.stringify(imageToDelete)', JSON.stringify(imageToDelete))
+            });
 
             // formImages.current?.files
 
@@ -237,7 +241,7 @@ const EditCampground: React.FunctionComponent = () => {
                 .delete(`/api/v1/campgrounds/${campgroundId}`, {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: appContext.currentUser.id.toString(),
+                        Authorization: appContext.currentUser!.id.toString(),
                     },
                 })
                 .then(() => {
@@ -436,7 +440,9 @@ const EditCampground: React.FunctionComponent = () => {
                                     </span>
                                 </span>
 
-                                <span className="text-muted text-sm">Drag to rearrange images</span>
+                                {/* <span className="text-muted text-xs">Drag to rearrange images</span> */}
+                                <span>//display tooltip icon here</span>
+
                             </Form.Label>
 
                             <Form.Group controlId="campgroundImageFiles" className="mb-3">
@@ -478,7 +484,9 @@ const EditCampground: React.FunctionComponent = () => {
                                         Deleting {formDeletingImages.length}{' '}
                                         {formDeletingImages.length > 1 ? 'images:' : 'image:'}
                                     </span>
-                                    <span className="text-muted text-sm">Click on image to restore</span>
+                                    <span className="text-muted text-sm">
+                                        Click on image to restore
+                                    </span>
                                 </Form.Label>
 
                                 <GridContextProvider onChange={() => {}}>

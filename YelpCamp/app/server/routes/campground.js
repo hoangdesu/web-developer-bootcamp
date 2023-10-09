@@ -11,15 +11,12 @@ const { upload } = require('../configs/cloudinary');
 /* @Route: /api/v1/campgrounds 
 */
 
-router
-    .route('/')
-    .get(controller.getAllCamgrounds)
-    .post(
-        requiresLoggedIn,
-        upload.array('campground[images]', 12),
-        middlewares.validateCampground,
-        controller.createCampground,
-    );
+router.route('/').get(controller.getAllCamgrounds).post(
+    requiresLoggedIn,
+    upload.array('campground[images]', 12), // limit to 12 images
+    middlewares.validateNewCampground,
+    controller.createCampground,
+);
 
 router.get('/search', controller.searchCampgrounds);
 
@@ -29,8 +26,8 @@ router
     .put(
         requiresLoggedIn,
         middlewares.isCampgroundAuthor,
-        upload.array('campground[images]'),
-        middlewares.validateCampground,
+        upload.array('campground[newImages]'),
+        middlewares.validateExistingCampground,
         controller.editCampground,
     )
     .delete(requiresLoggedIn, middlewares.isCampgroundAuthor, controller.deleteCampground);

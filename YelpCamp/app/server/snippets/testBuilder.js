@@ -7,8 +7,6 @@ const campground = new CampgroundBuilder()
     .withGeometry('campground 1')
     .withImages('campground 1')
     .withAuthor('hà nội')
-    .withReviews('hà nội')
-    .withReservations('hà nội')
     .build();
 
 console.log(campground);
