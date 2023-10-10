@@ -32,7 +32,7 @@ const validateNewCampground = (req, res, next) => {
     next(); // dont forget!
 };
 
-const validateExistingCampground = (req, res, next) => {
+const validateAndParseExistingCampground = (req, res, next) => {
     const { title, location, price, geometry, images, description } = req.body.campground;
     const author = req.headers.authorization;
     let { imagesToDelete } = req.body;
@@ -71,7 +71,6 @@ const validateExistingCampground = (req, res, next) => {
 
     console.log('-- campground', campground);
     console.log('-- req.files', req.files);
-
     console.log('-- imagesToDelete', imagesToDelete);
     
     const newImages = req.files.map(f => ({ url: f.path, filename: f.filename }));
@@ -89,6 +88,11 @@ const validateExistingCampground = (req, res, next) => {
     }
 
     console.log('VALIDATED OK, NO ERROR!!');
+
+    // Add to req.body object after validating successfully for controller use
+    req.body.reOrderedImages = reOrderedImages;
+    req.body.imagesToDelete = imagesToDelete
+    req.body.newImages = newImages;
 
     next();
 };
@@ -111,6 +115,6 @@ const isCampgroundAuthor = async (req, res, next) => {
 
 module.exports = {
     validateNewCampground,
-    validateExistingCampground,
+    validateAndParseExistingCampground,
     isCampgroundAuthor,
 };

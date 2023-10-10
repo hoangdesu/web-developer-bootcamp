@@ -19,6 +19,12 @@ const PreviewMap: React.FunctionComponent<PreviewMapProps> = ({ coordinates, loc
                 duration: 2000,
                 zoom: 10.0,
             });
+        } else {
+            mapRef.current?.flyTo({
+                center: [107, 16.0],
+                duration: 3000,
+                zoom: 3.0,
+            });
         }
     }, [coordinates]);
 
@@ -42,7 +48,7 @@ const PreviewMap: React.FunctionComponent<PreviewMapProps> = ({ coordinates, loc
         <Map
             mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
             initialViewState={{
-                // default coordinate to Vietnam
+                // Default coordinate to Vietnam
                 longitude: coordinates.length > 0 ? coordinates[0] : 107,
                 latitude: coordinates.length > 0 ? coordinates[1] : 16.0,
                 zoom: coordinates.length > 0 ? 10 : 3.0,

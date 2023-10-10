@@ -34,15 +34,6 @@ const getACampground = catchAsync(async (req, res, next) => {
 
     if (!campground) return next(new YelpcampError(404, 'Campground not found'));
 
-    // const geoData = await geocodingClient
-    //     .forwardGeocode({
-    //         query: campground.location,
-    //         limit: 1,
-    //     })
-    //     .send();
-    // console.log("🚀 ~ file: campground.js:39 ~ getACampground ~ geoData:", geoData.body.features[0].geometry)
-
-    // console.log(campground.images[0].thumbnail);
     res.status(200).json(campground);
 });
 
@@ -106,93 +97,63 @@ const createCampground = catchAsync(async (req, res, next) => {
 // (current schema requires a list of images in campground object -> but we now have multiple image arrays)
 const editCampground = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const { campground, deletingImages, existingImages } = req.body;
-    const { images } = campground;
+    const { title, location, price, description } = req.body.campground;
+    const author = req.headers.authorization;
+    const { reOrderedImages, imagesToDelete, newImages } = req.body;
 
-    // --- testing updating images
-    console.log('existingImages parsed:', existingImages);
-    const updatingImages = [];
+    let { geometry } = req.body.campground;
 
-    for (let img of existingImages) {
-        updatingImages.push(JSON.parse(img));
+    console.log('req.body', req.body);
+
+    // Add new images campground
+    let extendedCampgroundImages = reOrderedImages;
+    if (newImages.length > 0) {
+        extendedCampgroundImages = reOrderedImages.concat(newImages);
     }
-    console.log('updating images[]:', updatingImages);
 
-    const cg = await Campground.findById(id);
-    cg.images = updatingImages;
-    const saved = await cg.save();
-    return res.status(200).json(saved._id);
-    // ---
+    // Using geocoding service in the backend if client doesn't provide geometry object
+    if (!geometry) {
+        const geoData = await geocodingClient
+            .forwardGeocode({
+                query: location,
+                limit: 1,
+            })
+            .send();
+        geometry = geoData.body?.features?.[0]?.geometry;
+        console.log('No geometry from client, using geometry backend:', geometry);
+    }
 
-    // console.log('featuredImageIndex', featuredImageIndex);
+    const campground = new CampgroundBuilder()
+        .withTitle(title)
+        .withPrice(price)
+        .withDescription(description)
+        .withLocation(location)
+        .withGeometry(geometry)
+        .withImages(extendedCampgroundImages)
+        .withAuthor(author)
+        .build();
 
-    // update campground text data
+    // Update campground data
     const updatedCampground = await Campground.findByIdAndUpdate(id, campground, {
         runValidators: true,
         new: true,
     });
 
-    /*
-    // add images to array and save to db
-    // TODO: fix this shit
-    if (req.files) {
-        // mapping over image file objects from req.files
-        const uploadingImages = req.files.map(file => ({
-            url: file.path,
-            filename: file.filename,
-        }));
+    if (!updatedCampground) return next(new YelpcampError(400, 'Failed saving campground'));
 
-        // save to db
-        updatedCampground.images.push(...uploadingImages);
-        await updatedCampground.save();
-    }
-    */
-
-    // swapping featured image
-    // if (featuredImageIndex !== 0) {
-    //     const temp = updatedCampground.images[0];
-    //     updatedCampground.images[0] = updatedCampground.images[featuredImageIndex];
-    //     updatedCampground.images[featuredImageIndex] = temp;
-    //     await updatedCampground.save();
-    // }
-
-    // deleting images
-    if (deletingImages) {
-        // delete images stored in cloudinary
-        // await deletingImages.forEach(image => cloudinary.uploader.destroy(image)); // method 1
-        // method 2
-        const deletedRes = await cloudinary.api.delete_resources(deletingImages, {
+    // Delete images stored in cloudinary
+    if (imagesToDelete.length > 0) {
+        // await imagesToDelete.forEach(image => cloudinary.uploader.destroy(image)); // method 1
+        const deletedRes = await cloudinary.api.delete_resources(imagesToDelete, {
             type: 'upload',
             resource_type: 'image',
         });
-        // .then(res => console.log('deleted:', res));
 
         if (!deletedRes)
             return next(new YelpcampError(500, 'Failed deleting images on Cloudinary'));
-
-        // delete images in db
-        await updatedCampground.updateOne({
-            $pull: { images: { filename: { $in: deletingImages } } },
-        });
-
-        if (!updatedCampground) return next(new YelpcampError(400, 'Failed deleting images in db'));
     }
 
-    // geometry data
-    // >>> also, can use either client/server side
-    const geoData = await geocodingClient
-        .forwardGeocode({
-            query: updatedCampground.location,
-            limit: 1,
-        })
-        .send();
-    updatedCampground.geometry = geoData.body?.features?.[0]?.geometry || null;
-
-    await updatedCampground.save();
-
-    if (!updatedCampground) return next(new YelpcampError(400, 'Failed saving campground'));
-
-    res.status(200).json(updatedCampground._id);
+    return res.status(200).json(updatedCampground._id);
 });
 
 const deleteCampground = catchAsync(async (req, res, next) => {
@@ -203,16 +164,29 @@ const deleteCampground = catchAsync(async (req, res, next) => {
         return next(new YelpcampError(404, 'Delete failed. Campground not found'));
     }
 
-    // delete all campgrounds associated with this user
-    const userId = deletedCampground.author;
-    const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { campgrounds: id } });
+    console.log('deletedCampground', deletedCampground);
+
+    // delete all campgrounds associated with this user ---> wtf why??
+    // const userId = deletedCampground.author;
+    // const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { campgrounds: id } });
 
     // TODO: delete a campground will delete all those REVIEWS in a user' reviews array
-    console.log('updatedUser', updatedUser);
+    // console.log('updatedUser', updatedUser);
 
-    // TODO: delete a campground should delete all images from cloudinary
+    // Delete a campground should delete all images from cloudinary
+    const deletedRes = await cloudinary.api.delete_resources(
+        deletedCampground.images.map(img => img.filename),
+        {
+            type: 'upload',
+            resource_type: 'image',
+        },
+    );
 
-    res.status(200).send('campground deleted');
+    console.log('Deleted images from cloudinary:', deletedRes);
+
+    if (!deletedRes) return next(new YelpcampError(500, 'Failed deleting images on Cloudinary'));
+
+    return res.status(200).send('campground deleted');
 });
 
 const searchCampgrounds = catchAsync(async (req, res) => {

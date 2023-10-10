@@ -27,7 +27,7 @@ router
         requiresLoggedIn,
         middlewares.isCampgroundAuthor,
         upload.array('campground[newImages]'),
-        middlewares.validateExistingCampground,
+        middlewares.validateAndParseExistingCampground,
         controller.editCampground,
     )
     .delete(requiresLoggedIn, middlewares.isCampgroundAuthor, controller.deleteCampground);

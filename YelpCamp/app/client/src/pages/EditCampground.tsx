@@ -1,25 +1,29 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
-import { Link, useLoaderData, useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
 import axios, { AxiosError } from 'axios';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useQuery } from 'react-query';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 
-import { Container, Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 
 import PageContainer from '../components/PageContainer';
 import Loading from './Loading';
 
-import AppContext from '../store/app-context';
 import styled from '@emotion/styled';
-import { Delete } from '@mui/icons-material';
+import { Autocomplete, LinearProgress, Tooltip } from '@mui/material';
+import { GridContextProvider, GridDropZone, GridItem, swap } from 'react-grid-dnd';
 import PreviewMap from '../components/PreviewMap';
+import AppContext from '../store/app-context';
 import { Campground, Image, MapboxFeature, UploadImage } from '../types';
-import { Autocomplete, LinearProgress } from '@mui/material';
-import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
 
-import useWindowDimensions from '../hooks/useWindowDimensions';
-import DraggableUploadingImage from '../components/DraggableUploadingImage';
-import DraggableExistingImage from '../components/DraggableExistingImage';
+import BackspaceIcon from '@mui/icons-material/Backspace';
 import DeletingImage from '../components/DeletingImage';
+import DraggableExistingImage from '../components/DraggableExistingImage';
+import DraggableUploadingImage from '../components/DraggableUploadingImage';
+import useWindowDimensions from '../hooks/useWindowDimensions';
+import { formatDate, timeDifference } from '../helpers/campground';
+import HelpIconTooltip from '../components/HelpIconTooltip';
+import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
+import SecondaryTransparentButton from '../components/Buttons/SecondaryTransparentButton';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -75,7 +79,7 @@ const EditCampground: React.FunctionComponent = () => {
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
 
-    // protect route when user is not logged in
+    // Protect route when user is not logged in
     useEffect(() => {
         document.title = 'YelpCamp | Edit Campground';
         if (!currentUser) navigate('/login');
@@ -103,11 +107,7 @@ const EditCampground: React.FunctionComponent = () => {
             setFormLocation(campground.location);
             setFormCoordinates(campground.geometry.coordinates);
             setPreviewLocation(campground.location);
-
             setFormExistingImages(campground.images);
-
-            // setEditingImages(campground.images);
-            // setCampground(campground);
         },
     });
 
@@ -137,15 +137,8 @@ const EditCampground: React.FunctionComponent = () => {
                     }`,
                 )
                 .then(res => {
-                    const coords = res.data.features[0].geometry.coordinates;
                     const features = res.data.features;
-                    const placeText = features[0]['text'];
-                    console.log('setSuggestedLocations', features);
-                    console.log('placeText[0]', placeText);
-                    // setFormLocation(placeText);
                     setSuggestedLocations(features);
-
-                    // setCoordinates({ longitude: coords[0], latitude: coords[1] });
                 })
                 .catch(err => {
                     // ... err msg
@@ -157,6 +150,7 @@ const EditCampground: React.FunctionComponent = () => {
     const handleEditCampgroundFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
+
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
@@ -174,20 +168,7 @@ const EditCampground: React.FunctionComponent = () => {
                 formData.append('campground[geometry][coordinates]', formCoordinates[1].toString());
             }
 
-            // adding new images
-            // TODO: MERGE EXISTED IMAGE AND ADDING MORE IMAGES TO A SINGLE ARRAY
-            // MODIFY ARRAY AND FINALLY APPEND TO FORMDATA BEFORE SAVING
-            // OVERWRITE CURRENT IMAGES ARRAY IN DB
-            // ...
-            // formData.append('campground[images]', formImages.current?.files[0]);
-            // Array.from(formImages.current?.files).forEach(file => {
-            //     formData.append('campground[images]', file);
-            // });
-
-            // >>> refactor this
-            // deletingImages.forEach(img => formData.append('deletingImages[]', img));
-
-            // Updating existing images
+            // Update existing images
             const campgroundImages = formExistingImages.map(image => ({
                 url: image.url,
                 filename: image.filename,
@@ -220,18 +201,10 @@ const EditCampground: React.FunctionComponent = () => {
                     navigate(`/campgrounds/${campground._id}`);
                 })
                 .catch(err => {
-                    console.error(err);
-                    // appContext.setAlert({
-                    //     message: `${err.response.status} - ${err.response.data}`,
-                    //     variant: 'danger',
-                    // });
-
-                    appContext.setSnackbar(true, err?.response?.data.toString(), 'error');
-
-                    if (err.response.status === 401) navigate('/login');
-                    // appContext.setCurrentUser(null);
-                    // navigate('/login');
-
+                    const errMsg = err.response?.data.toString();
+                    console.log('Error: Failed to update campground: ', errMsg);
+                    appContext.setSnackbar(true, 'Error: Failed to update campground', 'error');
+                    if (err.response?.status === 401) navigate('/login');
                     setIsUpdating(false);
                 });
         }
@@ -287,10 +260,6 @@ const EditCampground: React.FunctionComponent = () => {
         }
     };
 
-    if (isLoading) return <Loading />;
-
-    if (error) return <p>Error</p>;
-
     const onSelectUploadingImagesHandler = evt => {
         const imageFiles = Array.from(evt.target.files) as File[];
 
@@ -334,15 +303,26 @@ const EditCampground: React.FunctionComponent = () => {
         return setFormUploadingImages(rearrangedImages);
     };
 
+    if (isLoading) return <Loading />;
+
+    if (error) return <p>Error</p>;
+
+    console.log(campground);
+
     return (
         <PageContainer>
             {campground && (
                 <Wrapper length={formDeletingImages.length}>
-                    <h1 className="text-center mb-5">Edit Campground</h1>
-                    <p> // basic campground information</p>
-                    <p>
-                        created at:{campground.createdAt}, modified at: {campground.modifiedAt}
-                    </p>
+                    <div className="mb-5">
+                        <h1 className="text-center mb-3">Edit Campground</h1>
+                        <small className="block text-center text-muted text-sm">{`Created ${timeDifference(
+                            Date.now(),
+                            Date.parse(campground.createdAt),
+                        )} · Updated ${timeDifference(
+                            Date.now(),
+                            Date.parse(campground.updatedAt),
+                        )}`}</small>
+                    </div>
 
                     <Form
                         noValidate
@@ -362,15 +342,16 @@ const EditCampground: React.FunctionComponent = () => {
                                 Title is required!
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <div className="mb-3">
-                            <Form.Group className="mb-3" controlId="campgroundLocation">
-                                <Form.Label>Location</Form.Label>
+
+                        <Form.Group className="mb-3" controlId="campgroundLocation">
+                            <Form.Label>Location</Form.Label>
+                            <InputGroup className="mb-3">
                                 <Autocomplete
                                     sx={{
                                         width: '100%',
-                                        marginBottom: '1rem',
                                         '& input': {
                                             width: '100%',
+
                                             bgcolor: 'background.paper',
                                             color: theme =>
                                                 theme.palette.getContrastText(
@@ -405,24 +386,33 @@ const EditCampground: React.FunctionComponent = () => {
                                                 type="text"
                                                 {...params.inputProps}
                                                 className="form-control"
+                                                placeholder="Start typing to search..."
+                                                required
                                             />
+                                            <Form.Control.Feedback type="valid">
+                                                Looks good!
+                                            </Form.Control.Feedback>
+                                            <Form.Control.Feedback type="invalid">
+                                                Location is required!
+                                            </Form.Control.Feedback>
                                         </div>
                                     )}
                                 />
+                                <InputGroup.Text
+                                    className="absolute right-0 hover:cursor-pointer hover:bg-gray-200 text-sm h-[38px]"
+                                    onClick={() => {
+                                        setFormCoordinates([]);
+                                        setPreviewLocation('');
+                                        setFormLocation('');
+                                    }}
+                                >
+                                    <BackspaceIcon fontSize="inherit" />
+                                </InputGroup.Text>
+                            </InputGroup>
 
-                                <PreviewMap
-                                    coordinates={formCoordinates}
-                                    location={previewLocation}
-                                />
+                            <PreviewMap coordinates={formCoordinates} location={previewLocation} />
+                        </Form.Group>
 
-                                <Form.Control.Feedback type="valid">
-                                    Looks good!
-                                </Form.Control.Feedback>
-                                <Form.Control.Feedback type="invalid">
-                                    Location is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </div>
                         <Form.Group className="mb-3" controlId="campgroundPrice">
                             <Form.Label>Price</Form.Label>
                             <InputGroup className="mb-2">
@@ -442,6 +432,7 @@ const EditCampground: React.FunctionComponent = () => {
                                 </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
+
                         <Form.Group className="mb-3" controlId="campgroundDescription">
                             <Form.Label>Description</Form.Label>
                             <Form.Control
@@ -453,19 +444,18 @@ const EditCampground: React.FunctionComponent = () => {
                                 Description is optional
                             </Form.Control.Feedback>
                         </Form.Group>
+
                         {/* EXISTING IMAGES */}
                         <Form.Group className="mb-3" controlId="campgroundImageUrl">
-                            <Form.Label className="flex flex-row gap-2 items-center justify-between">
-                                <span className="flex gap-2 items-center">
-                                    Uploaded images
+                            <div className="flex flex-row gap-5 items-center justify-between">
+                                <Form.Label>
+                                    Uploaded images{' '}
                                     <span className="text-muted text-sm">
                                         ({formExistingImages.length})
                                     </span>
-                                </span>
-
-                                {/* <span className="text-muted text-xs">Drag to rearrange images</span> */}
-                                <span>//display tooltip icon here</span>
-                            </Form.Label>
+                                </Form.Label>
+                                <HelpIconTooltip title={'Drag images to re-arrange'} />
+                            </div>
 
                             <Form.Group controlId="campgroundImageFiles" className="mb-3">
                                 <GridContextProvider onChange={draggingExistingImagesHandler}>
@@ -498,17 +488,17 @@ const EditCampground: React.FunctionComponent = () => {
                                 Image URL is required!
                             </Form.Control.Feedback>
                         </Form.Group>
+
                         {/* DELETING IMAGES */}
                         {formDeletingImages.length > 0 && (
-                            <Form.Group className="mb-3" controlId="campgroundPrice">
+                            <Form.Group className="mb-3" controlId="deletingImages">
                                 <Form.Label className="flex flex-row gap-2 items-center justify-between">
-                                    <span className="text-red-700">
+                                    <span className="text-red-800 font-medium">
                                         Deleting {formDeletingImages.length}{' '}
-                                        {formDeletingImages.length > 1 ? 'images:' : 'image:'}
+                                        {formDeletingImages.length > 1 ? 'images' : 'image'}
                                     </span>
-                                    <span className="text-muted text-sm">
-                                        Click on image to restore
-                                    </span>
+
+                                    <HelpIconTooltip title={'Click on the image to restore'} />
                                 </Form.Label>
 
                                 <GridContextProvider onChange={() => {}}>
@@ -540,7 +530,15 @@ const EditCampground: React.FunctionComponent = () => {
                         {/* UPLOADING IMAGES */}
                         <Form.Group controlId="campgroundImages" className="mb-3">
                             <Form.Group className="mb-3">
-                                <Form.Label>Add more images</Form.Label>
+                                <div className="flex flex-row gap-2 items-center justify-between">
+                                    <Form.Label>
+                                        Add more images{' '}
+                                        <span className="text-muted text-sm">
+                                            ({formUploadingImages.length})
+                                        </span>
+                                    </Form.Label>
+                                    <HelpIconTooltip title={'Drag images to re-arrange'} />
+                                </div>
                                 <Form.Control
                                     type="file"
                                     multiple
@@ -580,30 +578,43 @@ const EditCampground: React.FunctionComponent = () => {
                                 </GridContextProvider>
                             </Form.Group>
                         </Form.Group>
-                        {isUpdating ? (
-                            <Button variant="secondary" type="submit" disabled>
-                                <Spinner
-                                    animation="border"
-                                    size="sm"
-                                    role="status"
-                                    aria-hidden="true"
-                                    as="span"
-                                />
-                                <span> Updating campground...</span>
-                            </Button>
-                        ) : (
-                            <Button variant="success" type="submit">
-                                Update campground
-                            </Button>
-                        )}
-                        <Link to={-1}>
-                            <Button variant="secondary" type="submit" className="mx-2">
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>Delete campground</Form.Label>
+                            <div>
+                                <button onClick={deleteCampgroundHandler} type="button">
+                                    Delete campground
+                                </button>
+                            </div>
+                        </Form.Group>
+
+                        <div className="w-full flex flex-row gap-3">
+                            {isUpdating ? (
+                                <PrimaryBlackButton className="flex-1" disabled={true}>
+                                    <Spinner
+                                        animation="border"
+                                        size="sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                        as="span"
+                                    />
+                                    <span> Updating campground...</span>
+                                </PrimaryBlackButton>
+                            ) : (
+                                <PrimaryBlackButton className="flex-1">
+                                    Update campground
+                                </PrimaryBlackButton>
+                            )}
+
+                            {/* TODO: modal confirm cancel: you have unsaved edit */}
+
+                            {/* <Button variant="secondary" type="submit" className="mx-2">
                                 Cancel
-                            </Button>
-                        </Link>
-                        <button onClick={deleteCampgroundHandler} type="button">
-                            Delete campground
-                        </button>
+                            </Button> */}
+                            <SecondaryTransparentButton onClick={() => navigate(-1)} type="button">
+                                Cancel
+                            </SecondaryTransparentButton>
+                        </div>
                     </Form>
                 </Wrapper>
             )}

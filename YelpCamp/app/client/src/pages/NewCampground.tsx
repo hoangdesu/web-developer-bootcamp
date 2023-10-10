@@ -1,19 +1,20 @@
-import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import AppContext from '../store/app-context';
 
-import { Container, Form, Button, InputGroup, Spinner, Image } from 'react-bootstrap';
+import { Form, InputGroup, Spinner } from 'react-bootstrap';
 
-import PageContainer from '../components/PageContainer';
-import ArtImage from '../assets/new-campground-art.jpg';
 import styled from '@emotion/styled';
-import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
-import PreviewMap from '../components/PreviewMap';
+import BackspaceIcon from '@mui/icons-material/Backspace';
 import { Autocomplete, LinearProgress } from '@mui/material';
-import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
+import { GridContextProvider, GridDropZone, GridItem, swap } from 'react-grid-dnd';
+import ArtImage from '../assets/new-campground-art.jpg';
+import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 import DraggableUploadingImage from '../components/DraggableUploadingImage';
+import PageContainer from '../components/PageContainer';
+import PreviewMap from '../components/PreviewMap';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 import { MapboxFeature, UploadImage } from '../types';
 
@@ -255,53 +256,72 @@ const NewCampground: React.FunctionComponent = () => {
                         {/* -- LOCATION -- */}
                         <Form.Group className="mb-3" controlId="campgroundLocation">
                             <Form.Label>Location</Form.Label>
-                            <Autocomplete
-                                sx={{
-                                    width: '100%',
-                                    marginBottom: '1rem',
-                                    '& input': {
+                            <InputGroup className="mb-3">
+                                <Autocomplete
+                                    sx={{
                                         width: '100%',
-                                        bgcolor: 'background.paper',
-                                        color: theme =>
-                                            theme.palette.getContrastText(
-                                                theme.palette.background.paper,
-                                            ),
-                                    },
-                                }}
-                                options={suggestedLocations}
-                                onChange={(
-                                    event: React.SyntheticEvent<Element, Event>,
-                                    feature: MapboxFeature,
-                                ) => {
-                                    setFormCoordinates(feature.geometry.coordinates);
-                                    setPreviewLocation(feature.place_name);
-                                }}
-                                inputValue={formLocation}
-                                onInputChange={(event: any, newInputValue: string) => {
-                                    setFormLocation(newInputValue);
-                                }}
-                                id="location-suggestion-input"
-                                getOptionLabel={(feature: MapboxFeature) => `${feature.place_name}`}
-                                filterOptions={(options, state) => options}
-                                freeSolo
-                                loading={!!formLocation}
-                                loadingText={
-                                    <div className="text-primary-accent-color">
-                                        <LinearProgress color="inherit" />
-                                    </div>
-                                }
-                                renderInput={params => (
-                                    <div ref={params.InputProps.ref}>
-                                        <input
-                                            type="text"
-                                            {...params.inputProps}
-                                            className="form-control"
-                                            required
-                                            placeholder="Start typing to search..."
-                                        />
-                                    </div>
-                                )}
-                            />
+                                        '& input': {
+                                            width: '100%',
+                                            bgcolor: 'background.paper',
+                                            color: theme =>
+                                                theme.palette.getContrastText(
+                                                    theme.palette.background.paper,
+                                                ),
+                                        },
+                                    }}
+                                    options={suggestedLocations}
+                                    onChange={(
+                                        event: React.SyntheticEvent<Element, Event>,
+                                        feature: MapboxFeature,
+                                    ) => {
+                                        setFormCoordinates(feature.geometry.coordinates);
+                                        setPreviewLocation(feature.place_name);
+                                    }}
+                                    inputValue={formLocation}
+                                    onInputChange={(event: any, newInputValue: string) => {
+                                        setFormLocation(newInputValue);
+                                    }}
+                                    id="location-suggestion-input"
+                                    getOptionLabel={(feature: MapboxFeature) =>
+                                        `${feature.place_name}`
+                                    }
+                                    filterOptions={(options, state) => options}
+                                    freeSolo
+                                    loading={!!formLocation}
+                                    loadingText={
+                                        <div className="text-primary-accent-color">
+                                            <LinearProgress color="inherit" />
+                                        </div>
+                                    }
+                                    renderInput={params => (
+                                        <div ref={params.InputProps.ref}>
+                                            <input
+                                                type="text"
+                                                {...params.inputProps}
+                                                className="form-control"
+                                                required
+                                                placeholder="Start typing to search..."
+                                            />
+                                            <Form.Control.Feedback type="valid">
+                                                Looks good!
+                                            </Form.Control.Feedback>
+                                            <Form.Control.Feedback type="invalid">
+                                                Location is required!
+                                            </Form.Control.Feedback>
+                                        </div>
+                                    )}
+                                />
+                                <InputGroup.Text
+                                    className="absolute right-0 hover:cursor-pointer hover:bg-gray-200 text-sm h-[38px]"
+                                    onClick={() => {
+                                        setFormCoordinates([]);
+                                        setPreviewLocation('');
+                                        setFormLocation('');
+                                    }}
+                                >
+                                    <BackspaceIcon fontSize="inherit" />
+                                </InputGroup.Text>
+                            </InputGroup>
 
                             <PreviewMap coordinates={formCoordinates} location={previewLocation} />
 

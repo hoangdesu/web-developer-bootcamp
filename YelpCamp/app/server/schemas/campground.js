@@ -18,7 +18,7 @@ module.exports.newCampgroundSchema = Joi.object({
             )
             .required()
             .min(1),
-        description: Joi.string().sanitizeHTML(),
+        description: Joi.string().sanitizeHTML().allow(null, ''),
         author: Joi.string().required(),
     }).required(),
 });
@@ -42,7 +42,7 @@ module.exports.existingCampgroundSchema = Joi.object({
             )
             .required()
             .min(1),
-        description: Joi.string().sanitizeHTML(),
+        description: Joi.string().sanitizeHTML().allow(null, ''),
         author: Joi.string().required(),
     }).required(),
     imagesToDelete: Joi.array().items(Joi.string()).required(),
