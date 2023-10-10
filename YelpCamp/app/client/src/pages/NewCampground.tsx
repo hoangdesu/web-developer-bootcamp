@@ -273,7 +273,6 @@ const NewCampground: React.FunctionComponent = () => {
                                     event: React.SyntheticEvent<Element, Event>,
                                     feature: MapboxFeature,
                                 ) => {
-                                    console.log('on change', 'new value', feature);
                                     setFormCoordinates(feature.geometry.coordinates);
                                     setPreviewLocation(feature.place_name);
                                 }}

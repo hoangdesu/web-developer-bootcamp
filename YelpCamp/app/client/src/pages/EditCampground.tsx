@@ -12,7 +12,7 @@ import AppContext from '../store/app-context';
 import styled from '@emotion/styled';
 import { Delete } from '@mui/icons-material';
 import PreviewMap from '../components/PreviewMap';
-import { Campground, Image, UploadImage } from '../types';
+import { Campground, Image, MapboxFeature, UploadImage } from '../types';
 import { Autocomplete, LinearProgress } from '@mui/material';
 import { GridContextProvider, GridDropZone, GridItem, swap, move } from 'react-grid-dnd';
 
@@ -61,7 +61,6 @@ const EditCampground: React.FunctionComponent = () => {
     );
 
     const [suggestedLocations, setSuggestedLocations] = useState([]);
-    const [coordinates, setCoordinates] = useState([105, 20]);
     const [formCoordinates, setFormCoordinates] = useState<number[]>([]);
     const [formLocation, setFormLocation] = useState('');
     const [previewLocation, setPreviewLocation] = useState('');
@@ -168,6 +167,13 @@ const EditCampground: React.FunctionComponent = () => {
             formData.append('campground[location]', formLocation);
             formData.append('campground[description]', formDescription.current?.value || '');
 
+            // Using geometry data from client
+            if (formCoordinates.length > 0) {
+                formData.append('campground[geometry][type]', 'Point');
+                formData.append('campground[geometry][coordinates]', formCoordinates[0].toString());
+                formData.append('campground[geometry][coordinates]', formCoordinates[1].toString());
+            }
+
             // adding new images
             // TODO: MERGE EXISTED IMAGE AND ADDING MORE IMAGES TO A SINGLE ARRAY
             // MODIFY ARRAY AND FINALLY APPEND TO FORMDATA BEFORE SAVING
@@ -182,39 +188,22 @@ const EditCampground: React.FunctionComponent = () => {
             // deletingImages.forEach(img => formData.append('deletingImages[]', img));
 
             // Updating existing images
-            Array.from(formExistingImages).forEach(image => {
-                formData.append('campground[images]', JSON.stringify(image));
-            });
+            const campgroundImages = formExistingImages.map(image => ({
+                url: image.url,
+                filename: image.filename,
+            }));
+            formData.append('campground[images]', JSON.stringify(campgroundImages));
 
             // Images to delete
-            // Array.from(formDeletingImages).forEach(imageToDelete => {
-            //     formData.append('imagesToDelete', JSON.stringify(imageToDelete));
-            //     console.log('JSON.stringify(imageToDelete)', JSON.stringify(imageToDelete));
-            // });
+            const imagesToDelete = formDeletingImages.map(img => img.filename);
+            formData.append('imagesToDelete', JSON.stringify(imagesToDelete));
 
-            // how about stringify the whole thing?
-            formData.append('imagesToDelete', JSON.stringify(formDeletingImages));
-            console.log('JSON.stringify(formDeletingImages)',JSON.stringify(formDeletingImages));
-            
-
-
-            // New images to upload
-            // Array.from(formUploadingImages).forEach(imageToUpload => {
-            //     formData.append('newImages', JSON.stringify(imageToUpload));
-            //     console.log('JSON.stringify(imageToUpload)', JSON.stringify(imageToUpload));
-            // });
-
-            // formData.append('newImages', JSON.stringify(formUploadingImages));
-            // console.log('JSON.stringify(formUploadingImages)', JSON.stringify(formUploadingImages));
-            //cannot do this. copy from new campground
-
-            // optional
-            if (formUploadingImages.length > 1) {
+            // New images to upload (optional)
+            if (formUploadingImages.length > 0) {
                 Array.from(formUploadingImages).forEach(image => {
                     formData.append('campground[newImages]', image.file);
                 });
             }
-
 
             axios
                 .put(`/api/v1/campgrounds/${campground._id}`, formData, {
@@ -232,10 +221,12 @@ const EditCampground: React.FunctionComponent = () => {
                 })
                 .catch(err => {
                     console.error(err);
-                    appContext.setAlert({
-                        message: `${err.response.status} - ${err.response.data}`,
-                        variant: 'danger',
-                    });
+                    // appContext.setAlert({
+                    //     message: `${err.response.status} - ${err.response.data}`,
+                    //     variant: 'danger',
+                    // });
+
+                    appContext.setSnackbar(true, err?.response?.data.toString(), 'error');
 
                     if (err.response.status === 401) navigate('/login');
                     // appContext.setCurrentUser(null);
@@ -387,23 +378,19 @@ const EditCampground: React.FunctionComponent = () => {
                                                 ),
                                         },
                                     }}
-                                    // value={formLocation}
-                                    onChange={(event: any, location: string | null) => {
-                                        // setValue(newValue);
-                                        // setFormLocation(newValue); //lowercase error
-                                        console.log('on change', 'new value', location);
-                                        setCoordinates(location.geometry.coordinates);
+                                    options={suggestedLocations}
+                                    onChange={(event: any, feature: MapboxFeature) => {
+                                        setFormCoordinates(feature.geometry.coordinates);
+                                        setPreviewLocation(feature.place_name);
                                     }}
                                     inputValue={formLocation}
-                                    onInputChange={(event, newInputValue) => {
+                                    onInputChange={(event, newInputValue: string) => {
                                         setFormLocation(newInputValue);
-                                        console.log('onInputChange', newInputValue);
                                     }}
                                     id="location-suggestion-input"
-                                    getOptionLabel={location =>
-                                        `${location?.text} (${location['place_name']})`
+                                    getOptionLabel={(feature: MapboxFeature) =>
+                                        `${feature.place_name}`
                                     }
-                                    options={suggestedLocations}
                                     filterOptions={(options, state) => options}
                                     freeSolo
                                     loading={!!formLocation}
