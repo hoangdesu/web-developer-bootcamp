@@ -18,9 +18,10 @@ const CampgroundMap: React.FunctionComponent<CampgroundMapProps> = ({ campground
 
     const popup = useMemo(() => {
         return new mapboxgl.Popup().setOffset(10).setHTML(`
-        <div>
+        <div style="padding:6px;">
             <h6>${campground.title}</h6>
-            <span>${coordinates.longitude}, ${coordinates.latitude}</span>
+            <span style="display:block;">${campground.location}</span>
+            <small>(${coordinates.longitude.toFixed(2)}, ${coordinates.latitude.toFixed(2)})</small>
         </div>`);
     }, []);
 
@@ -49,8 +50,6 @@ const CampgroundMap: React.FunctionComponent<CampgroundMapProps> = ({ campground
                     ref={markerRef}
                 ></Marker>
             </Map>
-
-            
         </div>
     );
 };

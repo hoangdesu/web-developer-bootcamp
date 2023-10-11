@@ -1,29 +1,31 @@
 import axios, { AxiosError } from 'axios';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Link, useLoaderData, useNavigate } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 
-import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Form, InputGroup, Spinner } from 'react-bootstrap';
 
 import PageContainer from '../components/PageContainer';
 import Loading from './Loading';
 
 import styled from '@emotion/styled';
-import { Autocomplete, LinearProgress, Tooltip } from '@mui/material';
+import { Autocomplete, LinearProgress } from '@mui/material';
 import { GridContextProvider, GridDropZone, GridItem, swap } from 'react-grid-dnd';
 import PreviewMap from '../components/PreviewMap';
 import AppContext from '../store/app-context';
 import { Campground, Image, MapboxFeature, UploadImage } from '../types';
 
 import BackspaceIcon from '@mui/icons-material/Backspace';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
+import SecondaryTransparentButton from '../components/Buttons/SecondaryTransparentButton';
 import DeletingImage from '../components/DeletingImage';
 import DraggableExistingImage from '../components/DraggableExistingImage';
 import DraggableUploadingImage from '../components/DraggableUploadingImage';
-import useWindowDimensions from '../hooks/useWindowDimensions';
-import { formatDate, timeDifference } from '../helpers/campground';
 import HelpIconTooltip from '../components/HelpIconTooltip';
-import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
-import SecondaryTransparentButton from '../components/Buttons/SecondaryTransparentButton';
+import ModalConfirmDeleteCampground from '../components/Modals/ModalConfirmDeleteCampground';
+import { timeDifference } from '../helpers/campground';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 
 export async function loader({ params }) {
     return { campgroundId: params.campgroundId };
@@ -111,7 +113,7 @@ const EditCampground: React.FunctionComponent = () => {
         },
     });
 
-    // protect route when user is unauthorized to edit
+    // Protect route when user is unauthorized to edit
     useEffect(() => {
         if (campground) {
             if (campground.author) {
@@ -195,7 +197,7 @@ const EditCampground: React.FunctionComponent = () => {
                 })
                 .then(res => {
                     appContext.setAlert({
-                        message: 'Campground has been updated',
+                        message: 'Your campground has been updated!',
                         variant: 'success',
                     });
                     navigate(`/campgrounds/${campground._id}`);
@@ -211,53 +213,11 @@ const EditCampground: React.FunctionComponent = () => {
         setValidated(true);
     };
 
-    // TODO: handle delete campground in modal
     const deleteCampgroundHandler = () => {
         appContext.setModal({
             open: true,
-            content: <p>Confirm Delete campground</p>,
+            content: <ModalConfirmDeleteCampground campground={campground} />,
         });
-
-        // return;
-
-        if (confirm(`Delete ${campground.title}?`)) {
-            axios
-                .delete(`/api/v1/campgrounds/${campgroundId}`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: appContext.currentUser!.id.toString(),
-                    },
-                })
-                .then(() => {
-                    appContext.setAlert({
-                        message: 'Deleted campground successfully',
-                        variant: 'warning',
-                    });
-                    navigate('/');
-                })
-                .catch(err => {
-                    // TODO: write a error handling function for navigating
-                    console.error(err);
-                    let message = '';
-                    if (err.response.status === 401) {
-                        message = 'Unauthorized to delete campground. Please log in again.';
-                        appContext.setAlert({
-                            message,
-                            variant: 'danger',
-                        });
-                        navigate('/login');
-                    } else if (err.response.status === 403) {
-                        message = 'Unauthorized to delete campground';
-                    } else {
-                        message = `${err.response.status} - ${err.response.data}`;
-                    }
-                    appContext.setAlert({
-                        message,
-                        variant: 'danger',
-                    });
-                    // appContext.setCurrentUser(null);
-                });
-        }
     };
 
     const onSelectUploadingImagesHandler = evt => {
@@ -553,7 +513,7 @@ const EditCampground: React.FunctionComponent = () => {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group className="mb-3">
+                            <Form.Group className="mb-4">
                                 <GridContextProvider onChange={draggingUploadingImagesHandler}>
                                     <GridDropZone
                                         id="images"
@@ -579,14 +539,18 @@ const EditCampground: React.FunctionComponent = () => {
                             </Form.Group>
                         </Form.Group>
 
-                        <Form.Group className="mb-3">
+                        <hr />
+                        <Form.Group className="mb-2 flex flex-row items-baseline justify-between">
                             <Form.Label>Delete campground</Form.Label>
-                            <div>
-                                <button onClick={deleteCampgroundHandler} type="button">
-                                    Delete campground
-                                </button>
-                            </div>
+                            <button
+                                onClick={deleteCampgroundHandler}
+                                type="button"
+                                className="bg-red-700 hover:bg-red-800 border-0 text-white py-2 px-[30px] flex flex-row gap-1 items-center rounded"
+                            >
+                                <DeleteOutlineIcon fontSize="small" />
+                            </button>
                         </Form.Group>
+                        <hr />
 
                         <div className="w-full flex flex-row gap-3">
                             {isUpdating ? (
@@ -607,10 +571,6 @@ const EditCampground: React.FunctionComponent = () => {
                             )}
 
                             {/* TODO: modal confirm cancel: you have unsaved edit */}
-
-                            {/* <Button variant="secondary" type="submit" className="mx-2">
-                                Cancel
-                            </Button> */}
                             <SecondaryTransparentButton onClick={() => navigate(-1)} type="button">
                                 Cancel
                             </SecondaryTransparentButton>

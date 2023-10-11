@@ -12,6 +12,7 @@ import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 import Logo from '../assets/logo.png';
 import ResetPwdImg from '../assets/reset-password.png';
 import SecondaryTransparentButton from '../components/Buttons/SecondaryTransparentButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {
@@ -133,14 +134,11 @@ const ResetPassword: React.FunctionComponent = () => {
                     setView('reset');
                 })
                 .catch(err => {
-                    // appContext.setAlert({
-                    //     message: 'Wrong username or password. Please login again',
-                    //     variant: 'warning',
-                    // });
-                    // appContext.setCurrentUser(null);
-                    // setValidated(false);
-                    // form.reset();
-                    // console.log(err.response);
+                    appContext.setSnackbar(
+                        true,
+                        "Error: Username and password don't match",
+                        'error',
+                    );
                 });
         }
         setValidated(true);
@@ -174,15 +172,10 @@ const ResetPassword: React.FunctionComponent = () => {
                 )
                 .then(res => {
                     console.log(res.data);
-
                     appContext.setSnackbar(true, 'Your password has been reset!', 'success');
                     navigate('/login');
                 })
                 .catch(err => {
-                    // appContext.setAlert({
-                    //     message: 'Wrong username or password. Please login again',
-                    //     variant: 'warning',
-                    // });
                     appContext.setCurrentUser(null);
                     setValidated(false);
                     form.reset();
@@ -263,7 +256,7 @@ const ResetPassword: React.FunctionComponent = () => {
                                 // validated={validated}
                                 onSubmit={resetPasswordHandler}
                             >
-                                <h4>Reset password</h4>
+                                <h1>Reset password</h1>
                                 <Form.Text>
                                     Enter matching username and email to reset your password
                                 </Form.Text>
@@ -323,11 +316,12 @@ const ResetPassword: React.FunctionComponent = () => {
                                     </InputGroup>
                                 </Form.Group>
 
+                                {/* TODO: wrong button sizes */}
                                 <div className="flex flex-row items-center justify-between gap-2 mt-4">
                                     <SecondaryTransparentButton onClick={() => setView('check')}>
-                                        ⬅
+                                        <ArrowBackIcon />
                                     </SecondaryTransparentButton>
-                                    <PrimaryBlackButton className="w-full">
+                                    <PrimaryBlackButton className="flex-1">
                                         Reset password
                                     </PrimaryBlackButton>
                                 </div>

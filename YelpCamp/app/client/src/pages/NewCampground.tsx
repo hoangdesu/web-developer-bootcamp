@@ -17,6 +17,7 @@ import PageContainer from '../components/PageContainer';
 import PreviewMap from '../components/PreviewMap';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 import { MapboxFeature, UploadImage } from '../types';
+import HelpIconTooltip from '../components/HelpIconTooltip';
 
 const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
     display: flex;
@@ -369,8 +370,7 @@ const NewCampground: React.FunctionComponent = () => {
                                     <span className="text-muted text-sm ">(maximum 12)</span>
                                 </Form.Label>
 
-                                {/* <span className="text-muted text-xs">Drag to rearrange images</span> */}
-                                <span>//display tooltip icon here</span>
+                                <HelpIconTooltip title={'Drag images to re-arrange'} />
                             </div>
                             <Form.Control
                                 type="file"

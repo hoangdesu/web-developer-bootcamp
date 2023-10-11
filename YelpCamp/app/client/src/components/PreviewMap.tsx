@@ -1,6 +1,6 @@
-import React, { useRef, useMemo, useCallback, useEffect, useState, memo } from 'react';
-import Map, { MapRef, Marker, NavigationControl } from 'react-map-gl';
 import mapboxgl from 'mapbox-gl';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import Map, { MapRef, Marker, NavigationControl } from 'react-map-gl';
 
 interface PreviewMapProps {
     coordinates: number[];
@@ -31,11 +31,11 @@ const PreviewMap: React.FunctionComponent<PreviewMapProps> = ({ coordinates, loc
     const popup = useMemo(() => {
         if (location && coordinates.length > 0) {
             return new mapboxgl.Popup().setOffset(10).setHTML(`
-            <div>
+            <div style="padding: 6px;">
                 <h6>${location || 'Location'}</h6>
-                <small className="text-muted text-xs">(${coordinates[0].toFixed(
-                    2,
-                )} ${coordinates[1].toFixed(2)})</small>
+                <small style="center">(${coordinates[0].toFixed(2)} ${coordinates[1].toFixed(
+                2,
+            )})</small>
             </div>`);
         }
     }, [location]);

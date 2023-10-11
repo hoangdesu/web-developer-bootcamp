@@ -17,11 +17,6 @@ const ImageThumbnails = styled.div`
     width: 100%;
     overflow: scroll;
 
-    // TODO: use GRID display for thumbnail container
-    /* display: grid;
-    grid-gap: 25px;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 100px)); */
-
     & img {
         transition: 0.3s all;
         width: 100px;
@@ -80,11 +75,9 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
     const [image, setImage] = useState('');
 
     const changeImageHandler = (index: number) => {
-        // console.log(index);
         setActiveIndex(index);
     };
 
-    // if (campground.images.length > 0) console.log('images')
     // TODO: clicking on each image (OR A FULLSCREEN ICON) will show big size in CUSTOM MODAL
     return (
         <section className="mb-5">

@@ -179,7 +179,11 @@ const Campground: React.FunctionComponent = () => {
                 );
             })
             .catch(err => {
-                appContext.setSnackbar(true, 'Error: Failed adding campground to your favorite', 'error');
+                appContext.setSnackbar(
+                    true,
+                    'Error: Failed adding campground to your favorite',
+                    'error',
+                );
             });
     };
 
@@ -281,59 +285,54 @@ const Campground: React.FunctionComponent = () => {
                 </Col>
 
                 <Col lg={5}>
-                    {/* {mapViewState && <Map viewState={mapViewState} />} */}
                     {/* using react-map-gl */}
                     {campground && <CampgroundMap campground={campground} />}
 
                     {/* only activate review form for logged in user */}
-                    {appContext.currentUser ? (
-                        <>
-                            <Form
-                                className="mt-5 flex flex-column"
-                                noValidate
-                                validated={validated}
-                                onSubmit={onReviewSubmit}
-                            >
-                                <h3 className="font-normal">Leave a review</h3>
-                                <Form.Group className="mb-2" controlId="reviewRating">
-                                    <Rating
-                                        name="simple-controlled"
-                                        value={ratingValue}
-                                        onChange={(event, newValue) => {
-                                            setRatingValue(newValue || 1);
-                                        }}
-                                    />
-                                </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="reviewComment">
-                                    <Form.Label>Comment</Form.Label>
-                                    <Form.Control as="textarea" ref={reviewText} required />
-                                    <Form.Control.Feedback type="invalid">
-                                        Please add your comment
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                                <PrimaryBlackButton className="mt-1 bg-red-400 self-end">
-                                    Submit
-                                </PrimaryBlackButton>
-                            </Form>
-                        </>
-                    ) : (
-                        // TODO: STYLE THIS MF
-                        <Link to="/login">Login to add your review</Link>
+                    {appContext.currentUser && (
+                        <Form
+                            className="mt-5 flex flex-column mb-[-2rem]"
+                            noValidate
+                            validated={validated}
+                            onSubmit={onReviewSubmit}
+                        >
+                            <h3 className="font-normal">Leave a review</h3>
+                            <Form.Group className="mb-2" controlId="reviewRating">
+                                <Rating
+                                    name="simple-controlled"
+                                    value={ratingValue}
+                                    onChange={(event, newValue) => {
+                                        setRatingValue(newValue || 1);
+                                    }}
+                                />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="reviewComment">
+                                <Form.Label>Comment</Form.Label>
+                                <Form.Control as="textarea" ref={reviewText} required />
+                                <Form.Control.Feedback type="invalid">
+                                    Please add your comment
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <PrimaryBlackButton className="mt-1 bg-red-400 self-end">
+                                Submit
+                            </PrimaryBlackButton>
+                        </Form>
                     )}
-                    <h4 className="font-normal">Reviews</h4>
 
+                    <h4 className="font-normal mt-5">Reviews</h4>
                     {campground.reviews?.length > 0 && (
                         <Box
                             sx={{
                                 display: 'flex',
-                                alignItems: 'baseline',
+                                alignItems: 'base-line',
                                 justifyContent: 'space-between',
                             }}
                         >
                             <p>
                                 {campground.reviews?.length || 0}{' '}
-                                {campground.reviews?.length === 0 ? 'review' : 'reviews'} · Average
+                                {campground.reviews?.length > 1 ? 'reviews' : 'review'} · Average
                                 rating: {averageRating(campground)}
                             </p>
                             <Rating
