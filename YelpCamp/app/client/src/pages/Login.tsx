@@ -154,7 +154,8 @@ const Login: React.FunctionComponent = () => {
                 </Link>
 
                 <p className="text-muted text-center italic my-4">"Life is a journey"</p>
-
+        
+        {/* // TODO: set login state */}
                 <Form className="mb-5" noValidate validated={validated} onSubmit={loginHandler}>
                     <Form.Group className="mb-3" controlId="username">
                         <Form.Label>Username</Form.Label>

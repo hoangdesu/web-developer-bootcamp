@@ -91,10 +91,6 @@ const createCampground = catchAsync(async (req, res, next) => {
 });
 
 // PUT /api/v1/campgrounds/:id
-// TODO: allow editing current images array to set Featured image
-// TODO: fix not adding new images will crash
-// SOLUTION: USING SAME JOI SCHEMA WONT WORK. MUST CREATE SEPARATE SCHEMA FOR EDITING FORM
-// (current schema requires a list of images in campground object -> but we now have multiple image arrays)
 const editCampground = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { title, location, price, description } = req.body.campground;

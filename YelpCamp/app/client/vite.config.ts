@@ -25,5 +25,9 @@ export default ({ mode }) => {
             // https: true,
         },
         // base: '/web-developer-bootcamp/'
+        root: 'src',
+        build: {
+            outDir: './dist',
+        },
     });
 };
