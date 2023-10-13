@@ -11,6 +11,7 @@ const About: React.FunctionComponent = () => {
     return (
         <PageContainer>
             <h1>About</h1>
+            <p>put something here...</p>
         </PageContainer>
     );
 };
