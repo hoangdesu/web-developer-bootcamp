@@ -13,7 +13,7 @@ export default ({ mode }) => {
             proxy: {
                 '/api/v1': {
                     target: process.env.TARGET_PROXY_URL,
-                    changeOrigin: true,
+                    changeOrigin: false,
                     secure: false,
                 },
             },
@@ -25,9 +25,9 @@ export default ({ mode }) => {
             // https: true,
         },
         // base: '/web-developer-bootcamp/'
-        root: 'src',
-        build: {
-            outDir: './dist',
-        },
+        // root: 'src',
+        // build: {
+        //     outDir: './dist',
+        // },
     });
 };

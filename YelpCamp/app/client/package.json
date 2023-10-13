@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode dev",
-    "build": "tsc && vite build --mode prod",
+    "build:tsc": "tsc && vite build --mode prod",
+    "build": "vite build --mode prod",
     "preview": "vite preview --mode dev",
     "start:dev": "yarn run dev",
     "start:prod": "vite --mode prod"
