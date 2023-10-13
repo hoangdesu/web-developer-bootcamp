@@ -36,6 +36,7 @@ const paginationTheme = createTheme({
     },
 });
 
+
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
@@ -43,6 +44,8 @@ const App: React.FunctionComponent = () => {
     const [filteredCampgroundList, setFilteredCampgroundList] = useState<Campground[]>([]);
     const [page, setPage] = useState(1);
     const itemsPerPage = 12;
+
+    axios.defaults.baseURL = 'https://yelp-camp-api.onrender.com';
 
     useEffect(() => {
         document.title = 'YelpCamp';
