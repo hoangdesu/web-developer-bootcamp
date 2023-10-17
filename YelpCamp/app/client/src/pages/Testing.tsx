@@ -146,7 +146,7 @@ const Testing = () => {
 
             <h1>Testing form</h1>
             <form
-                action="/testing/delete-images-array"
+                action="http://localhost:3001/testing/delete-images-array"
                 method="post"
                 // encType="multipart/form-data" // must NOT be this type for the array to work
                 // encType="application/json"
@@ -169,7 +169,7 @@ const Testing = () => {
             </form>
 
             <h1>Seed database</h1>
-            <form action={`/testing/resetdb`} method="get">
+            <form action={`http://localhost:3001/testing/resetdb`} method="get">
                 <input type="text" name="count" id="" placeholder="campgrounds (default=5)" />
                 <button type="submit">Reseed database</button>
             </form>

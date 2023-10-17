@@ -42,6 +42,8 @@ const Campground: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
+    axios.defaults.baseURL = 'https://yelp-camp-api.onrender.com';
+
     const reviewText = useRef<HTMLInputElement>(null);
 
     const [ratingValue, setRatingValue] = useState<number>(3);
