@@ -51,7 +51,7 @@ db.once('open', () => {
         console.log(`🚀 [${process.env.NODE_ENV}] Server running at http://localhost:${PORT}`);
     });
 });
-app.use(cors( { credentials: true }));
+// app.use(cors( { credentials: true }));
 app.use(cors());
 
 

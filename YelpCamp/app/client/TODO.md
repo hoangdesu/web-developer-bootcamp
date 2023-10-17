@@ -85,4 +85,4 @@ if possible: can use 1 array to preview / edit images. or just use 2 arrays :/
 
 PROBLEMS:
 - check session / cookies from the back end. No sessionId (connect.sid) is set on the browser. Using proxy server DOES work for some reason :/ ?
-- cannot enter path directly into browser e.g. site.com/login. Have to use router?
+[FIXED] - cannot enter path directly into browser e.g. site.com/login. Have to use router?

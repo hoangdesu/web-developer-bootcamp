@@ -38,7 +38,7 @@ const StyledSection = styled.section`
 `;
 
 const Campground: React.FunctionComponent = () => {
-    const { campgroundId } = useLoaderData();
+    const { campgroundId } = useLoaderData() as { campgroundId: string };
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 

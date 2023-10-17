@@ -16,21 +16,17 @@ export default ({ mode }) => {
             proxy: {
                 '/api/v1': {
                     target: process.env.TARGET_PROXY_URL,
-                    changeOrigin: false,
-                    secure: false,
+                    changeOrigin: true,
+                    // secure: true,
                 },
             },
             watch: {
                 usePolling: true,
             },
-            host: true, // needed for the Docker Container port mapping to work
+            host: true,
             port: parseInt(process.env.PORT),
             // https: true,
         },
         // base: '/web-developer-bootcamp/' // only used for production, will fukup dev server
-        // root: 'src',
-        // build: {
-        //     outDir: './dist',
-        // },
     });
 };
