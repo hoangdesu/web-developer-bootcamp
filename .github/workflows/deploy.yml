@@ -28,6 +28,11 @@ jobs:
             url: ${{ steps.deployment.outputs.page_url }}
 
         runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: ./YelpCamp/app/client
+
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -37,17 +42,16 @@ jobs:
               with:
                   node-version: 18
                   cache: 'npm'
+                  cache-dependency-path: './YelpCamp/app/client/yarn-lock.json'
 
             - name: Install Yarn
               run: npm install yarn
 
             - name: Install dependencies
               run: yarn
-              working-directory: ./YelpCamp/app/client
 
             - name: Build
               run: yarn run build
-              working-directory: ./YelpCamp/app/client
 
             - name: Setup Pages
               uses: actions/configure-pages@v3
