@@ -8,6 +8,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import AppContextProvider from './store/AppContextProvider';
 import router from './router';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://yelp-camp-api.onrender.com';
 
 const queryClient = new QueryClient({
     defaultOptions: {
