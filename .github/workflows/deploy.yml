@@ -43,7 +43,7 @@ jobs:
                   node-version: 18
                   cache: 'npm'
                   # cache-dependency-path: ${{github.workspace}}/YelpCamp/app/client/package-lock.json
-                  # cache-dependency-path: ${{github.workspace}}/YelpCamp/app/client/yarn.lock
+                  cache-dependency-path: ${{github.workspace}}/YelpCamp/app/client/yarn.lock
 
             - name: Install yarn
               run: npm install yarn
