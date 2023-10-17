@@ -45,7 +45,7 @@ const App: React.FunctionComponent = () => {
     const [page, setPage] = useState(1);
     const itemsPerPage = 12;
 
-    // axios.defaults.baseURL = 'https://yelp-camp-api.onrender.com';
+    axios.defaults.baseURL = 'https://yelp-camp-api.onrender.com';
     // axios.defaults.baseURL = 'http://localhost:3001';
 
     useEffect(() => {

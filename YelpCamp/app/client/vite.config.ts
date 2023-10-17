@@ -13,13 +13,13 @@ export default ({ mode }) => {
         // plugins: [react(), mkcert()],
         plugins: [react()],
         server: {
-            // proxy: {
-            //     '/api/v1': {
-            //         target: process.env.TARGET_PROXY_URL,
-            //         changeOrigin: false,
-            //         secure: false,
-            //     },
-            // },
+            proxy: {
+                '/api/v1': {
+                    target: process.env.TARGET_PROXY_URL,
+                    changeOrigin: false,
+                    secure: false,
+                },
+            },
             watch: {
                 usePolling: true,
             },
