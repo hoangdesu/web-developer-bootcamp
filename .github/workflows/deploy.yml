@@ -59,7 +59,7 @@ jobs:
               uses: actions/upload-pages-artifact@v1
               with:
                   # Upload dist repository
-                  path: './dist'
+                  path: './YelpCamp/app/client/dist'
 
             - name: Deploy to GitHub Pages
               id: deployment
