@@ -27,7 +27,7 @@ export default ({ mode }) => {
             port: parseInt(process.env.PORT),
             // https: true,
         },
-        // base: '/web-developer-bootcamp/'
+        base: '/web-developer-bootcamp/'
         // root: 'src',
         // build: {
         //     outDir: './dist',
