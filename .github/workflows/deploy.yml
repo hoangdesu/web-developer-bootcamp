@@ -40,10 +40,12 @@ jobs:
             - name: Set up Node
               uses: actions/setup-node@v3
               with:
-                  node-version: 18
+                  node-version: 16.14
                   cache: 'npm'
                   # cache-dependency-path: ${{github.workspace}}/YelpCamp/app/client/package-lock.json
-                  cache-dependency-path: ${{github.workspace}}/YelpCamp/app/client/yarn.lock
+                  # cache-dependency-path: ${{github.workspace}}/YelpCamp/app/client/yarn.lock
+                  cache-dependency-path: '**/yarn.lock'
+                  
 
             - name: Install yarn
               run: npm install yarn
@@ -52,7 +54,7 @@ jobs:
               run: yarn
 
             - name: Build
-              run: npm run build
+              run: yarn run build
 
             - name: Setup Pages
               uses: actions/configure-pages@v3
