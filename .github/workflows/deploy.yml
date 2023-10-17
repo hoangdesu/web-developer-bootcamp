@@ -40,7 +40,7 @@ jobs:
             - name: Set up Node
               uses: actions/setup-node@v3
               with:
-                  node-version: 16.14
+                  node-version: 18
                   cache: 'npm'
                   # cache-dependency-path: ${{github.workspace}}/YelpCamp/app/client/package-lock.json
                   # cache-dependency-path: ${{github.workspace}}/YelpCamp/app/client/yarn.lock
