@@ -42,7 +42,7 @@ jobs:
               with:
                   node-version: 18
                   cache: 'npm'
-                  cache-dependency-path: './YelpCamp/app/client/package-lock.json'
+                  cache-dependency-path: ${{github.workspace}}/YelpCamp/app/client/package-lock.json
 
             - name: Install dependencies
               run: npm install
