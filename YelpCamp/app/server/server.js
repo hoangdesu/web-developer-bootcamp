@@ -14,6 +14,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 const YelpcampError = require('./utilities/YelpcampError');
 const sessionConfigs = require('./configs/sessionConfigs');
@@ -35,6 +37,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
+
 // Mongoose
 mongoose.set('strictQuery', true);
 const URI = `${process.env.MONGO_URI}`;
@@ -48,9 +51,15 @@ db.once('open', () => {
         console.log(`🚀 [${process.env.NODE_ENV}] Server running at http://localhost:${PORT}`);
     });
 });
+app.use(cors( { credentials: true }));
+app.use(cors());
+
 
 // Passport
 app.use(session(sessionConfigs));
+app.use(cookieParser());
+// app.use(bodyParser());
+// app.use(session({ secret: 'TEST '}));
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -59,9 +68,8 @@ passport.deserializeUser(User.deserializeUser());
 
 // middlewares
 app.use(express.json());
-app.use(cors());
 app.use(methodOverride('_method'));
-app.use('/static', express.static(path.join(__dirname, 'public')));
+// app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use(
     mongoSanitize({
         allowDots: true,

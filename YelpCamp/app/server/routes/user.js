@@ -12,7 +12,19 @@ router.route('/').get(controller.getAllUsers).post(controller.createUser);
 
 router.post('/reset-password', controller.resetPassword);
 
-router.post('/login', passport.authenticate('local'), controller.login);
+router.post('/login', (req, res, next) => {
+    console.log('got a login');
+
+    console.log('req.body', req.body)
+
+    console.log('req.session', req.session);
+
+    // console.log('req:',{ req});
+
+    next();
+
+
+} , passport.authenticate('local'), controller.login);
 
 router.post('/logout', controller.logout);
 

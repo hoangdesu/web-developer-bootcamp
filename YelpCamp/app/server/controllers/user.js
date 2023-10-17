@@ -60,6 +60,7 @@ const getUserById = async (req, res) => {
 
 const login = (req, res, next) => {
     console.log('User logged in:', req.user.username);
+    // console.log('req.user', req.user);
     res.sendStatus(200);
 };
 

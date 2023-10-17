@@ -88,7 +88,7 @@ const Login: React.FunctionComponent = () => {
     const formUsername = useRef<HTMLInputElement>(null);
     const formPassword = useRef<HTMLInputElement>(null);
 
-    axios.defaults.baseURL = 'https://yelp-camp-api.onrender.com';
+    // axios.defaults.baseURL = 'https://yelp-camp-api.onrender.com';
 
 
     useEffect(() => {
