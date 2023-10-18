@@ -37,7 +37,6 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
-
 // Mongoose
 mongoose.set('strictQuery', true);
 const URI = `${process.env.MONGO_URI}`;
@@ -51,9 +50,18 @@ db.once('open', () => {
         console.log(`🚀 [${process.env.NODE_ENV}] Server running at http://localhost:${PORT}`);
     });
 });
-// app.use(cors( { credentials: true }));
-app.use(cors());
-
+app.use(
+    cors({
+        credentials: true,
+        origin: [
+            'http://localhost:5173',
+            'http://localhost:4173',
+            'http://localhost:3000',
+            'https://yelpcamp.hoangdesu.com',
+        ],
+    }),
+);
+// app.use(cors());
 
 // Passport
 app.use(session(sessionConfigs));

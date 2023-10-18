@@ -61,7 +61,7 @@ const getUserById = async (req, res) => {
 const login = (req, res, next) => {
     console.log('User logged in:', req.user.username);
     // console.log('req.user', req.user);
-    res.cookie('name', 'cún');
+    res.cookie('express:D', `this_cookie_is_sent_from_server_${Math.round(Math.random() * 10)}`);
     res.sendStatus(200);
 };
 
