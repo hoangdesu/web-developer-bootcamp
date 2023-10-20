@@ -28,7 +28,7 @@ const CampgroundMap: React.FunctionComponent<CampgroundMapProps> = ({ campground
                 attributionControl={false}
             >
                 <NavigationControl />
-                <Marker {...coordinates} anchor="top" onClick={() => setShowPopup(true)} />
+                <Marker {...coordinates} anchor="top" onClick={() => setShowPopup(!showPopup)} />
                 {showPopup && (
                     <Popup
                         longitude={coordinates.longitude}
@@ -36,7 +36,7 @@ const CampgroundMap: React.FunctionComponent<CampgroundMapProps> = ({ campground
                         anchor="bottom"
                         closeOnClick={false}
                         onClose={() => setShowPopup(false)}
-                        closeButton={true}
+                        closeButton={false}
                         offset={10}
                     >
                         <div style={{ padding: '6px' }}>

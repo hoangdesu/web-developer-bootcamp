@@ -89,4 +89,7 @@ PROBLEMS:
 
 [FIXED] - Another problem: EditCampground -> request to mapbox api is blocked by CORS policy
 
-
+[] finish reservation
+[] style navbar on mobile
+[] SEO meta tags
+[] sitemap, robots.txt or sth similar for SEO

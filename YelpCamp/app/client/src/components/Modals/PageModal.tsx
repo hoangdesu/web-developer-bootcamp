@@ -5,7 +5,7 @@ import ModalLogin from './ModalLogin';
 
 const style = {
     position: 'fixed',
-    top: '20vh', // TODO: different position from top on mobile vs desktop (10vh mobile)
+    top: '16vh',
     left: 'calc(50% - (500px/2))',
     transform: 'translate(-50%, -50%)',
     width: '500px',
@@ -29,9 +29,9 @@ const style = {
     },
 
     '@media (max-width: 600px)': {
-        // background: 'red',
         left: 'calc(50% - (90%/2))',
         width: '90%',
+        top: '8vh',
     },
 };
 
@@ -53,9 +53,7 @@ const index = () => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
             open={appContext.modal.open}
-            onClose={() =>
-                appContext.setModal({ open: false, content: null })
-            }
+            onClose={() => appContext.setModal({ open: false, content: null })}
         >
             <Box sx={style}>{content}</Box>
         </Modal>

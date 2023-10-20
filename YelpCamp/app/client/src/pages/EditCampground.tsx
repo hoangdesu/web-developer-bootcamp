@@ -268,8 +268,6 @@ const EditCampground: React.FunctionComponent = () => {
 
     if (error) return <p>Error</p>;
 
-    console.log(campground);
-
     return (
         <PageContainer>
             {campground && (
