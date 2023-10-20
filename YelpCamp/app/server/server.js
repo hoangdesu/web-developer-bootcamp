@@ -86,7 +86,7 @@ app.use('/api/v1/campgrounds', campgroundRoutes);
 app.use('/api/v1/campgrounds/:campgroundId/reviews', reviewRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/reservation', reservationRoutes);
+app.use('/api/v1/reservations', reservationRoutes);
 app.use('/testing', testingRoutes);
 
 // 404, place after all route handlers

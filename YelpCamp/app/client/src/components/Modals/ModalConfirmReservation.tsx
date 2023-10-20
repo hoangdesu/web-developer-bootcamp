@@ -18,6 +18,10 @@ const Table = styled.table`
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 6px;
+
+    td {
+        vertical-align: top;
+    }
 `;
 
 const ModalConfirmReservation: React.FC<ModalProps> = ({
@@ -39,7 +43,6 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
         },
         {
             title: 'Check-in',
-            // data: Date.parse(reservation.checkIn),
             data: new Date(reservation.checkIn).toLocaleString(undefined, {
                 year: 'numeric',
                 month: 'short',
@@ -77,8 +80,8 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
     ];
 
     const makeReservation = () => {
-        axios.post('/api/v1/reservation/new', { reservation }).then(res => {
-            navigate(`/reservation/${res.data._id}`);
+        axios.post('/api/v1/reservations', { reservation }).then(res => {
+            navigate(`/reservations/${res.data._id}`);
         });
     };
 
@@ -87,30 +90,32 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
             <h2 className="mb-3">Confirm reservation</h2>
             <Table className="w-full border-separate">
                 {TABLE_FIELDS.map(({ title, data }) => (
-                    <tr key={title}>
-                        <td>{title}</td>
-                        <td>
-                            <span
-                                className={`font-medium ${
-                                    title === 'Discount code' &&
-                                    discountPercentage > 0 &&
-                                    'text-red-500'
-                                }`}
-                            >
-                                {data}
-                            </span>
-                        </td>
-                    </tr>
+                    <tbody>
+                        <tr key={title}>
+                            <td>{title}</td>
+                            <td>
+                                <span
+                                    className={`font-medium ${
+                                        title === 'Discount code' &&
+                                        discountPercentage > 0 &&
+                                        'text-red-500'
+                                    }`}
+                                >
+                                    {data}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
                 ))}
             </Table>
-            <div className="flex flex-row items-center gap-2 mt-3">
-                {/* // TODO: button sizes are wrong */}
+            <div className="w-full flex flex-row gap-2 mt-3">
                 <SecondaryTransparentButton
                     onClick={() => appContext.setModal({ open: false, content: null })}
+                    className=""
                 >
                     Cancel
                 </SecondaryTransparentButton>
-                <PrimaryBlackButton onClick={makeReservation} className="w-full">
+                <PrimaryBlackButton onClick={makeReservation} className="flex-1 px-3">
                     Checkout <ArrowForwardIcon />
                 </PrimaryBlackButton>
             </div>

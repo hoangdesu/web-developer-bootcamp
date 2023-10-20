@@ -4,12 +4,12 @@ const router = express.Router();
 const controller = require('../controllers/reservation');
 
 /**
- * @Route: /api/v1/reservation
+ * @Route: /api/v1/reservations
  */
 
-router.get('/all', controller.getAllReservations);
+router.get('/', controller.getAllReservations);
 
-router.post('/new', controller.createReservation);
+router.post('/', controller.createReservation);
 
 router.get('/discount', controller.checkDiscountCode);
 

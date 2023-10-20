@@ -75,13 +75,13 @@ export default createBrowserRouter([
         errorElement: <ErrorBoundary />,
     },
     {
-        path: '/reservation/:reservationId',
+        path: '/reservations/:reservationId',
         element: <Reservation />,
         loader: resvLoader,
         errorElement: <ErrorBoundary />,
     },
     {
-        path: '/reservation/:reservationId/confirm',
+        path: '/reservations/:reservationId/confirm',
         element: <Confirm />,
         loader: resvLoader,
         errorElement: <ErrorBoundary />,

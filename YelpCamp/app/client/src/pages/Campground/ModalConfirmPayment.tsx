@@ -18,7 +18,7 @@ const ModalConfirmPayment = () => {
     useEffect(() => {
         const paymentTimer = setInterval(() => {
             axios
-                .get('/api/v1/reservation/status')
+                .get('/api/v1/reservations/status')
                 .then(res => res.data)
                 .then(data => {
                     console.log(data);
@@ -41,29 +41,29 @@ const ModalConfirmPayment = () => {
     console.log(window.location.protocol, window.location.host, window.location.hostname);
     const urlForQR = `${window.location.protocol}//${window.location.host}`;
 
-    const [qrQuery] = useQueries([
-        {
-            queryKey: ['reservationQR'],
-            queryFn: () =>
-                // axios.get(`/api/v1/reservation/${url}/qr`).then(res => res.data),
-                axios
-                    .post(`/api/v1/reservation/qr`, {
-                        url: urlForQR,
-                    })
-                    .then(res => res.data),
-        },
-    ]);
+    // const [qrQuery] = useQueries([
+    //     {
+    //         queryKey: ['reservationQR'],
+    //         queryFn: () =>
+    //             // axios.get(`/api/v1/reservation/${url}/qr`).then(res => res.data),
+    //             axios
+    //                 .post(`/api/v1/reservation/qr`, {
+    //                     url: urlForQR,
+    //                 })
+    //                 .then(res => res.data),
+    //     },
+    // ]);
 
-    if (qrQuery.isLoading) return <>Loading...</>;
+    // if (qrQuery.isLoading) return <>Loading...</>;
 
-    if (qrQuery.error) return <>Error</>;
+    // if (qrQuery.error) return <>Error</>;
 
     return (
         <div>
             <h1>Confirm payment</h1>
             <p>Online payment</p>
 
-            <img src={qrQuery.data} alt="" height={200} />
+            {/* <img src={qrQuery.data} alt="" height={200} /> */}
             <p>{seconds}</p>
             <p>Status: {status}</p>
         </div>

@@ -181,7 +181,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
 
         if (discountCouponRef.current) {
             axios
-                .get('/api/v1/reservation/discount', {
+                .get('/api/v1/reservations/discount', {
                     params: {
                         discountCode: discountCouponRef.current.value,
                     },

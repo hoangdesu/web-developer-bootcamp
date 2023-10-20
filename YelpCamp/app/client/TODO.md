@@ -89,7 +89,19 @@ PROBLEMS:
 
 [FIXED] - Another problem: EditCampground -> request to mapbox api is blocked by CORS policy
 
-[] finish reservation
 [] style navbar on mobile
 [] SEO meta tags
 [] sitemap, robots.txt or sth similar for SEO
+
+[] change /user paths to /users
+
+[] finish reservation
+RESERVATION TODOS:
+*need heavy works on <Reservation />
+
+- navigate to /reservations/:id
+- rename resv page
+- change api endpoints
+
+- /reservations/:id
+- /reservations/:id/confirm -> mobile view, rename this component

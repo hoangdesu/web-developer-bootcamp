@@ -15,7 +15,7 @@ const Confirm = () => {
     const [showCheckmark, setShowCheckmark] = useState(false);
 
     const makePayment = () => {
-        axios.get(`/api/v1/reservation/${reservationId}/pay`).then(data => {
+        axios.get(`/api/v1/reservations/${reservationId}/pay`).then(data => {
             console.log('AFTER PAY:', data);
             // reservationQuery.refetch();
             setShowCheckmark(true);
