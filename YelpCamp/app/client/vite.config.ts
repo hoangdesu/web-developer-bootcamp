@@ -13,21 +13,22 @@ export default ({ mode }) => {
         // plugins: [react(), mkcert()],
         plugins: [react()],
         server: {
-            proxy: {
-                '/api/v1': {
-                    target: process.env.TARGET_PROXY_URL,
-                    changeOrigin: true,
-                    // secure: true,
-                },
-            },
-            https: false,
-            open: true,
-            // watch: {
-            //     usePolling: true,
-            // },
             host: true,
             port: parseInt(process.env.PORT),
-            // https: true,
+            https: false,
+            open: true,
+            watch: {
+                usePolling: true,
+            },
+
+            // remove proxy server for production build
+            // proxy: {
+            //     '/api/v1': {
+            //         target: process.env.TARGET_PROXY_URL,
+            //         changeOrigin: true,
+            //         secure: true,
+            //     },
+            // },
         },
         // base: '/web-developer-bootcamp/' // only used for production, will fukup dev server
     });

@@ -19,8 +19,6 @@ router.get('/:id/status', controller.checkStatus);
 
 router.get('/:id/pay', controller.pay);
 
-router.post('/:id/qr', controller.getQRCode);
-
 router.get('/:id/pending', controller.pending);
 
 module.exports = router;

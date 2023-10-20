@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 import { useQueries } from 'react-query';
 import { useLoaderData } from 'react-router-dom';
 

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import styled from '@emotion/styled';
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { Card, Form, OverlayTrigger, Popover, PopoverHeader } from 'react-bootstrap';

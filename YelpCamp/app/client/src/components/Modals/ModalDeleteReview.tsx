@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import AppContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 import { Review } from '../../types';
 
 interface ModalProps {

@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 import { Form, InputGroup } from 'react-bootstrap';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 import { useNavigate } from 'react-router-dom';

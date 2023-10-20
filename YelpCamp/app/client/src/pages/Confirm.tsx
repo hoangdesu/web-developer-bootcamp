@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import axios from 'axios';
+import axios from '../config/yelpcampAxios';
 import React, { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import CheckmarkCSSAnimation from '../components/CheckmarkCSSAnimation';
@@ -32,7 +32,6 @@ const Confirm = () => {
             <div className="w-screen h-screen flex flex-col items-center justify-center">
                 <Button onClick={makePayment}>Confirm</Button>
             </div>
-
         </div>
     );
 };

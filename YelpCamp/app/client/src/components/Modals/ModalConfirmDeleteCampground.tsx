@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
 import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 import AppContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';

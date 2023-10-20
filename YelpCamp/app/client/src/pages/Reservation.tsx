@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import axios from 'axios';
+import axios from '../config/yelpcampAxios';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { useQueries } from 'react-query';
 import Logo from '../assets/logo.png';
@@ -38,7 +38,6 @@ const Reservation = () => {
 
     console.log('urlForQR', urlForQR);
     useEffect(() => {
-
         const qrEl = qrCode.defineCustomElements(window);
         console.log('qrEl', qrEl);
 

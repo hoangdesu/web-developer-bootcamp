@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
-import axios from 'axios';
+import axios from '../config/yelpcampAxios';
 
 const Testing = () => {
     const reader = new FileReader();
@@ -63,11 +63,9 @@ const Testing = () => {
     const loginHandler = e => {
         e.preventDefault();
 
-
         axios
             .post(
-                'http://localhost:3001/api/v1/users/login',
-                // '/api/v1/users/login',
+                '/api/v1/users/login',
                 {
                     username: username,
                     password: pwd,
@@ -77,11 +75,10 @@ const Testing = () => {
                         'Content-Type': 'application/json',
                     },
                     // withCredentials: true,
-
                 },
             )
             .then(res => {
-                console.log('login ok')
+                console.log('login ok');
                 console.log(res.data);
             });
     };
@@ -89,7 +86,7 @@ const Testing = () => {
     const logout = () => {
         axios
             .post(
-                'http://localhost:3001/api/v1/users/logout',
+                '/api/v1/users/logout',
                 {},
                 {
                     headers: {

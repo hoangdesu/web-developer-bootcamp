@@ -95,16 +95,6 @@ const Navbar: React.FunctionComponent = () => {
 
     const logoutHandler = async () => {
         appContext.setModal({ open: true, content: <ModalLogout /> });
-        // if (confirm('Logging out?')) {
-        //     await axios.post('/api/v1/users/logout');
-        //     appContext.setCurrentUser(null);
-        //     localStorage.removeItem('currentUser');
-        //     appContext.setAlert({
-        //         message: `Goodbye!`,
-        //         variant: 'success',
-        //     });
-        //     navigate('/');
-        // }
     };
 
     return (

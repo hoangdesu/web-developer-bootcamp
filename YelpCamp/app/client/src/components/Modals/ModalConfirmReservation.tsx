@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import AppContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
+import axios from '../../config/yelpcampAxios';
 import { Campground, Reservation } from '../../types';
-import axios from 'axios';
 import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
 import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
 import styled from '@emotion/styled';

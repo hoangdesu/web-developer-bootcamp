@@ -8,15 +8,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import AppContextProvider from './store/AppContextProvider';
 import router from './router';
-import axios from 'axios';
-
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
-// axios.defaults.headers.common['Cross-Origin-Opener-Policy'] = 'same-origin';
-// axios.defaults.headers.common['Cross-Origin-Embedder-Policy'] = 'require-corp';
-// axios.defaults.headers.common['Content-Type'] = 'application/json';
-axios.defaults.withCredentials = true;
-// res.setHeader("Cross-Origin-Opener-Policy", "same-origin")
-// res.setHeader("Cross-Origin-Embedder-Policy", "require-corp")
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -27,7 +18,6 @@ const queryClient = new QueryClient({
 });
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    // <React.StrictMode>
     <ThemeProvider>
         <QueryClientProvider client={queryClient}>
             <AppContextProvider>
@@ -35,5 +25,4 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             </AppContextProvider>
         </QueryClientProvider>
     </ThemeProvider>,
-    // </React.StrictMode>,
 );

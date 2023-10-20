@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 import React, { useContext, useEffect } from 'react';
 import appContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';

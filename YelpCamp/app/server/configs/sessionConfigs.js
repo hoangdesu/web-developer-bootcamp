@@ -1,7 +1,5 @@
 const MongoStore = require('connect-mongo');
 require('dotenv').config();
-// if (process.env.NODE_ENV !== 'production') {
-// }
 
 const mongoStore = MongoStore.create({
     mongoUrl: process.env.MONGO_URI,

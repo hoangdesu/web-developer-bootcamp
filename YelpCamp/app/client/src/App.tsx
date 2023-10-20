@@ -1,9 +1,7 @@
 import React, { useState, useContext, useRef, FormEvent, useEffect } from 'react';
 import { useQueries } from 'react-query';
-import axios from 'axios';
-import styled from '@emotion/styled';
+import axios from './config/yelpcampAxios';
 import { useNavigate } from 'react-router-dom';
-import { lime, purple, green } from '@mui/material/colors';
 
 import { Col, Row } from 'react-bootstrap';
 import { Pagination, ThemeProvider, createTheme } from '@mui/material';
@@ -36,7 +34,6 @@ const paginationTheme = createTheme({
     },
 });
 
-
 const App: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
@@ -44,8 +41,6 @@ const App: React.FunctionComponent = () => {
     const [filteredCampgroundList, setFilteredCampgroundList] = useState<Campground[]>([]);
     const [page, setPage] = useState(1);
     const itemsPerPage = 12;
-
-    // axios.defaults.baseURL = 'http://localhost:3001';
 
     useEffect(() => {
         document.title = 'YelpCamp';

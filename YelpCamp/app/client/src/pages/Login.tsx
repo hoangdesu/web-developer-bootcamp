@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import axios from 'axios';
+import axios from '../config/yelpcampAxios';
 
 import AppContext from '../store/app-context';
 
@@ -103,11 +103,11 @@ const Login: React.FunctionComponent = () => {
 
     const loginHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setIsLoggingIn(true);
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
+            setIsLoggingIn(true);
             axios
                 .post(
                     '/api/v1/users/login',
@@ -122,7 +122,7 @@ const Login: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    document.cookie = "testing=logincookie"
+                    document.cookie = 'testing=logincookie';
                     axios
                         .get('/api/v1/auth/currentuser')
                         .then(resp => {

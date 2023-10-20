@@ -1,20 +1,17 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQueries } from 'react-query';
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 
 import AppContext from '../../store/app-context';
 
 import { Container, Button, Form, Col, Row } from 'react-bootstrap';
 import { Star, Favorite, FavoriteBorder, IosShare } from '@mui/icons-material';
 
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
 import PageContainer from '../../components/PageContainer';
 import Loading from '../Loading';
 import Review from './Review';
 import { Review as ReviewType } from '../../types';
-import FlashAlert from '../../components/FlashAlert';
 import { Alert, Box, Modal, Rating, Snackbar } from '@mui/material';
 import CampgroundCardCarousel from './CampgroundCardCarousel';
 import CampgroundMap from './CampgroundMap';
