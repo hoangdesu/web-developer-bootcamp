@@ -1,6 +1,5 @@
-import React, { useRef, useMemo, useCallback } from 'react';
-import Map, { Marker, NavigationControl } from 'react-map-gl';
-import mapboxgl from 'mapbox-gl';
+import React, { useState } from 'react';
+import Map, { Marker, NavigationControl, Popup } from 'react-map-gl';
 
 import { Campground } from '../../types';
 
@@ -9,25 +8,12 @@ interface CampgroundMapProps {
 }
 
 const CampgroundMap: React.FunctionComponent<CampgroundMapProps> = ({ campground }) => {
-    const markerRef = useRef<mapboxgl.Marker>();
+    const [showPopup, setShowPopup] = useState(true);
 
     const coordinates = {
         longitude: campground.geometry.coordinates[0],
         latitude: campground.geometry.coordinates[1],
     };
-
-    const popup = useMemo(() => {
-        return new mapboxgl.Popup().setOffset(10).setHTML(`
-        <div style="padding:6px;">
-            <h6>${campground.title}</h6>
-            <span style="display:block;">${campground.location}</span>
-            <small>(${coordinates.longitude.toFixed(2)}, ${coordinates.latitude.toFixed(2)})</small>
-        </div>`);
-    }, []);
-
-    const togglePopup = useCallback(() => {
-        markerRef.current?.togglePopup();
-    }, []);
 
     return (
         <div>
@@ -42,13 +28,27 @@ const CampgroundMap: React.FunctionComponent<CampgroundMapProps> = ({ campground
                 attributionControl={false}
             >
                 <NavigationControl />
-                <Marker
-                    {...coordinates}
-                    anchor="top"
-                    onClick={togglePopup}
-                    popup={popup}
-                    ref={markerRef}
-                ></Marker>
+                <Marker {...coordinates} anchor="top" onClick={() => setShowPopup(true)} />
+                {showPopup && (
+                    <Popup
+                        longitude={coordinates.longitude}
+                        latitude={coordinates.latitude}
+                        anchor="bottom"
+                        closeOnClick={false}
+                        onClose={() => setShowPopup(false)}
+                        closeButton={true}
+                        offset={10}
+                    >
+                        <div style={{ padding: '6px' }}>
+                            <h6>{campground.title}</h6>
+                            <span style={{ display: 'block' }}>{campground.location}</span>
+                            <small>
+                                ({coordinates.longitude.toFixed(2)},{' '}
+                                {coordinates.latitude.toFixed(2)})
+                            </small>
+                        </div>
+                    </Popup>
+                )}
             </Map>
         </div>
     );

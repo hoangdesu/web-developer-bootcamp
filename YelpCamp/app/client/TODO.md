@@ -4,7 +4,7 @@
 
 [x] pagination
 [x] cluster map popup
-[] clicking on campground bug
+[x] clicking on campground bug => FIXED: SET closeOnClick={false} on Popup
 
 [x] explore 102 campgrounds -> make catchy title text
 [x] style Campground page
@@ -31,7 +31,7 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [x] replace confirm popups with modals
 
 [x] fix reservation calculations
-[] alerts fk up the UI -> replace important ones with snackbars
+[x] alerts fk up the UI -> replace important ones with snackbars
 
 [x] login screen ui
 [x] register screen ui
@@ -52,7 +52,7 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 
 [x] Campground Thumbnail grid
 [x] campground marker style
-[] clustermap error: try using useEffect to reset state for popup
+[x] clustermap error: try using useEffect to reset state for popup
 
 [x] map preview in edit and new campground
 
@@ -87,4 +87,6 @@ PROBLEMS:
 [FIXED] - check session / cookies from the back end. No sessionId (connect.sid) is set on the browser. Using proxy server DOES work for some reason :/ ?
 [FIXED] - cannot enter path directly into browser e.g. site.com/login. Have to use router?
 
-Another problem: EditCampground -> request to mapbox api is blocked by CORS policy
+[FIXED] - Another problem: EditCampground -> request to mapbox api is blocked by CORS policy
+
+

@@ -95,8 +95,6 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                 latitude: feature.geometry.coordinates[1],
             });
         }
-
-        // TODO: fix clicking on consecutive single campground does NOT show popup, just marker :/ ?
     };
 
     const onMove = useCallback(evt => {
@@ -176,7 +174,7 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
                             latitude={popupInfo.latitude}
                             offset={30}
                             onClose={() => setPopupInfo(null)}
-                            closeOnClick={true}
+                            closeOnClick={false}
                             maxWidth="300px"
                         >
                             <PopupBox campground={popupInfo.campground} />
