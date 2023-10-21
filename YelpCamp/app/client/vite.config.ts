@@ -24,7 +24,7 @@ export default ({ mode }) => {
             // remove proxy server for production build
             // proxy: {
             //     '/api/v1': {
-            //         target: process.env.TARGET_PROXY_URL,
+            //         target: process.env.VITE_BASE_URL,
             //         changeOrigin: true,
             //         secure: true,
             //     },

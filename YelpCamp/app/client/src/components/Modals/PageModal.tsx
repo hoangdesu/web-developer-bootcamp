@@ -9,6 +9,7 @@ const style = {
     left: 'calc(50% - (500px/2))',
     transform: 'translate(-50%, -50%)',
     width: '500px',
+    maxHeight: '700px',
     backgroundColor: 'white',
     padding: '3rem',
     borderRadius: '16px',
@@ -16,6 +17,7 @@ const style = {
     zIndex: '100',
     animation: 'slide-down 300ms ease-out forwards',
     outline: 'none',
+    overflowY: 'scroll',
 
     '@keyframes slide-down': {
         from: {

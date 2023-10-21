@@ -155,7 +155,7 @@ const Reservation = () => {
             <h1>Confirm Reservation</h1>
             <p>Confirm Reservation: {reservationId}</p>
             <p>Booked by: {reservation.bookedBy.username}</p>
-            {/* <p>Campground: {reservation.campground.title}</p> */}
+            <p>Campground: {reservation.campground.title}</p>
             <p>Checkin: {reservation.checkIn}</p>
             <p>Checkout: {reservation.checkOut}</p>
             <p>Status: {reservation.status}</p>

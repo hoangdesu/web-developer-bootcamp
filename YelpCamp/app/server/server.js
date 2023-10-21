@@ -68,6 +68,15 @@ app.use(
         ],
     }),
 );
+
+// app.use((req, res, next) => {
+//     cors({
+//         credentials: true,
+//         origin: req.headers.origin,
+//     });
+//     next();
+// });
+
 app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(

@@ -89,8 +89,8 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
         <div>
             <h2 className="mb-3">Confirm reservation</h2>
             <Table className="w-full border-separate">
-                {TABLE_FIELDS.map(({ title, data }) => (
-                    <tbody>
+                <tbody>
+                    {TABLE_FIELDS.map(({ title, data }) => (
                         <tr key={title}>
                             <td>{title}</td>
                             <td>
@@ -105,8 +105,8 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
                                 </span>
                             </td>
                         </tr>
-                    </tbody>
-                ))}
+                    ))}
+                </tbody>
             </Table>
             <div className="w-full flex flex-row gap-2 mt-3">
                 <SecondaryTransparentButton
