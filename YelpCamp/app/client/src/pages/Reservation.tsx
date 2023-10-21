@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext, useCallback } from 'react';
 import axios from '../config/yelpcampAxios';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { useQueries } from 'react-query';
@@ -14,10 +14,11 @@ export async function loader({ params }) {
     return { reservationId: params.reservationId };
 }
 
+// TODO: this page is only for DISPLAYING reservation, not checkout
 const Reservation = () => {
     const { reservationId } = useLoaderData() as { reservationId: string };
     const [status, setStatus] = useState('PENDING');
-    const [seconds, setSeconds] = useState(60);
+    const [seconds, setSeconds] = useState(3);
     const appContext = useContext(AppContext);
 
     const navigate = useNavigate();
@@ -150,6 +151,14 @@ const Reservation = () => {
         });
     };
 
+    // const qrref = useCallback(node => {
+    //     if (node !== null) {
+    //         node.animateQRCode('RadialRippleIn');
+    //     }
+    // }, [])
+
+    console.log('reservation:', reservation)
+
     return (
         <PageContainer>
             <h1>Confirm Reservation</h1>
@@ -177,6 +186,7 @@ const Reservation = () => {
                     backgroundColor: '#fff',
                 }}
                 ref={qrRef}
+                // ref={qrref}
             >
                 <img
                     src={Logo}

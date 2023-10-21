@@ -43,7 +43,16 @@ module.exports.getReservationById = catchAsync(async (req, res) => {
     const { id } = req.params;
     const reservation = await Reservation.findById(id)
         .populate('bookedBy', '_id username email')
-        .populate('campground', 'title')
+        // .populate('campground')
+        .populate({
+            path: 'campground',
+            select: ['images', 'location', 'price', 'reviews', 'title', 'description'],
+            populate: {
+                path: 'author',
+                model: 'User',
+                select: ['_id', 'username'],
+            },
+        })
         .exec();
     if (!reservation) throw new YelpcampError(404, 'Reservation not found');
     res.status(200).json(reservation);

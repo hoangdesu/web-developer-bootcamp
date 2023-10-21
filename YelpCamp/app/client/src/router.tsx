@@ -18,6 +18,7 @@ import Search from './pages/Search';
 import Reservation, { loader as resvLoader } from './pages/Reservation';
 import Confirm from './pages/Confirm';
 import ResetPassword from './pages/ResetPassword';
+import Checkout, { loader as checkouResvtLoader } from './pages/Checkout';
 
 export default createBrowserRouter([
     {
@@ -78,6 +79,12 @@ export default createBrowserRouter([
         path: '/reservations/:reservationId',
         element: <Reservation />,
         loader: resvLoader,
+        errorElement: <ErrorBoundary />,
+    },
+    {
+        path: '/reservations/:reservationId/checkout',
+        element: <Checkout />,
+        loader: checkouResvtLoader,
         errorElement: <ErrorBoundary />,
     },
     {

@@ -105,3 +105,5 @@ RESERVATION TODOS:
 
 - /reservations/:id
 - /reservations/:id/confirm -> mobile view, rename this component
+
+[] Checkout page

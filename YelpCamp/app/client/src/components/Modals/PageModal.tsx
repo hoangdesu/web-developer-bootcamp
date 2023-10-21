@@ -9,7 +9,7 @@ const style = {
     left: 'calc(50% - (500px/2))',
     transform: 'translate(-50%, -50%)',
     width: '500px',
-    maxHeight: '700px',
+    maxHeight: '600px',
     backgroundColor: 'white',
     padding: '3rem',
     borderRadius: '16px',

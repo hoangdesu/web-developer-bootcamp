@@ -17,7 +17,7 @@ interface ModalProps {
 const Table = styled.table`
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 6px;
+    border-spacing: 0 8px;
 
     td {
         vertical-align: top;
@@ -81,7 +81,7 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
 
     const makeReservation = () => {
         axios.post('/api/v1/reservations', { reservation }).then(res => {
-            navigate(`/reservations/${res.data._id}`);
+            navigate(`/reservations/${res.data._id}/checkout`);
         });
     };
 
@@ -111,11 +111,11 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
             <div className="w-full flex flex-row gap-2 mt-3">
                 <SecondaryTransparentButton
                     onClick={() => appContext.setModal({ open: false, content: null })}
-                    className=""
+                    className="grow-0"
                 >
                     Cancel
                 </SecondaryTransparentButton>
-                <PrimaryBlackButton onClick={makeReservation} className="flex-1 px-3">
+                <PrimaryBlackButton onClick={makeReservation} className="grow">
                     Checkout <ArrowForwardIcon />
                 </PrimaryBlackButton>
             </div>
