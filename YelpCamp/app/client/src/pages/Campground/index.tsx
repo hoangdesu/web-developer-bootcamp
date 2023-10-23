@@ -161,7 +161,7 @@ const Campground: React.FunctionComponent = () => {
                         <>
                             <span>Saved to your favorite. </span>
                             <Link
-                                to={`/user/${appContext.currentUser?.username}?tab=favorite`}
+                                to={`/users/${appContext.currentUser?.username}?tab=favorite`}
                                 className="text-inherit"
                                 target="_blank"
                             >
@@ -274,6 +274,7 @@ const Campground: React.FunctionComponent = () => {
                         </a>
                     </StyledSection>
 
+{/* // TODO: maybe only display reservation section for clients (hide for author) */}
                     <StyledSection className="mb-5">
                         <h4 className="font-normal">Reservation</h4>
                         <CampgroundReservation campground={campground} />

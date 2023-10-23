@@ -3,6 +3,7 @@ import React from 'react';
 import { Spinner } from 'react-bootstrap';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import PageContainer from '../components/PageContainer';
 
 const Container = styled.div`
     width: 100vw;
@@ -16,12 +17,14 @@ const Container = styled.div`
 const Loading = () => {
     return (
         <>
-            <Navbar />
-            <Container>
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </Spinner>
-            </Container>
+            {/* <Navbar /> */}
+            <PageContainer>
+                <Container>
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                </Container>
+            </PageContainer>
         </>
     );
 };

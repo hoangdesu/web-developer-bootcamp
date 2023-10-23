@@ -93,7 +93,8 @@ PROBLEMS:
 [] SEO meta tags
 [] sitemap, robots.txt or sth similar for SEO
 
-[] change /user paths to /users
+[] improve navbar navigation in mobile view
+[x] change /user paths to /users
 
 [] finish reservation
 RESERVATION TODOS:

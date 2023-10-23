@@ -61,6 +61,9 @@ module.exports.getReservationById = catchAsync(async (req, res) => {
 module.exports.checkStatus = catchAsync(async (req, res) => {
     const { id } = req.params;
     const resv = await Reservation.findById(id);
+
+    if (!resv) throw new YelpcampError(404, 'Reservation not found');
+
     if (resv.status === 'PAID') {
         return res.send('PAID');
     }

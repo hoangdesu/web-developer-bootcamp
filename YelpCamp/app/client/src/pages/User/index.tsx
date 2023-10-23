@@ -267,7 +267,7 @@ const User = () => {
                                                     </p>
                                                 </div>
                                                 <div>
-                                                    <Link to={`/reservation/${resv._id}`}>
+                                                    <Link to={`/reservations/${resv._id}`}>
                                                         {resv._id}
                                                     </Link>
                                                 </div>

@@ -18,6 +18,7 @@ const style = {
     animation: 'slide-down 300ms ease-out forwards',
     outline: 'none',
     overflowY: 'scroll',
+    // TODO: only limit to overflowY
 
     '@keyframes slide-down': {
         from: {

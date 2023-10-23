@@ -65,7 +65,7 @@ export default createBrowserRouter([
         element: <ResetPassword />,
     },
     {
-        path: '/user/:username',
+        path: '/users/:username',
         element: <User />,
         loader: usernameLoader,
         errorElement: <ErrorBoundary />,

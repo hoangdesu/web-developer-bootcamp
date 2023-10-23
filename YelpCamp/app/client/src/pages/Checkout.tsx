@@ -1,7 +1,7 @@
 import axios from '../config/yelpcampAxios';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import Loading from './Loading';
 import ErrorBoundary from './ErrorBoundary';
@@ -9,6 +9,8 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { averageRating } from '../helpers/campground';
 import Logo from '../assets/logo.png';
 import * as qrCode from '@bitjson/qr-code';
+import AppContext from '../store/app-context';
+import ModalPaymentReceived from '../components/Modals/ModalPaymentReceived';
 
 export async function loader({ params }) {
     return { reservationId: params.reservationId };
@@ -16,21 +18,61 @@ export async function loader({ params }) {
 
 const Checkout = () => {
     const { reservationId } = useLoaderData() as { reservationId: string };
+    const appContext = useContext(AppContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const qrEl = qrCode.defineCustomElements(window);
+
+        // TODO: check if status === PAID, redirect to Reservation page w/ message: you have paid
     }, []);
 
     const {
         data: resv,
         isLoading,
         isError,
+        refetch,
     } = useQuery({
         queryKey: ['getReservationById'],
         queryFn: () => axios.get(`/api/v1/reservations/${reservationId}`).then(data => data.data),
     });
 
     console.log(resv);
+
+    useEffect(() => {
+        const paymentTimer = setInterval(() => {
+            axios.get(`/api/v1/reservations/${reservationId}/status`).then(res => {
+                const { data } = res;
+                console.log('STATUS:', data);
+                if (data === 'PAID') {
+                    // setStatus('PAID!');
+
+                    // setTimeout(() => {
+                    //     navigate(`/users/${appContext.currentUser!.username}?tab=reservations`);
+                    // }, 5000);
+                    refetch();
+                    appContext.setModal({
+                        open: true,
+                        content: <ModalPaymentReceived />,
+                    });
+                    clearInterval(paymentTimer);
+                }
+            });
+            // reservationQuery.refetch();
+
+            // qrRef.current.animateQRCode('RadialRippleIn')
+
+            // if (seconds > 0) {
+            //     setSeconds(seconds - 1);
+            // }
+            // if (seconds === 0) {
+            //     clearInterval(paymentTimer);
+            // }
+        }, 1000);
+        return () => {
+            clearInterval(paymentTimer);
+        };
+    }, []);
 
     if (isLoading) return <Loading />;
 
@@ -48,6 +90,7 @@ const Checkout = () => {
                     <Col lg={8} className="bg-white flex flex-col gap-5 p-3">
                         <Row>
                             <p>// basic info abt campground</p>
+                            <p>id: {resv._id}</p>
                             <div className="">
                                 <img
                                     src={resv.campground.images[0].thumbnail}
@@ -56,6 +99,7 @@ const Checkout = () => {
                                 />
                                 <div className="inline">
                                     <span>{resv.campground.title}</span>
+                                    {/* bug: always show NEW */}
                                     <p>★ {averageRating(resv.campground)}</p>
                                     <p>{resv.campground.location}</p>
                                     <p>Host: {resv.campground.author.username}</p>
@@ -87,14 +131,21 @@ const Checkout = () => {
                         <Row>
                             <p>// Price</p>
 
-                            <p>Total amount: ${resv.totalAmount}</p>
+                            <p>Total amount: ${resv.totalAmount.toFixed(2)}</p>
                         </Row>
                         <Row>
                             <p>// QR code</p>
                             <span>timer</span>
 
-                            <p>Scan to pay</p>
-                            <a href={urlForQR} target="_blank" className="">
+                            <p>Scan this QR code to pay</p>
+                            <p>(You can also click on the QR code to open mobile view)</p>
+                            {/* <a href={urlForQR} target="_blank" className=""> */}
+                            <div
+                                onClick={() => {
+                                    window.open(urlForQR, '_blank', 'width=400, height=600');
+                                }}
+                                className="hover:cursor-pointer"
+                            >
                                 <qr-code
                                     id="qr1"
                                     contents={urlForQR}
@@ -120,7 +171,9 @@ const Checkout = () => {
                                         style={{ background: 'white', width: '100%' }}
                                     />
                                 </qr-code>
-                            </a>
+                            </div>
+                            <p>Status: {resv.status}</p>
+                            {/* </a> */}
                         </Row>
                     </Col>
                 </Row>

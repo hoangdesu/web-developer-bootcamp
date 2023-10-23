@@ -139,7 +139,7 @@ const Navbar: React.FunctionComponent = () => {
                                     <span className="">New campground</span>
                                 </Link>
                                 <Link
-                                    to={`/user/${currentUser.username}?tab=info`}
+                                    to={`/users/${currentUser.username}?tab=info`}
                                     key={'user'}
                                     className="dropdown-item active:bg-primary-accent-color"
                                 >

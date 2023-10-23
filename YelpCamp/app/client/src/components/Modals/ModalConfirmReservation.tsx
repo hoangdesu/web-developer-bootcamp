@@ -102,6 +102,7 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
                                     }`}
                                 >
                                     {data}
+                                    {/* TODO: total amount BOLD */}
                                 </span>
                             </td>
                         </tr>
@@ -109,6 +110,7 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
                 </tbody>
             </Table>
             <div className="w-full flex flex-row gap-2 mt-3">
+                {/* // TODO: buttons size overflow X, check */}
                 <SecondaryTransparentButton
                     onClick={() => appContext.setModal({ open: false, content: null })}
                     className="grow-0"

@@ -18,7 +18,7 @@ export async function loader({ params }) {
 const Reservation = () => {
     const { reservationId } = useLoaderData() as { reservationId: string };
     const [status, setStatus] = useState('PENDING');
-    const [seconds, setSeconds] = useState(3);
+    const [seconds, setSeconds] = useState(30);
     const appContext = useContext(AppContext);
 
     const navigate = useNavigate();
@@ -102,7 +102,7 @@ const Reservation = () => {
                     if (data === 'PAID') {
                         setStatus('PAID!');
                         setTimeout(() => {
-                            navigate(`/user/${appContext.currentUser!.username}?tab=reservations`);
+                            navigate(`/users/${appContext.currentUser!.username}?tab=reservations`);
                         }, 5000);
                         reservationQuery.refetch();
                         appContext.setModal({
@@ -161,8 +161,7 @@ const Reservation = () => {
 
     return (
         <PageContainer>
-            <h1>Confirm Reservation</h1>
-            <p>Confirm Reservation: {reservationId}</p>
+            <h1>Reservation</h1>
             <p>Booked by: {reservation.bookedBy.username}</p>
             <p>Campground: {reservation.campground.title}</p>
             <p>Checkin: {reservation.checkIn}</p>
