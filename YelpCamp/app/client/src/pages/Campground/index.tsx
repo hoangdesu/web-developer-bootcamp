@@ -274,7 +274,7 @@ const Campground: React.FunctionComponent = () => {
                         </a>
                     </StyledSection>
 
-{/* // TODO: maybe only display reservation section for clients (hide for author) */}
+                    {/* // TODO: maybe only display reservation section for clients (hide for author) */}
                     <StyledSection className="mb-5">
                         <h4 className="font-normal">Reservation</h4>
                         <CampgroundReservation campground={campground} />
@@ -336,8 +336,8 @@ const Campground: React.FunctionComponent = () => {
                             >
                                 <p>
                                     {campground.reviews?.length || 0}{' '}
-                                    {campground.reviews?.length > 1 ? 'reviews' : 'review'} ·
-                                    Avg. rating: {averageRating(campground)}
+                                    {campground.reviews?.length > 1 ? 'reviews' : 'review'} · Avg.
+                                    rating: {averageRating(campground)}
                                 </p>
                                 <Rating
                                     name="read-only"

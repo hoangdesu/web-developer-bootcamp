@@ -25,6 +25,11 @@ const Button = styled.button`
         background-color: #10b981;
         border: 1px solid #10b981;
     }
+
+    /* Mobile view */
+    @media (max-width: 768px) {
+        padding: 10px 1rem;
+    }
 `;
 
 const PrimaryBlackButton: React.FunctionComponent<ButtonProps> = props => {

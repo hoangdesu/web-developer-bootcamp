@@ -87,9 +87,8 @@ const Checkout = () => {
             <Container>
                 <Row>
                     {/* // Left col */}
-                    <Col lg={8} className="bg-white flex flex-col gap-5 p-3">
+                    <Col lg={8} className="bg-white border flex flex-col gap-5 p-3 mr-5 max-[991px]:mb-5">
                         <Row>
-                            <p>// basic info abt campground</p>
                             <p>id: {resv._id}</p>
                             <div className="">
                                 <img
@@ -116,18 +115,10 @@ const Checkout = () => {
                             <p>Nights: {resv.nights}</p>
                             <p>Guests: {resv.guests}</p>
                         </Row>
-
-                        <Row>
-                            <p>// info abt the reservation</p>
-                            <div>Check-in: {resv.checkIn}</div>
-                            <div>Check-in: {resv.checkOut}</div>
-                            <p>Nights: {resv.nights}</p>
-                            <p>Guests: {resv.guests}</p>
-                        </Row>
                     </Col>
 
                     {/* Right col */}
-                    <Col className="flex flex-col gap-5 p-3">
+                    <Col className="bg-white border flex flex-col gap-5 p-3">
                         <Row>
                             <p>// Price</p>
 
@@ -135,7 +126,6 @@ const Checkout = () => {
                         </Row>
                         <Row>
                             <p>// QR code</p>
-                            <span>timer</span>
 
                             <p>Scan this QR code to pay</p>
                             <p>(You can also click on the QR code to open mobile view)</p>

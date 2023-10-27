@@ -108,3 +108,5 @@ RESERVATION TODOS:
 - /reservations/:id/confirm -> mobile view, rename this component
 
 [] Checkout page
+
+[x] Loading page spinner is not center
