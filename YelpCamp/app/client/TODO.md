@@ -110,3 +110,13 @@ RESERVATION TODOS:
 [] Checkout page
 
 [x] Loading page spinner is not center
+
+[] less padding for NewCampground on mobile
+
+[] https://stackoverflow.com/questions/36904185/react-router-scroll-to-top-on-every-transition
+
+[] add subtotal to reservation and modal + checkout page
+
+[] implement scroll to top on page navigation with either scroll to top or scroll restorartion component + take note
+
+[] change component App to Home

@@ -87,7 +87,10 @@ const Checkout = () => {
             <Container>
                 <Row>
                     {/* // Left col */}
-                    <Col lg={8} className="bg-white border flex flex-col gap-5 p-3 mr-5 max-[991px]:mb-5">
+                    <Col
+                        lg={8}
+                        className="bg-white border flex flex-col gap-5 p-3 mr-5 max-[991px]:mb-5"
+                    >
                         <Row>
                             <p>id: {resv._id}</p>
                             <div className="">
@@ -121,9 +124,19 @@ const Checkout = () => {
                     <Col className="bg-white border flex flex-col gap-5 p-3">
                         <Row>
                             <p>// Price</p>
-
+                            // only display discount when available
+                            <p>Discount code: {resv.discount.code}</p>
+                            <p>Discount percentage: {resv.discount.percentage}%</p>
+                            <p>
+                                Subtotal: $
+                                {(
+                                    (resv.totalAmount * 100) /
+                                    (100 - resv.discount.percentage)
+                                ).toFixed(2)}
+                            </p>
                             <p>Total amount: ${resv.totalAmount.toFixed(2)}</p>
                         </Row>
+
                         <Row>
                             <p>// QR code</p>
 

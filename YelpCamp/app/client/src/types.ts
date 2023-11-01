@@ -74,7 +74,10 @@ export interface Reservation {
     nights: number;
     guests: number;
     totalAmount: number;
-    discountCode?: string;
+    discount: {
+        code: string;
+        percentage: number;
+    };
     status?: 'PENDING' | 'PAID' | 'CANCELLED';
 }
 

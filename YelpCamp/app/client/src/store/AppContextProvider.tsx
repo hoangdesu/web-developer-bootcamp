@@ -94,6 +94,11 @@ const AppContextProvider: FunctionComponent<ContextProviderProps> = ({ children 
     useEffect(() => {
         const user = localStorage.getItem('currentUser') as string;
         setCurrentUser(JSON.parse(user));
+        document.documentElement.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "instant", // Optional if you want to skip the scrolling animation
+          });
     }, []);
 
     return <AppContext.Provider value={appContext}>{children}</AppContext.Provider>;

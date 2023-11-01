@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
+const DiscountSchema = new Schema({
+    code: String,
+    percentage: Number,
+});
+
 const reservationSchema = new Schema(
     {
         bookedBy: {
@@ -34,8 +39,8 @@ const reservationSchema = new Schema(
             type: Number,
             required: true,
         },
-        discountCode: {
-            type: String,
+        discount: {
+            type: DiscountSchema,
             required: false,
         },
         status: {

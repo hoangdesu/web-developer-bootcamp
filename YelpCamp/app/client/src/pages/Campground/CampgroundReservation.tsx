@@ -131,35 +131,18 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             checkOut: inputEndDate,
             guests: guests,
             totalAmount: fees.totalAfterDiscount,
-            discountCode: discount.code || '',
+            discount: {
+                code: discount.code || '',
+                percentage: discount.percentage || 0,
+            },
         };
 
         appContext.setModal({
             open: true,
-            content: (
-                <ModalConfirmReservation
-                    reservation={reservation}
-                    campground={campground}
-                    discountPercentage={discount.percentage}
-                />
-            ),
+            content: <ModalConfirmReservation reservation={reservation} campground={campground} />,
             requiresLoggedIn: true,
         });
     };
-
-    const EditButton = styled.button`
-        /* border: 1px solid black; */
-        background-color: transparent;
-        padding: 2px 20px;
-        /* font-size: 14px; */
-        /* height: fit-content; */
-        border: inherit;
-        transition: 100ms ease;
-        &:hover {
-            color: #fffcf9;
-            background-color: #222325;
-        }
-    `;
 
     const applyDiscountCode = (evt: React.FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
@@ -236,6 +219,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                 </p>
                 <span>{nights > 0 && `${nights} ${nights === 1 ? 'night' : 'nights'}`}</span>
             </div>
+
             {/* DATE PICKER */}
             <div className="flex flex-row md:flex-col justify-between gap-5 mb-4">
                 <div>
@@ -270,6 +254,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                     />
                 </div>
             </div>
+
             {/* NUMBER OF GUESTS */}
             <div className="flex flex-row justify-between items-baseline">
                 <Form.Label>Guests</Form.Label>
@@ -358,6 +343,26 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                                     </span>
                                 </div>
                             </Tooltip>
+
+                            <Tooltip
+                                title={`// TODO: Total before taxes: $${Number(
+                                    fees.totalBeforeTaxes,
+                                ).toFixed(2)} × 8%`}
+                                placement="right"
+                                enterDelay={200}
+                                arrow
+                            >
+                                <div className="flex flex-row justify-between">
+                                    <span>
+                                        Subtotal
+                                        {/* <span className="text-sm text-muted">(8%)</span> */}
+                                    </span>
+                                    <span className="text-right">
+                                        ${fees.totalAfterTaxes.toFixed(2)}
+                                    </span>
+                                </div>
+                            </Tooltip>
+
                             <hr />
                             {/* DISCOUNT CODE */}
                             <Form onSubmit={applyDiscountCode}>
@@ -415,10 +420,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
             >
                 RESERVE <ArrowForwardIcon />
             </PrimaryBlackButton>
-            {/* <ArrowRightAltIcon/>
-            <ArrowForwardIcon/>
-            <KeyboardArrowRightIcon/> 
-            <ArrowForwardIosIcon/>  */}
         </ReserveSection>
     );
 };

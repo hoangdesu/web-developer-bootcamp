@@ -11,7 +11,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 interface ModalProps {
     reservation: Reservation;
     campground: Campground;
-    discountPercentage: number;
 }
 
 const Table = styled.table`
@@ -24,11 +23,7 @@ const Table = styled.table`
     }
 `;
 
-const ModalConfirmReservation: React.FC<ModalProps> = ({
-    reservation,
-    campground,
-    discountPercentage,
-}) => {
+const ModalConfirmReservation: React.FC<ModalProps> = ({ reservation, campground }) => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
@@ -69,8 +64,8 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
         },
         {
             title: 'Discount code',
-            data: reservation.discountCode
-                ? `${reservation.discountCode} (${discountPercentage}%)`
+            data: reservation.discount.code
+                ? `${reservation.discount.code} (${reservation.discount.percentage}%)`
                 : '-',
         },
         {
@@ -97,7 +92,7 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
                                 <span
                                     className={`font-medium ${
                                         title === 'Discount code' &&
-                                        discountPercentage > 0 &&
+                                        reservation.discount.percentage > 0 &&
                                         'text-red-500'
                                     }`}
                                 >
@@ -110,7 +105,6 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
                 </tbody>
             </Table>
             <div className="w-full flex flex-row gap-2 mt-3">
-                {/* // TODO: buttons size overflow X, check */}
                 <SecondaryTransparentButton
                     onClick={() => appContext.setModal({ open: false, content: null })}
                     className="grow-0"

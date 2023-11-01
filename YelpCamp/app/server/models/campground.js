@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Review = require('./review');
 
-const ImageSchema = Schema(
+const ImageSchema = new Schema(
     {
         url: { type: String, required: [true, 'Missing image url'] },
         filename: { type: String, required: [true, 'Missing image filename'] },
