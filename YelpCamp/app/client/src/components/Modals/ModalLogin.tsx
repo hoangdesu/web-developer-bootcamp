@@ -14,7 +14,11 @@ const InputGroupText = styled(InputGroup.Text)`
     }
 `;
 
-const ModalLogin = () => {
+interface ModalLoginProps {
+    nextAction: () => void;
+}
+
+const ModalLogin: React.FC<ModalLoginProps> = ({ nextAction }) => {
     const appContext = useContext(AppContext);
     const [validated, setValidated] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -55,6 +59,8 @@ const ModalLogin = () => {
                             `Welcome back, ${resp.data.username}!`,
                             'success',
                         );
+                        nextAction;
+                        console.log('nextAction', nextAction);
                     });
                 })
                 .catch(err => {

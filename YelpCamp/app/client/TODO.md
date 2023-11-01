@@ -83,6 +83,7 @@ if possible: can use 1 array to preview / edit images. or just use 2 arrays :/
 [] error page
 [] profile page TODOs
 
+[] ModalLogin should perform next action
 PROBLEMS:
 [FIXED] - check session / cookies from the back end. No sessionId (connect.sid) is set on the browser. Using proxy server DOES work for some reason :/ ?
 [FIXED] - cannot enter path directly into browser e.g. site.com/login. Have to use router?
