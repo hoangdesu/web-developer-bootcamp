@@ -3,9 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": ".",
   "scripts": {
     "dev": "vite --mode dev",
     "build": "tsc && vite build --mode prod",
+    "build:nocheck": "vite build --mode prod",
     "preview": "vite preview --mode dev",
     "start:dev": "yarn run dev",
     "start:prod": "vite --mode prod"

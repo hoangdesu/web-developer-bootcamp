@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import AppContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
+import axios from '../../config/yelpcampAxios';
 import { Campground, Reservation } from '../../types';
-import axios from 'axios';
 import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
 import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
 import styled from '@emotion/styled';
@@ -17,7 +17,11 @@ interface ModalProps {
 const Table = styled.table`
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 6px;
+    border-spacing: 0 8px;
+
+    td {
+        vertical-align: top;
+    }
 `;
 
 const ModalConfirmReservation: React.FC<ModalProps> = ({
@@ -39,7 +43,6 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
         },
         {
             title: 'Check-in',
-            // data: Date.parse(reservation.checkIn),
             data: new Date(reservation.checkIn).toLocaleString(undefined, {
                 year: 'numeric',
                 month: 'short',
@@ -77,8 +80,8 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
     ];
 
     const makeReservation = () => {
-        axios.post('/api/v1/reservation/new', { reservation }).then(res => {
-            navigate(`/reservation/${res.data._id}`);
+        axios.post('/api/v1/reservations', { reservation }).then(res => {
+            navigate(`/reservations/${res.data._id}/checkout`);
         });
     };
 
@@ -86,31 +89,35 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({
         <div>
             <h2 className="mb-3">Confirm reservation</h2>
             <Table className="w-full border-separate">
-                {TABLE_FIELDS.map(({ title, data }) => (
-                    <tr key={title}>
-                        <td>{title}</td>
-                        <td>
-                            <span
-                                className={`font-medium ${
-                                    title === 'Discount code' &&
-                                    discountPercentage > 0 &&
-                                    'text-red-500'
-                                }`}
-                            >
-                                {data}
-                            </span>
-                        </td>
-                    </tr>
-                ))}
+                <tbody>
+                    {TABLE_FIELDS.map(({ title, data }) => (
+                        <tr key={title}>
+                            <td>{title}</td>
+                            <td>
+                                <span
+                                    className={`font-medium ${
+                                        title === 'Discount code' &&
+                                        discountPercentage > 0 &&
+                                        'text-red-500'
+                                    }`}
+                                >
+                                    {data}
+                                    {/* TODO: total amount BOLD */}
+                                </span>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
             </Table>
-            <div className="flex flex-row items-center gap-2 mt-3">
-                {/* // TODO: button sizes are wrong */}
+            <div className="w-full flex flex-row gap-2 mt-3">
+                {/* // TODO: buttons size overflow X, check */}
                 <SecondaryTransparentButton
                     onClick={() => appContext.setModal({ open: false, content: null })}
+                    className="grow-0"
                 >
                     Cancel
                 </SecondaryTransparentButton>
-                <PrimaryBlackButton onClick={makeReservation} className="w-full">
+                <PrimaryBlackButton onClick={makeReservation} className="grow">
                     Checkout <ArrowForwardIcon />
                 </PrimaryBlackButton>
             </div>

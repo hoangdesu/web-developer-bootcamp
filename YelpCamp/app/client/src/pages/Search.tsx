@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../config/yelpcampAxios';
 import React, { useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link, useSearchParams } from 'react-router-dom';

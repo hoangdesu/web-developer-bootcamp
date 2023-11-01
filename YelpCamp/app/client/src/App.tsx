@@ -1,9 +1,7 @@
 import React, { useState, useContext, useRef, FormEvent, useEffect } from 'react';
 import { useQueries } from 'react-query';
-import axios from 'axios';
-import styled from '@emotion/styled';
+import axios from './config/yelpcampAxios';
 import { useNavigate } from 'react-router-dom';
-import { lime, purple, green } from '@mui/material/colors';
 
 import { Col, Row } from 'react-bootstrap';
 import { Pagination, ThemeProvider, createTheme } from '@mui/material';

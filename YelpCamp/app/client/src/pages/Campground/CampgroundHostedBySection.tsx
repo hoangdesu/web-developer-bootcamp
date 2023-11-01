@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatDate, isAuthor, timeDifference } from '../../helpers/campground';
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 import AppContext from '../../store/app-context';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import { Campground } from '../../types';
@@ -14,6 +14,7 @@ interface SectionProps {
 
 const EditButton = styled.button`
     border: 1px solid black;
+    color: inherit;
     background-color: transparent;
     padding: 4px 20px;
     font-size: 14px;

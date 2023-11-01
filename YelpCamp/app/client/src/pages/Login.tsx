@@ -1,11 +1,11 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import axios from 'axios';
+import axios from '../config/yelpcampAxios';
 
 import AppContext from '../store/app-context';
 
-import { Form, Button, InputGroup } from 'react-bootstrap';
+import { Form, Button, InputGroup, Spinner } from 'react-bootstrap';
 import { Visibility, VisibilityOff } from '@mui/icons-material/';
 
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
@@ -82,6 +82,7 @@ const Container = styled.div`
 const Login: React.FunctionComponent = () => {
     const [validated, setValidated] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
     const navigate = useNavigate();
     const appContext = useContext(AppContext);
 
@@ -106,6 +107,7 @@ const Login: React.FunctionComponent = () => {
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
+            setIsLoggingIn(true);
             axios
                 .post(
                     '/api/v1/users/login',
@@ -120,23 +122,38 @@ const Login: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    axios.get('/api/v1/auth/currentuser').then(resp => {
-                        appContext.setAlert({
-                            message: `Welcome back, ${resp.data.username}!`,
-                            variant: 'success',
+                    document.cookie = 'testing=logincookie';
+                    axios
+                        .get('/api/v1/auth/currentuser')
+                        .then(resp => {
+                            appContext.setAlert({
+                                message: `Welcome back, ${resp.data.username}!`,
+                                variant: 'success',
+                            });
+                            appContext.setCurrentUser(resp.data);
+                            localStorage.setItem('currentUser', JSON.stringify(resp.data));
+                            navigate('/');
+                        })
+                        .catch(err => {
+                            appContext.setSnackbar(true, 'Error: cannot get current user', 'error');
+                            setValidated(false);
+                            setIsLoggingIn(false);
+                            form.reset();
+                            appContext.setAlert({
+                                message: 'Wrong username or password. Please login again',
+                                variant: 'warning',
+                            });
                         });
-                        appContext.setCurrentUser(resp.data);
-                        localStorage.setItem('currentUser', JSON.stringify(resp.data));
-                        navigate('/');
-                    });
                 })
                 .catch(err => {
-                    appContext.setAlert({
-                        message: 'Wrong username or password. Please login again',
-                        variant: 'warning',
-                    });
+                    appContext.setSnackbar(
+                        true,
+                        'Wrong username or password. Please try again',
+                        'error',
+                    );
                     appContext.setCurrentUser(null);
                     setValidated(false);
+                    setIsLoggingIn(false);
                     form.reset();
                 });
         }
@@ -181,7 +198,20 @@ const Login: React.FunctionComponent = () => {
                             </Form.Control.Feedback>
                         </InputGroup>
                     </Form.Group>
-                    <PrimaryBlackButton className="mt-4 w-full">Login</PrimaryBlackButton>
+                    {isLoggingIn ? (
+                        <PrimaryBlackButton className="mt-4 w-full" disabled={true}>
+                            <Spinner
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                                as="span"
+                            />
+                            <span> Logging in...</span>
+                        </PrimaryBlackButton>
+                    ) : (
+                        <PrimaryBlackButton className="mt-4 w-full">Login</PrimaryBlackButton>
+                    )}
                 </Form>
                 <p className="mt-3">
                     New here?{' '}

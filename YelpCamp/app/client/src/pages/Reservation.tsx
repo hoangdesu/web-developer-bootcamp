@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
-import axios from 'axios';
+import React, { useEffect, useRef, useState, useContext, useCallback } from 'react';
+import axios from '../config/yelpcampAxios';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { useQueries } from 'react-query';
 import Logo from '../assets/logo.png';
@@ -14,31 +14,23 @@ export async function loader({ params }) {
     return { reservationId: params.reservationId };
 }
 
-const StyledLogo = styled.img`
-    position: absolute;
-    width: 60px;
-    top: 80px;
-    left: 80px;
-    background: white;
-`;
-
+// TODO: this page is only for DISPLAYING reservation, not checkout
 const Reservation = () => {
     const { reservationId } = useLoaderData() as { reservationId: string };
     const [status, setStatus] = useState('PENDING');
-    const [seconds, setSeconds] = useState(60);
+    const [seconds, setSeconds] = useState(30);
     const appContext = useContext(AppContext);
 
     const navigate = useNavigate();
 
     console.log(window.location.protocol, window.location.host, window.location.hostname);
-    const urlForQR = `${window.location.protocol}//${window.location.host}/reservation/${reservationId}/confirm`;
+    const urlForQR = `${window.location.protocol}//${window.location.host}/reservations/${reservationId}/confirm`;
 
     const qrRef = useRef(null);
     console.log('qrRef', qrRef.current);
 
     console.log('urlForQR', urlForQR);
     useEffect(() => {
-
         const qrEl = qrCode.defineCustomElements(window);
         console.log('qrEl', qrEl);
 
@@ -85,32 +77,32 @@ const Reservation = () => {
     }, [qrRef]);
 
     // axios.post(`/api/v1/reservation/${reservationId}/pay`)
-    const [reservationQuery, qrQuery] = useQueries([
+    const [reservationQuery] = useQueries([
         {
             queryKey: ['getReservationById'],
             queryFn: () =>
-                axios.get(`/api/v1/reservation/${reservationId}`).then(data => data.data),
+                axios.get(`/api/v1/reservations/${reservationId}`).then(data => data.data),
         },
-        {
-            queryKey: ['getQr'],
-            queryFn: () =>
-                axios
-                    .post(`/api/v1/reservation/${reservationId}/qr`, { url: urlForQR })
-                    .then(data => data.data),
-        },
+        // {
+        //     queryKey: ['getQr'],
+        //     queryFn: () =>
+        //         axios
+        //             .post(`/api/v1/reservation/${reservationId}/qr`, { url: urlForQR })
+        //             .then(data => data.data),
+        // },
     ]);
 
     useEffect(() => {
         const paymentTimer = setInterval(() => {
             axios
-                .get(`/api/v1/reservation/${reservationId}/status`)
+                .get(`/api/v1/reservations/${reservationId}/status`)
                 .then(res => res.data)
                 .then(data => {
                     console.log('STATUS:', data);
                     if (data === 'PAID') {
                         setStatus('PAID!');
                         setTimeout(() => {
-                            navigate(`/user/${appContext.currentUser!.username}?tab=reservations`);
+                            navigate(`/users/${appContext.currentUser!.username}?tab=reservations`);
                         }, 5000);
                         reservationQuery.refetch();
                         appContext.setModal({
@@ -127,7 +119,6 @@ const Reservation = () => {
                     }
                 });
             // reservationQuery.refetch();
-            // axios.get(`/api/v1/reservation/${reservationId}`).then(data => data.data),
 
             // qrRef.current.animateQRCode('RadialRippleIn')
 
@@ -143,26 +134,34 @@ const Reservation = () => {
         };
     });
 
-    if (reservationQuery.isLoading || qrQuery.isLoading) return <>Loading...</>;
-    if (reservationQuery.error || qrQuery.isLoading) return <>Error</>;
+    if (reservationQuery.isLoading) return <>Loading...</>;
+    if (reservationQuery.error) return <>Error</>;
 
     const reservation = reservationQuery.data;
-    // console.log(reservation);
+    console.log('reservation', reservation);
 
-    const qr = qrQuery.data;
-    console.log(qr);
+    // const qr = qrQuery.data;
+    // console.log(qr);
 
     const makePayment = () => {
-        axios.get(`/api/v1/reservation/${reservationId}/pay`).then(data => {
+        // TODO: change to POST
+        axios.get(`/api/v1/reservations/${reservationId}/pay`).then(data => {
             console.log('AFTER PAY:', data);
             reservationQuery.refetch();
         });
     };
 
+    // const qrref = useCallback(node => {
+    //     if (node !== null) {
+    //         node.animateQRCode('RadialRippleIn');
+    //     }
+    // }, [])
+
+    console.log('reservation:', reservation)
+
     return (
         <PageContainer>
-            <h1>Confirm Reservation</h1>
-            <p>Confirm Reservation: {reservationId}</p>
+            <h1>Reservation</h1>
             <p>Booked by: {reservation.bookedBy.username}</p>
             <p>Campground: {reservation.campground.title}</p>
             <p>Checkin: {reservation.checkIn}</p>
@@ -171,11 +170,6 @@ const Reservation = () => {
 
             <p>{seconds}</p>
             <button onClick={makePayment}>Pay</button>
-
-            <div style={{ float: 'left', position: 'relative' }}>
-                <img src={qr} alt="qr" />
-                <StyledLogo src={Logo} alt="logo" />
-            </div>
 
             <qr-code
                 id="qr1"
@@ -191,6 +185,7 @@ const Reservation = () => {
                     backgroundColor: '#fff',
                 }}
                 ref={qrRef}
+                // ref={qrref}
             >
                 <img
                     src={Logo}
@@ -217,20 +212,6 @@ const Reservation = () => {
             >
                 QRREF
             </button>
-
-            <QRCode
-                value={urlForQR}
-                logoImage={Logo}
-                ecLevel={'H'}
-                size={300}
-                removeQrCodeBehindLogo
-                logoPadding={10}
-            />
-            {/* 
-            <img
-                src="https://cdn.dribbble.com/users/1751799/screenshots/5512482/media/1cbd3594bb5e8d90924a105d4aae924c.gif"
-                alt=""
-            /> */}
         </PageContainer>
     );
 };

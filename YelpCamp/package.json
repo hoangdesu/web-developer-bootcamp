@@ -10,6 +10,7 @@
     "start:all:dev": "concurrently \"yarn run start:server:dev\"  \"yarn run start:client:dev\"",
     "start:all:prod": "concurrently \"yarn run start:server:dev\"  \"yarn run start:client:prod\"",
     "start:server:dev": "yarn workspace server run start:dev",
+    "start:server:prod": "yarn workspace server run start:prod",
     "start:client:dev": "yarn workspace client run start:dev",
     "start:client:prod": "yarn workspace client run start:prod",
     "install:all": "yarn --cwd client && yarn --cwd server",

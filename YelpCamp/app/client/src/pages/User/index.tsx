@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 import { useQuery } from 'react-query';
 import { Link, useLoaderData, useNavigate, useSearchParams } from 'react-router-dom';
 import PageContainer from '../../components/PageContainer';
@@ -267,7 +267,7 @@ const User = () => {
                                                     </p>
                                                 </div>
                                                 <div>
-                                                    <Link to={`/reservation/${resv._id}`}>
+                                                    <Link to={`/reservations/${resv._id}`}>
                                                         {resv._id}
                                                     </Link>
                                                 </div>

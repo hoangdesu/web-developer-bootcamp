@@ -4,7 +4,7 @@ import { Form, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 
 const InputGroupText = styled(InputGroup.Text)`

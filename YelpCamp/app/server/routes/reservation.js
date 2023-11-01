@@ -4,12 +4,12 @@ const router = express.Router();
 const controller = require('../controllers/reservation');
 
 /**
- * @Route: /api/v1/reservation
+ * @Route: /api/v1/reservations
  */
 
-router.get('/all', controller.getAllReservations);
+router.get('/', controller.getAllReservations);
 
-router.post('/new', controller.createReservation);
+router.post('/', controller.createReservation);
 
 router.get('/discount', controller.checkDiscountCode);
 
@@ -18,8 +18,6 @@ router.get('/:id', controller.getReservationById);
 router.get('/:id/status', controller.checkStatus);
 
 router.get('/:id/pay', controller.pay);
-
-router.post('/:id/qr', controller.getQRCode);
 
 router.get('/:id/pending', controller.pending);
 

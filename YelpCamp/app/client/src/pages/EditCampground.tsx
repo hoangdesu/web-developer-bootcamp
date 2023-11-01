@@ -1,4 +1,5 @@
-import axios, { AxiosError } from 'axios';
+import ogAxios, { AxiosError } from 'axios';
+import axios from '../config/yelpcampAxios';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useLoaderData, useNavigate } from 'react-router-dom';
@@ -132,7 +133,7 @@ const EditCampground: React.FunctionComponent = () => {
     useEffect(() => {
         const queryLocationTimeOut = setTimeout(() => {
             if (!formLocation) setSuggestedLocations([]);
-            axios
+            ogAxios
                 .get(
                     `https://api.mapbox.com/geocoding/v5/mapbox.places/${formLocation}.json?access_token=${
                         import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
@@ -266,8 +267,6 @@ const EditCampground: React.FunctionComponent = () => {
     if (isLoading) return <Loading />;
 
     if (error) return <p>Error</p>;
-
-    console.log(campground);
 
     return (
         <PageContainer>

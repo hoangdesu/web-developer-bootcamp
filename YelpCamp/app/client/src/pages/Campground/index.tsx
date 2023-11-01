@@ -1,21 +1,18 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useLoaderData, Link, useNavigate } from 'react-router-dom';
 import { useQueries } from 'react-query';
-import axios from 'axios';
+import axios from '../../config/yelpcampAxios';
 
 import AppContext from '../../store/app-context';
 
-import { Container, Button, Form, Col, Row } from 'react-bootstrap';
+import { Form, Col, Row } from 'react-bootstrap';
 import { Star, Favorite, FavoriteBorder, IosShare } from '@mui/icons-material';
 
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
 import PageContainer from '../../components/PageContainer';
 import Loading from '../Loading';
 import Review from './Review';
 import { Review as ReviewType } from '../../types';
-import FlashAlert from '../../components/FlashAlert';
-import { Alert, Box, Modal, Rating, Snackbar } from '@mui/material';
+import { Box, Rating } from '@mui/material';
 import CampgroundCardCarousel from './CampgroundCardCarousel';
 import CampgroundMap from './CampgroundMap';
 import { Campground } from '../../types';
@@ -24,7 +21,6 @@ import styled from '@emotion/styled';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 import CampgroundReservation from './CampgroundReservation';
 import CampgroundHostedBySection from './CampgroundHostedBySection';
-import PageModal from '../../components/Modals/PageModal';
 import ModalShare from '../../components/Modals/ModalShare';
 import ModalLogin from '../../components/Modals/ModalLogin';
 
@@ -38,7 +34,7 @@ const StyledSection = styled.section`
 `;
 
 const Campground: React.FunctionComponent = () => {
-    const { campgroundId } = useLoaderData();
+    const { campgroundId } = useLoaderData() as { campgroundId: string };
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
 
@@ -169,7 +165,7 @@ const Campground: React.FunctionComponent = () => {
                         <>
                             <span>Saved to your favorite. </span>
                             <Link
-                                to={`/user/${appContext.currentUser?.username}?tab=favorite`}
+                                to={`/users/${appContext.currentUser?.username}?tab=favorite`}
                                 className="text-inherit"
                                 target="_blank"
                             >
@@ -282,7 +278,8 @@ const Campground: React.FunctionComponent = () => {
                         </a>
                     </StyledSection>
 
-                    <StyledSection>
+                    {/* // TODO: maybe only display reservation section for clients (hide for author) */}
+                    <StyledSection className="mb-5">
                         <h4 className="font-normal">Reservation</h4>
                         <CampgroundReservation campground={campground} />
                     </StyledSection>
@@ -293,61 +290,71 @@ const Campground: React.FunctionComponent = () => {
                     {campground && <CampgroundMap campground={campground} />}
 
                     {/* only activate review form for logged in user */}
-
                     {appContext.currentUser && (
                         <Form
-                            className="mt-5 flex flex-column mb-[-2rem]"
+                            className="mt-5 flex flex-column"
                             noValidate
                             validated={validated}
                             onSubmit={onReviewSubmit}
                         >
                             <h3 className="font-normal">Leave a review</h3>
-                            <Form.Group className="mb-2" controlId="reviewRating">
-                                <Rating
-                                    name="simple-controlled"
-                                    value={ratingValue}
-                                    onChange={(event, newValue) => {
-                                        setRatingValue(newValue || 1);
-                                    }}
-                                />
-                            </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="reviewComment">
+                            <Form.Group className="mb-1" controlId="reviewComment">
                                 <Form.Label>Comment</Form.Label>
+
                                 <Form.Control as="textarea" ref={reviewText} required />
                                 <Form.Control.Feedback type="invalid">
                                     Please add your comment
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <PrimaryBlackButton className="mt-1 bg-red-400 self-end">
-                                Submit
-                            </PrimaryBlackButton>
+
+                            <div className="flex flex-row w-full justify-between items-center">
+                                <Form.Group
+                                    className="mb-2 flex flex-col justify-start gap-0"
+                                    controlId="reviewRating"
+                                >
+                                    <Form.Label>Rating</Form.Label>
+                                    <Rating
+                                        name="simple-controlled"
+                                        value={ratingValue}
+                                        onChange={(event, newValue) => {
+                                            setRatingValue(newValue || 1);
+                                        }}
+                                    />
+                                </Form.Group>
+
+                                <PrimaryBlackButton>Submit</PrimaryBlackButton>
+                            </div>
                         </Form>
                     )}
 
-                    <h4 className="font-normal mt-5">Reviews</h4>
-                    {campground.reviews?.length > 0 && (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'base-line',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <p>
-                                {campground.reviews?.length || 0}{' '}
-                                {campground.reviews?.length > 1 ? 'reviews' : 'review'} · Average
-                                rating: {averageRating(campground)}
-                            </p>
-                            <Rating
-                                name="read-only"
-                                value={parseFloat(averageRating(campground)) || 1}
-                                readOnly
-                                precision={0.5}
-                                emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
-                            />
-                        </Box>
-                    )}
+                    <div className="mt-5">
+                        <h4 className="font-normal">Reviews</h4>
+                        {campground.reviews?.length > 0 && (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'base-line',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <p>
+                                    {campground.reviews?.length || 0}{' '}
+                                    {campground.reviews?.length > 1 ? 'reviews' : 'review'} · Avg.
+                                    rating: {averageRating(campground)}
+                                </p>
+                                <Rating
+                                    name="read-only"
+                                    value={parseFloat(averageRating(campground)) || 1}
+                                    readOnly
+                                    precision={0.5}
+                                    emptyIcon={
+                                        <Star style={{ opacity: 0.55 }} fontSize="inherit" />
+                                    }
+                                />
+                            </Box>
+                        )}
+                    </div>
 
                     {campground.reviews && (
                         <>
@@ -361,7 +368,7 @@ const Campground: React.FunctionComponent = () => {
                                     Add your first review!
                                 </span>
                             )}
-                            <div className="h-[600px] overflow-y-auto">
+                            <div className="max-h-[600px] overflow-y-auto">
                                 {campground.reviews.map((review: ReviewType) => (
                                     <Review
                                         key={review._id}
@@ -374,13 +381,6 @@ const Campground: React.FunctionComponent = () => {
                     )}
                 </Col>
             </Row>
-            {/* <Snackbar
-                open={true}
-                autoHideDuration={6000}
-                //   onClose={}
-                message="Note archived"
-                //   action={action}
-            ><Alert severity="success">This is a success message!</Alert></Snackbar> */}
         </PageContainer>
     );
 };

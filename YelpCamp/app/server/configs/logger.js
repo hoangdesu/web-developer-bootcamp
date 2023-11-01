@@ -19,7 +19,7 @@ const logger = (req, res, next) => {
         const now = new Date();
         const time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
 
-        const user = req.user?.username || null;
+        const user = req.user?.username;
         console.log(`\n[${time}] req.user: ${user}`);
         next();
     };

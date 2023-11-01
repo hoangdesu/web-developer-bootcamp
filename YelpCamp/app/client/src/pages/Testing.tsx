@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
+import axios from '../config/yelpcampAxios';
 
 const Testing = () => {
     const reader = new FileReader();
@@ -42,7 +43,7 @@ const Testing = () => {
     };
 
     function onDragEnd(result) {
-        console.log('result', result)
+        console.log('result', result);
         const newItems = [...items];
         const [removed] = newItems.splice(result.source.index, 1);
         newItems.splice(result.destination.index, 0, removed);
@@ -55,6 +56,49 @@ const Testing = () => {
         { id: 'four', content: 'four' },
     ];
     const [items, setItems] = useState(elements);
+
+    const [username, setUsername] = useState('');
+    const [pwd, setPwd] = useState('');
+
+    const loginHandler = e => {
+        e.preventDefault();
+
+        axios
+            .post(
+                '/api/v1/users/login',
+                {
+                    username: username,
+                    password: pwd,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    // withCredentials: true,
+                },
+            )
+            .then(res => {
+                console.log('login ok');
+                console.log(res.data);
+            });
+    };
+
+    const logout = () => {
+        axios
+            .post(
+                '/api/v1/users/logout',
+                {},
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    // withCredentials: true,
+                },
+            )
+            .then(res => {
+                console.log(res.data);
+            });
+    };
 
     return (
         <PageContainer>
@@ -208,6 +252,19 @@ const Testing = () => {
                         )}
                     </Droppable>
                 </DragDropContext> */}
+            </div>
+
+            <div>
+                <h1>Test log in</h1>
+
+                <form onSubmit={loginHandler}>
+                    <label htmlFor="">Username</label>
+                    <input type="text" onChange={e => setUsername(e.currentTarget.value)} />
+                    <label htmlFor="">Password</label>
+                    <input type="text" onChange={e => setPwd(e.currentTarget.value)} />
+                    <button>Log in</button>
+                </form>
+                <button onClick={logout}>Log out</button>
             </div>
         </PageContainer>
     );

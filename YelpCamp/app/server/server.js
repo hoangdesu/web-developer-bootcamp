@@ -1,6 +1,5 @@
 const path = require('path');
-if (!process.env.NODE_ENV)
-    throw new Error('Missing .env file. Please set NODE_ENV to one of these values: dev | prod');
+if (!process.env.NODE_ENV) process.env.NODE_ENV = 'dev';
 require('dotenv').config({ path: path.join(__dirname, `./.env.${process.env.NODE_ENV}`) });
 const express = require('express');
 const cors = require('cors');
@@ -9,7 +8,6 @@ const logger = require('./configs/logger');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const session = require('express-session');
-const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -58,10 +56,29 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // middlewares
+app.use(
+    cors({
+        credentials: true,
+        origin: [
+            'http://localhost:5173',
+            'http://localhost:4173',
+            'http://localhost:3000',
+            'https://yelpcamp.hoangdesu.com',
+            'https://yelpcamp-hoangdesu.vercel.app',
+        ],
+    }),
+);
+
+// app.use((req, res, next) => {
+//     cors({
+//         credentials: true,
+//         origin: req.headers.origin,
+//     });
+//     next();
+// });
+
 app.use(express.json());
-app.use(cors());
 app.use(methodOverride('_method'));
-app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use(
     mongoSanitize({
         allowDots: true,
@@ -69,7 +86,6 @@ app.use(
     }),
 );
 app.use(helmet());
-app.use(flash());
 app.use(morgan('dev'));
 app.use(logger());
 
@@ -79,7 +95,7 @@ app.use('/api/v1/campgrounds', campgroundRoutes);
 app.use('/api/v1/campgrounds/:campgroundId/reviews', reviewRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/reservation', reservationRoutes);
+app.use('/api/v1/reservations', reservationRoutes);
 app.use('/testing', testingRoutes);
 
 // 404, place after all route handlers

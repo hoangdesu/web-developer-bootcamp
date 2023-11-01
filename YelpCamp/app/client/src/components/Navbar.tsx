@@ -95,16 +95,6 @@ const Navbar: React.FunctionComponent = () => {
 
     const logoutHandler = async () => {
         appContext.setModal({ open: true, content: <ModalLogout /> });
-        // if (confirm('Logging out?')) {
-        //     await axios.post('/api/v1/users/logout');
-        //     appContext.setCurrentUser(null);
-        //     localStorage.removeItem('currentUser');
-        //     appContext.setAlert({
-        //         message: `Goodbye!`,
-        //         variant: 'success',
-        //     });
-        //     navigate('/');
-        // }
     };
 
     return (
@@ -143,13 +133,13 @@ const Navbar: React.FunctionComponent = () => {
                             >
                                 <Link
                                     to={'/campgrounds/new'}
-                                    key={'user'}
+                                    key={'new'}
                                     className="dropdown-item active:bg-primary-accent-color"
                                 >
                                     <span className="">New campground</span>
                                 </Link>
                                 <Link
-                                    to={`/user/${currentUser.username}?tab=info`}
+                                    to={`/users/${currentUser.username}?tab=info`}
                                     key={'user'}
                                     className="dropdown-item active:bg-primary-accent-color"
                                 >

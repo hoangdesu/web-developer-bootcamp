@@ -18,6 +18,7 @@ import Search from './pages/Search';
 import Reservation, { loader as resvLoader } from './pages/Reservation';
 import Confirm from './pages/Confirm';
 import ResetPassword from './pages/ResetPassword';
+import Checkout, { loader as checkouResvtLoader } from './pages/Checkout';
 
 export default createBrowserRouter([
     {
@@ -64,7 +65,7 @@ export default createBrowserRouter([
         element: <ResetPassword />,
     },
     {
-        path: '/user/:username',
+        path: '/users/:username',
         element: <User />,
         loader: usernameLoader,
         errorElement: <ErrorBoundary />,
@@ -75,13 +76,19 @@ export default createBrowserRouter([
         errorElement: <ErrorBoundary />,
     },
     {
-        path: '/reservation/:reservationId',
+        path: '/reservations/:reservationId',
         element: <Reservation />,
         loader: resvLoader,
         errorElement: <ErrorBoundary />,
     },
     {
-        path: '/reservation/:reservationId/confirm',
+        path: '/reservations/:reservationId/checkout',
+        element: <Checkout />,
+        loader: checkouResvtLoader,
+        errorElement: <ErrorBoundary />,
+    },
+    {
+        path: '/reservations/:reservationId/confirm',
         element: <Confirm />,
         loader: resvLoader,
         errorElement: <ErrorBoundary />,

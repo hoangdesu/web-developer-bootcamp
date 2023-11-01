@@ -4,7 +4,7 @@
 
 [x] pagination
 [x] cluster map popup
-[] clicking on campground bug
+[x] clicking on campground bug => FIXED: SET closeOnClick={false} on Popup
 
 [x] explore 102 campgrounds -> make catchy title text
 [x] style Campground page
@@ -31,7 +31,7 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [x] replace confirm popups with modals
 
 [x] fix reservation calculations
-[] alerts fk up the UI -> replace important ones with snackbars
+[x] alerts fk up the UI -> replace important ones with snackbars
 
 [x] login screen ui
 [x] register screen ui
@@ -52,7 +52,7 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 
 [x] Campground Thumbnail grid
 [x] campground marker style
-[] clustermap error: try using useEffect to reset state for popup
+[x] clustermap error: try using useEffect to reset state for popup
 
 [x] map preview in edit and new campground
 
@@ -84,3 +84,30 @@ if possible: can use 1 array to preview / edit images. or just use 2 arrays :/
 [] profile page TODOs
 
 [] ModalLogin should perform next action
+PROBLEMS:
+[FIXED] - check session / cookies from the back end. No sessionId (connect.sid) is set on the browser. Using proxy server DOES work for some reason :/ ?
+[FIXED] - cannot enter path directly into browser e.g. site.com/login. Have to use router?
+
+[FIXED] - Another problem: EditCampground -> request to mapbox api is blocked by CORS policy
+
+[] style navbar on mobile
+[] SEO meta tags
+[] sitemap, robots.txt or sth similar for SEO
+
+[] improve navbar navigation in mobile view
+[x] change /user paths to /users
+
+[] finish reservation
+RESERVATION TODOS:
+*need heavy works on <Reservation />
+
+- navigate to /reservations/:id
+- rename resv page
+- change api endpoints
+
+- /reservations/:id
+- /reservations/:id/confirm -> mobile view, rename this component
+
+[] Checkout page
+
+[x] Loading page spinner is not center

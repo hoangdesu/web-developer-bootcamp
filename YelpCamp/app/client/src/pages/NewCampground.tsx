@@ -1,4 +1,5 @@
-import axios from 'axios';
+import ogAxios from 'axios';
+import axios from '../config/yelpcampAxios';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -120,7 +121,7 @@ const NewCampground: React.FunctionComponent = () => {
 
         // wait 0.5s before querying feature (location) data from mapbox
         const queryLocationTimeOut = setTimeout(() => {
-            axios
+            ogAxios
                 .get(
                     `https://api.mapbox.com/geocoding/v5/mapbox.places/${formLocation}.json?access_token=${
                         import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
