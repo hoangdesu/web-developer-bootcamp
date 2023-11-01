@@ -82,3 +82,5 @@ if possible: can use 1 array to preview / edit images. or just use 2 arrays :/
 [] style search page
 [] error page
 [] profile page TODOs
+
+[] ModalLogin should perform next action

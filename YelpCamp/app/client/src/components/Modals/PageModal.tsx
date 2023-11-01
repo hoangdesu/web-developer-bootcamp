@@ -29,7 +29,6 @@ const style = {
     },
 
     '@media (max-width: 600px)': {
-        // background: 'red',
         left: 'calc(50% - (90%/2))',
         width: '90%',
     },

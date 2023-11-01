@@ -107,6 +107,31 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     // Note that en-CA is a locale, not a timezone. Canada uses the YYYY-MM-DD format.
     const minStartDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
 
+    const openModalConfirmReservation = () => {
+        const reservation = {
+            bookedBy: appContext.currentUser.id,
+            campground: campground._id,
+            nights: nights,
+            checkIn: inputStartDate,
+            checkOut: inputEndDate,
+            guests: guests,
+            totalAmount: fees.totalAfterDiscount,
+            discountCode: discount.code || '',
+        };
+
+        appContext.setModal({
+            open: true,
+            content: (
+                <ModalConfirmReservation
+                    reservation={reservation}
+                    campground={campground}
+                    discountPercentage={discount.percentage}
+                />
+            ),
+            requiresLoggedIn: true,
+        });
+    };
+
     const reserveHandler = () => {
         if (!inputStartDate) {
             checkinDateRef.current!.showPicker();
@@ -119,7 +144,11 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
         }
 
         if (!appContext.currentUser) {
-            appContext.setModal({ open: true, content: <ModalLogin />, requiresLoggedIn: true });
+            appContext.setModal({
+                open: true,
+                content: <ModalLogin nextAction={() => alert('next action')} />,
+                requiresLoggedIn: true,
+            });
             return;
         }
 

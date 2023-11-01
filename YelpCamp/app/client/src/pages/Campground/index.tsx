@@ -142,7 +142,11 @@ const Campground: React.FunctionComponent = () => {
 
     const toggleFavoriteCampground = evt => {
         if (!appContext.currentUser) {
-            appContext.setModal({ open: true, content: <ModalLogin />, requiresLoggedIn: true });
+            appContext.setModal({
+                open: true,
+                content: <ModalLogin nextAction={'name'} />,
+                requiresLoggedIn: true,
+            });
             return;
         }
 
