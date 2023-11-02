@@ -35,7 +35,7 @@ const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
     }
 
     .form {
-        padding: clamp(1rem, 3rem, 3rem);
+        padding: 3rem;
     }
 
     .art-container {
@@ -60,8 +60,13 @@ const Wrapper = styled.div<{ mouseCoords: { x: number; y: number } }>`
         .form-container {
             width: 100%;
         }
+
         .art-container {
             display: none;
+        }
+
+        .form {
+            padding: 1rem;
         }
     }
 `;

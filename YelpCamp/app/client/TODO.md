@@ -112,7 +112,7 @@ RESERVATION TODOS:
 
 [x] Loading page spinner is not center
 
-[] less padding for NewCampground on mobile
+[x] less padding for NewCampground on mobile
 
 [] https://stackoverflow.com/questions/36904185/react-router-scroll-to-top-on-every-transition
 
@@ -122,4 +122,4 @@ and modal + checkout page
 [x] implement scroll to top on page navigation with either scroll to top or scroll restorartion component 
 + take note
 
-[] different hover colors/effects for primary and secondary buttons
+[x] different hover colors/effects for primary and secondary buttons

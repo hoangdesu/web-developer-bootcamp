@@ -16,6 +16,15 @@ export const formatDate = (createdTime: string) => {
     return `${format(date)}`;
 };
 
+export const formatDateWithoutTime = (createdTime: string) => {
+    const { format } = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Ho_Chi_Minh',
+        dateStyle: 'long',
+    });
+
+    return `${format(new Date(createdTime))}`;
+};
+
 export const timeDifference = (current: number, previous: number) => {
     var msPerMinute = 60 * 1000;
     var msPerHour = msPerMinute * 60;
@@ -49,6 +58,7 @@ export const USDtoVND = (usd: number) => {
 
 export const formattedPrice = (price: number) => `$${price}/night (~${USDtoVND(price)})`;
 
+// returns the average rating from all reviews of a certain campground
 export const averageRating = (campground: Campground) => {
     const result = (
         campground?.reviews?.reduce((accumulator, review) => accumulator + review.rating, 0) /

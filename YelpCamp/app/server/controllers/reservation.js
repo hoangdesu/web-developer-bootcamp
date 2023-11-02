@@ -46,11 +46,18 @@ module.exports.getReservationById = catchAsync(async (req, res) => {
         // .populate('campground')
         .populate({
             path: 'campground',
-            select: ['images', 'location', 'price', 'reviews', 'title', 'description'],
+            select: ['images', 'location', 'price', 'title', 'description'],
             populate: {
                 path: 'author',
                 model: 'User',
                 select: ['_id', 'username'],
+            },
+        })
+        .populate({
+            path: 'campground',
+            populate: {
+                path: 'reviews',
+                model: 'Review',
             },
         })
         .exec();
