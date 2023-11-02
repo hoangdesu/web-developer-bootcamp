@@ -17,8 +17,8 @@ const Button = styled.button`
     margin: 1rem 0;
 
     &:hover {
-        color: var(--primary-color);
-        background-color: var(--primary-dark-color);
+        color: black;
+        background-color: #f9f3f3;
         cursor: pointer;
     }
 

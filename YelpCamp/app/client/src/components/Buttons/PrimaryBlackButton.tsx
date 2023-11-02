@@ -8,6 +8,9 @@ interface ButtonProps {
     disabled?: boolean;
 }
 
+const HOVER_COLOR = '#4c4c4c';
+const DISABLED_COLOR = '#b9a0a0';
+
 const Button = styled.button`
     border: 1px solid black;
     background-color: var(--primary-dark-color);
@@ -17,13 +20,13 @@ const Button = styled.button`
     margin: 1rem 0;
 
     &:hover {
-        background-color: var(--primary-accent-color);
-        border: 1px solid var(--primary-accent-color);
+        background-color: ${HOVER_COLOR};
+        border: 1px solid ${HOVER_COLOR};
     }
 
     &:disabled {
-        background-color: #10b981;
-        border: 1px solid #10b981;
+        background-color: ${DISABLED_COLOR};
+        border: 1px solid ${DISABLED_COLOR};
     }
 
     /* Mobile view */

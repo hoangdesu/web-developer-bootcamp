@@ -116,8 +116,10 @@ RESERVATION TODOS:
 
 [] https://stackoverflow.com/questions/36904185/react-router-scroll-to-top-on-every-transition
 
-[] add subtotal to reservation and modal + checkout page
+[x] add subtotal to reservation 
+and modal + checkout page
 
-[] implement scroll to top on page navigation with either scroll to top or scroll restorartion component + take note
+[x] implement scroll to top on page navigation with either scroll to top or scroll restorartion component 
++ take note
 
-[] change component App to Home
+[] different hover colors/effects for primary and secondary buttons

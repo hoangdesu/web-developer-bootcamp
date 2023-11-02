@@ -374,18 +374,13 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                             </Tooltip>
 
                             <Tooltip
-                                title={`// TODO: Total before taxes: $${Number(
-                                    fees.totalBeforeTaxes,
-                                ).toFixed(2)} × 8%`}
+                                title={'Everything after taxes'}
                                 placement="right"
                                 enterDelay={200}
                                 arrow
                             >
                                 <div className="flex flex-row justify-between">
-                                    <span>
-                                        Subtotal
-                                        {/* <span className="text-sm text-muted">(8%)</span> */}
-                                    </span>
+                                    <span>Subtotal</span>
                                     <span className="text-right">
                                         ${fees.totalAfterTaxes.toFixed(2)}
                                     </span>

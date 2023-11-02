@@ -39,6 +39,7 @@ const SearchIconWrapper = muistyled('div')(({ theme }) => ({
 
 const StyledInputBase = muistyled(InputBase)(({ theme }) => ({
     color: 'inherit',
+    fontFamily: 'Lora serif',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 0),
         // vertical padding + font size from searchIcon

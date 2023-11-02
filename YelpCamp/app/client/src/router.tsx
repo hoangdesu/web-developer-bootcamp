@@ -27,97 +27,7 @@ import ResetPassword from './pages/ResetPassword';
 import Checkout, { loader as checkouResvtLoader } from './pages/Checkout';
 import ScrollToTop from './components/ScrollToTop';
 
-// export default createBrowserRouter([
-//     {
-//         path: '/',
-//         element: <App />,
-//         errorElement: <ErrorBoundary />,
-//     },
-//     {
-//         path: '/campgrounds/:campgroundId',
-//         element: <Campground />,
-//         loader: addCampgroundLoader,
-//         errorElement: <ErrorBoundary />,
-//     },
-//     {
-//         path: '/about',
-//         element: <About />,
-//     },
-//     {
-//         path: '/campgrounds/new',
-//         element: <NewCampground />,
-//         errorElement: <ErrorBoundary />,
-//     },
-//     {
-//         path: '/campgrounds/:campgroundId/edit',
-//         element: <EditCampground />,
-//         loader: editCampgroundLoader,
-//     },
-//     {
-//         path: '/campgrounds',
-//         loader: async () => {
-//             throw redirect('/');
-//         },
-//     },
-//     {
-//         path: '/register',
-//         element: <Register />,
-//     },
-//     {
-//         path: '/login',
-//         element: <Login />,
-//     },
-//     {
-//         path: '/reset',
-//         element: <ResetPassword />,
-//     },
-//     {
-//         path: '/users/:username',
-//         element: <User />,
-//         loader: usernameLoader,
-//         errorElement: <ErrorBoundary />,
-//     },
-//     {
-//         path: '/search',
-//         element: <Search />,
-//         errorElement: <ErrorBoundary />,
-//     },
-//     {
-//         path: '/reservations/:reservationId',
-//         element: <Reservation />,
-//         loader: resvLoader,
-//         errorElement: <ErrorBoundary />,
-//     },
-//     {
-//         path: '/reservations/:reservationId/checkout',
-//         element: <Checkout />,
-//         loader: checkouResvtLoader,
-//         errorElement: <ErrorBoundary />,
-//     },
-//     {
-//         path: '/reservations/:reservationId/confirm',
-//         element: <Confirm />,
-//         loader: resvLoader,
-//         errorElement: <ErrorBoundary />,
-//     },
-//     {
-//         path: '/testing',
-//         element: <Testing />,
-//     },
-//     {
-//         path: '/error',
-//         element: <ErrorBoundary />,
-//         errorElement: <ErrorBoundary />,
-//     },
-//     {
-//         path: '/loading',
-//         element: <Loading />,
-//     },
-// ]);
-
-function Layout() {
-    let navigation = useNavigation();
-
+const Layout = () => {
     // You can provide a custom implementation of what "key" should be used to
     // cache scroll positions for a given location.  Using the location.key will
     // provide standard browser behavior and only restore on back/forward
@@ -125,14 +35,14 @@ function Layout() {
     // restoration and will also restore on normal link navigations to a
     // previously-accessed path.  Or - go nuts and lump many pages into a
     // single key (i.e., anything /wizard/* uses the same key)!
-    let getKey = React.useCallback((location: Location, matches: ReturnType<typeof useMatches>) => {
-        let match = matches.find(m => (m.handle as any)?.scrollMode);
-        if ((match?.handle as any)?.scrollMode === 'pathname') {
-            return location.pathname;
-        }
+    // let getKey = React.useCallback((location: Location, matches: ReturnType<typeof useMatches>) => {
+    //     let match = matches.find(m => (m.handle as any)?.scrollMode);
+    //     if ((match?.handle as any)?.scrollMode === 'pathname') {
+    //         return location.pathname;
+    //     }
 
-        return location.key;
-    }, []);
+    //     return location.key;
+    // }, []);
 
     return (
         <>
@@ -147,7 +57,7 @@ function Layout() {
             {/* <ScrollRestoration getKey={getKey} /> */}
         </>
     );
-}
+};
 
 export default createBrowserRouter([
     {
@@ -240,20 +150,4 @@ export default createBrowserRouter([
             },
         ],
     },
-    // {
-    //     path: '/',
-    //     element: <App />,
-    //     errorElement: <ErrorBoundary />,
-    // },
-    // {
-    //     path: '/campgrounds/:campgroundId',
-    //     element: <Campground />,
-    //     loader: addCampgroundLoader,
-    //     errorElement: <ErrorBoundary />,
-    // },
-    // {
-    //     path: '/about',
-    //     element: <About />,
-    // },
-    //
 ]);
