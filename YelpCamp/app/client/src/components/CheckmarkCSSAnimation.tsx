@@ -2,12 +2,13 @@ import React, { useRef } from 'react';
 import styled from '@emotion/styled';
 
 const Div = styled.div`
-    transform: scale(2);
-    margin-top: 100px;
-    margin-bottom: 60px;
+    transform: scale(1.5);
+    // TODO: can just keep original aspect ratios, and modify in the container outside where we use this animation for better reusability
+
+    /* margin-top: 100px; */
+    /* margin-bottom: 60px; */
     /* transform: translateY(10px); */
 
-    // TODO: can just keep original aspect ratios, and modify in the container outside where we use this animation for better reusability
     
     
     .checkmark__circle {

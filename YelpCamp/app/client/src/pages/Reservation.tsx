@@ -92,47 +92,47 @@ const Reservation = () => {
         // },
     ]);
 
-    useEffect(() => {
-        const paymentTimer = setInterval(() => {
-            axios
-                .get(`/api/v1/reservations/${reservationId}/status`)
-                .then(res => res.data)
-                .then(data => {
-                    console.log('STATUS:', data);
-                    if (data === 'PAID') {
-                        setStatus('PAID!');
-                        setTimeout(() => {
-                            navigate(`/users/${appContext.currentUser!.username}?tab=reservations`);
-                        }, 5000);
-                        reservationQuery.refetch();
-                        appContext.setModal({
-                            open: true,
-                            content: (
-                                <div>
-                                    <h1>Payment received</h1>
-                                    <p>Thank you for your reservation with YelpCamp!</p>
+    // useEffect(() => {
+    //     const paymentTimer = setInterval(() => {
+    //         axios
+    //             .get(`/api/v1/reservations/${reservationId}/status`)
+    //             .then(res => res.data)
+    //             .then(data => {
+    //                 console.log('STATUS:', data);
+    //                 if (data === 'PAID') {
+    //                     setStatus('PAID!');
+    //                     setTimeout(() => {
+    //                         navigate(`/users/${appContext.currentUser!.username}?tab=reservations`);
+    //                     }, 5000);
+    //                     reservationQuery.refetch();
+    //                     appContext.setModal({
+    //                         open: true,
+    //                         content: (
+    //                             <div>
+    //                                 <h1>Payment received</h1>
+    //                                 <p>Thank you for your reservation with YelpCamp!</p>
 
-                                    <CheckmarkCSSAnimation />
-                                </div>
-                            ),
-                        });
-                    }
-                });
-            // reservationQuery.refetch();
+    //                                 <CheckmarkCSSAnimation />
+    //                             </div>
+    //                         ),
+    //                     });
+    //                 }
+    //             });
+    //         // reservationQuery.refetch();
 
-            // qrRef.current.animateQRCode('RadialRippleIn')
+    //         // qrRef.current.animateQRCode('RadialRippleIn')
 
-            if (seconds > 0) {
-                setSeconds(seconds - 1);
-            }
-            if (seconds === 0) {
-                clearInterval(paymentTimer);
-            }
-        }, 1000);
-        return () => {
-            clearInterval(paymentTimer);
-        };
-    });
+    //         if (seconds > 0) {
+    //             setSeconds(seconds - 1);
+    //         }
+    //         if (seconds === 0) {
+    //             clearInterval(paymentTimer);
+    //         }
+    //     }, 1000);
+    //     return () => {
+    //         clearInterval(paymentTimer);
+    //     };
+    // });
 
     if (reservationQuery.isLoading) return <>Loading...</>;
     if (reservationQuery.error) return <>Error</>;

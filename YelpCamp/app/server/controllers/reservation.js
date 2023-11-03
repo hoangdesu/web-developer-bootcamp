@@ -121,3 +121,18 @@ module.exports.checkDiscountCode = catchAsync(async (req, res) => {
         });
     }
 });
+
+module.exports.cancelReservation = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    
+    const resv = await Reservation.findOneAndUpdate(
+        { _id: id },
+        { status: 'CANCELLED' },
+        {
+            new: true,
+        },
+    );
+
+    if (!resv) return next(new YelpcampError(404, 'Error: invalid Reservation ID'));
+    res.sendStatus(200);
+});

@@ -22,7 +22,7 @@ import User, { loader as usernameLoader } from './pages/User';
 import Testing from './pages/Testing';
 import Search from './pages/Search';
 import Reservation, { loader as resvLoader } from './pages/Reservation';
-import Confirm from './pages/Confirm';
+import ConfirmOnMobile from './pages/ConfirmOnMobile';
 import ResetPassword from './pages/ResetPassword';
 import Checkout, { loader as checkouResvtLoader } from './pages/Checkout';
 import ScrollToTop from './components/ScrollToTop';
@@ -131,7 +131,7 @@ export default createBrowserRouter([
             },
             {
                 path: '/reservations/:reservationId/confirm',
-                element: <Confirm />,
+                element: <ConfirmOnMobile />,
                 loader: resvLoader,
                 errorElement: <ErrorBoundary />,
             },

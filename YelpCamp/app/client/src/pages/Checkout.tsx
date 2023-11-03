@@ -1,18 +1,21 @@
 import axios from '../config/yelpcampAxios';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import Loading from './Loading';
 import ErrorBoundary from './ErrorBoundary';
 import { Col, Container, Row } from 'react-bootstrap';
-import { averageRating, formatDateWithoutTime } from '../helpers/campground';
+import { USDtoVND, averageRating, formatDateWithoutTime } from '../helpers/campground';
 import Logo from '../assets/logo.png';
 import * as qrCode from '@bitjson/qr-code';
 import AppContext from '../store/app-context';
 import ModalPaymentReceived from '../components/Modals/ModalPaymentReceived';
 import styled from '@emotion/styled';
 import useWindowDimensions from '../hooks/useWindowDimensions';
+import WaitingGIF from '../assets/waiting.gif';
+import SecondaryTransparentButton from '../components/Buttons/SecondaryTransparentButton';
+import ModalConfirmCancelReservation from '../components/Modals/ModalConfirmCancelReservation';
 
 export async function loader({ params }) {
     return { reservationId: params.reservationId };
@@ -43,9 +46,12 @@ const Checkout = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
     const { width: windowWidth } = useWindowDimensions();
+    const qrRef = useRef(null);
+
+    const [resvStatus, setResvStatus] = useState<'PENDING' | 'PAID' | 'CANCELLED'>('PENDING');
 
     useEffect(() => {
-        const qrEl = qrCode.defineCustomElements(window);
+        qrCode.defineCustomElements(window);
 
         // TODO: check if status === PAID, redirect to Reservation page w/ message: you have paid
     }, []);
@@ -58,46 +64,46 @@ const Checkout = () => {
     } = useQuery({
         queryKey: ['getReservationById'],
         queryFn: () => axios.get(`/api/v1/reservations/${reservationId}`).then(data => data.data),
+        onSuccess: resv => {
+            setResvStatus(resv.status);
+        },
     });
 
     console.log(resv);
 
     useEffect(() => {
-        let timerOn = false; // TODO: remove in production
-        if (timerOn) {
-            const paymentTimer = setInterval(() => {
-                axios.get(`/api/v1/reservations/${reservationId}/status`).then(res => {
-                    const { data } = res;
-                    console.log('STATUS:', data);
-                    if (data === 'PAID') {
-                        // setStatus('PAID!');
+        const paymentTimer = setInterval(() => {
+            axios.get(`/api/v1/reservations/${reservationId}/status`).then(res => {
+                const { data } = res;
+                console.log('STATUS:', data);
+                if (data === 'PAID') {
+                    // setStatus('PAID!');
 
-                        // setTimeout(() => {
-                        //     navigate(`/users/${appContext.currentUser!.username}?tab=reservations`);
-                        // }, 5000);
-                        refetch();
-                        appContext.setModal({
-                            open: true,
-                            content: <ModalPaymentReceived />,
-                        });
-                        clearInterval(paymentTimer);
-                    }
-                });
-                // reservationQuery.refetch();
+                    // setTimeout(() => {
+                    //     navigate(`/users/${appContext.currentUser!.username}?tab=reservations`);
+                    // }, 5000);
+                    refetch();
+                    appContext.setModal({
+                        open: true,
+                        content: <ModalPaymentReceived />,
+                    });
+                    clearInterval(paymentTimer);
+                }
+            });
+            // reservationQuery.refetch();
 
-                // qrRef.current.animateQRCode('RadialRippleIn')
+            // qrRef.current.animateQRCode('RadialRippleIn')
 
-                // if (seconds > 0) {
-                //     setSeconds(seconds - 1);
-                // }
-                // if (seconds === 0) {
-                //     clearInterval(paymentTimer);
-                // }
-            }, 1000);
-            return () => {
-                clearInterval(paymentTimer);
-            };
-        }
+            // if (seconds > 0) {
+            //     setSeconds(seconds - 1);
+            // }
+            // if (seconds === 0) {
+            //     clearInterval(paymentTimer);
+            // }
+        }, 1000);
+        return () => {
+            clearInterval(paymentTimer);
+        };
     }, []);
 
     if (isLoading) return <Loading />;
@@ -109,7 +115,6 @@ const Checkout = () => {
     const subTotal = (resv.totalAmount * 100) / (100 - resv.discount.percentage);
     const discount = subTotal - resv.totalAmount;
 
-    // UI design ref: https://dribbble.com/shots/4631896-Prepayment-page
     return (
         <PageContainer>
             <h1>Checkout</h1>
@@ -225,6 +230,12 @@ const Checkout = () => {
                                     </div>
                                 </div>
                             </Row>
+
+                            <hr />
+                            <Row>
+                                <span className="mt-[-16px]">Reservation ID: </span>
+                                <span className="text-muted text-sm">{resv._id}</span>
+                            </Row>
                         </Col>
 
                         {/* Right col */}
@@ -279,43 +290,99 @@ const Checkout = () => {
                                             .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     </span>
                                 </div>
+
+                                <div className="text-muted text-sm flex flex-row justify-between">
+                                    <span>🇻🇳 Vietnam Dong</span>
+                                    <span>{USDtoVND(resv.totalAmount)}₫</span>
+                                </div>
                             </Row>
 
                             <Row className="mt-[-1rem]">
-                                <h5>Scan QR code to pay</h5>
-                                <p className="text-muted text-xs w-[95%]">
-                                    (You can also click on the QR code to open mobile view)
-                                </p>
-                                <div
-                                    onClick={() => {
-                                        window.open(urlForQR, '_blank', 'width=400, height=600');
-                                    }}
-                                    className="hover:cursor-pointer flex items-center justify-center"
-                                >
-                                    <qr-code
-                                        id="qr1"
-                                        contents={urlForQR}
-                                        module-color="#1c7d43"
-                                        position-ring-color="#13532d"
-                                        position-center-color="#70c559"
-                                        mask-x-to-y-ratio="1.2"
-                                        style={{
-                                            // maxWidth: '250px',
-                                            height: '300px',
-                                            margin: 0,
-                                            padding: 0,
-                                        }}
-                                    >
-                                        <img
-                                            src={Logo}
-                                            alt="logo"
-                                            slot="icon"
-                                            style={{ background: 'white', width: '100%' }}
-                                        />
-                                    </qr-code>
-                                </div>
-                                <p>Status: {resv.status}</p>
-                                {/* </a> */}
+                                {/* Show QR code only for pending reservation */}
+                                {resvStatus === 'PENDING' && (
+                                    <>
+                                        <h5>Scan QR code to pay</h5>
+                                        <p className="text-muted text-xs w-[95%]">
+                                            (You can also click on the QR code to open mobile view)
+                                        </p>
+                                        <div
+                                            onClick={() => {
+                                                window.open(
+                                                    urlForQR,
+                                                    '_blank',
+                                                    'width=400, height=600',
+                                                );
+                                            }}
+                                            className="hover:cursor-pointer flex items-center justify-center"
+                                        >
+                                            <qr-code
+                                                id="qr1"
+                                                contents={urlForQR}
+                                                module-color="#1c7d43"
+                                                position-ring-color="#13532d"
+                                                position-center-color="#70c559"
+                                                mask-x-to-y-ratio="1.2"
+                                                style={{
+                                                    maxWidth: '250px',
+                                                    margin: 0,
+                                                    padding: 0,
+                                                }}
+                                                ref={qrRef}
+                                                onMouseEnter={() => {
+                                                    qrRef.current.animateQRCode('RadialRipple');
+                                                }}
+                                            >
+                                                <img
+                                                    src={Logo}
+                                                    alt="logo"
+                                                    slot="icon"
+                                                    style={{ background: 'white', width: '100%' }}
+                                                />
+                                            </qr-code>
+                                        </div>
+                                    </>
+                                )}
+
+                                {resvStatus === 'PENDING' ? (
+                                    <p className="flex flex-row items-end gap-2">
+                                        <span>Status: waiting for payment... </span>
+                                        <span>
+                                            <img src={WaitingGIF} alt="" width={25} />
+                                        </span>
+                                    </p>
+                                ) : (
+                                    <div className="mt-3">
+                                        <p>Status: {resv.status}</p>
+                                        <div>
+                                            <SecondaryTransparentButton
+                                                className="w-full"
+                                                onClick={() => navigate('/')}
+                                            >
+                                                Back to Home
+                                            </SecondaryTransparentButton>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {resvStatus === 'PENDING' && (
+                                    <div>
+                                        <SecondaryTransparentButton
+                                            className="w-full"
+                                            onClick={() =>
+                                                appContext.setModal({
+                                                    open: true,
+                                                    content: (
+                                                        <ModalConfirmCancelReservation
+                                                            resv={resv}
+                                                        />
+                                                    ),
+                                                })
+                                            }
+                                        >
+                                            Cancel reservation
+                                        </SecondaryTransparentButton>
+                                    </div>
+                                )}
                             </Row>
                         </Col>
                     </Row>
