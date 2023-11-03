@@ -12,12 +12,15 @@ import * as qrCode from '@bitjson/qr-code';
 import AppContext from '../store/app-context';
 import ModalPaymentReceived from '../components/Modals/ModalPaymentReceived';
 import styled from '@emotion/styled';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 
 export async function loader({ params }) {
     return { reservationId: params.reservationId };
 }
 
 const StyledContainer = styled.div`
+    margin-top: 1rem;
+
     .right-border {
         padding-right: 16px;
         border-right: 1px solid #999da1;
@@ -39,6 +42,7 @@ const Checkout = () => {
     const { reservationId } = useLoaderData() as { reservationId: string };
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
+    const { width: windowWidth } = useWindowDimensions();
 
     useEffect(() => {
         const qrEl = qrCode.defineCustomElements(window);
@@ -118,63 +122,104 @@ const Checkout = () => {
                             className="bg-white border flex flex-col gap-5 p-3 mr-5 max-[991px]:mb-5"
                         >
                             <Row className="">
-                                <div className="flex flex-row items-start gap-3">
+                                {windowWidth > 768 ? (
+                                    <div className="flex flex-row items-start gap-3">
+                                        <Link
+                                            to={`/campgrounds/${resv.campground._id}`}
+                                            style={{ textDecoration: 'none', color: 'inherit' }}
+                                            className="flex flex-row gap-3"
+                                            target="_blank"
+                                        >
+                                            <img
+                                                src={resv.campground.images[0].thumbnail}
+                                                alt="Campground thumbnail"
+                                                style={{
+                                                    objectFit: 'cover',
+                                                    height: '120px',
+                                                }}
+                                            />
+                                            <div className="flex flex-col justify-between">
+                                                <h5>{resv.campground.title}</h5>
+                                                <p className="text-muted">
+                                                    {resv.campground.location}
+                                                </p>
+                                                <p className="">
+                                                    Hosted by: {resv.campground.author.username}
+                                                </p>
+                                            </div>
+                                        </Link>
+                                        <div className="ml-auto">
+                                            <p>★ {averageRating(resv.campground)}</p>
+                                        </div>
+                                    </div>
+                                ) : (
                                     <Link
                                         to={`/campgrounds/${resv.campground._id}`}
                                         style={{ textDecoration: 'none', color: 'inherit' }}
-                                        className="flex flex-row gap-3"
+                                        className="flex flex-col gap-3"
                                         target="_blank"
                                     >
                                         <img
-                                            src={resv.campground.images[0].thumbnail}
+                                            src={resv.campground.images[0].url}
                                             alt="Campground thumbnail"
                                             style={{
                                                 objectFit: 'cover',
-                                                // maxWidth: '150px'
-                                                height: '120px',
+                                                width: '100%',
+                                                height: '150px',
+                                                position: 'center',
                                             }}
                                         />
-                                        <div className="flex flex-col justify-between">
+                                        <div className="flex flex-col justify-between mt-3">
                                             <h5>{resv.campground.title}</h5>
                                             <p className="text-muted">{resv.campground.location}</p>
-                                            <p className="">
-                                                Hosted by: {resv.campground.author.username}
-                                            </p>
+                                            <div className="flex flex-row justify-between">
+                                                <span className="">
+                                                    Hosted by: {resv.campground.author.username}
+                                                </span>
+                                                <span className="ml-auto">
+                                                    ★ {averageRating(resv.campground)}
+                                                </span>
+                                            </div>
                                         </div>
                                     </Link>
-                                    <div className="ml-auto">
-                                        <p>★ {averageRating(resv.campground)}</p>
-                                    </div>
-                                </div>
+                                )}
                             </Row>
 
                             <hr />
-
+                            <h5 className="mt-[-32px]">Your stay</h5>
                             <Row>
-                                <div className="border bg-secondary-color w-fit p-3 rounded flex gap-3 m-3">
+                                <div className="border bg-secondary-color w-fit p-3 rounded flex gap-3 ml-3">
                                     <div className="right-border relative">
                                         <span className="absolute-text">Check-in</span>
-                                        <span>{formatDateWithoutTime(resv.checkIn)}</span>
+                                        <span className="font-medium">
+                                            {windowWidth > 768
+                                                ? formatDateWithoutTime(resv.checkIn, 'full')
+                                                : formatDateWithoutTime(resv.checkIn, 'medium')}
+                                        </span>
                                     </div>
 
                                     <div className="relative">
                                         <span className="absolute-text">Check out</span>
-                                        <span>{formatDateWithoutTime(resv.checkOut)}</span>
+                                        <span className="font-medium">
+                                            {windowWidth > 768
+                                                ? formatDateWithoutTime(resv.checkOut, 'full')
+                                                : formatDateWithoutTime(resv.checkOut, 'medium')}
+                                        </span>
                                     </div>
                                 </div>
                             </Row>
                             <Row>
-                                <div className="border bg-secondary-color w-fit p-3 rounded flex gap-3 m-3">
+                                <div className="border bg-secondary-color w-fit p-3 rounded flex gap-3 ml-3">
                                     <div className="right-border relative">
                                         <span className="absolute-text">Nights</span>
-                                        <span>
+                                        <span className="font-medium">
                                             {resv.nights} {resv.nights === 1 ? 'night' : 'nights'}
                                         </span>
                                     </div>
 
                                     <div className="relative">
                                         <span className="absolute-text">Guests</span>
-                                        <span>
+                                        <span className="font-medium">
                                             {resv.guests} {resv.guests === 1 ? 'guest' : 'guests'}
                                         </span>
                                     </div>
@@ -185,7 +230,8 @@ const Checkout = () => {
                         {/* Right col */}
                         <Col className="bg-white border flex flex-col gap-5 p-3">
                             <Row>
-                                {/* <p>// Price</p> */}
+                                <h5>Invoice</h5>
+
                                 <div className="flex flex-row justify-between">
                                     <span>Subtotal</span>
                                     <span>
@@ -235,14 +281,11 @@ const Checkout = () => {
                                 </div>
                             </Row>
 
-                            <Row>
-                                {/* <p>// QR code</p> */}
-
-                                <h5>Scan this QR code to pay</h5>
-                                <p className="text-muted text-sm w-[95%]">
+                            <Row className="mt-[-1rem]">
+                                <h5>Scan QR code to pay</h5>
+                                <p className="text-muted text-xs w-[95%]">
                                     (You can also click on the QR code to open mobile view)
                                 </p>
-                                {/* <a href={urlForQR} target="_blank" className=""> */}
                                 <div
                                     onClick={() => {
                                         window.open(urlForQR, '_blank', 'width=400, height=600');
@@ -262,8 +305,6 @@ const Checkout = () => {
                                             margin: 0,
                                             padding: 0,
                                         }}
-                                        // ref={qrRef}
-                                        // ref={qrref}
                                     >
                                         <img
                                             src={Logo}

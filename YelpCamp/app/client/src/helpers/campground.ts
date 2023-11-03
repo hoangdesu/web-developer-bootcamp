@@ -16,10 +16,13 @@ export const formatDate = (createdTime: string) => {
     return `${format(date)}`;
 };
 
-export const formatDateWithoutTime = (createdTime: string) => {
+export const formatDateWithoutTime = (
+    createdTime: string,
+    dateStyle: 'full' | 'long' | 'medium' | 'short' | undefined = 'full',
+) => {
     const { format } = new Intl.DateTimeFormat('en-US', {
         timeZone: 'Asia/Ho_Chi_Minh',
-        dateStyle: 'long',
+        dateStyle: dateStyle,
     });
 
     return `${format(new Date(createdTime))}`;
