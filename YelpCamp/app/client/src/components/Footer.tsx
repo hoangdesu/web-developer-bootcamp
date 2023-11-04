@@ -11,10 +11,12 @@ const Footer: React.FunctionComponent = () => {
         console.log(appContext);
     };
 
+
     return (
         <footer className="footer bg-dark fixed bottom-0 w-full z-[-1] h-[150px] py-5">
             <Container className="px-[5%]">
-                <span className="text-muted">YelpCamp &copy; Hoang Nguyen 2023</span>
+                <p className="text-gray-400">YelpCamp &copy; Hoang Nguyen 2023</p>
+                <p className="text-gray-400">Build: {__BUILD_TIMESTAMP__}</p>
                 {debuggingMode && (
                     <div>
                         <button onClick={handler}>Log current context</button>

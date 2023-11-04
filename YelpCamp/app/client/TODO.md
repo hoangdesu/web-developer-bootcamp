@@ -16,10 +16,10 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 
 [x] style Campground page
 [x] modal elements
-[] QR payment
+[x] QR payment
 
 [] random a campground
-[] share modal
+[x] share modal
 [] design web flows + ui
 [x] review box time
 [x] fix edit button
@@ -35,7 +35,7 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 
 [x] login screen ui
 [x] register screen ui
-[] reservation modal
+[x] reservation modal
 
 [x] reset password page
 [] search page
@@ -81,9 +81,7 @@ if possible: can use 1 array to preview / edit images. or just use 2 arrays :/
 
 [] style search page
 [] error page
-[] profile page TODOs
 
-[] ModalLogin should perform next action
 PROBLEMS:
 [FIXED] - check session / cookies from the back end. No sessionId (connect.sid) is set on the browser. Using proxy server DOES work for some reason :/ ?
 [FIXED] - cannot enter path directly into browser e.g. site.com/login. Have to use router?
@@ -97,7 +95,7 @@ PROBLEMS:
 [] improve navbar navigation in mobile view
 [x] change /user paths to /users
 
-[] finish reservation
+[x] finish reservation
 RESERVATION TODOS:
 *need heavy works on <Reservation />
 
@@ -127,3 +125,13 @@ and modal + checkout page
 [] wording: Save vs Favorite campground
 
 [] hide scrolls on chrome windows
+
+[] nextAction on ModalLogin
+
+[] reservation page
+
+[] profile page TODOs
+
+[] ModalLogin should perform next action
+
+[] some pages missing favicon

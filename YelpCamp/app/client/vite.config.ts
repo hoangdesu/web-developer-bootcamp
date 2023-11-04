@@ -30,6 +30,9 @@ export default ({ mode }) => {
             //     },
             // },
         },
+        define: {
+            '__BUILD_TIMESTAMP__': new Date(),
+        },
         // base: '/web-developer-bootcamp/' // only used for production, will fukup dev server
     });
 };

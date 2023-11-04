@@ -149,8 +149,6 @@ const UserUpdateInfo = ({ user }) => {
                         </Form.Group>
 
                         <PrimaryBlackButton>Update</PrimaryBlackButton>
-
-                        <CheckmarkCSSAnimation />
                     </Form>
                 </>
             )}

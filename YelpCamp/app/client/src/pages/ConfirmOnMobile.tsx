@@ -10,14 +10,8 @@ import { Container, Form, InputGroup } from 'react-bootstrap';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-const Button = styled.button`
-    width: 200px;
-    height: 100px;
-`;
-
 const ConfirmOnMobile = () => {
-    const { reservationId } = useLoaderData();
-    console.log(reservationId);
+    const { reservationId } = useLoaderData() as { reservationId: string };
     const [showCheckmark, setShowCheckmark] = useState(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [validated, setValidated] = useState<boolean>(false);
@@ -32,9 +26,6 @@ const ConfirmOnMobile = () => {
     } = useQuery({
         queryKey: ['getReservationById'],
         queryFn: () => axios.get(`/api/v1/reservations/${reservationId}`).then(data => data.data),
-        // onSuccess: resv => {
-        //     setResvStatus(resv.status);
-        // },
     });
 
     const makePayment = (event: React.FormEvent<HTMLFormElement>) => {
@@ -63,8 +54,6 @@ const ConfirmOnMobile = () => {
     if (isLoading) return <></>;
 
     if (isError) return <ErrorBoundary err={'Invalid Reservation ID'} />;
-
-    console.log(resv);
 
     return (
         <Container className="my-4 h-[80vh] flex flex-col">
