@@ -22,6 +22,7 @@ const ConfirmOnMobile = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [validated, setValidated] = useState<boolean>(false);
     const formPassword = useRef(null);
+    const [errMsg, setErrMsg] = useState('');
 
     const {
         data: resv,
@@ -36,18 +37,25 @@ const ConfirmOnMobile = () => {
         // },
     });
 
-    // TODO
     const makePayment = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.stopPropagation();
+            setErrMsg('');
         } else {
-            axios.get(`/api/v1/reservations/${reservationId}/pay`).then(data => {
-                console.log('AFTER PAY:', data);
-                // reservationQuery.refetch();
-                setShowCheckmark(true);
-            });
+            axios
+                .post(`/api/v1/reservations/${reservationId}/pay`, {
+                    password: formPassword.current!.value,
+                })
+                .then(data => {
+                    setShowCheckmark(true);
+                    setErrMsg('');
+                })
+                .catch(err => {
+                    setValidated(false);
+                    setErrMsg(err.response.data);
+                });
         }
         setValidated(true);
     };
@@ -59,17 +67,27 @@ const ConfirmOnMobile = () => {
     console.log(resv);
 
     return (
-        <Container className="my-3 h-[80vh] flex flex-col">
-            <h1>Confirm on mobile</h1>
+        <Container className="my-4 h-[80vh] flex flex-col">
+            <h1>Confirm Payment</h1>
 
-            {/* <p>id: {reservationId}</p> */}
-            {/* <p>Campground: {resv.campground.title}</p> */}
+            <p className="text-muted">{resv.campground.title}</p>
             <p>
-                You're making a purchase of <span className="font-bold text-lg">${resv.totalAmount.toFixed(2)}</span>{' '}
-                to YelpCamp. Please re-enter your password to confirm payment.
+                You're making a payment of{' '}
+                <span className="font-bold text-lg">${resv.totalAmount.toFixed(2)}</span> to{' '}
+                <span className="font-bold">YelpCamp</span>.
             </p>
+            <p>Please re-enter your password to confirm the payment.</p>
 
-            {showCheckmark && <CheckmarkCSSAnimation />}
+            {showCheckmark && (
+                <>
+                    <CheckmarkCSSAnimation />
+                    <div className="text-center mt-2">
+                        <span>Thank you for your payment.</span>
+                        <p>Please check your Checkout page.</p>
+                        <p className="text-sm text-muted">You can close this window now</p>
+                    </div>
+                </>
+            )}
 
             <Form className="mt-auto" noValidate validated={validated} onSubmit={makePayment}>
                 <Form.Group controlId="password">
@@ -82,10 +100,8 @@ const ConfirmOnMobile = () => {
                         <InputGroup.Text onClick={() => setShowPassword(show => !show)}>
                             {showPassword ? <Visibility /> : <VisibilityOff />}
                         </InputGroup.Text>
-                        <Form.Control.Feedback type="invalid">
-                            Invalid password
-                        </Form.Control.Feedback>
                     </InputGroup>
+                    <span className="text-red-600">{errMsg}</span>
                 </Form.Group>
 
                 <PrimaryBlackButton className="w-full">Confirm</PrimaryBlackButton>

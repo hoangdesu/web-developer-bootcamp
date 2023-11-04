@@ -47,13 +47,11 @@ const Checkout = () => {
     const navigate = useNavigate();
     const { width: windowWidth } = useWindowDimensions();
     const qrRef = useRef(null);
-
+    const [timer, setTimer] = useState(60);
     const [resvStatus, setResvStatus] = useState<'PENDING' | 'PAID' | 'CANCELLED'>('PENDING');
 
     useEffect(() => {
         qrCode.defineCustomElements(window);
-
-        // TODO: check if status === PAID, redirect to Reservation page w/ message: you have paid
     }, []);
 
     const {
@@ -69,19 +67,12 @@ const Checkout = () => {
         },
     });
 
-    console.log(resv);
-
     useEffect(() => {
         const paymentTimer = setInterval(() => {
             axios.get(`/api/v1/reservations/${reservationId}/status`).then(res => {
-                const { data } = res;
-                console.log('STATUS:', data);
-                if (data === 'PAID') {
-                    // setStatus('PAID!');
-
-                    // setTimeout(() => {
-                    //     navigate(`/users/${appContext.currentUser!.username}?tab=reservations`);
-                    // }, 5000);
+                const { data: status } = res;
+                console.log('STATUS:', status);
+                if (status === 'PAID') {
                     refetch();
                     appContext.setModal({
                         open: true,
@@ -90,21 +81,17 @@ const Checkout = () => {
                     clearInterval(paymentTimer);
                 }
             });
-            // reservationQuery.refetch();
 
-            // qrRef.current.animateQRCode('RadialRippleIn')
-
-            // if (seconds > 0) {
-            //     setSeconds(seconds - 1);
-            // }
-            // if (seconds === 0) {
-            //     clearInterval(paymentTimer);
-            // }
+            if (timer > 0) {
+                setTimer(prev => prev - 1);
+            } else if (timer === 0) {
+                clearInterval(paymentTimer);
+            }
         }, 1000);
         return () => {
             clearInterval(paymentTimer);
         };
-    }, []);
+    });
 
     if (isLoading) return <Loading />;
 
@@ -114,6 +101,8 @@ const Checkout = () => {
 
     const subTotal = (resv.totalAmount * 100) / (100 - resv.discount.percentage);
     const discount = subTotal - resv.totalAmount;
+
+    console.log('timer:', timer);
 
     return (
         <PageContainer>
@@ -171,7 +160,7 @@ const Checkout = () => {
                                                 objectFit: 'cover',
                                                 width: '100%',
                                                 height: '150px',
-                                                position: 'center',
+                                                objectPosition: 'center',
                                             }}
                                         />
                                         <div className="flex flex-col justify-between mt-3">
@@ -346,9 +335,11 @@ const Checkout = () => {
                                 {resvStatus === 'PENDING' ? (
                                     <p className="flex flex-row items-end gap-2">
                                         <span>Status: waiting for payment... </span>
-                                        <span>
-                                            <img src={WaitingGIF} alt="" width={25} />
-                                        </span>
+                                        {timer > 0 && (
+                                            <span>
+                                                <img src={WaitingGIF} alt="" width={25} />
+                                            </span>
+                                        )}
                                     </p>
                                 ) : (
                                     <div className="mt-3">

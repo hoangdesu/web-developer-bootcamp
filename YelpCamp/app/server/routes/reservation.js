@@ -17,7 +17,7 @@ router.get('/:id', controller.getReservationById);
 
 router.get('/:id/status', controller.checkStatus);
 
-router.get('/:id/pay', controller.pay);
+router.post('/:id/pay', controller.pay);
 
 router.get('/:id/pending', controller.pending);
 

@@ -81,13 +81,22 @@ module.exports.checkStatus = catchAsync(async (req, res) => {
     });
 });
 
-module.exports.pay = catchAsync(async (req, res) => {
+module.exports.pay = catchAsync(async (req, res, next) => {
     const { id } = req.params;
+    const { password } = req.body;
+
     const resv = await Reservation.findById(id);
-    console.log(resv);
+    if (!resv) return next(new YelpcampError(404, 'Invalid Reservation ID'));
+
+    const author = await User.findById(resv.bookedBy);
+
+    const auth = await author.authenticate(password);
+
+    if (!auth.user) return next(new YelpcampError(401, 'Wrong password'));
+
     resv.status = 'PAID';
     await resv.save();
-    res.send(resv.status);
+    return res.status(200).json(resv.status);
 });
 
 // TODO: remove unnecessary controllers
@@ -124,7 +133,7 @@ module.exports.checkDiscountCode = catchAsync(async (req, res) => {
 
 module.exports.cancelReservation = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    
+
     const resv = await Reservation.findOneAndUpdate(
         { _id: id },
         { status: 'CANCELLED' },

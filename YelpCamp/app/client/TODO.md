@@ -123,3 +123,7 @@ and modal + checkout page
 + take note
 
 [x] different hover colors/effects for primary and secondary buttons
+
+[] wording: Save vs Favorite campground
+
+[] hide scrolls on chrome windows

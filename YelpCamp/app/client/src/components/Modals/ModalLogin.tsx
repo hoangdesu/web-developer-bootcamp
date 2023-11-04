@@ -72,6 +72,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ nextAction }) => {
         }
         setValidated(true);
     };
+
     return (
         <div>
             <h2 className="mb-2">Welcome to YelpCamp</h2>

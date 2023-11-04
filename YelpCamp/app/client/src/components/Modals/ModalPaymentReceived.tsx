@@ -12,7 +12,7 @@ const ModalPaymentReceived = () => {
         const timer = setInterval(() => {
             setRedirectSeconds(redirectSeconds - 1);
             if (redirectSeconds === 1) {
-                // navigate(`/users/${appContext.currentUser!.username}?tab=reservations`);
+                navigate(`/users/${appContext.currentUser!.username}?tab=reservations`);
 
                 appContext.setModal({ open: false, content: null });
                 clearInterval(timer);
