@@ -1,11 +1,13 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import AppContext from '../../store/app-context';
 import { Form, InputGroup } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from '../../config/yelpcampAxios';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
+import ModalConfirmReservation from './ModalConfirmReservation';
+import { Campground, Reservation } from '../../types';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {
@@ -15,14 +17,14 @@ const InputGroupText = styled(InputGroup.Text)`
 `;
 
 interface ModalLoginProps {
-    nextAction: () => void;
+    reservation?: Omit<Reservation, 'bookedBy'>;
+    campground?: Campground;
 }
 
-const ModalLogin: React.FC<ModalLoginProps> = ({ nextAction }) => {
+const ModalLogin: React.FC<ModalLoginProps> = ({ reservation, campground }) => {
     const appContext = useContext(AppContext);
     const [validated, setValidated] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const navigate = useNavigate();
 
     const formUsername = useRef<HTMLInputElement>(null);
     const formPassword = useRef<HTMLInputElement>(null);
@@ -50,17 +52,32 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ nextAction }) => {
                     axios.get('/api/v1/auth/currentuser').then(resp => {
                         appContext.setCurrentUser(resp.data);
                         localStorage.setItem('currentUser', JSON.stringify(resp.data));
-                        appContext.setModal({
-                            open: false,
-                            content: null,
-                        });
                         appContext.setSnackbar(
                             true,
                             `Welcome back, ${resp.data.username}!`,
                             'success',
                         );
-                        nextAction;
-                        console.log('nextAction', nextAction);
+                        if (reservation && campground) {
+                            const resv = {
+                                ...reservation,
+                                bookedBy: formUsername.current!.value,
+                            } as Reservation;
+                            appContext.setModal({
+                                open: true,
+                                content: (
+                                    <ModalConfirmReservation
+                                        reservation={resv}
+                                        campground={campground}
+                                    />
+                                ),
+                                requiresLoggedIn: true,
+                            });
+                        } else {
+                            appContext.setModal({
+                                open: false,
+                                content: null,
+                            });
+                        }
                     });
                 })
                 .catch(err => {

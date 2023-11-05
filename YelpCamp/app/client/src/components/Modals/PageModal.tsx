@@ -1,7 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import AppContext from '../../store/app-context';
 import { Box, CircularProgress, Modal } from '@mui/material';
 import ModalLogin from './ModalLogin';
+import CloseIcon from '@mui/icons-material/Close';
+import styled from '@emotion/styled';
 
 const style = {
     position: 'fixed',
@@ -38,6 +40,24 @@ const style = {
     },
 };
 
+const CloseButton = styled(CloseIcon)`
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 12px;
+    background: #f3f0f0;
+    border-radius: 50%;
+    padding: 6px;
+    width: 2rem;
+    height: 2rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+        cursor: pointer;
+        background: #e1dcdc;
+    }
+`;
+
 const index = () => {
     const appContext = useContext(AppContext);
 
@@ -47,9 +67,9 @@ const index = () => {
         return <CircularProgress color="success" />;
     }
 
-    if (appContext.modal.requiresLoggedIn && !appContext.currentUser) {
-        content = <ModalLogin />;
-    }
+    // if (appContext.modal.requiresLoggedIn && !appContext.currentUser) {
+    //     content = <ModalLogin />;
+    // }
 
     return (
         <Modal
@@ -58,7 +78,10 @@ const index = () => {
             open={appContext.modal.open}
             onClose={() => appContext.setModal({ open: false, content: null })}
         >
-            <Box sx={style}>{content}</Box>
+            <Box sx={style}>
+                <CloseButton onClick={() => appContext.setModal({ open: false, content: null })} />
+                {content}
+            </Box>
         </Modal>
     );
 };

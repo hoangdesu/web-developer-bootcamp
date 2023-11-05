@@ -140,7 +140,7 @@ const Campground: React.FunctionComponent = () => {
         if (!appContext.currentUser) {
             appContext.setModal({
                 open: true,
-                content: <ModalLogin nextAction={'name'} />,
+                content: <ModalLogin />,
                 requiresLoggedIn: true,
             });
             return;

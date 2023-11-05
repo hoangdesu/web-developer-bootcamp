@@ -106,7 +106,7 @@ RESERVATION TODOS:
 - /reservations/:id
 - /reservations/:id/confirm -> mobile view, rename this component
 
-[] Checkout page
+[x] Checkout page
 
 [x] Loading page spinner is not center
 
@@ -122,16 +122,14 @@ and modal + checkout page
 
 [x] different hover colors/effects for primary and secondary buttons
 
-[] wording: Save vs Favorite campground
+[x] wording: Save vs Favorite campground
 
 [] hide scrolls on chrome windows
-
-[] nextAction on ModalLogin
 
 [] reservation page
 
 [] profile page TODOs
 
-[] ModalLogin should perform next action
+[x] ModalLogin should perform next action
 
 [] some pages missing favicon

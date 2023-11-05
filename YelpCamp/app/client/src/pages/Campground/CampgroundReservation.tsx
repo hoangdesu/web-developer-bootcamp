@@ -146,7 +146,23 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
         if (!appContext.currentUser) {
             appContext.setModal({
                 open: true,
-                content: <ModalLogin nextAction={() => alert('next action')} />,
+                content: (
+                    <ModalLogin
+                        reservation={{
+                            campground: campground._id,
+                            nights: nights,
+                            checkIn: inputStartDate,
+                            checkOut: inputEndDate,
+                            guests: guests,
+                            totalAmount: fees.totalAfterDiscount,
+                            discount: {
+                                code: discount.code || '',
+                                percentage: discount.percentage || 0,
+                            },
+                        }}
+                        campground={campground}
+                    />
+                ),
                 requiresLoggedIn: true,
             });
             return;
