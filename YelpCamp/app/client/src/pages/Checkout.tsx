@@ -102,8 +102,6 @@ const Checkout = () => {
     const subTotal = (resv.totalAmount * 100) / (100 - resv.discount.percentage);
     const discount = subTotal - resv.totalAmount;
 
-    console.log('timer:', timer);
-
     return (
         <PageContainer>
             <h1>Checkout</h1>

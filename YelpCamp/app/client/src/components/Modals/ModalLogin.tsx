@@ -60,7 +60,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ reservation, campground }) => {
                         if (reservation && campground) {
                             const resv = {
                                 ...reservation,
-                                bookedBy: formUsername.current!.value,
+                                bookedBy: resp.data.id,
                             } as Reservation;
                             appContext.setModal({
                                 open: true,

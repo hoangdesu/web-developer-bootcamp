@@ -132,4 +132,6 @@ and modal + checkout page
 
 [x] ModalLogin should perform next action
 
-[] some pages missing favicon
+[x] some pages missing favicon
+
+[x] fix error cant reserve after login
