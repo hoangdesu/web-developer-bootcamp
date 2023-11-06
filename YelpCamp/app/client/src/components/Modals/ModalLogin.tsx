@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import AppContext from '../../store/app-context';
-import { Form, InputGroup } from 'react-bootstrap';
+import { Form, InputGroup, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -25,6 +25,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ reservation, campground }) => {
     const appContext = useContext(AppContext);
     const [validated, setValidated] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
 
     const formUsername = useRef<HTMLInputElement>(null);
     const formPassword = useRef<HTMLInputElement>(null);
@@ -35,6 +36,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ reservation, campground }) => {
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
+            setIsLoggingIn(true);
             axios
                 .post(
                     '/api/v1/users/login',
@@ -84,7 +86,12 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ reservation, campground }) => {
                     appContext.setCurrentUser(null);
                     setValidated(false);
                     form.reset();
-                    appContext.setSnackbar(true, 'Error: failed to login', 'error');
+                    appContext.setSnackbar(
+                        true,
+                        'Wrong username or password. Please try again',
+                        'error',
+                    );
+                    setIsLoggingIn(false);
                 });
         }
         setValidated(true);
@@ -121,7 +128,20 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ reservation, campground }) => {
                     </InputGroup>
                 </Form.Group>
 
-                <PrimaryBlackButton className="w-full">Login</PrimaryBlackButton>
+                {isLoggingIn ? (
+                    <PrimaryBlackButton className="mt-4 w-full" disabled={true}>
+                        <Spinner
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            as="span"
+                        />
+                        <span> Logging in...</span>
+                    </PrimaryBlackButton>
+                ) : (
+                    <PrimaryBlackButton className="w-full">Login</PrimaryBlackButton>
+                )}
             </Form>
             <p className="mt-4">
                 New here?{' '}

@@ -19,8 +19,6 @@ router.get('/:id/status', controller.checkStatus);
 
 router.post('/:id/pay', controller.pay);
 
-router.get('/:id/pending', controller.pending);
-
 router.post('/:id/cancel', controller.cancelReservation)
 
 module.exports = router;

@@ -99,16 +99,6 @@ module.exports.pay = catchAsync(async (req, res, next) => {
     return res.status(200).json(resv.status);
 });
 
-// TODO: remove unnecessary controllers
-module.exports.pending = catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const resv = await Reservation.findById(id);
-    console.log(resv);
-    resv.status = 'PENDING';
-    await resv.save();
-    res.send(resv.status);
-});
-
 module.exports.checkDiscountCode = catchAsync(async (req, res) => {
     const { discountCode: discountCodeParam } = req.query;
     const discountCode = discountCodeParam.toUpperCase();

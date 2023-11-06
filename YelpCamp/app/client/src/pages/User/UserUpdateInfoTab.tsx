@@ -15,7 +15,7 @@ const InputGroupText = styled(InputGroup.Text)`
     }
 `;
 
-const UserUpdateInfo = ({ user }) => {
+const UserUpdateInfoTab = ({ user }) => {
     const userEmailRef = useRef<HTMLInputElement>(null);
     const userCurrentPasswordRef = useRef<HTMLInputElement>(null);
     const userNewPasswordRef = useRef<HTMLInputElement>(null);
@@ -156,4 +156,4 @@ const UserUpdateInfo = ({ user }) => {
     );
 };
 
-export default UserUpdateInfo;
+export default UserUpdateInfoTab;

@@ -79,7 +79,7 @@ if possible: can use 1 array to preview / edit images. or just use 2 arrays :/
 
 [x] finish edit campground
 
-[] style search page
+
 [] error page
 
 PROBLEMS:
@@ -135,3 +135,5 @@ and modal + checkout page
 [x] some pages missing favicon
 
 [x] fix error cant reserve after login
+
+[x] search page

@@ -13,6 +13,10 @@ const Div = styled.div<{ length: number }>`
         auto-fit,
         minmax(262px, ${props => (props.length < 3 ? '262px' : '1fr')})
     );
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(auto-fit, minmax(262px, 1fr));
+    }
 `;
 
 const CampgroundsContainer: React.FC<ContainerProps> = ({ children, length }) => {

@@ -11,7 +11,7 @@ const { upload } = require('../configs/cloudinary');
 /* @Route: /api/v1/campgrounds 
 */
 
-router.route('/').get(controller.getAllCamgrounds).post(
+router.route('/').get(controller.getAllCampgrounds).post(
     requiresLoggedIn,
     upload.array('campground[images]', 12), // limit to 12 images
     middlewares.validateNewCampground,

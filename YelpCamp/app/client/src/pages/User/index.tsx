@@ -9,7 +9,10 @@ import { Campground } from '../../types';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import styled from '@emotion/styled';
 import AppContext from '../../store/app-context';
-import UserUpdateInfo from './UserUpdateInfo';
+import UserUpdateInfoTab from './UserUpdateInfoTab';
+import UserFavoriteCampgroundsTab from './UserFavoriteCampgroundsTab';
+import UserReservationsTab from './UserReservationsTab';
+import UserOwnedCampgroundsTab from './UserOwnedCampgroundsTab';
 
 export async function loader({ params }) {
     return { username: params.username };
@@ -198,84 +201,44 @@ const User = () => {
                         </div>
                     </div>
                 ) : (
-                    <button>Show tabs</button>
+                    // <button>Show tabs</button>
+                    <div className="bg-red-500">
+                        <ul className="flex flex-col overflow-x-auto">
+                            {TABS.map(tab => (
+                                <li
+                                    key={tab.id}
+                                    onClick={() => {
+                                        // setActiveTab(tab.id as ActiveTabType);
+                                        setSearchParams({ tab: tab.id }, { replace: true });
+                                    }}
+                                    className={`${
+                                        tab.id === searchParams.get('tab') && 'active'
+                                    } w-fit`}
+                                >
+                                    <span>{tab.title}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 )}
 
                 {/* content */}
                 <div className="content">
                     {!searchParams.get('tab') ||
-                        (searchParams.get('tab') === 'info' && <UserUpdateInfo user={user} />)}
+                        (searchParams.get('tab') === 'info' && <UserUpdateInfoTab user={user} />)}
 
                     {searchParams.get('tab') === 'owned' && (
-                        <div>
-                            <h1>Owned campgrounds</h1>
-                            <ol>
-                                {user.campgrounds.map((campground: Campground) => (
-                                    <li key={campground._id}>
-                                        <Link to={`/campgrounds/${campground._id}`}>
-                                            {campground.title} (${campground.price})
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
+                        <UserOwnedCampgroundsTab ownedCampgrounds={user.campgrounds} />
                     )}
 
                     {searchParams.get('tab') === 'favorite' && (
-                        <div>
-                            <h1>Favorite campgrounds</h1>
-                            <ol>
-                                {user.favoritedCampgrounds.map(campground => (
-                                    <li key={campground._id}>
-                                        <div className="">
-                                            <Link to={`/campgrounds/${campground._id}`}>
-                                                <h5>{campground.title}</h5>
-                                                <p>{campground.location}</p>
-                                                <img
-                                                    src={campground.images[0].url}
-                                                    alt=""
-                                                    width="200xp"
-                                                />
-                                            </Link>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
+                        <UserFavoriteCampgroundsTab
+                            favoritedCampgrounds={user.favoritedCampgrounds}
+                        />
                     )}
 
                     {searchParams.get('tab') === 'reservations' && (
-                        <div>
-                            <h1>Reservations</h1>
-                            <ol>
-                                {user.reservations &&
-                                    user.reservations.map(resv => {
-                                        return (
-                                            <li key={resv._id}>
-                                                <div>
-                                                    <p>Bookedby: {resv.bookedBy}</p>
-                                                    <p>Campground: {resv.campground}</p>
-                                                    <p>Checkin: {resv.checkIn}</p>
-                                                    <p>checkOut: {resv.checkOut}</p>
-                                                    <p>
-                                                        Nights: {resv.nights} - guests:{' '}
-                                                        {resv.guests}
-                                                    </p>
-                                                    <p>
-                                                        totalPrice: {resv.totalPrice} - status:{' '}
-                                                        {resv.status}
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <Link to={`/reservations/${resv._id}`}>
-                                                        {resv._id}
-                                                    </Link>
-                                                </div>
-                                            </li>
-                                        );
-                                    })}
-                            </ol>
-                        </div>
+                        <UserReservationsTab reservations={user.reservations} />
                     )}
                 </div>
             </Container>

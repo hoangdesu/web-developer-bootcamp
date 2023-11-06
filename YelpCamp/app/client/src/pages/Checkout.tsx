@@ -52,6 +52,7 @@ const Checkout = () => {
 
     useEffect(() => {
         qrCode.defineCustomElements(window);
+        document.title = 'YelpCamp | Checkout';
     }, []);
 
     const {

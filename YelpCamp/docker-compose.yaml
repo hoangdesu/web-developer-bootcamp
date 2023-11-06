@@ -5,6 +5,9 @@ services:
       # dockefile: Dockerfile
     ports:
       - "5173:5173"   
+    volumes:
+      - .:/app
+      - /app/client/node_modules
     # depends_on:
     #   - db
   # server:

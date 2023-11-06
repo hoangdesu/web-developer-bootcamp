@@ -19,7 +19,7 @@ const ModalLogout = () => {
                 appContext.setModal({ open: false, content: null });
                 appContext.setSnackbar(true, 'Goodbye!', 'success');
 
-                // navigate('/');
+                navigate('/');
             })
             .catch(err => {
                 appContext.setSnackbar(true, 'Error logging out', 'error');

@@ -8,7 +8,7 @@ const YelpcampError = require('../utilities/YelpcampError');
 const geocodingClient = require('../configs/mapbox');
 const CampgroundBuilder = require('../utilities/builders');
 
-const getAllCamgrounds = catchAsync(async (req, res) => {
+const getAllCampgrounds = catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({})
         .populate('author', '_id username')
         .populate('reviews', 'rating')
@@ -187,18 +187,16 @@ const deleteCampground = catchAsync(async (req, res, next) => {
 
 const searchCampgrounds = catchAsync(async (req, res) => {
     const { q: query } = req.query;
+    if (!query) return res.json([]);
 
-    if (!query) return res.send([]);
-
-    const matchedTitles = await Campground.find({ title: new RegExp(query, 'gi') }); // get all occurrences (g), be case insensitive (i)
-    const matchedLocations = await Campground.find({ location: new RegExp(query, 'gi') });
-    const results = matchedTitles.concat(matchedLocations);
-    // TODO: concat might give duplicated results. Remove duplicated
-    res.send(results);
+    const results = await Campground.find({
+        $or: [{ title: new RegExp(query, 'gi') }, { location: new RegExp(query, 'gi') }], // get all occurrences (g), be case insensitive (i)
+    });
+    res.status(200).json(results);
 });
 
 module.exports = {
-    getAllCamgrounds,
+    getAllCampgrounds,
     getACampground,
     createCampground,
     editCampground,

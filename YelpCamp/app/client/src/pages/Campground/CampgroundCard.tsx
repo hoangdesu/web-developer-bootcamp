@@ -41,7 +41,7 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
     return (
         <StyledCard>
             <Link
-                to={`campgrounds/${campground._id}`}
+                to={`/campgrounds/${campground._id}`}
                 style={{ textDecoration: 'none', color: '#212529', height: '25em' }}
             >
                 <Card.Img
