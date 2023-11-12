@@ -162,12 +162,8 @@ const deleteCampground = catchAsync(async (req, res, next) => {
 
     console.log('deletedCampground', deletedCampground);
 
-    // delete all campgrounds associated with this user ---> wtf why??
-    // const userId = deletedCampground.author;
-    // const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { campgrounds: id } });
-
-    // TODO: delete a campground will delete all those REVIEWS in a user' reviews array
-    // console.log('updatedUser', updatedUser);
+    // Also delete the campground associated with this user's campgrounds array
+    await User.findByIdAndUpdate(deletedCampground.author, { $pull: { campgrounds: id } });
 
     // Delete a campground should delete all images from cloudinary
     const deletedRes = await cloudinary.api.delete_resources(
@@ -189,6 +185,7 @@ const searchCampgrounds = catchAsync(async (req, res) => {
     const { q: query } = req.query;
     if (!query) return res.json([]);
 
+    // query by title or location
     const results = await Campground.find({
         $or: [{ title: new RegExp(query, 'gi') }, { location: new RegExp(query, 'gi') }], // get all occurrences (g), be case insensitive (i)
     });
