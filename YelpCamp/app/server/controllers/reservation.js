@@ -12,8 +12,8 @@ const path = require('path');
 const reservationSchema = require('../schemas/reservation');
 
 module.exports.getAllReservations = catchAsync(async (req, res) => {
-    const reservations = await Reservation.find({}).exec();
-    res.send(reservations);
+    const reservations = await Reservation.find({}).populate('campground').exec();
+    res.status(200).json(reservations);
 });
 
 module.exports.createReservation = catchAsync(async (req, res) => {

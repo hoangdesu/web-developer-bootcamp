@@ -37,14 +37,33 @@ const getUserByUsername = catchAsync(async (req, res, next) => {
     const { username } = req.params;
     const user = await User.findOne({ username })
         .select('_id username email')
-        .populate('campgrounds', '_id title price')
-        .populate('favoritedCampgrounds', '_id title images location')
+        .populate({
+            path: 'campgrounds',
+            populate: 'reviews',
+        })
+        .populate({
+            path: 'favoritedCampgrounds',
+            populate: 'reviews',
+        })
         .populate('reservations')
+        .populate({
+            path: 'reservations',
+            populate: {
+                path: 'bookedBy',
+                select: '_id username email',
+            },
+        })
+        .populate({
+            path: 'reservations',
+            populate: {
+                path: 'campground',
+            },
+        })
         .exec();
 
     if (!user) return next(new YelpcampError(404, 'User not found'));
 
-    res.status(200).send(user);
+    res.status(200).json(user);
 });
 
 const getUserById = async (req, res) => {
@@ -73,10 +92,7 @@ const logout = (req, res, next) => {
 
 const getAllFavoritedCampgrounds = catchAsync(async (req, res) => {
     const { id } = req.params;
-    const user = await User.findById(id)
-        // .select('')
-        .populate('favoritedCampgrounds', '_id title')
-        .exec();
+    const user = await User.findById(id).populate('favoritedCampgrounds', '_id title').exec();
     if (!user) return next(new YelpcampError(404, 'User not found'));
 
     res.status(200).json(user.favoritedCampgrounds);

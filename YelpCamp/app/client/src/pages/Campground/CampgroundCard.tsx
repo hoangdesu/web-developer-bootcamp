@@ -5,6 +5,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { Campground } from '../../types';
 import styled from '@emotion/styled';
 import { averageRating } from '../../helpers/campground';
+import FallbackImage from '../../assets/logo.png';
 
 interface CardProps {
     campground: Campground;
@@ -50,6 +51,10 @@ const CampgroundCard: React.FunctionComponent<CardProps> = ({ campground }) => {
                     height={'200px'}
                     className="img"
                     draggable={false}
+                    onError={({ currentTarget }) => {
+                        currentTarget.onerror = null; // prevents looping
+                        currentTarget.src = FallbackImage;
+                    }}
                 />
 
                 <Card.Body className="flex flex-column gap-1">

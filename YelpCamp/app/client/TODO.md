@@ -126,10 +126,6 @@ and modal + checkout page
 
 [] hide scrolls on chrome windows
 
-[] reservation page
-
-[] profile page TODOs
-
 [x] ModalLogin should perform next action
 
 [x] some pages missing favicon
@@ -137,3 +133,16 @@ and modal + checkout page
 [x] fix error cant reserve after login
 
 [x] search page
+
+[] profile page TODOs
+
+[] Navbar follow FB style
+
+[] Display Warning for Unsaved Form Data on Page Exit
+https://claritydev.net/blog/display-warning-for-unsaved-form-data-on-page-exit
+
+[x] owned
+
+[] remove endpoint to reservation page (and page component)
+[] different font for search bar
+[] populate data

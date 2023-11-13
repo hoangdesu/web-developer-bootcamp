@@ -13,6 +13,7 @@ import UserUpdateInfoTab from './UserUpdateInfoTab';
 import UserFavoriteCampgroundsTab from './UserFavoriteCampgroundsTab';
 import UserReservationsTab from './UserReservationsTab';
 import UserOwnedCampgroundsTab from './UserOwnedCampgroundsTab';
+import SecondaryTransparentButton from '../../components/Buttons/SecondaryTransparentButton';
 
 export async function loader({ params }) {
     return { username: params.username };
@@ -68,7 +69,8 @@ const Container = styled.div`
     }
 
     .content {
-        width: fit-content;
+        /* width: fit-content; */
+        width: 100%;
     }
 
     .active {
@@ -192,12 +194,9 @@ const User = () => {
                         </ul>
                         {/* debug area */}
                         <div className="mt-[200px]">
-                            <p>
-                                Screen width: {width} - Height: {height}
-                            </p>
-
-                            <p>{width < 768 ? 'MOBILE' : 'LAPTOP'} SCREEN</p>
-                            <Button onClick={() => navigate(-1)}>Back</Button>
+                            <SecondaryTransparentButton onClick={() => navigate(-1)}>
+                                (//left arrow) Back
+                            </SecondaryTransparentButton>
                         </div>
                     </div>
                 ) : (

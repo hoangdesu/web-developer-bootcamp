@@ -1,34 +1,16 @@
 import axios from '../config/yelpcampAxios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import CampgroundCard from './Campground/CampgroundCard';
 import { Campground } from '../types';
 import { Form, InputGroup } from 'react-bootstrap';
-import styled from '@emotion/styled';
 import NothingFound from '../assets/nothing-found.png';
 import Loading from './Loading';
 import ErrorBoundary from './ErrorBoundary';
-import { Slider } from '@mui/material';
 import ApplyButton from '../components/Buttons/ApplyButton';
-
-const GridContainer = styled.div<{ length: number }>`
-    display: grid;
-    grid-gap: 25px;
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(262px, ${props => (props.length < 3 ? '0.5fr' : '1fr')})
-    );
-
-    @media (max-width: 768px) {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    }
-`;
-
-function valuetext(value: number) {
-    return `$${value}`;
-}
+import CampgroundsContainer from '../components/CampgroundsContainer';
 
 const Search = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -90,11 +72,11 @@ const Search = () => {
             </Form>
 
             {campgrounds.length > 0 ? (
-                <GridContainer length={campgrounds.length}>
+                <CampgroundsContainer length={campgrounds.length}>
                     {campgrounds.map((campground: Campground) => (
-                        <CampgroundCard campground={campground} />
+                        <CampgroundCard key={campground._id} campground={campground} />
                     ))}
-                </GridContainer>
+                </CampgroundsContainer>
             ) : (
                 <div className="w-full flex flex-col items-center justify-center gap-3 mt-[100px]">
                     <img src={NothingFound} alt="Nothing found" />

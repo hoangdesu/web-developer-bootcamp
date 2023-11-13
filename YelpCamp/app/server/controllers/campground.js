@@ -186,10 +186,13 @@ const searchCampgrounds = catchAsync(async (req, res) => {
     if (!query) return res.json([]);
 
     // query by title or location
-    const results = await Campground.find({
+    const campgrounds = await Campground.find({
         $or: [{ title: new RegExp(query, 'gi') }, { location: new RegExp(query, 'gi') }], // get all occurrences (g), be case insensitive (i)
-    });
-    res.status(200).json(results);
+    })
+        .populate('reviews')
+        .exec();
+
+    res.status(200).json(campgrounds);
 });
 
 module.exports = {

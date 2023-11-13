@@ -67,6 +67,7 @@ export interface Snackbar {
 }
 
 export interface Reservation {
+    _id: string;
     bookedBy: string;
     campground: string;
     checkIn: string;

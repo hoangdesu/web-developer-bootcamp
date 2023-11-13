@@ -11,7 +11,7 @@ const Div = styled.div<{ length: number }>`
     grid-gap: 25px;
     grid-template-columns: repeat(
         auto-fit,
-        minmax(262px, ${props => (props.length < 3 ? '262px' : '1fr')})
+        minmax(262px, ${props => (props.length < 3 ? '0.25fr' : '1fr')})
     );
 
     @media (max-width: 768px) {

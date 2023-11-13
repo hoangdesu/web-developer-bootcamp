@@ -4,6 +4,7 @@ import { Card, Carousel, Image } from 'react-bootstrap';
 import { Campground } from '../../types';
 import AppContext from '../../store/app-context';
 import { Box, Modal } from '@mui/material';
+import YelpcampLogo from '../../assets/logo-original.png';
 
 const ImageThumbnails = styled.div`
     display: flex;
@@ -81,7 +82,6 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
     // TODO: clicking on each image (OR A FULLSCREEN ICON) will show big size in CUSTOM MODAL
     return (
         <section className="mb-5">
-            {/* TODO: DEFAULT IMAGE IF NO IMAGE SELECTED */}
             <Carousel activeIndex={activeIndex} onSelect={changeImageHandler}>
                 {campground.images?.map((image, index) => (
                     <Carousel.Item key={index}>
@@ -95,13 +95,17 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
                                 setIsModalOpen(true);
                             }}
                             className="hover:cursor-pointer"
+                            onError={({ currentTarget }) => {
+                                currentTarget.onerror = null; // prevents looping
+                                currentTarget.src = YelpcampLogo;
+                            }}
                         />
                     </Carousel.Item>
                 ))}
             </Carousel>
 
             <ImageThumbnails>
-                {campground.images?.map((image, i) => (
+                {campground.images.map((image, i) => (
                     <Image
                         key={i}
                         src={image.thumbnail}
@@ -110,6 +114,10 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
                         onClick={() => changeImageHandler(i)}
                         style={{
                             opacity: activeIndex === i ? 1 : 0.6,
+                        }}
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src = YelpcampLogo;
                         }}
                     />
                 ))}

@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, ReactNode, FunctionComponent } from 'react';
 import AppContext, { AppContextType } from './app-context';
-import { Alert, Modal, Snackbar, User } from '../types';
+import { Alert, Modal, User } from '../types';
 
 interface ContextProviderProps {
     children?: ReactNode;

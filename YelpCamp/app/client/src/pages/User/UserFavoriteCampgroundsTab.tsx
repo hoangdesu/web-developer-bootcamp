@@ -1,24 +1,31 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import CampgroundsContainer from '../../components/CampgroundsContainer';
+import CampgroundCard from '../Campground/CampgroundCard';
+import styled from '@emotion/styled';
+import { Campground } from '../../types';
 
-const UserFavoriteCampgroundsTab = ({ favoritedCampgrounds }) => {
+interface TabProps {
+    favoritedCampgrounds: Campground[];
+}
+
+const UserFavoriteCampgroundsTab: React.FC<TabProps> = ({ favoritedCampgrounds }) => {
     return (
         <div>
-            <h1>Favorite campgrounds</h1>
+            <h1 className="mb-4">Favorite campgrounds</h1>
 
-            <ol>
-                {favoritedCampgrounds.map(campground => (
-                    <li key={campground._id}>
-                        <div className="">
-                            <Link to={`/campgrounds/${campground._id}`}>
-                                <h5>{campground.title}</h5>
-                                <p>{campground.location}</p>
-                                <img src={campground.images[0].url} alt="" width="200xp" />
-                            </Link>
-                        </div>
-                    </li>
-                ))}
-            </ol>
+            {favoritedCampgrounds.length > 0 ? (
+                <CampgroundsContainer length={favoritedCampgrounds.length}>
+                    {favoritedCampgrounds.map(campground => (
+                        <CampgroundCard key={campground._id} campground={campground} />
+                    ))}
+                </CampgroundsContainer>
+            ) : (
+                <p>
+                    Your favorite campground list is empty.{' '}
+                    <Link to="/">Start exploring campgrounds!</Link>
+                </p>
+            )}
         </div>
     );
 };

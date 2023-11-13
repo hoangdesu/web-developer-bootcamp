@@ -25,6 +25,7 @@ const Search = muistyled('div')(({ theme }) => ({
         marginLeft: theme.spacing(1),
         width: 'auto',
     },
+    marginTop: '16px',
 }));
 
 const SearchIconWrapper = muistyled('div')(({ theme }) => ({
@@ -118,7 +119,7 @@ const Navbar: React.FunctionComponent = () => {
                                 <SearchIcon />
                             </SearchIconWrapper>
                             <StyledInputBase
-                                placeholder="Search campgrounds..."
+                                placeholder="Search YelpCamp"
                                 inputProps={{ 'aria-label': 'search' }}
                                 onChange={e => setSearch(e.currentTarget.value)}
                             />
@@ -126,34 +127,39 @@ const Navbar: React.FunctionComponent = () => {
                     </form>
                     <Nav activeKey="/" className="">
                         {currentUser ? (
-                            <NavDropdown
-                                title={currentUser?.username}
-                                id="nav-dropdown"
-                                className="pe-2"
-                                align={{ lg: 'end' }}
-                            >
-                                <Link
-                                    to={'/campgrounds/new'}
-                                    key={'new'}
-                                    className="dropdown-item active:bg-primary-accent-color"
+                            <>
+                                <NavDropdown
+                                    title={currentUser?.username}
+                                    id="nav-dropdown"
+                                    className="pe-2"
+                                    align={{ lg: 'end' }}
                                 >
-                                    <span className="">New campground</span>
-                                </Link>
-                                <Link
-                                    to={`/users/${currentUser.username}?tab=info`}
-                                    key={'user'}
-                                    className="dropdown-item active:bg-primary-accent-color"
-                                >
-                                    <span className="">Profile</span>
-                                </Link>
-                                <Button
-                                    variant="secondary"
-                                    onClick={logoutHandler}
-                                    className="dropdown-item"
-                                >
-                                    Log out
-                                </Button>
-                            </NavDropdown>
+                                    <Link
+                                        to={'/campgrounds/new'}
+                                        key={'new'}
+                                        className="dropdown-item active:bg-primary-accent-color"
+                                    >
+                                        <span className="">New campground</span>
+                                    </Link>
+                                    <Link
+                                        to={`/users/${currentUser.username}?tab=info`}
+                                        key={'user'}
+                                        className="dropdown-item active:bg-primary-accent-color"
+                                    >
+                                        <span className="">Profile</span>
+                                    </Link>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={logoutHandler}
+                                        className="dropdown-item"
+                                    >
+                                        Log out
+                                    </Button>
+                                </NavDropdown>
+                                <Nav>
+                                <p className="text-white ml-auto">TESTINGGGGG</p>
+                                </Nav>
+                            </>
                         ) : (
                             <>
                                 <Link
