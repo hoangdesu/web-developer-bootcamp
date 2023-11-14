@@ -3,6 +3,8 @@ import AppContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../config/yelpcampAxios';
 import { Review } from '../../types';
+import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
+import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
 
 interface ModalProps {
     review: Review;
@@ -31,10 +33,16 @@ const ModalDeleteReview: React.FC<ModalProps> = ({ review, refetch }) => {
             });
     };
     return (
-        // TODO: STYLE this mtfk
         <div>
-            <h1>Delete Review?</h1>
-            <button onClick={deleteReviewHandler}>Yes</button>
+            <h1>Delete your review?</h1>
+            <div className="flex flex-row gap-2">
+                <PrimaryBlackButton onClick={deleteReviewHandler}>Delete</PrimaryBlackButton>
+                <SecondaryTransparentButton
+                    onClick={() => appContext.setModal({ open: false, content: null })}
+                >
+                    Cancel
+                </SecondaryTransparentButton>
+            </div>
         </div>
     );
 };

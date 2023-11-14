@@ -3,9 +3,7 @@ import axios from '../../config/yelpcampAxios';
 import { useQuery } from 'react-query';
 import { Link, useLoaderData, useNavigate, useSearchParams } from 'react-router-dom';
 import PageContainer from '../../components/PageContainer';
-import { Button, Form } from 'react-bootstrap';
 import Loading from '../Loading';
-import { Campground } from '../../types';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import styled from '@emotion/styled';
 import AppContext from '../../store/app-context';
@@ -14,6 +12,7 @@ import UserFavoriteCampgroundsTab from './UserFavoriteCampgroundsTab';
 import UserReservationsTab from './UserReservationsTab';
 import UserOwnedCampgroundsTab from './UserOwnedCampgroundsTab';
 import SecondaryTransparentButton from '../../components/Buttons/SecondaryTransparentButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export async function loader({ params }) {
     return { username: params.username };
@@ -82,7 +81,7 @@ const Container = styled.div`
 
     /* MOBILE VIEW */
     @media (max-width: 768px) {
-        background: #e5dadc;
+        /* background: #e5dadc; */
         /* height: 100vh; */
         display: flex;
         flex-direction: column;
@@ -195,12 +194,13 @@ const User = () => {
                         {/* debug area */}
                         <div className="mt-[200px]">
                             <SecondaryTransparentButton onClick={() => navigate(-1)}>
-                                (//left arrow) Back
+                                <span className="flex items-center justify-center gap-1">
+                                    <ArrowBackIcon /> Back
+                                </span>
                             </SecondaryTransparentButton>
                         </div>
                     </div>
                 ) : (
-                    // <button>Show tabs</button>
                     <div className="bg-red-500">
                         <ul className="flex flex-col overflow-x-auto">
                             {TABS.map(tab => (

@@ -1,6 +1,6 @@
 [x] change title on every page
 [x] favicon
-[] default campground image
+[x] default campground image
 
 [x] pagination
 [x] cluster map popup
@@ -8,19 +8,14 @@
 
 [x] explore 102 campgrounds -> make catchy title text
 [x] style Campground page
-[] search page -> with other filters
 [x] share button -> modal
-[] measure distance with turf
-https://stackoverflow.com/questions/69520848/how-to-get-distance-between-two-coordinates-with-mapbox
-https://labs.mapbox.com/education/proximity-analysis/point-distance/
 
 [x] style Campground page
 [x] modal elements
 [x] QR payment
 
-[] random a campground
 [x] share modal
-[] design web flows + ui
+[x] design web flows + ui
 [x] review box time
 [x] fix edit button
 
@@ -38,7 +33,6 @@ https://labs.mapbox.com/education/proximity-analysis/point-distance/
 [x] reservation modal
 
 [x] reset password page
-[] search page
 
 [x] pagination color
 [x] Login to add your review text
@@ -79,8 +73,7 @@ if possible: can use 1 array to preview / edit images. or just use 2 arrays :/
 
 [x] finish edit campground
 
-
-[] error page
+[x] error page
 
 PROBLEMS:
 [FIXED] - check session / cookies from the back end. No sessionId (connect.sid) is set on the browser. Using proxy server DOES work for some reason :/ ?
@@ -145,4 +138,9 @@ https://claritydev.net/blog/display-warning-for-unsaved-form-data-on-page-exit
 
 [] remove endpoint to reservation page (and page component)
 [] different font for search bar
+[x] Delete Review modal
+[] show length in user's fav and owned campgrounds
+
 [] populate data
+
+[x] reservation tab

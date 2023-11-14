@@ -61,6 +61,7 @@ const EditCampground: React.FunctionComponent = () => {
     const { width: screenWidth } = useWindowDimensions();
 
     const [validated, setValidated] = useState(false);
+    const [formChanged, setFormChanged] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
 
     const [boxesPerRow, setBoxesPerRow] = useState(
@@ -86,6 +87,19 @@ const EditCampground: React.FunctionComponent = () => {
     useEffect(() => {
         document.title = 'YelpCamp | Edit Campground';
         if (!currentUser) navigate('/login');
+
+        const onBeforeUnload = e => {
+            e.preventDefault();
+            if (formChanged) {
+                e.preventDefault();
+                e.returnValue = true;
+            }
+        };
+        window.addEventListener('beforeunload', onBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', onBeforeUnload);
+        };
     }, []);
 
     // Resizing preview thumbnail container based on screenWidth
@@ -287,6 +301,7 @@ const EditCampground: React.FunctionComponent = () => {
                         noValidate
                         validated={validated}
                         onSubmit={handleEditCampgroundFormSubmit}
+                        onChange={() => setFormChanged(true)}
                     >
                         <Form.Group className="mb-3" controlId="campgroundTitle">
                             <Form.Label>Campground Title</Form.Label>

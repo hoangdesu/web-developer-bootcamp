@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
 import AppContext from '../../store/app-context';
 
