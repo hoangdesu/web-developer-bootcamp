@@ -11,6 +11,9 @@ const Footer: React.FunctionComponent = () => {
         console.log(appContext);
     };
 
+    console.log('__BUILD_TIMESTAMP__', __BUILD_TIMESTAMP__);
+    
+
 
     return (
         <footer className="footer bg-dark fixed bottom-0 w-full z-[-1] h-[150px] py-5">

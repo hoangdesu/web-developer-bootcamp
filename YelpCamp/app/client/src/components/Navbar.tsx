@@ -11,6 +11,18 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
 
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {
+    Box,
+    Divider,
+    Drawer,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+} from '@mui/material';
+
 const Search = muistyled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -25,7 +37,7 @@ const Search = muistyled('div')(({ theme }) => ({
         marginLeft: theme.spacing(1),
         width: 'auto',
     },
-    marginTop: '16px',
+    // margin: '16px',
 }));
 
 const SearchIconWrapper = muistyled('div')(({ theme }) => ({
@@ -85,6 +97,7 @@ const Navbar: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
 
@@ -98,6 +111,48 @@ const Navbar: React.FunctionComponent = () => {
     const logoutHandler = async () => {
         appContext.setModal({ open: true, content: <ModalLogout /> });
     };
+
+    const closeDrawer = open => (event: React.KeyboardEvent | React.MouseEvent) => {
+        if (
+            event.type === 'keydown' &&
+            ((event as React.KeyboardEvent).key === 'Tab' ||
+                (event as React.KeyboardEvent).key === 'Shift')
+        ) {
+            return;
+        }
+
+        setDrawerOpen(open);
+    };
+
+    const list = () => (
+        <Box sx={{ width: 250 }} role="presentation" onClick={closeDrawer} onKeyDown={closeDrawer}>
+            <List>
+                {[].map((text, index) => (
+                    <ListItem key={text} disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+            <Divider />
+            <List>
+                {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                    <ListItem key={text} disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
+    );
 
     return (
         <BootstrapNavbar expand="md" variant="dark" className="bg-primary-dark-color">
@@ -125,15 +180,20 @@ const Navbar: React.FunctionComponent = () => {
                             />
                         </Search>
                     </form>
-                    <Nav activeKey="/" className="">
+                    <Nav activeKey="/">
                         {currentUser ? (
                             <>
                                 <NavDropdown
-                                    title={currentUser?.username}
+                                    // title={currentUser?.username}
+                                    title={<AccountCircleIcon fontSize="medium" />}
                                     id="nav-dropdown"
                                     className="pe-2"
                                     align={{ lg: 'end' }}
                                 >
+                                    <NavDropdown.Item className="dropdown-item active:bg-primary-accent-color">
+                                        {currentUser?.username}
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Divider />
                                     <Link
                                         to={'/campgrounds/new'}
                                         key={'new'}
@@ -156,9 +216,11 @@ const Navbar: React.FunctionComponent = () => {
                                         Log out
                                     </Button>
                                 </NavDropdown>
-                                <Nav>
-                                <p className="text-white ml-auto">TESTINGGGGG</p>
-                                </Nav>
+                                {/* <Nav>
+                                    <p className="text-white ml-auto">
+                                        <AccountCircleIcon fontSize="large" />
+                                    </p>
+                                </Nav> */}
                             </>
                         ) : (
                             <>
@@ -181,8 +243,13 @@ const Navbar: React.FunctionComponent = () => {
                             </>
                         )}
                     </Nav>
+                    <button onClick={() => setDrawerOpen(!drawerOpen)}>Open</button>
                 </BootstrapNavbar.Collapse>
             </Container>
+            <Drawer anchor={'right'} open={drawerOpen} onClose={closeDrawer(false)}>
+                {/* <p>inside drawer</p> */}
+                {list()}
+            </Drawer>
         </BootstrapNavbar>
     );
 };

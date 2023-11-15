@@ -47,7 +47,7 @@ const Checkout = () => {
     const navigate = useNavigate();
     const { width: windowWidth } = useWindowDimensions();
     const qrRef = useRef(null);
-    const [timer, setTimer] = useState(60);
+    const [timer, setTimer] = useState(60 * 3);
     const [resvStatus, setResvStatus] = useState<'PENDING' | 'PAID' | 'CANCELLED'>('PENDING');
 
     useEffect(() => {
