@@ -98,7 +98,7 @@ const App: React.FunctionComponent = () => {
             <Row className="justify-content-center my-4">
                 <Col>
                     <div className="flex flex-row items-center align-middle justify-between mb-3">
-                        <h3 className="my-4">Explore campgrounds</h3>
+                        <h3 className="my-2">Explore campgrounds</h3>
                     </div>
 
                     <CampgroundsContainer length={filteredCampgroundList.length}>

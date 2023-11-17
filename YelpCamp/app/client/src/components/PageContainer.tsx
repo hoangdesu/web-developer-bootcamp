@@ -4,7 +4,6 @@ import { Container } from 'react-bootstrap';
 import FlashAlert from './FlashAlert';
 import PageModal from '../components/Modals/PageModal';
 import Footer from './Footer';
-import { Snackbar } from '@mui/material';
 import PageSnackbar from './PageSnackbar';
 import AppContext from '../store/app-context';
 
@@ -22,7 +21,7 @@ const PageContainer: React.FunctionComponent<PageContainerProps> = ({ children }
     return (
         <div className="d-flex flex-column min-h-screen bg-primary-color mb-[150px] z-10">
             <Navbar />
-            <Container className="my-5 px-[5%]">
+            <Container className="my-[2em] px-[5%]">
                 <FlashAlert />
                 {children}
             </Container>

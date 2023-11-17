@@ -65,7 +65,7 @@ const Search = () => {
                 <InputGroup>
                     <Form.Control
                         ref={searchInputRef}
-                        placeholder="Search campground by name or location..."
+                        placeholder="Search by name or location..."
                     />
                     <ApplyButton>Search</ApplyButton>
                 </InputGroup>

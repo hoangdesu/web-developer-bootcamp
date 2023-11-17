@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
@@ -97,15 +97,16 @@ const SearchBoxContainer = styled.div`
             }
 
             ::placeholder {
-                padding-left: 18px;
+                padding-left: 22px;
                 opacity: 0.9;
             }
         }
     }
 `;
-const SearchBoxAnimatedCarret = () => {
+const SearchBoxAnimatedCarret = ({ showSearchBox }) => {
     const [search, setSearch] = useState('');
     const navigate = useNavigate();
+    const [focus, setFocus] = useState(true);
 
     const onSearchSubmit = (evt: React.FormEvent) => {
         evt.preventDefault();
@@ -113,6 +114,16 @@ const SearchBoxAnimatedCarret = () => {
 
         navigate(`/search?q=${search}`);
     };
+
+    const ref = useRef(null);
+
+    // TODO: fix clicking on search icon should focus the input
+    useEffect(() => {
+        if (ref.current && showSearchBox) {
+            console.log('focus');
+            ref.current?.focus();
+        }
+    }, [showSearchBox]);
 
     return (
         <SearchBoxContainer>
@@ -126,6 +137,7 @@ const SearchBoxAnimatedCarret = () => {
                         placeholder="Search Yelpcamp"
                         onFocus={e => (e.target.placeholder = '')}
                         onBlur={e => (e.target.placeholder = 'Search Yelpcamp')}
+                        ref={ref}
                     />
                     <i />
                 </div>

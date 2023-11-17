@@ -12,7 +12,15 @@ router.route('/').get(controller.getAllUsers).post(controller.createUser);
 
 router.post('/reset-password', controller.resetPassword);
 
-router.post('/login', passport.authenticate('local'), controller.login);
+router.post(
+    '/login',
+    (req, res, next) => {
+        req.body.username = req.body.username.toLowerCase();
+        next();
+    },
+    passport.authenticate('local'),
+    controller.login,
+);
 
 router.post('/logout', controller.logout);
 

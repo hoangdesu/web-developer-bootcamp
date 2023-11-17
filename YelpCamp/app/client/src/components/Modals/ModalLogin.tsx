@@ -41,7 +41,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ reservation, campground }) => {
                 .post(
                     '/api/v1/users/login',
                     {
-                        username: formUsername.current?.value || '',
+                        username: formUsername.current?.value.toLowerCase() || '',
                         password: formPassword.current?.value || '',
                     },
                     {

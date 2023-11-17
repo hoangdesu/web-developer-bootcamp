@@ -23,13 +23,7 @@ const InputGroupText = styled(InputGroup.Text)`
 const Container = styled.div`
     width: 100vw;
     height: 100vh;
-    /* background-image: url(https://images.unsplash.com/photo-1522660517748-2931a7a4aaf6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2130&q=80); */
-
-    /* top, transparent black, faked with gradient */
-    background: 
-    // linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)),
-        /* bottom, image url(https://images.unsplash.com/photo-1602391833977-358a52198938?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2148&q=80) */
-        /* bottom, image */ url(${LoginBGImage});
+    background: url(${LoginBGImage});
     background-position: center;
     background-size: cover;
     display: flex;
@@ -44,7 +38,6 @@ const Container = styled.div`
         min-height: fit-content;
         padding: 3rem;
         box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px;
-        /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1); */
         box-sizing: border-box;
         margin-left: 40%;
         margin-bottom: 5%;
@@ -112,7 +105,7 @@ const Login: React.FunctionComponent = () => {
                 .post(
                     '/api/v1/users/login',
                     {
-                        username: formUsername.current?.value || '',
+                        username: formUsername.current?.value.toLowerCase() || '',
                         password: formPassword.current?.value || '',
                     },
                     {
