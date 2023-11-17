@@ -32,9 +32,8 @@ const SearchBoxContainer = styled.div`
             caret-color: ${inputBgColor};
             color: ${inputTextColor};
             border: 0;
-            border-radius: 0.4em;
-            padding: 0.2em 1.2em;
-            /* padding: 1em; */
+            border-radius: 3px;
+            padding: 0.3em 1.2em;
             font-size: 1em;
             box-shadow: 0 0 0.75em 0.25em rgba(${{ inputBgColor }}, 0.2);
             transition: box-shadow 0.5s ease;
@@ -65,9 +64,9 @@ const SearchBoxContainer = styled.div`
                     display: block;
                     position: relative;
                     top: 0em;
-                    left: -0.3em;
-                    width: 0.8em;
-                    height: 0.8em;
+                    left: -0.38em;
+                    width: 0.9em;
+                    height: 0.9em;
                     border-radius: 100%;
                     border: 0.125em solid ${inputTextColor};
                     background-color: ${inputBgColor};
@@ -96,6 +95,11 @@ const SearchBoxContainer = styled.div`
                     display: none;
                 }
             }
+
+            ::placeholder {
+                padding-left: 18px;
+                opacity: 0.9;
+            }
         }
     }
 `;
@@ -119,6 +123,9 @@ const SearchBoxAnimatedCarret = () => {
                         type="text"
                         value={search}
                         onInput={e => setSearch(e.currentTarget.value)}
+                        placeholder="Search Yelpcamp"
+                        onFocus={e => (e.target.placeholder = '')}
+                        onBlur={e => (e.target.placeholder = 'Search Yelpcamp')}
                     />
                     <i />
                 </div>
