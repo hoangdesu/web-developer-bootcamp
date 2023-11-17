@@ -146,3 +146,8 @@ https://claritydev.net/blog/display-warning-for-unsaved-form-data-on-page-exit
 [x] reservation tab
 
 [x] Save review? modal
+
+navbar design:
+- thu hep khoang cach from top to map
+- always show search bar on mobile (2 rows)
+- replace nav dropdown with simple dropdown to avoid changing nav height

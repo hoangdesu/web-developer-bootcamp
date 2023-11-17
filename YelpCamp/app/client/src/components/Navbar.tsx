@@ -1,6 +1,14 @@
 import React, { useContext, useRef, useState } from 'react';
 import Container from 'react-bootstrap/Container';
-import { Navbar as BootstrapNavbar, Nav, Button, NavDropdown } from 'react-bootstrap';
+import {
+    Navbar as BootstrapNavbar,
+    Nav,
+    Button,
+    NavDropdown,
+    Form,
+    Dropdown,
+    DropdownButton,
+} from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import AppContext from '../store/app-context';
 import ModalLogout from './Modals/ModalLogout';
@@ -22,6 +30,8 @@ import {
     ListItemIcon,
     ListItemText,
 } from '@mui/material';
+import useWindowDimensions from '../hooks/useWindowDimensions';
+import SearchBoxAnimatedCarret from './SearchBoxAnimatedCarret';
 
 const Search = muistyled('div')(({ theme }) => ({
     position: 'relative',
@@ -98,6 +108,7 @@ const Navbar: React.FunctionComponent = () => {
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const { width: windowWidth } = useWindowDimensions();
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
 
@@ -154,9 +165,112 @@ const Navbar: React.FunctionComponent = () => {
         </Box>
     );
 
+    const v1 = (
+        <>
+            <LogoSection>
+                <Link to={'/'} className="no-underline">
+                    <span className="nav-link flex flex-row justify-center items-center gap-2">
+                        <img src={Logo} alt="YelpCamp logo" width={'35px'} />
+                        <span className="navbar-brand hover-underline-animation">YelpCamp</span>
+                    </span>
+                </Link>
+            </LogoSection>
+            <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
+            <BootstrapNavbar.Collapse id="basic-navbar-nav" className="">
+                {/* TODO: align this mtfk center of navbar */}
+                <form action="" onSubmit={onSearchSubmit} className="ml-auto mr-5">
+                    <Search>
+                        <SearchIconWrapper>
+                            <SearchIcon />
+                        </SearchIconWrapper>
+                        <StyledInputBase
+                            placeholder="Search YelpCamp"
+                            inputProps={{ 'aria-label': 'search' }}
+                            onChange={e => setSearch(e.currentTarget.value)}
+                        />
+                    </Search>
+                </form>
+                <Nav activeKey="/">
+                    {currentUser ? (
+                        <>
+                            <NavDropdown
+                                // title={currentUser?.username}
+                                title={<AccountCircleIcon fontSize="medium" />}
+                                id="nav-dropdown"
+                                className="pe-2"
+                                align={{ lg: 'end' }}
+                            >
+                                <NavDropdown.Item className="dropdown-item active:bg-primary-accent-color">
+                                    {currentUser?.username}
+                                </NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <Link
+                                    to={'/campgrounds/new'}
+                                    key={'new'}
+                                    className="dropdown-item active:bg-primary-accent-color"
+                                >
+                                    <span className="">New campground</span>
+                                </Link>
+                                <Link
+                                    to={`/users/${currentUser.username}?tab=info`}
+                                    key={'user'}
+                                    className="dropdown-item active:bg-primary-accent-color"
+                                >
+                                    <span className="">Profile</span>
+                                </Link>
+                                <Button
+                                    variant="secondary"
+                                    onClick={logoutHandler}
+                                    className="dropdown-item"
+                                >
+                                    Log out
+                                </Button>
+                            </NavDropdown>
+                            {/* <Nav>
+                        <p className="text-white ml-auto">
+                            <AccountCircleIcon fontSize="large" />
+                        </p>
+                    </Nav> */}
+                        </>
+                    ) : (
+                        <>
+                            <Link
+                                to={'/login'}
+                                key={'login'}
+                                style={{ textDecoration: 'none' }}
+                                className="nav-link"
+                            >
+                                <span>Login</span>
+                            </Link>
+                            <Link
+                                to={'/register'}
+                                key={'register'}
+                                style={{ textDecoration: 'none' }}
+                                className="nav-link"
+                            >
+                                <span>Register</span>
+                            </Link>
+                        </>
+                    )}
+                </Nav>
+                <button onClick={() => setDrawerOpen(!drawerOpen)}>Open</button>
+            </BootstrapNavbar.Collapse>
+        </>
+    );
+
+    // return (
+    //     <BootstrapNavbar expand="md" variant="dark" className="bg-primary-dark-color">
+    //     <Container className='px-[5%]'>
+    //     {v1}
+    //     </Container>
+    //     </BootstrapNavbar>
+    // )
+
     return (
         <BootstrapNavbar expand="md" variant="dark" className="bg-primary-dark-color">
             <Container className="px-[5%]">
+                {/* <Container> */}
+
                 <LogoSection>
                     <Link to={'/'} className="no-underline">
                         <span className="nav-link flex flex-row justify-center items-center gap-2">
@@ -165,91 +279,95 @@ const Navbar: React.FunctionComponent = () => {
                         </span>
                     </Link>
                 </LogoSection>
-                <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
-                <BootstrapNavbar.Collapse id="basic-navbar-nav" className="">
-                    {/* TODO: align this mtfk center of navbar */}
-                    <form action="" onSubmit={onSearchSubmit} className="ml-auto mr-5">
-                        <Search>
-                            <SearchIconWrapper>
-                                <SearchIcon />
-                            </SearchIconWrapper>
-                            <StyledInputBase
-                                placeholder="Search YelpCamp"
-                                inputProps={{ 'aria-label': 'search' }}
-                                onChange={e => setSearch(e.currentTarget.value)}
-                            />
-                        </Search>
-                    </form>
-                    <Nav activeKey="/">
-                        {currentUser ? (
-                            <>
-                                <NavDropdown
-                                    // title={currentUser?.username}
-                                    title={<AccountCircleIcon fontSize="medium" />}
-                                    id="nav-dropdown"
-                                    className="pe-2"
-                                    align={{ lg: 'end' }}
-                                >
-                                    <NavDropdown.Item className="dropdown-item active:bg-primary-accent-color">
-                                        {currentUser?.username}
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <Link
-                                        to={'/campgrounds/new'}
-                                        key={'new'}
-                                        className="dropdown-item active:bg-primary-accent-color"
-                                    >
-                                        <span className="">New campground</span>
-                                    </Link>
-                                    <Link
-                                        to={`/users/${currentUser.username}?tab=info`}
-                                        key={'user'}
-                                        className="dropdown-item active:bg-primary-accent-color"
-                                    >
-                                        <span className="">Profile</span>
-                                    </Link>
-                                    <Button
-                                        variant="secondary"
-                                        onClick={logoutHandler}
-                                        className="dropdown-item"
-                                    >
-                                        Log out
-                                    </Button>
-                                </NavDropdown>
-                                {/* <Nav>
-                                    <p className="text-white ml-auto">
-                                        <AccountCircleIcon fontSize="large" />
-                                    </p>
-                                </Nav> */}
-                            </>
-                        ) : (
-                            <>
-                                <Link
-                                    to={'/login'}
-                                    key={'login'}
-                                    style={{ textDecoration: 'none' }}
-                                    className="nav-link"
-                                >
-                                    <span>Login</span>
-                                </Link>
-                                <Link
-                                    to={'/register'}
-                                    key={'register'}
-                                    style={{ textDecoration: 'none' }}
-                                    className="nav-link"
-                                >
-                                    <span>Register</span>
-                                </Link>
-                            </>
-                        )}
-                    </Nav>
-                    <button onClick={() => setDrawerOpen(!drawerOpen)}>Open</button>
-                </BootstrapNavbar.Collapse>
+
+                {/* <div className="text-white">
+                    {windowWidth >= 768 ? (
+                        <div>
+                            <input type="text" />
+                        </div>
+                    ) : (
+                        <div>Mobile</div>
+                    )}
+                </div>
+                <Dropdown align={{ lg: 'end' }}>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        <AccountCircleIcon />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu show>
+                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown> */}
+
+                <div className="text-white flex flex-row">
+                    {windowWidth >= 768 && (
+                        <span>
+                            {' '}
+                            {/* <form action="" onSubmit={onSearchSubmit} className="ml-auto mr-5">
+                                <Search>
+                                    <SearchIconWrapper>
+                                        <SearchIcon />
+                                    </SearchIconWrapper>
+                                    <StyledInputBase
+                                        placeholder="Search YelpCamp"
+                                        inputProps={{ 'aria-label': 'search' }}
+                                        onChange={e => setSearch(e.currentTarget.value)}
+                                    />
+                                </Search>
+                            </form> */}
+                            {/* <form action="">
+                                <input type="text" />
+                            </form> */}
+                            {/* <SearchBox2>
+                                <div className="search-box">
+                                    <input
+                                        className="search-box__input"
+                                        type="text"
+                                        // onInput="this.setAttribute('value',this.value)"
+                                        value={search}
+                                        onInput={e => setSearch(e.currentTarget.value)}
+                                    />
+                                    <i></i>
+                                </div>
+                            </SearchBox2> */}
+                            <SearchBoxAnimatedCarret />
+                        </span>
+                    )}
+
+                    <span>login</span>
+                </div>
+
+                {/* <DropdownButton align="end" title="Dropdown end" id="dropdown-menu-align-end">
+                    <Dropdown.Item eventKey="1">
+                        <div>
+                            <div>account: a</div>
+                            <div>view account</div>
+                        </div>
+                    </Dropdown.Item>
+                    <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
+                    <Dropdown.Item eventKey="3">Something else here</Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item eventKey="4">Separated link</Dropdown.Item>
+                </DropdownButton> */}
             </Container>
-            <Drawer anchor={'right'} open={drawerOpen} onClose={closeDrawer(false)}>
-                {/* <p>inside drawer</p> */}
+
+            {windowWidth < 768 && (
+                <Container className="px-[5%]">
+                    <div className="text-white w-full">
+                        {/* <input type="text" className="w-full" /> */}
+
+                        <SearchBoxAnimatedCarret />
+                        {/* <Form.Control type="text" /> */}
+                    </div>
+                </Container>
+            )}
+
+            {/* <Drawer anchor={'right'} open={drawerOpen} onClose={closeDrawer(false)}>
+
                 {list()}
-            </Drawer>
+            </Drawer> */}
         </BootstrapNavbar>
     );
 };
