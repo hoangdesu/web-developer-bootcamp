@@ -174,72 +174,82 @@ const User = () => {
             {/* NEW UI */}
             {/* Recreate this: https://ui.shadcn.com/examples/forms/account */}
             <Container>
-                {/* tab */}
-                {width > 768 ? (
-                    <div className="tabs">
-                        <ul>
-                            {TABS.map(tab => (
-                                <li
-                                    key={tab.id}
-                                    onClick={() => {
-                                        // setActiveTab(tab.id as ActiveTabType);
-                                        setSearchParams({ tab: tab.id }, { replace: true });
-                                    }}
-                                    className={`${tab.id === searchParams.get('tab') && 'active'} `}
-                                >
-                                    <span>{tab.title}</span>
-                                </li>
-                            ))}
-                        </ul>
-                        {/* debug area */}
-                        <div className="mt-[200px]">
-                            <SecondaryTransparentButton onClick={() => navigate(-1)}>
-                                <span className="flex items-center justify-center gap-1">
-                                    <ArrowBackIcon /> Back
-                                </span>
-                            </SecondaryTransparentButton>
+                {appContext.currentUser?.username === user.username ? (
+                    <>
+                        {width > 768 ? (
+                            <div className="tabs">
+                                <ul>
+                                    {TABS.map(tab => (
+                                        <li
+                                            key={tab.id}
+                                            onClick={() => {
+                                                // setActiveTab(tab.id as ActiveTabType);
+                                                setSearchParams({ tab: tab.id }, { replace: true });
+                                            }}
+                                            className={`${
+                                                tab.id === searchParams.get('tab') && 'active'
+                                            } `}
+                                        >
+                                            <span>{tab.title}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                {/* debug area */}
+                                <div className="mt-[200px]">
+                                    <SecondaryTransparentButton onClick={() => navigate(-1)}>
+                                        <span className="flex items-center justify-center gap-1">
+                                            <ArrowBackIcon /> Back
+                                        </span>
+                                    </SecondaryTransparentButton>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="bg-red-500">
+                                <ul className="flex flex-col overflow-x-auto">
+                                    {TABS.map(tab => (
+                                        <li
+                                            key={tab.id}
+                                            onClick={() => {
+                                                // setActiveTab(tab.id as ActiveTabType);
+                                                setSearchParams({ tab: tab.id }, { replace: true });
+                                            }}
+                                            className={`${
+                                                tab.id === searchParams.get('tab') && 'active'
+                                            } w-fit`}
+                                        >
+                                            <span>{tab.title}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+
+                        {/* content */}
+                        <div className="content">
+                            {!searchParams.get('tab') ||
+                                (searchParams.get('tab') === 'info' && (
+                                    <UserUpdateInfoTab user={user} />
+                                ))}
+
+                            {searchParams.get('tab') === 'owned' && (
+                                <UserOwnedCampgroundsTab ownedCampgrounds={user.campgrounds} />
+                            )}
+
+                            {searchParams.get('tab') === 'favorite' && (
+                                <UserFavoriteCampgroundsTab
+                                    favoritedCampgrounds={user.favoritedCampgrounds}
+                                />
+                            )}
+
+                            {searchParams.get('tab') === 'reservations' && (
+                                <UserReservationsTab reservations={user.reservations} />
+                            )}
                         </div>
-                    </div>
+                    </>
                 ) : (
-                    <div className="bg-red-500">
-                        <ul className="flex flex-col overflow-x-auto">
-                            {TABS.map(tab => (
-                                <li
-                                    key={tab.id}
-                                    onClick={() => {
-                                        // setActiveTab(tab.id as ActiveTabType);
-                                        setSearchParams({ tab: tab.id }, { replace: true });
-                                    }}
-                                    className={`${
-                                        tab.id === searchParams.get('tab') && 'active'
-                                    } w-fit`}
-                                >
-                                    <span>{tab.title}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <div>guest</div>
                 )}
-
-                {/* content */}
-                <div className="content">
-                    {!searchParams.get('tab') ||
-                        (searchParams.get('tab') === 'info' && <UserUpdateInfoTab user={user} />)}
-
-                    {searchParams.get('tab') === 'owned' && (
-                        <UserOwnedCampgroundsTab ownedCampgrounds={user.campgrounds} />
-                    )}
-
-                    {searchParams.get('tab') === 'favorite' && (
-                        <UserFavoriteCampgroundsTab
-                            favoritedCampgrounds={user.favoritedCampgrounds}
-                        />
-                    )}
-
-                    {searchParams.get('tab') === 'reservations' && (
-                        <UserReservationsTab reservations={user.reservations} />
-                    )}
-                </div>
+                {/* tab */}
             </Container>
         </PageContainer>
     );

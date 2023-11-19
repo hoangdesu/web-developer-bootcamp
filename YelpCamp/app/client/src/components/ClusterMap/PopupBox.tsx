@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Campground } from '../../types';
+import Logo from '../../assets/logo.png';
 
 interface PopupBoxProps {
     campground: Pick<Campground, '_id' | 'title' | 'price' | 'location'> & {
@@ -10,7 +11,6 @@ interface PopupBoxProps {
 }
 
 const PopupBox: React.FC<PopupBoxProps> = ({ campground }) => {
-    // TODO: fix popup box dont show when clicking on multiple campgrounds consecutively
     return (
         <Link
             to={`/campgrounds/${campground._id}`}
@@ -20,6 +20,10 @@ const PopupBox: React.FC<PopupBoxProps> = ({ campground }) => {
                 src={campground.image}
                 alt="Campground cover"
                 className="w-[120px] object-cover max-h-[100px]"
+                onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src = Logo;
+                }}
             />
             <div className="flex flex-col w-[150px]">
                 <h6 className=" mb-1">{campground.title}</h6>

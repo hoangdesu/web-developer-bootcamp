@@ -17,6 +17,7 @@ import { Campground, User } from './types';
 import ErrorBoundary from './pages/ErrorBoundary';
 import SearchBox from './components/SearchBox';
 import CampgroundsContainer from './components/CampgroundsContainer';
+import { shuffle } from './utils/arrayUtils';
 
 declare global {
     namespace JSX {
@@ -65,7 +66,7 @@ const App: React.FunctionComponent = () => {
             queryFn: () => axios.get(`/api/v1/campgrounds`).then(res => res.data),
             onSuccess: (campgroundList: Campground[]) => {
                 setCampgrounds(() => {
-                    setFilteredCampgroundList(campgroundList.slice(0, 12));
+                    setFilteredCampgroundList(shuffle(campgroundList).slice(0, 12));
                     return campgroundList;
                 });
             },

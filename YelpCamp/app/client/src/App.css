@@ -44,3 +44,22 @@ body {
     border-color: #b5c4c1;
     box-shadow: 0 0 0 0.1rem #d8e7e4;
 }
+
+#sort-dropdown {
+    background: #EFEFEF;
+    border: none;
+}
+
+#sort-dropdown:hover {
+    color: var(--primary-color);
+    background-color: var(--primary-accent-color);
+}
+
+#sort-dropdown:focus {
+    color: var(--primary-color);
+    background-color: var(--primary-accent-color);
+}
+
+#sort-dropdown a[aria-selected="true"] {
+    background-color: var(--primary-accent-color) !important;
+}

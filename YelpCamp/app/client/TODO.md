@@ -153,3 +153,5 @@ https://claritydev.net/blog/display-warning-for-unsaved-form-data-on-page-exit
 - replace nav dropdown with simple dropdown to avoid changing nav height
 
 [] fix clicking on search icon should focus the input
+
+[x] default image on map view
