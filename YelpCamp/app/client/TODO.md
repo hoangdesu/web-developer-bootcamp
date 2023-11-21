@@ -61,7 +61,9 @@ into browser e.g. site.com/login. Have to use router?
 
 [FIXED] - Another problem: EditCampground -> request to mapbox api is blocked by CORS policy
 
-[x] style navbar on mobile [] SEO meta tags [] sitemap, robots.txt or sth similar for SEO
+[x] style navbar on mobile 
+[] SEO meta tags 
+[] sitemap, robots.txt or sth similar for SEO
 
 [] improve navbar navigation in mobile view [x] change /user paths to /users
 
@@ -103,15 +105,15 @@ component
 
 [x] search page
 
-[] profile page TODOs
+[x] profile page TODOs
 
 [] Display Warning for Unsaved Form Data on Page Exit
 https://claritydev.net/blog/display-warning-for-unsaved-form-data-on-page-exit
 
 [x] owned
 
-[] remove endpoint to reservation page (and page component) [] different font for search bar [x]
-Delete Review modal [] show length in user's fav and owned campgrounds
+[x] remove endpoint to reservation page (and page component) [] different font for search bar [x]
+Delete Review modal [x] show length in user's fav and owned campgrounds
 
 [] populate data
 
@@ -129,10 +131,12 @@ Delete Review modal [] show length in user's fav and owned campgrounds
 
 [x] default image on map view
 
-[] Error. User not found -> redirect back to Home with alert
+[x] Error. User not found -> redirect back to Home with alert
 
 [x] show total campgrounds in homepage (1-12 of 24 campgrounds)
 
 [] campground image custom modal
 
 [] styling footer
+
+[x] same design in other tabs (underline + subtitle)

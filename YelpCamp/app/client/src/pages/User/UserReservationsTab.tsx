@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Reservation } from '../../types';
 import { formatDateWithoutTime } from '../../helpers/campground';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Logo from '../../assets/logo.png';
 
 interface TabProps {
     reservations: Reservation[];
@@ -20,6 +21,10 @@ const ReservationCard: React.FC<ReservationCardProps> = ({ resv, index }) => {
                 src={resv.campground.images[0].url}
                 alt="Campground thumbnail"
                 className="w-full h-[200px] md:h-auto md:max-h-[220px] md:max-w-[250px] object-cover"
+                onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src = Logo;
+                }}
             />
             <div className="text-sm flex flex-col p-2">
                 <div className="mb-2">
@@ -78,11 +83,16 @@ const ReservationCard: React.FC<ReservationCardProps> = ({ resv, index }) => {
 };
 
 const UserReservationsTab: React.FC<TabProps> = ({ reservations }) => {
-    console.log(reservations);
-
     return (
         <div>
-            <h1 className="mb-4">Reservations</h1>
+            <div className="mb-5">
+                <h1>Reservations</h1>
+                <p className="text-muted">
+                    You currently have {reservations.length}{' '}
+                    {reservations.length > 1 ? 'reservations.' : 'reservation.'}
+                </p>
+                <hr />
+            </div>
             <div className="flex flex-col gap-3">
                 {reservations.length > 0 ? (
                     reservations.map((resv, index) => (

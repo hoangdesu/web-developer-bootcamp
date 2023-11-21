@@ -5,7 +5,6 @@ import axios from '../../config/yelpcampAxios';
 import { Form, InputGroup } from 'react-bootstrap';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 import { useNavigate } from 'react-router-dom';
-import CheckmarkCSSAnimation from '../../components/CheckmarkCSSAnimation';
 import AppContext from '../../store/app-context';
 import { User } from '../../types';
 
@@ -56,15 +55,11 @@ const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
                     setValidated(false);
                 })
                 .catch(err => {
-                    // TODO: alert this shit
-                    // appContext.setAlert({
-                    //     message: 'Wrong username or password. Please login again',
-                    //     variant: 'warning',
-                    // });
-                    // appContext.setCurrentUser(null);
-                    // setValidated(false);
-                    // form.reset();
-                    console.log(err);
+                    appContext.setSnackbar(
+                        true,
+                        'Something went wrong. Your account information was not updated.',
+                        'error',
+                    );
                 });
         }
         setValidated(true);
@@ -74,7 +69,6 @@ const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
         return user.username.toString() === appContext.currentUser?.username.toString();
     };
 
-    // TODO: UI design -> separate out changing email with changing password. Wrap in different boxes
     return (
         <div>
             <div>

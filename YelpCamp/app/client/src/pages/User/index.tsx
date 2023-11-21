@@ -1,116 +1,100 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import axios from '../../config/yelpcampAxios';
 import { useQuery } from 'react-query';
 import { Link, useLoaderData, useNavigate, useSearchParams } from 'react-router-dom';
 import PageContainer from '../../components/PageContainer';
 import Loading from '../Loading';
-import useWindowDimensions from '../../hooks/useWindowDimensions';
 import styled from '@emotion/styled';
 import AppContext from '../../store/app-context';
 import UserUpdateInfoTab from './UserUpdateInfoTab';
 import UserFavoriteCampgroundsTab from './UserFavoriteCampgroundsTab';
 import UserReservationsTab from './UserReservationsTab';
 import UserOwnedCampgroundsTab from './UserOwnedCampgroundsTab';
-import SecondaryTransparentButton from '../../components/Buttons/SecondaryTransparentButton';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ErrorBoundary from '../ErrorBoundary';
+import CampgroundsContainer from '../../components/CampgroundsContainer';
+import CampgroundCard from '../Campground/CampgroundCard';
+import { Campground } from '../../types';
 
 export async function loader({ params }) {
     return { username: params.username };
 }
-
-type ActiveTabType = 'userInfo' | 'ownedCampgrounds' | 'favoritedCampgrounds' | 'reservations';
 
 interface ILoaderData {
     username: string;
 }
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: row;
-    gap: 50px;
     margin-bottom: 50px;
-    /* border-right: 1px solid red; */
 
-    .tabs {
-        width: 250px;
-        /* position: absolute; */
-        /* z-index: 1; */
-        /* border-right: 1px solid black; */
-        /* margin-top: 4rem; */
-        /* margin-top: 1rem; */
-
-        ul {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-        }
-
-        ul,
-        li {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            transition: 100ms all ease-out;
-            /* height: auto;
-            width: auto; */
-            border-radius: 6px;
-        }
-
-        li {
-            padding: 10px;
-        }
-
-        li:hover {
-            cursor: pointer;
-            background-color: #e9dddd;
-            /* text-decoration: underline; */
-        }
-    }
-
-    .content {
-        /* width: fit-content; */
-        width: 100%;
-    }
-
-    .active {
-        cursor: pointer;
-        background: var(--primary-accent-color) !important;
-        text-decoration: none !important;
-        color: white;
-    }
-
-    /* MOBILE VIEW */
-    @media (max-width: 768px) {
-        /* background: #e5dadc; */
-        /* height: 100vh; */
+    .author-view {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        gap: 50px;
 
         .tabs {
-            /* width: 250px; */
-            width: 100%;
-            /* position: absolute; */
-            /* z-index: 1; */
-            /* border-right: 1px solid black; */
-            /* margin-top: 4rem; */
-            /* margin-top: 1rem; */
+            width: 250px;
 
             ul {
                 display: flex;
-                flex-direction: row;
+                flex-direction: column;
                 gap: 1px;
             }
 
+            ul,
             li {
-                /* width: ; */
                 list-style: none;
                 padding: 0;
                 margin: 0;
                 transition: 100ms all ease-out;
-                /* height: auto;
-            width: auto; */
+                width: auto;
                 border-radius: 6px;
+            }
+
+            li {
+                padding: 10px;
+                white-space: nowrap;
+            }
+
+            li:hover {
+                cursor: pointer;
+                background-color: #e9dddd;
+            }
+        }
+
+        .content {
+            width: 100%;
+        }
+
+        .active {
+            cursor: pointer;
+            background: var(--primary-accent-color) !important;
+            text-decoration: none !important;
+            color: white;
+        }
+
+        /* MOBILE VIEW */
+        @media (max-width: 768px) {
+            display: flex;
+            flex-direction: column;
+
+            .tabs {
+                width: 100%;
+
+                ul {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 6px;
+                    overflow-x: scroll;
+                }
+
+                li {
+                    width: fit-content;
+                    list-style: none;
+                    padding: 10px;
+                    margin: 0;
+                    transition: 100ms all ease-out;
+                    border-radius: 6px;
+                }
             }
         }
     }
@@ -139,8 +123,6 @@ const User = () => {
     const { username } = useLoaderData() as ILoaderData;
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
-    const { height, width } = useWindowDimensions();
-    const [activeTab, setActiveTab] = useState<ActiveTabType>('userInfo');
     const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
@@ -166,58 +148,29 @@ const User = () => {
 
     if (error) return <ErrorBoundary err={error} />;
 
-    console.log('user', user);
-
     return (
         <PageContainer>
-            {/* Recreate this: https://ui.shadcn.com/examples/forms/account */}
             <Container>
                 {appContext.currentUser?.username === user.username ? (
-                    <>
-                        {width > 768 ? (
-                            <div className="tabs">
-                                <ul>
-                                    {TABS.map(tab => (
-                                        <li
-                                            key={tab.id}
-                                            onClick={() => {
-                                                setSearchParams({ tab: tab.id }, { replace: true });
-                                            }}
-                                            className={`${
-                                                tab.id === searchParams.get('tab') && 'active'
-                                            } `}
-                                        >
-                                            <span>{tab.title}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                                <div className="mt-[200px]">
-                                    <SecondaryTransparentButton onClick={() => navigate(-1)}>
-                                        <span className="flex items-center justify-center gap-1">
-                                            <ArrowBackIcon /> Back
-                                        </span>
-                                    </SecondaryTransparentButton>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="bg-red-500">
-                                <ul className="flex flex-col overflow-x-auto">
-                                    {TABS.map(tab => (
-                                        <li
-                                            key={tab.id}
-                                            onClick={() => {
-                                                setSearchParams({ tab: tab.id }, { replace: true });
-                                            }}
-                                            className={`${
-                                                tab.id === searchParams.get('tab') && 'active'
-                                            } w-fit`}
-                                        >
-                                            <span>{tab.title}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
+                    // Author's view
+                    <div className="author-view">
+                        <div className="tabs">
+                            <ul>
+                                {TABS.map(tab => (
+                                    <li
+                                        key={tab.id}
+                                        onClick={() => {
+                                            setSearchParams({ tab: tab.id }, { replace: true });
+                                        }}
+                                        className={`${
+                                            tab.id === searchParams.get('tab') && 'active'
+                                        } `}
+                                    >
+                                        <span>{tab.title}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
                         {/* content */}
                         <div className="content">
@@ -240,11 +193,39 @@ const User = () => {
                                 <UserReservationsTab reservations={user.reservations} />
                             )}
                         </div>
-                    </>
+                    </div>
                 ) : (
-                    <div>guest</div>
+                    // Guest's view
+                    <div>
+                        <h1>User</h1>
+                        <hr />
+
+                        <div className="mb-5">
+                            <h3>Contact information</h3>
+                            <div>Username: {user.username}</div>
+                            <div>Email address: {user.email}</div>
+                        </div>
+
+                        <div>
+                            <h3>Owned campgrounds</h3>
+                            <p className="text-muted text-sm">
+                                {user.campgrounds.length} campgrounds
+                            </p>
+                            <div className="mt-3">
+                                {user.campgrounds.length > 0 && (
+                                    <CampgroundsContainer length={user.campgrounds.length}>
+                                        {user.campgrounds.map((campground: Campground) => (
+                                            <CampgroundCard
+                                                key={campground._id}
+                                                campground={campground}
+                                            />
+                                        ))}
+                                    </CampgroundsContainer>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 )}
-                {/* tab */}
             </Container>
         </PageContainer>
     );

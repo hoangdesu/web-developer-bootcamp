@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import CampgroundsContainer from '../../components/CampgroundsContainer';
 import CampgroundCard from '../Campground/CampgroundCard';
-import styled from '@emotion/styled';
 import { Campground } from '../../types';
 
 interface TabProps {
@@ -12,7 +11,14 @@ interface TabProps {
 const UserFavoriteCampgroundsTab: React.FC<TabProps> = ({ favoritedCampgrounds }) => {
     return (
         <div>
-            <h1 className="mb-4">Favorite campgrounds</h1>
+            <div className="mb-5">
+                <h1>Favorite campgrounds</h1>
+                <p className="text-muted">
+                    You currently have {favoritedCampgrounds.length} favorite{' '}
+                    {favoritedCampgrounds.length > 1 ? 'campgrounds.' : 'campground.'}
+                </p>
+                <hr />
+            </div>
 
             {favoritedCampgrounds.length > 0 ? (
                 <CampgroundsContainer length={favoritedCampgrounds.length}>

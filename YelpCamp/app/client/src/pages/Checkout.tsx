@@ -130,6 +130,10 @@ const Checkout = () => {
                                                     objectFit: 'cover',
                                                     height: '120px',
                                                 }}
+                                                onError={({ currentTarget }) => {
+                                                    currentTarget.onerror = null; // prevents looping
+                                                    currentTarget.src = Logo;
+                                                }}
                                             />
                                             <div className="flex flex-col justify-between">
                                                 <h5>{resv.campground.title}</h5>

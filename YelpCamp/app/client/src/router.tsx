@@ -21,8 +21,7 @@ import Login from './pages/Login';
 import User, { loader as usernameLoader } from './pages/User';
 import Testing from './pages/Testing';
 import Search from './pages/Search';
-import Reservation, { loader as resvLoader } from './pages/Reservation';
-import ConfirmOnMobile from './pages/ConfirmOnMobile';
+import ConfirmOnMobile, { loader as resvLoader } from './pages/ConfirmOnMobile';
 import ResetPassword from './pages/ResetPassword';
 import Checkout, { loader as checkouResvtLoader } from './pages/Checkout';
 import ScrollToTop from './components/ScrollToTop';
@@ -115,12 +114,6 @@ export default createBrowserRouter([
             {
                 path: '/search',
                 element: <Search />,
-                errorElement: <ErrorBoundary />,
-            },
-            {
-                path: '/reservations/:reservationId',
-                element: <Reservation />,
-                loader: resvLoader,
                 errorElement: <ErrorBoundary />,
             },
             {

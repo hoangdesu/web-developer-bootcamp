@@ -10,6 +10,10 @@ import { Container, Form, InputGroup } from 'react-bootstrap';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
+export async function loader({ params }) {
+    return { reservationId: params.reservationId };
+}
+
 const ConfirmOnMobile = () => {
     const { reservationId } = useLoaderData() as { reservationId: string };
     const [showCheckmark, setShowCheckmark] = useState(false);

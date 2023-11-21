@@ -9,11 +9,16 @@ interface TabProps {
 }
 
 const UserOwnedCampgroundsTab: React.FC<TabProps> = ({ ownedCampgrounds }) => {
-    console.log(ownedCampgrounds);
-
     return (
         <div>
-            <h1 className="mb-4">Owned campgrounds</h1>
+            <div className="mb-5">
+                <h1>Owned campgrounds</h1>
+                <p className="text-muted">
+                    You're currently hosting {ownedCampgrounds.length}{' '}
+                    {ownedCampgrounds.length > 1 ? 'campgrounds.' : 'campground.'}
+                </p>
+                <hr />
+            </div>
 
             {ownedCampgrounds.length > 0 ? (
                 <CampgroundsContainer length={ownedCampgrounds.length}>
