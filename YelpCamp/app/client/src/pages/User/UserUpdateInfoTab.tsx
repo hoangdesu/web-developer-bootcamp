@@ -7,6 +7,7 @@ import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
 import { useNavigate } from 'react-router-dom';
 import CheckmarkCSSAnimation from '../../components/CheckmarkCSSAnimation';
 import AppContext from '../../store/app-context';
+import { User } from '../../types';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {
@@ -15,7 +16,12 @@ const InputGroupText = styled(InputGroup.Text)`
     }
 `;
 
-const UserUpdateInfoTab = ({ user }) => {
+interface InfoTabProps {
+    user: User;
+    refetch: () => void;
+}
+
+const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
     const userEmailRef = useRef<HTMLInputElement>(null);
     const userCurrentPasswordRef = useRef<HTMLInputElement>(null);
     const userNewPasswordRef = useRef<HTMLInputElement>(null);
@@ -28,6 +34,7 @@ const UserUpdateInfoTab = ({ user }) => {
     const updateUserInfoHandler = (evt: React.FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
         const form = evt.currentTarget;
+
         if (form.checkValidity() === false) {
             evt.stopPropagation();
         } else {
@@ -39,9 +46,17 @@ const UserUpdateInfoTab = ({ user }) => {
             axios
                 .put(`/api/v1/users/${user._id}/update-info`, data)
                 .then(res => {
-                    navigate(0);
+                    appContext.setSnackbar(
+                        true,
+                        'Your account information has been updated!',
+                        'success',
+                    );
+                    refetch();
+                    form.reset();
+                    setValidated(false);
                 })
                 .catch(err => {
+                    // TODO: alert this shit
                     // appContext.setAlert({
                     //     message: 'Wrong username or password. Please login again',
                     //     variant: 'warning',
@@ -55,57 +70,75 @@ const UserUpdateInfoTab = ({ user }) => {
         setValidated(true);
     };
 
-    {
-        /* TODO: ADD AUTH TO ONLY ALLOW LOGGEDIN USER TO EDIT THEIR OWN DATA */
-    }
-
     const isAuthor = () => {
-        return user.username.toString() === appContext.currentUser?.username.toString(); // TODO: no login -> error -> need to login
+        return user.username.toString() === appContext.currentUser?.username.toString();
     };
 
     // TODO: UI design -> separate out changing email with changing password. Wrap in different boxes
     return (
         <div>
-            <h1>User info</h1>
-            <p>Username: {user.username}</p>
-            <p>UserId: {user._id}</p>
-            <p>Email: {user.email}</p>
+            <div>
+                <h1>User info</h1>
+                <p className="text-muted">Update your email. Reset your password.</p>
+            </div>
 
-            {/* TODO: ADD AUTH TO ONLY ALLOW LOGGEDIN USER TO EDIT THEIR OWN DATA */}
+            <hr />
+            <div>
+                <p>
+                    <span className="font-medium">Username:</span> {user.username}
+                </p>
+                <p>
+                    <span className="font-medium">User ID:</span> {user._id}
+                </p>
+            </div>
+            <hr />
+
             {isAuthor() && (
                 <>
-                    <h3>Update information</h3>
-
                     <Form
-                        className="mb-5"
+                        className="mb-5 mt-3"
                         noValidate
                         validated={validated}
                         onSubmit={updateUserInfoHandler}
                     >
-                        {/* <Form.Label>Email</Form.Label>
-    <Form.Control type="text" defaultValue={user.email} ref={userEmailRef} />
-    <Form.Label>Current Password</Form.Label>
-
-    <Form.Control
-        type="password"
-        defaultValue={user.password}
-        ref={userCurrentPasswordRef}
-    />
-    <Form.Label>New Password</Form.Label>
-
-    <Form.Control type="password" defaultValue={user.email} ref={userNewPasswordRef} /> */}
-
-                        <Form.Group className="mb-3" controlId="username">
-                            <Form.Label>Email: (current: {user.email})</Form.Label>
-                            <Form.Control type="text" ref={userEmailRef} />
+                        <Form.Group className="mb-4" controlId="username">
+                            <Form.Label className="font-medium">Update email</Form.Label>
+                            <Form.Control
+                                type="text"
+                                ref={userEmailRef}
+                                placeholder="john@doe.com"
+                            />
                             <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                             <Form.Control.Feedback type="invalid">
                                 Email is required!
                             </Form.Control.Feedback>
+                            <span className="text-muted text-sm">
+                                Your current email address: {user.email}
+                            </span>
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="currentPassword">
-                            <Form.Label>Current Password</Form.Label>
+                        <Form.Group className="mb-4" controlId="newPassword">
+                            <Form.Label className="font-medium">Update password</Form.Label>
+                            <InputGroup className="mb-2">
+                                <Form.Control
+                                    type={showNewPassword ? 'text' : 'password'}
+                                    ref={userNewPasswordRef}
+                                />
+                                <InputGroupText onClick={() => setShowNewPassword(show => !show)}>
+                                    {showNewPassword ? <Visibility /> : <VisibilityOff />}
+                                </InputGroupText>
+                                <Form.Control.Feedback type="valid">
+                                    Looks good!
+                                </Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    Password is required!
+                                </Form.Control.Feedback>
+                            </InputGroup>
+                            <span className="text-muted text-sm">Your new password.</span>
+                        </Form.Group>
+
+                        <Form.Group className="mb-4" controlId="currentPassword">
+                            <Form.Label className="font-medium">Current password</Form.Label>
                             <InputGroup className="mb-2">
                                 <Form.Control
                                     type={showCurrentPassword ? 'text' : 'password'}
@@ -124,31 +157,12 @@ const UserUpdateInfoTab = ({ user }) => {
                                     Password is required!
                                 </Form.Control.Feedback>
                             </InputGroup>
+                            <span className="text-muted text-sm">
+                                Enter your current password to confirm the changes.
+                            </span>
                         </Form.Group>
 
-                        {/* TODO: only allow changing password if newpassword !== oldPassword */}
-                        {/* STYLING: each info is a box */}
-                        <Form.Group className="mb-3" controlId="newPassword">
-                            <Form.Label>New Password</Form.Label>
-                            <InputGroup className="mb-2">
-                                <Form.Control
-                                    type={showNewPassword ? 'text' : 'password'}
-                                    ref={userNewPasswordRef}
-                                    // required
-                                />
-                                <InputGroupText onClick={() => setShowNewPassword(show => !show)}>
-                                    {showNewPassword ? <Visibility /> : <VisibilityOff />}
-                                </InputGroupText>
-                                <Form.Control.Feedback type="valid">
-                                    Looks good!
-                                </Form.Control.Feedback>
-                                <Form.Control.Feedback type="invalid">
-                                    Password is required!
-                                </Form.Control.Feedback>
-                            </InputGroup>
-                        </Form.Group>
-
-                        <PrimaryBlackButton>Update</PrimaryBlackButton>
+                        <PrimaryBlackButton>Update user info</PrimaryBlackButton>
                     </Form>
                 </>
             )}

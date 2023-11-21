@@ -1,23 +1,14 @@
-[x] change title on every page
-[x] favicon
-[x] default campground image
+[x] change title on every page [x] favicon [x] default campground image
 
-[x] pagination
-[x] cluster map popup
-[x] clicking on campground bug => FIXED: SET closeOnClick={false} on Popup
+[x] pagination [x] cluster map popup [x] clicking on campground bug => FIXED: SET
+closeOnClick={false} on Popup
 
-[x] explore 102 campgrounds -> make catchy title text
-[x] style Campground page
-[x] share button -> modal
+[x] explore 102 campgrounds -> make catchy title text [x] style Campground page [x] share button ->
+modal
 
-[x] style Campground page
-[x] modal elements
-[x] QR payment
+[x] style Campground page [x] modal elements [x] QR payment
 
-[x] share modal
-[x] design web flows + ui
-[x] review box time
-[x] fix edit button
+[x] share modal [x] design web flows + ui [x] review box time [x] fix edit button
 
 [x] reusable modal
 
@@ -25,18 +16,14 @@
 
 [x] replace confirm popups with modals
 
-[x] fix reservation calculations
-[x] alerts fk up the UI -> replace important ones with snackbars
+[x] fix reservation calculations [x] alerts fk up the UI -> replace important ones with snackbars
 
-[x] login screen ui
-[x] register screen ui
-[x] reservation modal
+[x] login screen ui [x] register screen ui [x] reservation modal
 
 [x] reset password page
 
-[x] pagination color
-[x] Login to add your review text
-[] mobile pay screen: user must enter correct password to pay
+[x] pagination color [x] Login to add your review text [x] mobile pay screen: user must enter
+correct password to pay
 
 [] campgrounds you may like (random)
 
@@ -44,9 +31,8 @@
 
 [x] Edit + new campground pages
 
-[x] Campground Thumbnail grid
-[x] campground marker style
-[x] clustermap error: try using useEffect to reset state for popup
+[x] Campground Thumbnail grid [x] campground marker style [x] clustermap error: try using useEffect
+to reset state for popup
 
 [x] map preview in edit and new campground
 
@@ -58,46 +44,35 @@
 
 // note on edit page:
 
-uploading data:
-{
-    ...
-    current images array[]
-    new images[] to updload
-    images[] to delete -> soft delete -> user click on delete = dont delete, just add to this array and blur image 
-}
+uploading data: { ... current images array[] new images[] to updload images[] to delete -> soft
+delete -> user click on delete = dont delete, just add to this array and blur image }
 
 if possible: can use 1 array to preview / edit images. or just use 2 arrays :/
 
-[x] fix DraggableImage type
-[x] fix editcampground map
+[x] fix DraggableImage type [x] fix editcampground map
 
 [x] finish edit campground
 
 [x] error page
 
-PROBLEMS:
-[FIXED] - check session / cookies from the back end. No sessionId (connect.sid) is set on the browser. Using proxy server DOES work for some reason :/ ?
-[FIXED] - cannot enter path directly into browser e.g. site.com/login. Have to use router?
+PROBLEMS: [FIXED] - check session / cookies from the back end. No sessionId (connect.sid) is set on
+the browser. Using proxy server DOES work for some reason :/ ? [FIXED] - cannot enter path directly
+into browser e.g. site.com/login. Have to use router?
 
 [FIXED] - Another problem: EditCampground -> request to mapbox api is blocked by CORS policy
 
-[] style navbar on mobile
-[] SEO meta tags
-[] sitemap, robots.txt or sth similar for SEO
+[x] style navbar on mobile [] SEO meta tags [] sitemap, robots.txt or sth similar for SEO
 
-[] improve navbar navigation in mobile view
-[x] change /user paths to /users
+[] improve navbar navigation in mobile view [x] change /user paths to /users
 
-[x] finish reservation
-RESERVATION TODOS:
-*need heavy works on <Reservation />
+[x] finish reservation RESERVATION TODOS: \*need heavy works on <Reservation />
 
-- navigate to /reservations/:id
-- rename resv page
-- change api endpoints
+-   navigate to /reservations/:id
+-   rename resv page
+-   change api endpoints
 
-- /reservations/:id
-- /reservations/:id/confirm -> mobile view, rename this component
+-   /reservations/:id
+-   /reservations/:id/confirm -> mobile view, rename this component
 
 [x] Checkout page
 
@@ -105,13 +80,14 @@ RESERVATION TODOS:
 
 [x] less padding for NewCampground on mobile
 
-[] https://stackoverflow.com/questions/36904185/react-router-scroll-to-top-on-every-transition
+[x] https://stackoverflow.com/questions/36904185/react-router-scroll-to-top-on-every-transition
 
-[x] add subtotal to reservation 
-and modal + checkout page
+[x] add subtotal to reservation and modal + checkout page
 
-[x] implement scroll to top on page navigation with either scroll to top or scroll restorartion component 
-+ take note
+[x] implement scroll to top on page navigation with either scroll to top or scroll restorartion
+component
+
+-   take note
 
 [x] different hover colors/effects for primary and secondary buttons
 
@@ -129,17 +105,13 @@ and modal + checkout page
 
 [] profile page TODOs
 
-[] Navbar follow FB style
-
 [] Display Warning for Unsaved Form Data on Page Exit
 https://claritydev.net/blog/display-warning-for-unsaved-form-data-on-page-exit
 
 [x] owned
 
-[] remove endpoint to reservation page (and page component)
-[] different font for search bar
-[x] Delete Review modal
-[] show length in user's fav and owned campgrounds
+[] remove endpoint to reservation page (and page component) [] different font for search bar [x]
+Delete Review modal [] show length in user's fav and owned campgrounds
 
 [] populate data
 
@@ -148,10 +120,19 @@ https://claritydev.net/blog/display-warning-for-unsaved-form-data-on-page-exit
 [x] Save review? modal
 
 [x] navbar design:
-- thu hep khoang cach from top to map
-- always show search bar on mobile (2 rows)
-- replace nav dropdown with simple dropdown to avoid changing nav height
+
+-   thu hep khoang cach from top to map
+-   always show search bar on mobile (2 rows)
+-   replace nav dropdown with simple dropdown to avoid changing nav height
 
 [] fix clicking on search icon should focus the input
 
 [x] default image on map view
+
+[] Error. User not found -> redirect back to Home with alert
+
+[x] show total campgrounds in homepage (1-12 of 24 campgrounds)
+
+[] campground image custom modal
+
+[] styling footer

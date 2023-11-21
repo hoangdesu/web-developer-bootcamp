@@ -80,7 +80,7 @@ const App: React.FunctionComponent = () => {
         return <ErrorBoundary err={campgroundsQuery.error} />;
     }
 
-    // pagination:
+    // Pagination:
     // page 1: 0 - 11
     // page 2: 12 - 23
     // page 3: 24 - 35
@@ -90,6 +90,17 @@ const App: React.FunctionComponent = () => {
         const startingIndex = (value - 1) * itemsPerPage;
         const endingIndex = startingIndex + itemsPerPage;
         setFilteredCampgroundList(campgrounds.slice(startingIndex, endingIndex));
+    };
+
+    const getPaginationInfo = () => {
+        if (campgrounds.length === 0) return '0 campgrounds';
+        const startingVal = (page - 1) * itemsPerPage;
+        const endingVal =
+            startingVal + itemsPerPage < campgrounds.length
+                ? startingVal + itemsPerPage
+                : campgrounds.length;
+
+        return `${startingVal + 1}-${endingVal} of ${campgrounds.length} campgrounds`;
     };
 
     return (
@@ -122,6 +133,7 @@ const App: React.FunctionComponent = () => {
                                 onChange={handlePageChange}
                             />
                         </ThemeProvider>
+                        <p className="pt-3 text-muted text-xs">{getPaginationInfo()}</p>
                     </div>
                 </Col>
             </Row>

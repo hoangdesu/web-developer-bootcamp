@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import { Navbar as BootstrapNavbar, Nav, Button, NavDropdown, Collapse } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -43,7 +43,6 @@ const Navbar: React.FunctionComponent = () => {
     const appContext = useContext(AppContext);
     const { width: windowWidth } = useWindowDimensions();
     const [showSearchBox, setShowSearchBox] = useState(false);
-    const ref = React.createRef();
 
     const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
 
@@ -95,7 +94,7 @@ const Navbar: React.FunctionComponent = () => {
                                 className="dropdown-item active:bg-gray-300 active:text-primary-dark-color"
                             >
                                 {currentUser?.username}
-                                <div className="text-muted text-sm">View your profile </div>
+                                <div className="text-muted text-sm">View your account</div>
                             </Link>
                             <Link
                                 to={'/campgrounds/new'}

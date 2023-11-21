@@ -59,7 +59,3 @@ body {
     color: var(--primary-color);
     background-color: var(--primary-accent-color);
 }
-
-#sort-dropdown a[aria-selected="true"] {
-    background-color: var(--primary-accent-color) !important;
-}

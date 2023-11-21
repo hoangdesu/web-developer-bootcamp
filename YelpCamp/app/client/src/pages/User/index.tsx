@@ -13,6 +13,7 @@ import UserReservationsTab from './UserReservationsTab';
 import UserOwnedCampgroundsTab from './UserOwnedCampgroundsTab';
 import SecondaryTransparentButton from '../../components/Buttons/SecondaryTransparentButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ErrorBoundary from '../ErrorBoundary';
 
 export async function loader({ params }) {
     return { username: params.username };
@@ -163,15 +164,12 @@ const User = () => {
 
     if (isLoading) return <Loading />;
 
-    if (error) return <p>Error. User not found</p>;
+    if (error) return <ErrorBoundary err={error} />;
 
     console.log('user', user);
 
-    /* TODO: ADD AUTH TO ONLY ALLOW CORRECT LOGGEDIN USER TO SEE CERTAIN PARTS OF THE PAGE. HIDE SOME PARTS (RESERVATIONS) FROM OUTSIDER */
-
     return (
         <PageContainer>
-            {/* NEW UI */}
             {/* Recreate this: https://ui.shadcn.com/examples/forms/account */}
             <Container>
                 {appContext.currentUser?.username === user.username ? (
@@ -183,7 +181,6 @@ const User = () => {
                                         <li
                                             key={tab.id}
                                             onClick={() => {
-                                                // setActiveTab(tab.id as ActiveTabType);
                                                 setSearchParams({ tab: tab.id }, { replace: true });
                                             }}
                                             className={`${
@@ -194,7 +191,6 @@ const User = () => {
                                         </li>
                                     ))}
                                 </ul>
-                                {/* debug area */}
                                 <div className="mt-[200px]">
                                     <SecondaryTransparentButton onClick={() => navigate(-1)}>
                                         <span className="flex items-center justify-center gap-1">
@@ -210,7 +206,6 @@ const User = () => {
                                         <li
                                             key={tab.id}
                                             onClick={() => {
-                                                // setActiveTab(tab.id as ActiveTabType);
                                                 setSearchParams({ tab: tab.id }, { replace: true });
                                             }}
                                             className={`${
@@ -228,7 +223,7 @@ const User = () => {
                         <div className="content">
                             {!searchParams.get('tab') ||
                                 (searchParams.get('tab') === 'info' && (
-                                    <UserUpdateInfoTab user={user} />
+                                    <UserUpdateInfoTab user={user} refetch={refetch} />
                                 ))}
 
                             {searchParams.get('tab') === 'owned' && (
@@ -256,7 +251,3 @@ const User = () => {
 };
 
 export default User;
-
-// tutorial:
-// https://codepen.io/hoangdesu/pen/poqpLKP
-// https://www.youtube.com/watch?v=rHdfxfuC_8U&ab_channel=WEBCIFAR

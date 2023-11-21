@@ -59,10 +59,6 @@ const Search = () => {
         setSortText('');
     }, [queryString, searchParams, queryValue]);
 
-    if (isLoading) return <Loading />;
-
-    if (error) return <ErrorBoundary />;
-
     // handle sort options
     useEffect(() => {
         switch (sortOptions) {
@@ -88,6 +84,10 @@ const Search = () => {
                 break;
         }
     }, [sortOptions]);
+
+    if (isLoading) return <Loading />;
+
+    if (error) return <ErrorBoundary />;
 
     return (
         <PageContainer>

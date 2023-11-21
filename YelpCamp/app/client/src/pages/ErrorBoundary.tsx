@@ -1,10 +1,9 @@
 import React, { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Alert, Button } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 
 import PageContainer from '../components/PageContainer';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
-import { AxiosError } from 'axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface ErrorBoundaryProps {
@@ -18,12 +17,19 @@ const ErrorBoundary: FunctionComponent<ErrorBoundaryProps> = ({ err = null }) =>
         <PageContainer>
             <Alert variant="danger">
                 <Alert.Heading>
-                    {err?.message || err?.data || err || 'Something went wrong'}
+                    {`Error: ${err?.response.data}` ||
+                        err?.message ||
+                        err?.data ||
+                        err ||
+                        'Something went wrong'}
                 </Alert.Heading>
-                <p>{err?.stack || '😕'}</p>
+                <p>{'😕'}</p>
             </Alert>
 
-            <PrimaryBlackButton onClick={() => navigate('/')}>
+            <PrimaryBlackButton
+                onClick={() => navigate('/')}
+                className="flex flex-row items-center justify-center"
+            >
                 <ArrowBackIcon /> Back to Homepage
             </PrimaryBlackButton>
         </PageContainer>
