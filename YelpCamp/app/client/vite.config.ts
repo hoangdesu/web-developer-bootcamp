@@ -16,7 +16,7 @@ export default ({ mode }) => {
             host: true,
             port: parseInt(process.env.PORT),
             https: false,
-            open: true,
+            open: !process.env.DOCKER ? true : false,
             watch: {
                 usePolling: true,
             },

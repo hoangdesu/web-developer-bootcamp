@@ -10,7 +10,8 @@
     "build:nocheck": "vite build --mode prod",
     "preview": "vite preview --mode dev",
     "start:dev": "yarn run dev",
-    "start:prod": "vite --mode prod"
+    "start:prod": "vite --mode prod",
+    "start:dev:docker": "vite --mode docker"
   },
   "dependencies": {
     "@bitjson/qr-code": "^1.0.2",
@@ -29,7 +30,6 @@
     "react-gesture-responder": "^2.1.0",
     "react-grid-dnd": "^2.1.2",
     "react-map-gl": "^7.1.4",
-    "react-qrcode-logo": "^2.9.0",
     "react-query": "^3.39.3",
     "react-router-dom": "6"
   },

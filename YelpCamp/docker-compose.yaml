@@ -1,28 +1,55 @@
+version: '3.9'
+
 services:
-  client:
-    build:
-      context: ./app/client
-      # dockefile: Dockerfile
+  mongo:
+    image: mongo:6.0
+    restart: always
+    container_name: yelpcamp-mongodb
     ports:
-      - "5173:5173"   
+      - "27017:27017"
     volumes:
-      - .:/app
+      - yelpcamp-db:/data/db
+    networks:
+      - app-network
+
+  server:
+    build: ./app/server
+    # image: hoangdesu/yelpcamp-mern-typescript:latest
+    image: yelpcamp-server:latest
+    container_name: yelpcamp-server-container
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./app/server:/app/server
+      - /app/server/node_modules
+    env_file: ./app/server/.env.docker
+    environment:
+      - NODE_ENV=dev
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+      
+  client:
+    build: ./app/client
+    image: yelpcamp-client:latest
+    container_name: yelpcamp-client-container
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./app/client/.env
+      - ./app/client/.env.docker
+    networks:
+      - app-network
+    stdin_open: true
+    volumes:
+      - ./app/client:/app/client
       - /app/client/node_modules
-    # depends_on:
-    #   - db
-  # server:
-  #   build:
-  #     context: ./app/server
-  #     dockerfile: Dockerfile
-  #   ports:
-      # - "3001:3001"
-    # depends_on:
-      # - db
-#   db:
-#     volumes:
-#       - yelp-camp-db:/data/db
-#     image: mongo:latest
-#     ports:
-#       - "27017:27017" 
-# volumes:
-#   yelp-camp-db:
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+  yelpcamp-db:
+    driver: local

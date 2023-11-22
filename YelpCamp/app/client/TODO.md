@@ -140,3 +140,7 @@ Delete Review modal [x] show length in user's fav and owned campgrounds
 [] styling footer
 
 [x] same design in other tabs (underline + subtitle)
+
+[] Empty reservations
+[] User info input spacings
+[] Server running at http://localhost:
