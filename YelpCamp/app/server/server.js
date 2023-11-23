@@ -1,4 +1,5 @@
 const path = require('path');
+const os = require('os');
 if (!process.env.NODE_ENV) process.env.NODE_ENV = 'dev';
 require('dotenv').config({ path: path.join(__dirname, `./.env.${process.env.NODE_ENV}`) });
 const express = require('express');
@@ -43,7 +44,13 @@ db.once('open', () => {
     console.log(`💾 [mongoose] Connected to db "${process.env.DB_NAME}"`);
     // ensure connection to db before starting for serverless functions
     app.listen(PORT, () => {
-        console.log(`🚀 [${process.env.NODE_ENV}] Server running at http://localhost:${PORT}`);
+        if (process.env.NODE_ENV === 'dev') {
+            console.log(`🚀 [${process.env.NODE_ENV}] Server running at http://localhost:${PORT}`);
+        } else {
+            console.log(
+                `🚀 [${process.env.NODE_ENV}] Server running at http://${os.hostname()}:${PORT}`,
+            );
+        }
     });
 });
 

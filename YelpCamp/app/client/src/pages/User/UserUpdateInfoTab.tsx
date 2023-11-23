@@ -16,7 +16,7 @@ const InputGroupText = styled(InputGroup.Text)`
 `;
 
 interface InfoTabProps {
-    user: User;
+    user: User & { _id: string };
     refetch: () => void;
 }
 
@@ -73,9 +73,8 @@ const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
         <div>
             <div>
                 <h1>User info</h1>
-                <p className="text-muted">Update your email. Reset your password.</p>
+                <p className="text-muted">Update your email and password.</p>
             </div>
-
             <hr />
             <div>
                 <p>
@@ -90,7 +89,7 @@ const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
             {isAuthor() && (
                 <>
                     <Form
-                        className="mb-5 mt-3"
+                        className="mb-5 mt-3 max-w-[500px]"
                         noValidate
                         validated={validated}
                         onSubmit={updateUserInfoHandler}
@@ -113,7 +112,7 @@ const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
 
                         <Form.Group className="mb-4" controlId="newPassword">
                             <Form.Label className="font-medium">Update password</Form.Label>
-                            <InputGroup className="mb-2">
+                            <InputGroup>
                                 <Form.Control
                                     type={showNewPassword ? 'text' : 'password'}
                                     ref={userNewPasswordRef}
@@ -133,7 +132,7 @@ const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
 
                         <Form.Group className="mb-4" controlId="currentPassword">
                             <Form.Label className="font-medium">Current password</Form.Label>
-                            <InputGroup className="mb-2">
+                            <InputGroup>
                                 <Form.Control
                                     type={showCurrentPassword ? 'text' : 'password'}
                                     ref={userCurrentPasswordRef}

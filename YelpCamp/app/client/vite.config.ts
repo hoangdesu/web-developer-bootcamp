@@ -9,6 +9,12 @@ dns.setDefaultResultOrder('verbatim');
 export default ({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd(), '') };
 
+    const { format } = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Ho_Chi_Minh',
+        dateStyle: 'medium',
+        timeStyle: 'short',
+    });
+
     return defineConfig({
         // plugins: [react(), mkcert()],
         plugins: [react()],
@@ -31,7 +37,7 @@ export default ({ mode }) => {
             // },
         },
         define: {
-            __BUILD_TIMESTAMP__: JSON.stringify(new Date().toLocaleString()),
+            __BUILD_TIMESTAMP__: JSON.stringify(format(new Date())),
         },
         // base: '/web-developer-bootcamp/' // only used for production, will fukup dev server
     });

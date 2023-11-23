@@ -19,7 +19,7 @@ const PageContainer: React.FunctionComponent<PageContainerProps> = ({ children }
     }, []);
 
     return (
-        <div className="d-flex flex-column min-h-screen bg-primary-color mb-[200px] z-10">
+        <div className="d-flex flex-column min-h-screen bg-primary-color mb-[356px] md:mb-[175px] z-10">
             <Navbar />
             <Container className="my-[2em] px-[5%]">
                 <FlashAlert />

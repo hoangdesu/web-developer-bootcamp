@@ -142,5 +142,9 @@ Delete Review modal [x] show length in user's fav and owned campgrounds
 [x] same design in other tabs (underline + subtitle)
 
 [] Empty reservations
-[] User info input spacings
-[] Server running at http://localhost:
+[x] User info input spacings
+[x] Server running at http://localhost:
+[] resv id?
+[] footer
+
+[] campground location text reposition
