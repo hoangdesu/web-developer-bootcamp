@@ -148,3 +148,9 @@ Delete Review modal [x] show length in user's fav and owned campgrounds
 [] footer
 
 [] campground location text reposition
+
+[] error boundary page 
+
+[x] fix footer on mobile
+
+[] TypeScript MERN stack maybe another text?

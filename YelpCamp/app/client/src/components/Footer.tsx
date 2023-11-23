@@ -50,7 +50,7 @@ const Footer: React.FunctionComponent = () => {
         <footer className="footer bg-dark fixed bottom-0 w-full z-[-1] py-4">
             <Container className="px-[5%] text-gray-400 flex flex-col gap-4">
                 <div className="grid grid-cols-1 gap-4 place-items-center md:grid-cols-3">
-                    <div className="flex flex-col items-center md:items-start h-full">
+                    <div className="flex flex-col items-center md:items-start md:h-full">
                         <h5 className="text-primary-color inline">YelpCamp</h5>
                         <div className="text-sm">(TypeScript MERN stack)</div>
                         <Link
@@ -60,8 +60,8 @@ const Footer: React.FunctionComponent = () => {
                             About
                         </Link>
                     </div>
-                    <div className="flex flex-col items-center md:items-start h-full">
-                        <h6 className="text-primary-color inline">Connect</h6>
+                    <div className="flex flex-col items-center md:items-start md:h-full">
+                        <h5 className="text-primary-color inline">Connect</h5>
                         <IconsContainer>
                             <Tooltip title="Github" placement="top">
                                 <a
@@ -98,7 +98,7 @@ const Footer: React.FunctionComponent = () => {
                             </Tooltip>
                         </IconsContainer>
                     </div>
-                    <div className="flex flex-col items-center md:items-start h-full">
+                    <div className="flex flex-col items-center md:items-start md:h-full">
                         <button
                             className="nav-link hover:text-white flex flex-row items-center gap-1 mb-3"
                             onClick={scrollToTop}
