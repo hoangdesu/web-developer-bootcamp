@@ -1,13 +1,12 @@
-import React, { useState, useRef, useContext, useEffect, Suspense } from 'react';
+import React, { useState, useContext, useEffect, Suspense } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import axios from '../config/yelpcampAxios';
 
 import AppContext from '../store/app-context';
 
-import { Form, Button, InputGroup, Spinner } from 'react-bootstrap';
+import { Form, InputGroup, Spinner } from 'react-bootstrap';
 import { Visibility, VisibilityOff } from '@mui/icons-material/';
-import FlashAlert from '../components/FlashAlert';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 import Logo from '../assets/logo.png';
 import ResetPwdImg from '../assets/reset-password.png';
@@ -52,7 +51,6 @@ const Container = styled.div`
 
             @media screen and (max-width: 992px) {
                 margin: 20px;
-                /* margin-bottom: 100px; */
                 flex-direction: column;
                 padding: 2rem;
             }
@@ -99,14 +97,6 @@ const ResetPassword: React.FunctionComponent = () => {
 
     useEffect(() => {
         document.title = 'YelpCamp | Reset password';
-        // const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
-        // if (currentUser) {
-        //     appContext.setAlert({
-        //         message: `Welcome back, ${currentUser.username}`,
-        //         variant: 'success',
-        //     });
-        //     navigate('/');
-        // }
     }, []);
 
     const checkMatchingHandler = (event: React.FormEvent<HTMLFormElement>) => {
@@ -130,7 +120,6 @@ const ResetPassword: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    console.log(res.data);
                     setView('reset');
                 })
                 .catch(err => {
@@ -149,7 +138,7 @@ const ResetPassword: React.FunctionComponent = () => {
         const form = event.currentTarget;
 
         if (confirmPassword !== formPassword) {
-            console.log("Passwords don't match!");
+            appContext.setSnackbar(true, "Passwords don't match", 'error');
             return;
         }
 
@@ -171,7 +160,6 @@ const ResetPassword: React.FunctionComponent = () => {
                     },
                 )
                 .then(res => {
-                    console.log(res.data);
                     appContext.setSnackbar(true, 'Your password has been reset!', 'success');
                     navigate('/login');
                 })
@@ -179,7 +167,6 @@ const ResetPassword: React.FunctionComponent = () => {
                     appContext.setCurrentUser(null);
                     setValidated(false);
                     form.reset();
-                    console.log(err.response);
                 });
         }
         setValidated(true);
@@ -187,11 +174,10 @@ const ResetPassword: React.FunctionComponent = () => {
 
     return (
         <Container>
-            <div className="w-full py-4">
-                {/* TODO: fix clicking on entire banner */}
+            <div className="py-4 flex flex-row items-center justify-center">
                 <Link
                     to="/"
-                    className="hover:text-black text-primary-dark-color flex flex-row gap-2 no-underline items-center justify-center"
+                    className="hover:text-black text-primary-dark-color gap-2 no-underline flex flex-row items-end justify-cente"
                 >
                     <img src={Logo} alt="yelpcamp-logo" className="w-[50px]" />
                     <h4 className="text-center hover-underline-animation">YelpCamp</h4>
@@ -316,12 +302,11 @@ const ResetPassword: React.FunctionComponent = () => {
                                     </InputGroup>
                                 </Form.Group>
 
-                                {/* TODO: wrong button sizes */}
-                                <div className="flex flex-row items-center justify-between gap-2 mt-4">
+                                <div className="w-full flex flex-row justify-between gap-2 mt-4">
                                     <SecondaryTransparentButton onClick={() => setView('check')}>
                                         <ArrowBackIcon />
                                     </SecondaryTransparentButton>
-                                    <PrimaryBlackButton className="flex-1">
+                                    <PrimaryBlackButton className="grow">
                                         Reset password
                                     </PrimaryBlackButton>
                                 </div>

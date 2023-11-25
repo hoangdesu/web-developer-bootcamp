@@ -76,7 +76,6 @@ export const getNextStartDays = inputStartDate => {
     const startDate = new Date(inputStartDate);
     const nextDate = new Date(startDate.getTime() + ONE_DAY);
     const nextDateStr = nextDate.toISOString().slice(0, 10);
-    // console.log(nextDateStr);
     return nextDateStr;
 };
 

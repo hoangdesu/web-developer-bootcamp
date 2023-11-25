@@ -17,7 +17,7 @@ const ErrorBoundary: FunctionComponent<ErrorBoundaryProps> = ({ err = null }) =>
         <PageContainer>
             <Alert variant="danger">
                 <Alert.Heading>
-                    {`Error: ${err?.response.data}` ||
+                    {`Error: ${err?.response?.data}` ||
                         err?.message ||
                         err?.data ||
                         err ||

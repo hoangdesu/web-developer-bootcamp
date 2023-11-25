@@ -135,7 +135,6 @@ const NewCampground: React.FunctionComponent = () => {
                 .then(res => {
                     const features: MapboxFeature[] = res.data.features;
                     setSuggestedLocations(features);
-                    // console.log('setSuggestedLocations', features);
                 })
                 .catch(err => {
                     appContext.setSnackbar(
@@ -205,7 +204,6 @@ const NewCampground: React.FunctionComponent = () => {
                     navigate(`/campgrounds/${res.data}`);
                 })
                 .catch(err => {
-                    console.log(err.response?.data);
                     appContext.setSnackbar(true, 'Error: Failed to create campground', 'error');
                     setIsUploading(false);
                 });

@@ -3,14 +3,6 @@ import styled from '@emotion/styled';
 
 const Div = styled.div`
     transform: scale(1.5);
-    // TODO: can just keep original aspect ratios, and modify in the container outside where we use this animation for better reusability
-
-    /* margin-top: 100px; */
-    /* margin-bottom: 60px; */
-    /* transform: translateY(10px); */
-
-    
-    
     .checkmark__circle {
         stroke-dasharray: 166;
         stroke-dashoffset: 166;
@@ -19,7 +11,6 @@ const Div = styled.div`
         stroke: #7ac142;
         fill: none;
         animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-        /* animation: stroke 0.7s cubic-bezier(0.65, 0, 0.45, 1) forwards; */
     }
     .checkmark {
         width: 56px;
@@ -32,14 +23,12 @@ const Div = styled.div`
         margin: 10% auto;
         box-shadow: inset 0px 0px 0px #7ac142;
         animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
-        /* animation: fill 0.5s ease-in-out 0.4s forwards, scale 0.4s ease-in-out 1s both; */
     }
     .checkmark__check {
         transform-origin: 50% 50%;
         stroke-dasharray: 48;
         stroke-dashoffset: 48;
         animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-        /* animation: stroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.9s forwards; */
     }
     @keyframes stroke {
         100% {
@@ -81,9 +70,8 @@ const CheckmarkCSSAnimation = () => {
                 checkmarkCheckRef.current.style.animationName = '';
             }, 0);
         });
-        // if (checkmarkRef.current && checkmarkCheckRef.current && checkmarkCircleRef.current) {
-        // }
     };
+
     return (
         <Div onClick={restartAnimation}>
             <svg

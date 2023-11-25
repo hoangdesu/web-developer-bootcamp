@@ -61,9 +61,7 @@ into browser e.g. site.com/login. Have to use router?
 
 [FIXED] - Another problem: EditCampground -> request to mapbox api is blocked by CORS policy
 
-[x] style navbar on mobile 
-[] SEO meta tags 
-[] sitemap, robots.txt or sth similar for SEO
+[x] style navbar on mobile [] SEO meta tags [] sitemap, robots.txt or sth similar for SEO
 
 [] improve navbar navigation in mobile view [x] change /user paths to /users
 
@@ -95,7 +93,7 @@ component
 
 [x] wording: Save vs Favorite campground
 
-[] hide scrolls on chrome windows
+[x] hide scrolls on chrome windows
 
 [x] ModalLogin should perform next action
 
@@ -122,7 +120,6 @@ Delete Review modal [x] show length in user's fav and owned campgrounds
 [x] Save review? modal
 
 [x] navbar design:
-
 -   thu hep khoang cach from top to map
 -   always show search bar on mobile (2 rows)
 -   replace nav dropdown with simple dropdown to avoid changing nav height
@@ -135,22 +132,17 @@ Delete Review modal [x] show length in user's fav and owned campgrounds
 
 [x] show total campgrounds in homepage (1-12 of 24 campgrounds)
 
-[] campground image custom modal
+[x] campground image custom modal
 
-[] styling footer
+[x] styling footer
 
 [x] same design in other tabs (underline + subtitle)
 
-[] Empty reservations
-[x] User info input spacings
-[x] Server running at http://localhost:
-[] resv id?
-[] footer
+[] Empty reservations [x] User info input spacings [x] Server running at http://localhost: [] resv
+id? [x] footer
 
 [] campground location text reposition
 
-[] error boundary page 
+[] error boundary page
 
 [x] fix footer on mobile
-
-[] TypeScript MERN stack maybe another text?

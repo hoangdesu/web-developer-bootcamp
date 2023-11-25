@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext, FormEvent } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import styled from '@emotion/styled';
 import { Campground } from '../../types';
 import { USDtoVND, getDaysBetween, getNextStartDays } from '../../helpers/campground';
@@ -23,12 +23,12 @@ interface CampgroundResvervationProps {
 }
 
 const ReserveSection = styled.div`
+    width: 100%;
+    max-width: fit-content;
     border: 1px solid rgb(221, 221, 221);
     border-radius: 8px;
     padding: 24px;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
-    width: fit-content;
-    /* max-width: fit-content; */
     background: white;
     margin-top: 20px;
 `;
@@ -106,31 +106,6 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     // input min requires date to be in yyyy-mm-dd format
     // Note that en-CA is a locale, not a timezone. Canada uses the YYYY-MM-DD format.
     const minStartDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
-
-    const openModalConfirmReservation = () => {
-        const reservation = {
-            bookedBy: appContext.currentUser.id,
-            campground: campground._id,
-            nights: nights,
-            checkIn: inputStartDate,
-            checkOut: inputEndDate,
-            guests: guests,
-            totalAmount: fees.totalAfterDiscount,
-            discountCode: discount.code || '',
-        };
-
-        appContext.setModal({
-            open: true,
-            content: (
-                <ModalConfirmReservation
-                    reservation={reservation}
-                    campground={campground}
-                    discountPercentage={discount.percentage}
-                />
-            ),
-            requiresLoggedIn: true,
-        });
-    };
 
     const reserveHandler = () => {
         if (!inputStartDate) {
@@ -254,7 +229,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
     return (
         <ReserveSection>
             {/* PRICE TAG */}
-            <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-row justify-between items-baseline">
                 <p className="">
                     <span className="font-bold text-2xl">${campground.price}</span>
                     <span> night</span>
@@ -282,7 +257,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                             }
                             setInputStartDate(e.currentTarget.value);
                         }}
-                        className="min-w-[120px]"
+                        className="w-[120px] md:w-[160px]"
                         ref={checkinDateRef}
                     />
                 </div>
@@ -294,7 +269,7 @@ const CampgroundReservation: React.FC<CampgroundResvervationProps> = ({ campgrou
                         onChange={e => {
                             setInputEndDate(e.currentTarget.value);
                         }}
-                        className="min-w-[120px]"
+                        className="w-[120px] md:w-[160px]"
                         ref={checkoutDateRef}
                     />
                 </div>

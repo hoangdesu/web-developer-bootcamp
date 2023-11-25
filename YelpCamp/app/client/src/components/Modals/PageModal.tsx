@@ -21,6 +21,10 @@ const style = {
     overflowY: 'scroll',
     overflowX: 'hidden',
 
+    '::-webkit-scrollbar': {
+        display: 'none',
+    },
+
     '@keyframes slide-down': {
         from: {
             opacity: 0,
@@ -65,10 +69,6 @@ const index = () => {
     if (appContext.modal.open && !appContext.modal.content) {
         return <CircularProgress color="success" />;
     }
-
-    // if (appContext.modal.requiresLoggedIn && !appContext.currentUser) {
-    //     content = <ModalLogin />;
-    // }
 
     return (
         <Modal

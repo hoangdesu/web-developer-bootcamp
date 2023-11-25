@@ -68,10 +68,6 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({ reservation, campground
                 ? `${reservation.discount.code} (${reservation.discount.percentage}%)`
                 : '-',
         },
-        {
-            title: 'Total amount',
-            data: `$${Number(reservation.totalAmount).toFixed(2)}`,
-        },
     ];
 
     const makeReservation = () => {
@@ -97,11 +93,16 @@ const ModalConfirmReservation: React.FC<ModalProps> = ({ reservation, campground
                                     }`}
                                 >
                                     {data}
-                                    {/* TODO: total amount BOLD */}
                                 </span>
                             </td>
                         </tr>
                     ))}
+                    <tr>
+                        <td>Total amount</td>
+                        <td className="font-bold text-lg">
+                            ${Number(reservation.totalAmount).toFixed(2)}
+                        </td>
+                    </tr>
                 </tbody>
             </Table>
             <div className="w-full flex flex-row gap-2 mt-3">

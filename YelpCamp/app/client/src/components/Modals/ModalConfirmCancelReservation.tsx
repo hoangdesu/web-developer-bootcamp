@@ -13,7 +13,6 @@ const ModalConfirmCancelReservation = ({ resv }) => {
         axios
             .post(`/api/v1/reservations/${resv._id}/cancel`)
             .then(res => {
-                console.log(res.data);
                 appContext.setSnackbar(true, 'Your reservation has been cancelled', 'success');
                 navigate('/');
             })

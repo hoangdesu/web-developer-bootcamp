@@ -54,14 +54,6 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
         })),
     };
 
-    // imperative onclick
-    // mapRef.current?.on('click', 'unclustered-point', function (e) {
-    //     console.log('unclustered:', e.features?.[0].geometry.coordinates);
-    //     new mapboxgl.Popup({ offset: 20 })
-    //         .setLngLat(e.features?.[0].geometry.coordinates)
-    //         .setHTML(`hi`);
-    // });
-
     const onMapClick = (event: mapboxgl.MapMouseEvent | any) => {
         const feature = event.features[0];
 
@@ -96,19 +88,6 @@ const ClusterMap: React.FunctionComponent<ClusterMapProps> = ({ campgrounds }) =
             });
         }
     };
-
-    const onMove = useCallback(evt => {
-        setViewState(prev => ({ ...prev, ...evt.viewState }));
-    }, []);
-
-    // imperative way of setting cursor
-    // mapRef.current?.on('mouseenter', 'clusters', function () {
-    //     mapRef.current!.getCanvas().style.cursor = 'pointer';
-    // });
-
-    // mapRef.current?.on('mouseleave', 'clusters', function () {
-    //     mapRef.current!.getCanvas().style.cursor = '';
-    // });
 
     // setting cursors :))
     const onMouseEnter = useCallback(() => setCursor('pointer'), []);

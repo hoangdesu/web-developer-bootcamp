@@ -117,10 +117,8 @@ const SearchBoxAnimatedCarret = ({ showSearchBox }) => {
 
     const ref = useRef(null);
 
-    // TODO: fix clicking on search icon should focus the input
     useEffect(() => {
         if (ref.current && showSearchBox) {
-            console.log('focus');
             ref.current?.focus();
         }
     }, [showSearchBox]);

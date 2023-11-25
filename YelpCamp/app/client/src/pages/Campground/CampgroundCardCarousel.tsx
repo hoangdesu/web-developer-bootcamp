@@ -1,22 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { Card, Carousel, Image } from 'react-bootstrap';
 import { Campground } from '../../types';
-import AppContext from '../../store/app-context';
-import { Box, Modal } from '@mui/material';
+import { Modal } from '@mui/material';
 import YelpcampLogo from '../../assets/logo-original.png';
+import CloseIcon from '@mui/icons-material/Close';
 
 const ImageThumbnails = styled.div`
     display: flex;
     flex-direction: row;
-    /* justify-content: center; */
-    /* flex-wrap: wrap; */
     align-items: center;
     margin-top: 8px;
     gap: 6px;
-    /* opacity: 0.8; */
     width: 100%;
-    overflow: scroll;
+    overflow-x: scroll;
 
     & img {
         transition: 0.3s all;
@@ -35,41 +32,37 @@ interface CarouselProps {
     campground: Campground;
 }
 
-const style = {
-    position: 'fixed',
-    top: '5vh',
-    left: 'calc(50% - (1500px/2))',
-    transform: 'translate(-50%, -50%)',
-    height: '200vh',
-    // width: '500px',
-    // backgroundColor: 'white',
-    padding: '3rem',
-    // borderRadius: '16px',
-    // boxShadow: '0 2px 8px rgba(6, 5, 5, 0.25)',
-    zIndex: '100',
-    animation: 'slide-down 300ms ease-out forwards',
-    outline: 'none',
-    // overflow: 'scroll',
+const ModalContainer = styled.div`
+    img {
+        height: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 80%;
+        max-width: 80%;
+        object-fit: contain;
+    }
 
-    '@keyframes slide-down': {
-        from: {
-            opacity: 0,
-            // transform: 'translateY(3rem)',
-        },
-        to: {
-            opacity: '1',
-            transform: 'translate(0)',
-        },
-    },
+    #close {
+        position: fixed;
+        top: 1em;
+        right: 1em;
+        color: white;
+        font-size: 2.5em;
+        background: #5f5a5a;
+        border-radius: 50%;
+        padding: 8px;
+        transition: all 0.2s ease;
+    }
 
-    '@media (max-width: 600px)': {
-        left: 'calc(50% - (90%/2))',
-        width: '90%',
-    },
-};
+    #close:hover {
+        cursor: pointer;
+        background: #7b7272;
+    }
+`;
 
 const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campground }) => {
-    const appContext = useContext(AppContext);
     const [activeIndex, setActiveIndex] = useState<number>(0);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,7 +72,6 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
         setActiveIndex(index);
     };
 
-    // TODO: clicking on each image (OR A FULLSCREEN ICON) will show big size in CUSTOM MODAL
     return (
         <section className="mb-5">
             <Carousel activeIndex={activeIndex} onSelect={changeImageHandler}>
@@ -123,17 +115,26 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
                 ))}
             </ImageThumbnails>
             <Modal
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+                aria-labelledby="image-modal"
+                aria-describedby="image-modal"
                 open={isModalOpen}
                 onClose={() => {
                     setIsModalOpen(false);
                 }}
             >
-                <Box sx={style}>
-                    <img src={image} alt="" width={'1500px'} />
-                    {/* use a % number here */}
-                </Box>
+                <ModalContainer>
+                    <div onClick={() => setIsModalOpen(false)}>
+                        <CloseIcon id="close" />
+                    </div>
+                    <img
+                        src={image}
+                        alt="Campground image"
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src = YelpcampLogo;
+                        }}
+                    />
+                </ModalContainer>
             </Modal>
         </section>
     );

@@ -25,7 +25,6 @@ const ModalSaveReviewChange: React.FC<ModalProps> = ({
 }) => {
     const appContext = useContext(AppContext);
 
-    // TODO: work on this mtfk
     const saveReviewHandler = () => {
         axios
             .put(

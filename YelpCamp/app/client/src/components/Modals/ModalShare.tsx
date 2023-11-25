@@ -32,7 +32,6 @@ const ModalShare = () => {
     }
 
     const copyText = async () => {
-        console.log('location.href', location.href);
         try {
             await copyToClipboard(location.href);
             appContext.setModal({ open: false, content: null });

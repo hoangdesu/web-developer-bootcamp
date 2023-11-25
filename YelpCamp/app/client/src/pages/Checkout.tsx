@@ -72,7 +72,6 @@ const Checkout = () => {
         const paymentTimer = setInterval(() => {
             axios.get(`/api/v1/reservations/${reservationId}/status`).then(res => {
                 const { data: status } = res;
-                console.log('STATUS:', status);
                 if (status === 'PAID') {
                     refetch();
                     appContext.setModal({

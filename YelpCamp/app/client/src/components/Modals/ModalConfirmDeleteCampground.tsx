@@ -35,7 +35,6 @@ const ModalConfirmDeleteCampground: React.FC<ModalProps> = ({ campground }) => {
                 navigate('/');
             })
             .catch(err => {
-                console.log(err);
                 appContext.setSnackbar(true, 'Error: Failed to delete your campground', 'error');
                 setIsDeleting(false);
             });

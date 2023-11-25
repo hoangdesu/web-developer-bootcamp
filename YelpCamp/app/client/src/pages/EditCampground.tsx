@@ -584,7 +584,6 @@ const EditCampground: React.FunctionComponent = () => {
                                 </PrimaryBlackButton>
                             )}
 
-                            {/* TODO: modal confirm cancel: you have unsaved edit */}
                             <SecondaryTransparentButton onClick={() => navigate(-1)} type="button">
                                 Cancel
                             </SecondaryTransparentButton>
