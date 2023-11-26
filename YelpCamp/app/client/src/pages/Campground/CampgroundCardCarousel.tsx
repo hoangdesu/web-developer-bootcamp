@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { Card, Carousel, Image } from 'react-bootstrap';
 import { Campground } from '../../types';
 import { Modal } from '@mui/material';
 import YelpcampLogo from '../../assets/logo-original.png';
 import CloseIcon from '@mui/icons-material/Close';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 const ImageThumbnails = styled.div`
     display: flex;
@@ -72,10 +74,34 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
         setActiveIndex(index);
     };
 
+    const changeImageOnKeyPressed = (type: 'next' | 'prev') => {
+        if (type === 'next') {
+            if (activeIndex < campground.images.length - 1) {
+                setActiveIndex(activeIndex + 1);
+            }
+        } else {
+            if (activeIndex > 0) {
+                setActiveIndex(activeIndex - 1);
+            }
+        }
+    };
+
+    const handleKeysPressed = (evt: React.KeyboardEvent<HTMLDivElement>) => {
+        if (evt.key === 'ArrowRight') {
+            changeImageOnKeyPressed('next');
+        } else if (evt.key === 'ArrowLeft') {
+            changeImageOnKeyPressed('prev');
+        }
+    };
+
+    useEffect(() => {
+        setImage(campground.images[activeIndex].url);
+    }, [activeIndex]);
+
     return (
         <section className="mb-5">
             <Carousel activeIndex={activeIndex} onSelect={changeImageHandler}>
-                {campground.images?.map((image, index) => (
+                {campground.images.map((image, index) => (
                     <Carousel.Item key={index}>
                         <Card.Img
                             variant="top"
@@ -122,9 +148,23 @@ const CampgroundCardCarousel: React.FunctionComponent<CarouselProps> = ({ campgr
                     setIsModalOpen(false);
                 }}
             >
-                <ModalContainer>
+                <ModalContainer onKeyDown={handleKeysPressed}>
                     <div onClick={() => setIsModalOpen(false)}>
                         <CloseIcon id="close" />
+                    </div>
+                    <div className="flex flex-row justify-between absolute w-full top-[50%] px-5">
+                        <span onClick={() => changeImageOnKeyPressed('prev')}>
+                            <KeyboardArrowLeftIcon
+                                className="relative hover:text-white hover:cursor-pointer rounded-full p-2 text-gray-300"
+                                fontSize="large"
+                            />
+                        </span>
+                        <span onClick={() => changeImageOnKeyPressed('next')}>
+                            <KeyboardArrowRightIcon
+                                className="relative hover:text-white hover:cursor-pointer rounded-full p-2 text-gray-300"
+                                fontSize="large"
+                            />
+                        </span>
                     </div>
                     <img
                         src={image}

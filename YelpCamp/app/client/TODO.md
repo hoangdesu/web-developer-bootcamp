@@ -146,3 +146,5 @@ id? [x] footer
 [] error boundary page
 
 [x] fix footer on mobile
+
+[x] image modal left/right arrow + keyboard inputs
