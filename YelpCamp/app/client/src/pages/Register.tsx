@@ -177,7 +177,7 @@ const Register: React.FunctionComponent = () => {
 
                     <Form.Group className="mb-3" controlId="email">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="text" ref={formEmail} required />
+                        <Form.Control type="email" ref={formEmail} required />
                         <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                         <Form.Control.Feedback type="invalid">
                             Email is required!

@@ -148,3 +148,5 @@ id? [x] footer
 [x] fix footer on mobile
 
 [x] image modal left/right arrow + keyboard inputs
+
+[] script to populate 15 campgrounds from a json

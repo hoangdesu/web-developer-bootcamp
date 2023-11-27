@@ -1,0 +1,34 @@
+{
+    "users": [
+        {
+            "username": "admin",
+            "email": "admin@yelpcamp.com",
+            "password": "admin"
+        },
+        {
+            "username": "brian",
+            "email": "brian@yelpcamp.com",
+            "password": "brian"
+        },
+        {
+            "username": "a",
+            "email": "a",
+            "password": "a"
+        },
+        {
+            "username": "hoang",
+            "email": "hoangdesu@gmail.com",
+            "password": "hoang"
+        }
+    ],
+    "campgrounds": [
+        {
+            "id": 1,
+            "title": "Camp 9",
+            "location": "Rạch Giá",
+            "price": 12,
+            "description": "nice place",
+            "username": "admin"
+        }
+    ]
+}

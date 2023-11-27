@@ -8,6 +8,8 @@ const mongoStore = MongoStore.create({
         secret: process.env.SESSION_SECRET,
     },
     dbName: process.env.DB_NAME,
+    ttl: 8 * 24 * 60 * 60, // 8 days
+    autoRemove: 'native', // expired sessions will be removed from collection
 });
 
 mongoStore.on('error', function (e) {

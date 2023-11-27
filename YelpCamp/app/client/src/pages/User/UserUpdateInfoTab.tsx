@@ -47,7 +47,7 @@ const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
                 .then(res => {
                     appContext.setSnackbar(
                         true,
-                        'Your account information has been updated!',
+                        'Your user information has been updated!',
                         'success',
                     );
                     refetch();
@@ -57,7 +57,7 @@ const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
                 .catch(err => {
                     appContext.setSnackbar(
                         true,
-                        'Something went wrong. Your account information was not updated.',
+                        'Something went wrong. Your user information was not updated.',
                         'error',
                     );
                 });
@@ -97,7 +97,7 @@ const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
                         <Form.Group className="mb-4" controlId="username">
                             <Form.Label className="font-medium">Update email</Form.Label>
                             <Form.Control
-                                type="text"
+                                type="email"
                                 ref={userEmailRef}
                                 placeholder="john@doe.com"
                             />
