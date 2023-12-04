@@ -11,7 +11,7 @@ const extension = Joi => ({
         sanitizeHTML: {
             validate(value, helpers) {
                 const clean = sanitizeHtml(value, {
-                    // allowedTags: [], // don't allow any tags or attributes at all
+                    // allowedTags: [],
                     // allowedAttributes: [],
                 });
                 if (clean !== value) return helpers.error('string.sanitizeHTML', { value });

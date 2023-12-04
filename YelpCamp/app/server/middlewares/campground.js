@@ -49,8 +49,6 @@ const validateAndParseExistingCampground = (req, res, next) => {
         return next(new YelpcampError(500, 'Error parsing existing image data'));
     }
 
-    console.log('reOrderedImages', reOrderedImages);
-
     // Parse images to delete
     try {
         imagesToDelete = JSON.parse(imagesToDelete);
@@ -68,13 +66,8 @@ const validateAndParseExistingCampground = (req, res, next) => {
         .withImages(reOrderedImages)
         .withAuthor(author)
         .build();
-
-    console.log('-- campground', campground);
-    console.log('-- req.files', req.files);
-    console.log('-- imagesToDelete', imagesToDelete);
     
     const newImages = req.files.map(f => ({ url: f.path, filename: f.filename }));
-    console.log('-- newImages', newImages);
 
     const { error: validationError } = existingCampgroundSchema.validate({
         campground,
@@ -87,8 +80,6 @@ const validateAndParseExistingCampground = (req, res, next) => {
         throw new YelpcampError(500, validationError);
     }
 
-    console.log('VALIDATED OK, NO ERROR!!');
-
     // Add to req.body object after validating successfully for controller use
     req.body.reOrderedImages = reOrderedImages;
     req.body.imagesToDelete = imagesToDelete
@@ -98,7 +89,6 @@ const validateAndParseExistingCampground = (req, res, next) => {
 };
 
 const isCampgroundAuthor = async (req, res, next) => {
-    // console.log('-- is author');
     const { id } = req.params;
 
     const author = req.headers.authorization;

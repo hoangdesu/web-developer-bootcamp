@@ -25,8 +25,6 @@ modal
 [x] pagination color [x] Login to add your review text [x] mobile pay screen: user must enter
 correct password to pay
 
-[] campgrounds you may like (random)
-
 [x] MODAL CONFIRM RESERVATION
 
 [x] Edit + new campground pages
@@ -63,7 +61,7 @@ into browser e.g. site.com/login. Have to use router?
 
 [x] style navbar on mobile [] SEO meta tags [] sitemap, robots.txt or sth similar for SEO
 
-[] improve navbar navigation in mobile view [x] change /user paths to /users
+[x] improve navbar navigation in mobile view [x] change /user paths to /users
 
 [x] finish reservation RESERVATION TODOS: \*need heavy works on <Reservation />
 
@@ -105,13 +103,13 @@ component
 
 [x] profile page TODOs
 
-[] Display Warning for Unsaved Form Data on Page Exit
+[x] Display Warning for Unsaved Form Data on Page Exit
 https://claritydev.net/blog/display-warning-for-unsaved-form-data-on-page-exit
 
 [x] owned
 
-[x] remove endpoint to reservation page (and page component) [] different font for search bar [x]
-Delete Review modal [x] show length in user's fav and owned campgrounds
+[x] remove endpoint to reservation page (and page component) 
+[x] Delete Review modal [x] show length in user's fav and owned campgrounds
 
 [] populate data
 
@@ -123,8 +121,6 @@ Delete Review modal [x] show length in user's fav and owned campgrounds
 -   thu hep khoang cach from top to map
 -   always show search bar on mobile (2 rows)
 -   replace nav dropdown with simple dropdown to avoid changing nav height
-
-[] fix clicking on search icon should focus the input
 
 [x] default image on map view
 
@@ -138,15 +134,17 @@ Delete Review modal [x] show length in user's fav and owned campgrounds
 
 [x] same design in other tabs (underline + subtitle)
 
-[] Empty reservations [x] User info input spacings [x] Server running at http://localhost: [] resv
-id? [x] footer
+[x] Empty reservations 
 
-[] campground location text reposition
+[x] User info input spacings 
 
-[] error boundary page
+[x] Server running at http://localhost: [] resv
+id? 
+
+[x] footer
+
+[x] error boundary page
 
 [x] fix footer on mobile
 
 [x] image modal left/right arrow + keyboard inputs
-
-[] script to populate 15 campgrounds from a json

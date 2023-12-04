@@ -2,7 +2,7 @@ const Joi = require('./extendedJoi');
 
 module.exports.newCampgroundSchema = Joi.object({
     campground: Joi.object({
-        title: Joi.string().required().sanitizeHTML(),
+        title: Joi.string().required(),
         location: Joi.string().required().sanitizeHTML(),
         geometry: Joi.object({
             type: Joi.string(),
@@ -18,14 +18,14 @@ module.exports.newCampgroundSchema = Joi.object({
             )
             .required()
             .min(1),
-        description: Joi.string().sanitizeHTML().allow(null, ''),
+        description: Joi.string().allow(null, ''),
         author: Joi.string().required(),
     }).required(),
 });
 
 module.exports.existingCampgroundSchema = Joi.object({
     campground: Joi.object({
-        title: Joi.string().required().sanitizeHTML(),
+        title: Joi.string().required(),
         location: Joi.string().required().sanitizeHTML(),
         geometry: Joi.object({
             type: Joi.string(),
@@ -42,7 +42,7 @@ module.exports.existingCampgroundSchema = Joi.object({
             )
             .required()
             .min(1),
-        description: Joi.string().sanitizeHTML().allow(null, ''),
+        description: Joi.string().allow(null, ''),
         author: Joi.string().required(),
     }).required(),
     imagesToDelete: Joi.array().items(Joi.string()).required(),

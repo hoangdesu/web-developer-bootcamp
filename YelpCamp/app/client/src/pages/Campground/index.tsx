@@ -264,7 +264,7 @@ const Campground: React.FunctionComponent = () => {
 
                     <StyledSection>
                         <h4 className="font-normal">About</h4>
-                        <p>{campground.description}</p>
+                        <p className="whitespace-pre-wrap">{campground.description}</p>
                     </StyledSection>
 
                     <StyledSection>
