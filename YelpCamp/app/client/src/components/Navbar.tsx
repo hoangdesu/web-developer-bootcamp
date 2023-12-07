@@ -1,6 +1,6 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Container from 'react-bootstrap/Container';
-import { Navbar as BootstrapNavbar, Nav, Button, NavDropdown, Collapse } from 'react-bootstrap';
+import { Navbar as BootstrapNavbar, Button, NavDropdown, Collapse } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import AppContext from '../store/app-context';
 import ModalLogout from './Modals/ModalLogout';
@@ -93,7 +93,7 @@ const Navbar: React.FunctionComponent = () => {
                                 key={'user'}
                                 className="dropdown-item active:bg-gray-300 active:text-primary-dark-color"
                             >
-                                {currentUser?.username}
+                                <div className="font-medium">{currentUser?.username}</div>
                                 <div className="text-muted text-sm">View your account</div>
                             </Link>
                             <Link

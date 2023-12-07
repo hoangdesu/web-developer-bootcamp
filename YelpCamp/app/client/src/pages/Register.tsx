@@ -1,15 +1,15 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../config/yelpcampAxios';
 
 import AppContext from '../store/app-context';
 
-import { Form, InputGroup, Spinner } from 'react-bootstrap';
 import { Visibility, VisibilityOff } from '@mui/icons-material/';
+import { Form, InputGroup, Spinner } from 'react-bootstrap';
 
-import RegisterBG from '../assets/register-bg.jpeg';
 import Logo from '../assets/logo.png';
+import RegisterBG from '../assets/register-bg.jpeg';
 import PrimaryBlackButton from '../components/Buttons/PrimaryBlackButton';
 import PageSnackbar from '../components/PageSnackbar';
 
@@ -114,6 +114,12 @@ const Register: React.FunctionComponent = () => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
+
+        if (formUsername.current?.value.includes(' ')) {
+            appContext.setSnackbar(true, 'Username cannot have whitespace character.', 'error');
+            return;
+        }
+
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
@@ -122,7 +128,7 @@ const Register: React.FunctionComponent = () => {
                 .post(
                     '/api/v1/users',
                     {
-                        username: formUsername.current?.value.toLowerCase() || '',
+                        username: formUsername.current?.value.toLowerCase().trim() || '',
                         email: formEmail.current?.value || '',
                         password: formPassword.current?.value || '',
                     },

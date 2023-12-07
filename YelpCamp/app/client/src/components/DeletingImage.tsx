@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
 import styled from '@emotion/styled';
+import React, { useState } from 'react';
 
 import RestoreIcon from '@mui/icons-material/Restore';
-import BlockIcon from '@mui/icons-material/Block';
 import { Image } from '../types';
 
 const Container = styled.div`

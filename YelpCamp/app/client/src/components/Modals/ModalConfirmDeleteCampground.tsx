@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
-import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
-import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
+import { Spinner } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import axios from '../../config/yelpcampAxios';
 import AppContext from '../../store/app-context';
-import { useNavigate } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
 import { Campground } from '../../types';
+import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
+import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
 
 interface ModalProps {
     campground: Campground;

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Campground } from '../../types';
 import Logo from '../../assets/logo.png';
+import { Campground } from '../../types';
 
 interface PopupBoxProps {
     campground: Pick<Campground, '_id' | 'title' | 'price' | 'location'> & {

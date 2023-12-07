@@ -1,12 +1,12 @@
+import styled from '@emotion/styled';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import React, { useContext } from 'react';
-import AppContext from '../../store/app-context';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../config/yelpcampAxios';
+import AppContext from '../../store/app-context';
 import { Campground, Reservation } from '../../types';
 import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
 import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
-import styled from '@emotion/styled';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 interface ModalProps {
     reservation: Reservation;

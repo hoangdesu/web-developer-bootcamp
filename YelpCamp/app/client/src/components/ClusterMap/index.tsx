@@ -1,20 +1,19 @@
-import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
+import mapboxgl from 'mapbox-gl';
+import React, { memo, useCallback, useRef, useState } from 'react';
+import type { MapRef } from 'react-map-gl';
 import Map, {
-    Source,
-    Layer,
-    Marker,
-    Popup,
-    NavigationControl,
     FullscreenControl,
     GeolocateControl,
-    useMap,
+    Layer,
+    Marker,
+    NavigationControl,
+    Popup,
+    Source
 } from 'react-map-gl';
-import type { MapRef, MapboxStyle } from 'react-map-gl';
-import { clusterLayer, clusterCountLayer, unclusteredPointLayer } from './layers';
-import { Campground } from '../../types';
-import mapboxgl from 'mapbox-gl';
 import { averageRating } from '../../helpers/campground';
+import { Campground } from '../../types';
 import PopupBox from './PopupBox';
+import { clusterCountLayer, clusterLayer, unclusteredPointLayer } from './layers';
 
 interface ClusterMapProps {
     campgrounds: Campground[];

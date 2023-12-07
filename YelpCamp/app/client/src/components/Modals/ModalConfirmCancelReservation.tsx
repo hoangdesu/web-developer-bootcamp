@@ -1,9 +1,9 @@
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../config/yelpcampAxios';
-import React, { useContext } from 'react';
-import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
-import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
 import AppContext from '../../store/app-context';
+import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
+import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
 
 const ModalConfirmCancelReservation = ({ resv }) => {
     const navigate = useNavigate();

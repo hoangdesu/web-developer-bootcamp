@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import AppContext from '../../store/app-context';
-import { Form, InputGroup, Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import axios from '../../config/yelpcampAxios';
+import React, { useContext, useRef, useState } from 'react';
+import { Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import PrimaryBlackButton from '../../components/Buttons/PrimaryBlackButton';
-import ModalConfirmReservation from './ModalConfirmReservation';
+import axios from '../../config/yelpcampAxios';
+import AppContext from '../../store/app-context';
 import { Campground, Reservation } from '../../types';
+import ModalConfirmReservation from './ModalConfirmReservation';
 
 const InputGroupText = styled(InputGroup.Text)`
     &:hover {

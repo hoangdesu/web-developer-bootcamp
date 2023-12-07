@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import CheckmarkCSSAnimation from '../CheckmarkCSSAnimation';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppContext from '../../store/app-context';
+import CheckmarkCSSAnimation from '../CheckmarkCSSAnimation';
 
 const ModalPaymentReceived = () => {
     const [redirectSeconds, setRedirectSeconds] = useState(5);

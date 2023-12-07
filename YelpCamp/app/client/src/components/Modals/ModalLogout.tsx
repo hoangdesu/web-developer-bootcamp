@@ -1,6 +1,6 @@
-import axios from '../../config/yelpcampAxios';
-import React, { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from '../../config/yelpcampAxios';
 import AppContext from '../../store/app-context';
 import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
 import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';

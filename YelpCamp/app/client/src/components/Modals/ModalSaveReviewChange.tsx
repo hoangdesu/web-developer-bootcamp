@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import AppContext from '../../store/app-context';
 import axios from '../../config/yelpcampAxios';
+import AppContext from '../../store/app-context';
+import { Review } from '../../types';
 import PrimaryBlackButton from '../Buttons/PrimaryBlackButton';
 import SecondaryTransparentButton from '../Buttons/SecondaryTransparentButton';
-import { Review } from '../../types';
 
 interface ModalProps {
     review: Review;

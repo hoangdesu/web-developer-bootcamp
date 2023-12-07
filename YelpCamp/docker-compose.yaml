@@ -14,8 +14,7 @@ services:
 
   server:
     build: ./app/server
-    # image: hoangdesu/yelpcamp-mern-typescript:latest
-    image: yelpcamp-server:latest
+    image: hoangdesu/yelpcamp-mern-server:latest
     container_name: yelpcamp-server-container
     ports:
       - "3001:3001"
@@ -32,7 +31,7 @@ services:
       
   client:
     build: ./app/client
-    image: yelpcamp-client:latest
+    image: hoangdesu/yelpcamp-mern-client:latest
     container_name: yelpcamp-client-container
     ports:
       - "5173:5173"
