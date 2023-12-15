@@ -14,7 +14,7 @@ Looking back, I really appreciate what I have learned from this course and wanna
 
 ## The final project: YelpCamp
 
-Details about YelpCamp - the final project can be found [here](https://github.com/hoangdesu/web-developer-bootcamp/tree/master/YelpCamp).
+Details about YelpCamp (MERN stack with TypeScript) - my implementation for the final project can be found [here](https://github.com/hoangdesu/web-developer-bootcamp/tree/master/YelpCamp).
 
 ![YelpCamp homepage](./YelpCamp/imgs/home.jpg)
 

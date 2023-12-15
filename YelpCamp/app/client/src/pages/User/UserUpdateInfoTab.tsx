@@ -72,7 +72,7 @@ const UserUpdateInfoTab: React.FC<InfoTabProps> = ({ user, refetch }) => {
     return (
         <div>
             <div>
-                <h1>User info</h1>
+                <h1>User information</h1>
                 <p className="text-muted">Update your email and password.</p>
             </div>
             <hr />

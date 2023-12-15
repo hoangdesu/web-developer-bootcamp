@@ -103,7 +103,7 @@ const Container = styled.div`
 const TABS = [
     {
         id: 'info',
-        title: 'User info',
+        title: 'User information',
     },
     {
         id: 'owned',

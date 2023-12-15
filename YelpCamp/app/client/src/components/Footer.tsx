@@ -76,6 +76,11 @@ const Footer: React.FunctionComponent = () => {
                                     <i className="fa-brands fa-linkedin"></i>
                                 </a>
                             </Tooltip>
+                            <Tooltip title="Personal website" placement="top">
+                                <a href="https://hoangdesu.com/" target="_blank">
+                                    <i className="fa-solid fa-globe"></i>
+                                </a>
+                            </Tooltip>
                             <Tooltip title="Facebook" placement="top">
                                 <a href="https://www.facebook.com/Hoangdayo" target="_blank">
                                     <i className="fa-brands fa-facebook-f"></i>
@@ -89,11 +94,6 @@ const Footer: React.FunctionComponent = () => {
                             <Tooltip title="Instagram" placement="top">
                                 <a href="https://www.instagram.com/hoang.desu/" target="_blank">
                                     <i className="fa-brands fa-instagram"></i>
-                                </a>
-                            </Tooltip>
-                            <Tooltip title="Personal website" placement="top">
-                                <a href="https://hoangdesu.com/" target="_blank">
-                                    <i className="fa-solid fa-globe"></i>
                                 </a>
                             </Tooltip>
                         </IconsContainer>
