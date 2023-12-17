@@ -136,7 +136,7 @@ const About: React.FunctionComponent = () => {
 
                     <h5>Backend</h5>
                     <p className="inline">
-                        The backend is powered{' '}
+                        The backend is powered by {' '}
                         <a href="https://expressjs.com/" target="_blank">
                             Express
                         </a>{' '}
@@ -274,7 +274,7 @@ const About: React.FunctionComponent = () => {
                         >
                             MongoDB Community Edition
                         </a>
-                        . Start database: <br /> <code>$ yarn run start:db</code>
+                        . Start the database: <br /> <code>$ yarn run start:db</code>
                     </p>
                     <p>
                         Start all services: <br />
