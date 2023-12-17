@@ -2,8 +2,12 @@ import React from 'react';
 
 import PageContainer from '../components/PageContainer';
 import styled from '@emotion/styled';
+import AboutImageContainer from '../components/AboutImageContainer';
+
 import Me from '../assets/hoangdesu.jpeg';
 import MERN from '../assets/MERN.png';
+import Home from '../../../../imgs/home.jpg';
+import Campground from '../../../../imgs/campground.jpg'
 
 const Div = styled.div`
     a {
@@ -59,7 +63,6 @@ const About: React.FunctionComponent = () => {
                         <img src={Me} alt="hoangdesu avatar" className="rounded-full w-52" />
                     </div>
                 </div>
-
                 <div className="mt-4">
                     <h2>Technologies</h2>
                     <img src={MERN} alt="MERN stack" className="w-full max-w-xs" />
@@ -235,7 +238,6 @@ const About: React.FunctionComponent = () => {
                         </li>
                     </ul>
                 </div>
-
                 <div className="mt-4">
                     <h2>Installation</h2>
                     <h5>Running locally</h5>
@@ -255,7 +257,8 @@ const About: React.FunctionComponent = () => {
                         Install{' '}
                         <a href="https://classic.yarnpkg.com/en/" target="_blank">
                             yarn
-                        </a> (optional): <br /> <code>$ npm install --global yarn</code>
+                        </a>{' '}
+                        (optional): <br /> <code>$ npm install --global yarn</code>
                     </p>
                     <p>
                         Run the following commands to install dependencies:
@@ -278,7 +281,7 @@ const About: React.FunctionComponent = () => {
                         <code>$ yarn run start:all:dev</code>
                     </p>
                     <p>
-                        Frontend will be available at{' '}
+                        🚀 Frontend will be available at{' '}
                         <a href="http://localhost:5173" target="_blank">
                             http://localhost:5173
                         </a>
@@ -289,8 +292,14 @@ const About: React.FunctionComponent = () => {
                     </p>
 
                     <h5>Running with Docker</h5>
+                    <p>
+                        Install{' '}
+                        <a href="https://www.docker.com/" target="_blank">
+                            Docker
+                        </a>
+                        . Make sure Docker daemon is running.
+                    </p>
                     <p className="inline">Images are pre-built and available on Dockerhub:</p>
-
                     <ul>
                         <li>
                             <a
@@ -310,22 +319,30 @@ const About: React.FunctionComponent = () => {
                         </li>
                     </ul>
 
-                    <p>Pull the prebuilt images and start the container:</p>
+                    <p className="inline">Pull the images and start the container:</p>
+                    <br />
+                    <code>$ docker compose up -d</code>
                 </div>
-
+                <div className="mt-4">
+                    <h2>Functionalities</h2>
+                    <div className='flex flex-wrap'>
+                        <AboutImageContainer image={Home} description={'something'} />
+                        <AboutImageContainer image={Campground} description={'campground'} />
+                        <AboutImageContainer image={Home} description={'something'} />
+                        <AboutImageContainer image={Home} description={'something'} />
+                    </div>
+                </div>
+                <br /> ...
                 <div className="mt-4">
                     <h2>How To</h2>
                     <h3>How to add a new campground?</h3>
                 </div>
-
                 <div className="mt-4">
                     <h2></h2>
                 </div>
-
                 <h2>Reflection?</h2>
-
                 <div>
-                    <h2> Connect with me </h2>* [Personal website](https://hoangdesu.com/) *
+                    <h2>Connect with me </h2>* [Personal website](https://hoangdesu.com/) *
                     [LinkedIn](https://www.linkedin.com/in/hoangdesu/) *
                     [Facebook](https://www.facebook.com/Hoangdayo/) *
                     [Instagram](https://www.instagram.com/hoang.desu/) *
