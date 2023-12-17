@@ -7,7 +7,7 @@ import AboutImageContainer from '../components/AboutImageContainer';
 import Me from '../assets/hoangdesu.jpeg';
 import MERN from '../assets/MERN.png';
 import Home from '../../../../imgs/home.jpg';
-import Campground from '../../../../imgs/campground.jpg'
+import Campground from '../../../../imgs/campground.jpg';
 
 const Div = styled.div`
     a {
@@ -37,8 +37,8 @@ const About: React.FunctionComponent = () => {
                             YelpCamp.
                         </p>
                         <p>
-                            My name is Hoang, some people know me as Brian. I'm a software engineer
-                            from Ho Chi Minh city, Vietnam 🇻🇳
+                            My name is Brian. I'm a software engineer from Ho Chi Minh city, Vietnam
+                            🇻🇳
                         </p>
                         <p>
                             YelpCamp is the final project from Colt Steele's course on Udemy{' '}
@@ -148,7 +148,7 @@ const About: React.FunctionComponent = () => {
                     </p>
                     <ul>
                         <li>
-                            <a href="" target="_blank">
+                            <a href="https://mongoosejs.com/" target="_blank">
                                 mongoose
                             </a>
                             : Object Data Modeling library for MongoDB and Node.js
@@ -325,7 +325,7 @@ const About: React.FunctionComponent = () => {
                 </div>
                 <div className="mt-4">
                     <h2>Functionalities</h2>
-                    <div className='flex flex-wrap'>
+                    <div className="flex flex-wrap">
                         <AboutImageContainer image={Home} description={'something'} />
                         <AboutImageContainer image={Campground} description={'campground'} />
                         <AboutImageContainer image={Home} description={'something'} />
