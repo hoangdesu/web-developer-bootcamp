@@ -1,6 +1,15 @@
 # Food Nutrition App
 
-Built using Svelte + Express + Mongoose
+A simple, typical CRUD app for food nutrition. Built with Svelte + Express + Mongoose
+
+## Functions
+
+| Screen | Screenshot |
+| ----------- | ----------- |
+| Home | ![Home](./imgs/home.jpg) |
+| Details | ![Details](./imgs/food.jpg) |
+| Edit food | ![Edit food](imgs/edit.jpg) |
+
 
 ## Running
 
