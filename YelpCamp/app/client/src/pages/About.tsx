@@ -237,6 +237,83 @@ const About: React.FunctionComponent = () => {
                 </div>
 
                 <div className="mt-4">
+                    <h2>Installation</h2>
+                    <h5>Running locally</h5>
+                    <p>
+                        Clone the project:
+                        <br />
+                        <code>
+                            $ git clone https://github.com/hoangdesu/web-developer-bootcamp.git
+                        </code>
+                    </p>
+                    <p>
+                        From the <code>web-developer-bootcamp</code> folder, navigate to YelpCamp
+                        directory: <br />
+                        <code>$ cd YelpCamp</code>
+                    </p>
+                    <p>
+                        Install{' '}
+                        <a href="https://classic.yarnpkg.com/en/" target="_blank">
+                            yarn
+                        </a> (optional): <br /> <code>$ npm install --global yarn</code>
+                    </p>
+                    <p>
+                        Run the following commands to install dependencies:
+                        <br />
+                        <code>$ yarn</code> <br />
+                        <code>$ yarn run install:all</code>
+                    </p>
+                    <p>
+                        Install{' '}
+                        <a
+                            href="https://www.mongodb.com/docs/manual/administration/install-community/"
+                            target="_blank"
+                        >
+                            MongoDB Community Edition
+                        </a>
+                        . Start database: <br /> <code>$ yarn run start:db</code>
+                    </p>
+                    <p>
+                        Start all services: <br />
+                        <code>$ yarn run start:all:dev</code>
+                    </p>
+                    <p>
+                        Frontend will be available at{' '}
+                        <a href="http://localhost:5173" target="_blank">
+                            http://localhost:5173
+                        </a>
+                        , backend at{' '}
+                        <a href="http://localhost:3001" target="_blank">
+                            http://localhost:3001
+                        </a>
+                    </p>
+
+                    <h5>Running with Docker</h5>
+                    <p className="inline">Images are pre-built and available on Dockerhub:</p>
+
+                    <ul>
+                        <li>
+                            <a
+                                href="https://hub.docker.com/r/hoangdesu/yelpcamp-mern-server"
+                                target="_blank"
+                            >
+                                yelpcamp-mern-server
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://hub.docker.com/r/hoangdesu/yelpcamp-mern-client"
+                                target="_blank"
+                            >
+                                yelpcamp-mern-client
+                            </a>
+                        </li>
+                    </ul>
+
+                    <p>Pull the prebuilt images and start the container:</p>
+                </div>
+
+                <div className="mt-4">
                     <h2>How To</h2>
                     <h3>How to add a new campground?</h3>
                 </div>
@@ -244,8 +321,6 @@ const About: React.FunctionComponent = () => {
                 <div className="mt-4">
                     <h2></h2>
                 </div>
-
-                <h2>Installation...</h2>
 
                 <h2>Reflection?</h2>
 

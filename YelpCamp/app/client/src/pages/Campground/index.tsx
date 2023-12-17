@@ -187,6 +187,17 @@ const Campground: React.FunctionComponent = () => {
             });
     };
 
+    const addReviewHandler = () => {
+        if (appContext.currentUser) {
+            reviewText.current?.focus();
+        } else {
+            appContext.setModal({
+                open: true,
+                content: <ModalLogin />,
+            });
+        }
+    };
+
     if (campgroundQuery.isLoading || !campground) return <Loading />;
 
     if (campgroundQuery.isError) {
@@ -360,9 +371,7 @@ const Campground: React.FunctionComponent = () => {
                             {campground.reviews?.length === 0 && (
                                 <span
                                     className="hover:underline hover:cursor-pointer text-emerald-800"
-                                    onClick={() => {
-                                        reviewText.current?.focus();
-                                    }}
+                                    onClick={addReviewHandler}
                                 >
                                     Add your first review!
                                 </span>
