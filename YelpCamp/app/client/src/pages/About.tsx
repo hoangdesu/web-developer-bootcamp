@@ -2,12 +2,24 @@ import React from 'react';
 
 import PageContainer from '../components/PageContainer';
 import styled from '@emotion/styled';
-import AboutImageContainer from '../components/AboutImageContainer';
 
 import Me from '../assets/hoangdesu.jpeg';
 import MERN from '../assets/MERN.png';
+
 import Home from '../../../../imgs/home.jpg';
-import Campground from '../../../../imgs/campground.jpg';
+import HomeMob from '../../../../imgs/home-mobile.jpg';
+import Campground from '../../../../imgs/campground1.jpg';
+import CampgroundMob from '../../../../imgs/campground-mobile.jpg';
+import NewCamp from '../../../../imgs/new-campground.jpg';
+import NewCampMob from '../../../../imgs/new-campground-mobile.jpg';
+import EditCamp from '../../../../imgs/edit.jpg';
+import EditCampMob from '../../../../imgs/edit-mobile.jpg';
+import SearchFilter from '../../../../imgs/search-filter.jpg';
+import SearchFilterMob from '../../../../imgs/search-filter-mobile.jpg';
+import Checkout from '../../../../imgs/checkout.jpg';
+import CheckoutMob from '../../../../imgs/checkout-mobile.jpg';
+import User from '../../../../imgs/user.jpg';
+import UserMob from '../../../../imgs/user-mobile.jpg';
 
 const Div = styled.div`
     a {
@@ -136,7 +148,7 @@ const About: React.FunctionComponent = () => {
 
                     <h5>Backend</h5>
                     <p className="inline">
-                        The backend is powered by {' '}
+                        The backend is powered by{' '}
                         <a href="https://expressjs.com/" target="_blank">
                             Express
                         </a>{' '}
@@ -324,34 +336,73 @@ const About: React.FunctionComponent = () => {
                     <code>$ docker compose up -d</code>
                 </div>
                 <div className="mt-4">
-                    <h2>Functionalities</h2>
-                    <div className="flex flex-wrap">
-                        <AboutImageContainer image={Home} description={'something'} />
-                        <AboutImageContainer image={Campground} description={'campground'} />
-                        <AboutImageContainer image={Home} description={'something'} />
-                        <AboutImageContainer image={Home} description={'something'} />
-                    </div>
+                    <h2>Features and app preview</h2>
+                    <p>
+                        This app is fully responsive and mobile-friendly. Some components are
+                        designed differently to work best with their current view.
+                    </p>
+                    <table className="border-collapse border border-slate-500 w-full">
+                        <tr className="border border-slate-500">
+                            <th className="border border-slate-500 p-2 text-center">Features</th>
+                            <th className="border border-slate-500 p-2 text-center">
+                                Desktop view
+                            </th>
+                            <th className="border border-slate-500 p-2 text-center">Mobile view</th>
+                        </tr>
+                        {[
+                            {
+                                feature: 'Homepage: browse campgrounds, clustered map view',
+                                desktop: Home,
+                                mobile: HomeMob,
+                            },
+                            {
+                                feature:
+                                    'View campground: add to favorite, leave a review, make reservations',
+                                desktop: Campground,
+                                mobile: CampgroundMob,
+                            },
+                            {
+                                feature:
+                                    'Add new campground: location auto suggestion, images drag and drop',
+                                desktop: NewCamp,
+                                mobile: NewCampMob,
+                            },
+                            {
+                                feature: 'Edit or delete campground',
+                                desktop: EditCamp,
+                                mobile: EditCampMob,
+                            },
+                            {
+                                feature: 'Search and filtering',
+                                desktop: SearchFilter,
+                                mobile: SearchFilterMob,
+                            },
+                            {
+                                feature: 'Make reservation, checkout',
+                                desktop: Checkout,
+                                mobile: CheckoutMob,
+                            },
+                            {
+                                feature:
+                                    'User dashboard: update account, manage owned and favorite campgrounds, view all reservations',
+                                desktop: User,
+                                mobile: UserMob,
+                            },
+                        ].map(row => (
+                            <tr className="w-full">
+                                <td className="border border-slate-500 p-2">{row.feature}</td>
+                                <td className="border border-slate-500 p-2 text-center">
+                                    <img src={row.desktop} alt={row.feature} className="w-full" />
+                                </td>
+                                <td className="border border-slate-500 p-2 content-center text-center">
+                                    <img src={row.mobile} alt={row.feature} className="w-[90%]" />
+                                </td>
+                            </tr>
+                        ))}
+                    </table>
                 </div>
-                <br /> ...
-                <div className="mt-4">
-                    <h2>How To</h2>
-                    <h3>How to add a new campground?</h3>
-                </div>
-                <div className="mt-4">
-                    <h2></h2>
-                </div>
-                <h2>Reflection?</h2>
-                <div>
-                    <h2>Connect with me </h2>* [Personal website](https://hoangdesu.com/) *
-                    [LinkedIn](https://www.linkedin.com/in/hoangdesu/) *
-                    [Facebook](https://www.facebook.com/Hoangdayo/) *
-                    [Instagram](https://www.instagram.com/hoang.desu/) *
-                    [Github](https://github.com/hoangdesu) * [Email](mailto:hoangdesu@gmail.com)
-                </div>
+                <br />
             </Div>
-            <div className="sticky top-10 right-0 float-right">
-                <h1>table of content?</h1>
-            </div>
         </PageContainer>
     );
 };

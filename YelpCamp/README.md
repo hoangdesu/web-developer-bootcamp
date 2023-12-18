@@ -148,6 +148,8 @@ $ docker compose up -d
 
 ## Features and app preview
 
+This app is fully responsive and mobile-friendly. Some components are designed differently to work best with their current view. 
+
 | Features | Desktop view | Mobile view |
 | ----------- | ----------- | ----------- |
 | Homepage: browse campgrounds, clustered map view | ![](imgs/home.jpg) | ![](imgs/home-mobile.jpg) |
