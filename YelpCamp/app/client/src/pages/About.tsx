@@ -341,65 +341,79 @@ const About: React.FunctionComponent = () => {
                         This app is fully responsive and mobile-friendly. Some components are
                         designed differently to work best with their current view.
                     </p>
-                    <table className="border-collapse border border-slate-500 w-full">
-                        <tr className="border border-slate-500">
-                            <th className="border border-slate-500 p-2 text-center">Features</th>
-                            <th className="border border-slate-500 p-2 text-center">
-                                Desktop view
-                            </th>
-                            <th className="border border-slate-500 p-2 text-center">Mobile view</th>
-                        </tr>
-                        {[
-                            {
-                                feature: 'Homepage: browse campgrounds, clustered map view',
-                                desktop: Home,
-                                mobile: HomeMob,
-                            },
-                            {
-                                feature:
-                                    'View campground: add to favorite, leave a review, make reservations',
-                                desktop: Campground,
-                                mobile: CampgroundMob,
-                            },
-                            {
-                                feature:
-                                    'Add new campground: location auto suggestion, images drag and drop',
-                                desktop: NewCamp,
-                                mobile: NewCampMob,
-                            },
-                            {
-                                feature: 'Edit or delete campground',
-                                desktop: EditCamp,
-                                mobile: EditCampMob,
-                            },
-                            {
-                                feature: 'Search and filtering',
-                                desktop: SearchFilter,
-                                mobile: SearchFilterMob,
-                            },
-                            {
-                                feature: 'Make reservation, checkout',
-                                desktop: Checkout,
-                                mobile: CheckoutMob,
-                            },
-                            {
-                                feature:
-                                    'User dashboard: update account, manage owned and favorite campgrounds, view all reservations',
-                                desktop: User,
-                                mobile: UserMob,
-                            },
-                        ].map(row => (
-                            <tr className="w-full">
-                                <td className="border border-slate-500 p-2">{row.feature}</td>
-                                <td className="border border-slate-500 p-2 text-center">
-                                    <img src={row.desktop} alt={row.feature} className="w-full" />
-                                </td>
-                                <td className="border border-slate-500 p-2 content-center text-center">
-                                    <img src={row.mobile} alt={row.feature} className="w-[90%]" />
-                                </td>
+                    <div className="overflow-x-scroll">
+                        <table className="border-collapse border border-slate-500 w-full min-w-[1000px]">
+                            <tr className="border border-slate-500">
+                                <th className="border border-slate-500 p-2 text-center">
+                                    Features
+                                </th>
+                                <th className="border border-slate-500 p-2 text-center">
+                                    Desktop view
+                                </th>
+                                <th className="border border-slate-500 p-2 text-center">
+                                    Mobile view
+                                </th>
                             </tr>
-                        ))}
-                    </table>
+                            {[
+                                {
+                                    feature: 'Homepage: browse campgrounds, clustered map view',
+                                    desktop: Home,
+                                    mobile: HomeMob,
+                                },
+                                {
+                                    feature:
+                                        'View campground: add to favorite, leave a review, make reservations',
+                                    desktop: Campground,
+                                    mobile: CampgroundMob,
+                                },
+                                {
+                                    feature:
+                                        'Add new campground: location auto suggestion, images drag and drop',
+                                    desktop: NewCamp,
+                                    mobile: NewCampMob,
+                                },
+                                {
+                                    feature: 'Edit or delete campground',
+                                    desktop: EditCamp,
+                                    mobile: EditCampMob,
+                                },
+                                {
+                                    feature: 'Search and filtering',
+                                    desktop: SearchFilter,
+                                    mobile: SearchFilterMob,
+                                },
+                                {
+                                    feature: 'Make reservation, checkout',
+                                    desktop: Checkout,
+                                    mobile: CheckoutMob,
+                                },
+                                {
+                                    feature:
+                                        'User dashboard: update account, manage owned and favorite campgrounds, view all reservations',
+                                    desktop: User,
+                                    mobile: UserMob,
+                                },
+                            ].map(row => (
+                                <tr className="w-full">
+                                    <td className="border border-slate-500 p-2">{row.feature}</td>
+                                    <td className="border border-slate-500 p-2 text-center">
+                                        <img
+                                            src={row.desktop}
+                                            alt={row.feature}
+                                            className="w-full"
+                                        />
+                                    </td>
+                                    <td className="border border-slate-500 p-2 content-center text-center">
+                                        <img
+                                            src={row.mobile}
+                                            alt={row.feature}
+                                            className="w-[90%]"
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </table>
+                    </div>
                 </div>
                 <br />
             </Div>
