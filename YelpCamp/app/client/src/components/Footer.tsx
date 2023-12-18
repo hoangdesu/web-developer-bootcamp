@@ -65,7 +65,7 @@ const Footer: React.FunctionComponent = () => {
                         <IconsContainer>
                             <Tooltip title="Github" placement="top">
                                 <a
-                                    href="https://github.com/hoangdesu/web-developer-bootcamp/tree/master/YelpCamp"
+                                    href="https://github.com/hoangdesu/"
                                     target="_blank"
                                 >
                                     <i className="fa-brands fa-github"></i>

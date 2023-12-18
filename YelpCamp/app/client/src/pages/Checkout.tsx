@@ -257,7 +257,7 @@ const Checkout = () => {
                                 </div>
 
                                 <div className="flex flex-row justify-between">
-                                    <span>Discount (${resv.discount.percentage})</span>
+                                    <span>Discount ({resv.discount.percentage}%)</span>
                                     <span
                                         className={`${
                                             resv.discount.percentage > 0 && 'text-red-500'

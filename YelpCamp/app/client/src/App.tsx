@@ -1,13 +1,12 @@
-import React, { useState, useContext, useRef, FormEvent, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQueries } from 'react-query';
 import axios from './config/yelpcampAxios';
-import { useNavigate } from 'react-router-dom';
+
 
 import { Col, Row } from 'react-bootstrap';
 import { Pagination, ThemeProvider, createTheme } from '@mui/material';
 
 import './App.css';
-import AppContext from './store/app-context';
 
 import PageContainer from './components/PageContainer';
 import ClusterMap from './components/ClusterMap';
@@ -15,7 +14,6 @@ import CampgroundCard from './pages/Campground/CampgroundCard';
 import Loading from './pages/Loading';
 import { Campground, User } from './types';
 import ErrorBoundary from './pages/ErrorBoundary';
-import SearchBox from './components/SearchBox';
 import CampgroundsContainer from './components/CampgroundsContainer';
 import { shuffle } from './utils/arrayUtils';
 
@@ -36,8 +34,6 @@ const paginationTheme = createTheme({
 });
 
 const App: React.FunctionComponent = () => {
-    const appContext = useContext(AppContext);
-    const navigate = useNavigate();
     const [campgrounds, setCampgrounds] = useState<Campground[]>([]);
     const [filteredCampgroundList, setFilteredCampgroundList] = useState<Campground[]>([]);
     const [page, setPage] = useState(1);
@@ -90,6 +86,13 @@ const App: React.FunctionComponent = () => {
         const startingIndex = (value - 1) * itemsPerPage;
         const endingIndex = startingIndex + itemsPerPage;
         setFilteredCampgroundList(campgrounds.slice(startingIndex, endingIndex));
+
+        // scroll to top on page change
+        document.documentElement.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth',
+        });
     };
 
     const getPaginationInfo = () => {

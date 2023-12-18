@@ -18,9 +18,8 @@
 - [Installation](#installation)
   - [Running locally](#running-locally)
   - [Running with Docker](#running-with-docker)
-- [Functionalities](#functionalities)
+- [Features and app preview](#features-and-app-preview)
 - [Video demo...](#video-demo)
-- [Connect with me](#connect-with-me)
 
 ## About
 
@@ -147,8 +146,19 @@ Pull the images and start the container:
 $ docker compose up -d
 ```
 
-## Functionalities
+## Features and app preview
+
+| Features | Desktop view | Mobile view |
+| ----------- | ----------- | ----------- |
+| Homepage: browse campgrounds, clustered map view | ![](imgs/home.jpg) | ![](imgs/home-mobile.jpg) |
+| View campground: add to favorite, leave a review, make reservations | ![](imgs/campground1.jpg) | ![](imgs/campground-mobile.jpg) |
+| Add new campground: location auto suggestion, images drag and drop | ![](imgs/new-campground.jpg) | ![](imgs/new-campground-mobile.jpg) |
+| Edit or delete campground | ![](imgs/edit.jpg) | ![](imgs/edit-mobile.jpg) |
+| Search and filtering | ![](imgs/search-filter.jpg) | ![](imgs/search-filter-mobile.jpg) |
+| Make reservation, checkout | ![](imgs/checkout.jpg) | ![](imgs/checkout-mobile.jpg) |
+| User dashboard: update account, manage owned and favorite campgrounds, view all reservations | ![](imgs/user.jpg) | ![Alt text](imgs/user-mobile.jpg) |
 
 
+## Video demo
 
-## Video demo...
+...
