@@ -19,7 +19,7 @@
   - [Running locally](#running-locally)
   - [Running with Docker](#running-with-docker)
 - [Features and app preview](#features-and-app-preview)
-- [Video demo...](#video-demo)
+- [Demo video](#demo-video)
 
 ## About
 
@@ -162,6 +162,6 @@ This app is fully responsive and mobile-friendly. Some components are designed d
 | User dashboard: update account, manage owned and favorite campgrounds, view all reservations | ![](imgs/user.jpg) | ![Alt text](imgs/user-mobile.jpg) |
 
 
-## Video demo
+## Demo video
 
-[![YelpCamp demo](http://img.youtube.com/vi/05fs2Pxwnj4/0.jpg)](https://youtu.be/05fs2Pxwnj4 "YelpCamp demo")
+[![YelpCamp demo video](http://img.youtube.com/vi/05fs2Pxwnj4/0.jpg)](https://youtu.be/05fs2Pxwnj4 "YelpCamp demo video")

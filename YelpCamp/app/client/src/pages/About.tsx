@@ -71,6 +71,16 @@ const About: React.FunctionComponent = () => {
                             like making reservations, user profile, simulated mobile payment with QR
                             code, etc.
                         </p>
+
+                        <p>
+                            The source code for this project is available at:{' '}
+                            <a
+                                href="https://github.com/hoangdesu/web-developer-bootcamp/tree/master/YelpCamp"
+                                target="_blank"
+                            >
+                                https://github.com/hoangdesu/web-developer-bootcamp/tree/master/YelpCamp
+                            </a>
+                        </p>
                     </div>
                     <div>
                         <img src={Me} alt="hoangdesu avatar" className="rounded-full w-52" />
@@ -421,7 +431,18 @@ const About: React.FunctionComponent = () => {
                         </table>
                     </div>
                 </div>
-                <br />
+                <div className="mt-4">
+                    <h1>Demo video</h1>
+                    <iframe
+                        width="860"
+                        height="515"
+                        src="https://www.youtube.com/embed/05fs2Pxwnj4?si=d8Efh1RSh11slaT9"
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                    ></iframe>
+                </div>
             </Div>
         </PageContainer>
     );

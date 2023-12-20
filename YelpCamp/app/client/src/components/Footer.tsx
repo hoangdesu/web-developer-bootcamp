@@ -64,10 +64,7 @@ const Footer: React.FunctionComponent = () => {
                         <h5 className="text-primary-color inline">Connect</h5>
                         <IconsContainer>
                             <Tooltip title="Github" placement="top">
-                                <a
-                                    href="https://github.com/hoangdesu/"
-                                    target="_blank"
-                                >
+                                <a href="https://github.com/hoangdesu/" target="_blank">
                                     <i className="fa-brands fa-github"></i>
                                 </a>
                             </Tooltip>
@@ -107,6 +104,15 @@ const Footer: React.FunctionComponent = () => {
                             <span>Back to top</span>
                         </button>
                         <span className="text-gray-400 text-xs">Build: {__BUILD_TIMESTAMP__}</span>
+                        <span className="text-gray-400 text-xs mt-1">
+                            <a
+                                href="/sitemap.xml"
+                                target="blank"
+                                className="text-gray-400 text-xs mt-1 hover:text-primary-color"
+                            >
+                                Sitemap
+                            </a>
+                        </span>
                     </div>
                 </div>
                 <div className="text-gray-300 text-center mt-auto text-sm">
