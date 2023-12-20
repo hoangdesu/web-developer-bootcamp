@@ -27,7 +27,7 @@ responsibility to keep on learning.
 
 **TLDR:** valuable course, great teacher, highly recommended 👍
 
-## [The final project: YelpCamp](https://github.com/hoangdesu/web-developer-bootcamp/blob/master/YelpCamp/README.md)
+## [The final project: YelpCamp](https://github.com/hoangdesu/web-developer-bootcamp/tree/master/YelpCamp)
 
 Detail documentation about YelpCamp (MERN stack with TypeScript) - my implementation for the final project can be found
 [here](https://github.com/hoangdesu/web-developer-bootcamp/blob/master/YelpCamp/README.md).

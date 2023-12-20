@@ -35,11 +35,12 @@ like making reservations, user profile, simulated mobile payment with QR code, e
 
 ## Technologies
 
-<img src="./app/client/src/assets/MERN.png" alt="MERN stack" width="400px">
+<img src="./app/client/src/assets/MERN.png" alt="MERN stack" width="300px">
+<img src="imgs/ts-logo.png" width="320px">
 
 ### Frontend
 
-The frontend is written in [React 18](https://github.com/facebook/react), with the following
+The frontend is written in [React 18](https://github.com/facebook/react) using [TypeScript](https://www.typescriptlang.org/), with the following
 additional libraries:
 
 -   [@bitjson/qr-code](https://github.com/bitjson/qr-code): web-component QR code generator for
@@ -163,4 +164,4 @@ This app is fully responsive and mobile-friendly. Some components are designed d
 
 ## Video demo
 
-...
+[![YelpCamp demo](http://img.youtube.com/vi/05fs2Pxwnj4/0.jpg)](https://youtu.be/05fs2Pxwnj4 "YelpCamp demo")

@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 
 import Me from '../assets/hoangdesu.jpeg';
 import MERN from '../assets/MERN.png';
+import TypeScript from '../../../../imgs/ts-logo.png';
 
 import Home from '../../../../imgs/home.jpg';
 import HomeMob from '../../../../imgs/home-mobile.jpg';
@@ -77,12 +78,17 @@ const About: React.FunctionComponent = () => {
                 </div>
                 <div className="mt-4">
                     <h2>Technologies</h2>
-                    <img src={MERN} alt="MERN stack" className="w-full max-w-xs" />
+                    <img src={MERN} alt="MERN stack" className="max-w-xs" />
+                    <img src={TypeScript} alt="TypeScript logo" className="max-w-xs" />
                     <h5>Frontend</h5>
                     <p className="inline">
                         The frontend is written in{' '}
                         <a href="https://github.com/facebook/react" target="_blank">
                             React 18
+                        </a>{' '}
+                        using{' '}
+                        <a href="https://www.typescriptlang.org/" target="_blank">
+                            TypeScript
                         </a>
                         , with the following additional libraries:
                     </p>
@@ -342,7 +348,7 @@ const About: React.FunctionComponent = () => {
                         designed differently to work best with their current view.
                     </p>
                     <div className="overflow-x-scroll">
-                        <table className="border-collapse border border-slate-500 w-full min-w-[1000px]">
+                        <table className="border-collapse border border-slate-500 w-full min-w-[800px]">
                             <tr className="border border-slate-500">
                                 <th className="border border-slate-500 p-2 text-center">
                                     Features
