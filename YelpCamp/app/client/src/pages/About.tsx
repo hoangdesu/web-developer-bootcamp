@@ -433,15 +433,17 @@ const About: React.FunctionComponent = () => {
                 </div>
                 <div className="mt-4">
                     <h1>Demo video</h1>
-                    <iframe
-                        width="860"
-                        height="515"
-                        src="https://www.youtube.com/embed/05fs2Pxwnj4?si=d8Efh1RSh11slaT9"
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                    ></iframe>
+                    <div className='w-full md:w-[800px]'>
+                        <iframe
+                            width="100%"
+                            height="480"
+                            src="https://www.youtube.com/embed/05fs2Pxwnj4?si=d8Efh1RSh11slaT9"
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
                 </div>
             </Div>
         </PageContainer>
