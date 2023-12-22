@@ -433,7 +433,7 @@ const About: React.FunctionComponent = () => {
                 </div>
                 <div className="mt-4">
                     <h1>Demo video</h1>
-                    <div className='w-full md:w-[800px]'>
+                    <div className="w-full md:w-[800px]">
                         <iframe
                             width="100%"
                             height="480"

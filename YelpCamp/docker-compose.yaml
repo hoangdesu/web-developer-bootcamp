@@ -44,6 +44,7 @@ services:
     volumes:
       - ./app/client:/app/client
       - /app/client/node_modules
+      - ./imgs:/imgs
 
 networks:
     app-network:
