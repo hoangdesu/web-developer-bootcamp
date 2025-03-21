@@ -6,6 +6,7 @@ import PageModal from '../components/Modals/PageModal';
 import Footer from './Footer';
 import PageSnackbar from './PageSnackbar';
 import AppContext from '../store/app-context';
+import { Analytics } from '@vercel/analytics/react';
 
 interface PageContainerProps {
     children: ReactNode;
@@ -28,6 +29,7 @@ const PageContainer: React.FunctionComponent<PageContainerProps> = ({ children }
             <PageModal />
             <PageSnackbar />
             <Footer />
+            <Analytics />
         </div>
     );
 };
